@@ -1,0 +1,203 @@
+<!doctype html>
+<html class="no-js" lang="en">
+    <head>
+        <style>
+            body {
+                background-color: #262626;
+                margin: 0;
+                overflow-x: hidden;
+                font-family: Consolas, sans-serif;
+                color: #D0D0D0;
+            }
+            h1 {
+                text-align: center;
+            }
+            hr {
+                border: 0;
+                box-shadow: 0 0 0 1px rgba(131, 131, 128, .75);
+            }
+            i {
+                color: #DBDCAA;
+            }
+            .hr {
+                width: 75%;
+                height: 2px;
+                margin: auto;
+                background-image: linear-gradient(to right, rgba(50, 50, 50, .5), rgba(131, 131, 128, .75), rgba(50, 50, 50, .5));
+            }
+            #container {
+                width: 100vw;
+                height: 100vh;
+                display: grid;
+                display: -ms-grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 1fr 1fr;
+            }
+            .section {
+                background: rgba(50, 50, 50, .5);
+                border: 1px solid rgba(131, 131, 128, .75);
+                padding-bottom: .75em;
+            }
+            #overview {
+                grid-column: 1;
+                grid-row: 1;
+            }
+            #overviewContent {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+                height: 81.25%;
+                text-align: center;
+            }
+            #overviewContent table {
+                margin: auto
+            }
+            #overviewContent td {
+                width: 50vw;
+                padding-top: 5px;
+            }
+            #overviewContent td p{
+                margin-top: -.75em;
+            }
+            .content {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+                height: 81.25%;
+                text-align: center;
+            }
+            .content > div:nth-child(-n+2){
+                width: 50%;
+                flex-wrap: nowrap;
+            }
+            .content div p {
+                margin-bottom: -.5em;
+            }
+            #contact {
+                grid-column: 1;
+                text-align: center;
+            }
+            #contact a:link {
+                color: rgba(127, 214, 253, .75);
+            }
+            #contact a:hover {
+                color: rgba(127, 214, 253, 1);
+            }
+            .class {
+                color: #4EC9B0;
+            }
+        </style>
+        <meta charset="utf-8">
+        <title>Custom Script Templates</title>
+        <meta name="description" content="Instructions for the Custom Script Templates Plugin for Unity.">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta property="og:title" content="Custom Script Templates">
+        <meta property="og:description" content="Instructions for the Custom Script Templates Plugin for Unity.">
+        <meta property="og:type" content="Instructions">
+        <meta name="theme-color" content="#262626">
+        <link rel="icon" type="image/png" sizes="310x310" href="Images/Favicon.png">
+    </head>
+    <body>
+    <div id="container">
+        <section id="overview" class="section">
+            <h1>OVERVIEW</h1>
+            <hr>
+            <div id="overviewContent">
+                <table>
+                    <tr>
+                        <td>
+                            <p>After importing the package, you will have an additional MenuItem "<b><u style="color: #DBDCAA"><i>Custom Script Templates</i></u></b>" under the "<b>Create</b>"-Menu.</p>
+                            <p style="font-size: small; margin-top: -.9em"><i>(When you right-click inside the Project window)</i></p>
+                        </td>
+                        <td>
+                            <img src="Images/Create%20Menu.png">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div style="width: 100%" class="hr"></div>
+                        </td>
+                        <td>
+                            <div style="width: 100%"  class="hr"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>This MenuItem holds all Templates.</p>
+                            <p>You can customize the default ones, delete items you don't want, and even create your own Templates.</p>
+                        </td>
+                        <td>
+                            <img src="Images/Custom%20Script%20Templates.png">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+        <section class="section">
+            <h1>TEMPLATES</h1>
+            <hr>
+            <div class="content">
+                <div>
+                    <p>Templates are .txt Files inside the Templates Folder</p>
+                    <p style="font-size: small; margin-top: .5em"><i>Custom Script Templates -> Settings -> Templates</i></p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p>The most important tag is <b><u class="class">#SCRIPTNAME#</u></b>.</p>
+                    <p>This is the placeholder for the name you give the File.</p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p>The <b><u class="class">#NAMESPACE#</u></b>-tag is optional.</p>
+                    <p>When you put it in the Template, it will insert your Projects root Namespace at that line,</p>
+                    <p style="font-size: small"><i>Edit -> Project Settings -> Editor -> Root namespace</i></p>
+                    <p>or the Namespace of the next Assembly Definition File in your Project.</p>
+                    <p style="font-size: small; margin-top: .5em"><i>(Aseembly Definition Reference also works)</i></p>
+                    <p>If your Project or the Assembly Definition File doesn't have a root Namespace set, the tag will be removed on File creation.</p>
+                    <p>So you can just leave the Tag in the Template, it won't break anything.</p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p>You can also set a custom Namespace, regardless if you have a root Namespace set.</p>
+                    <p><b class="class">#NAMESPACE#CustomNamespace#</b></p>
+                    <p>Just write the name of the Namespace after the <b class="class">#NAMESPACE#</b>-tag and end the line with a <b>#</b></p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p>Both tags, <b class="class">#SCRIPTNAME#</b> and <b class="class">#NAMESPACE#</b> have to be <b><u>upper case</u></b> and be in between 2 <b><u>#</u></b></p>
+                    <p><span style="border-bottom: 1px solid white"><b>You can write anything inside a Template, from using statements to Methods, everything works!</b></span></p>
+                </div>
+                <div>
+                    <img src="Images/Templates%20Path.png">
+                    <img src="Images/Template.png">
+                    <img src="Images/Custom%20Namespace.png">
+                </div>
+            </div>
+        </section>
+        <section class="section">
+            <h1>SETTINGS</h1>
+            <hr>
+            <div class="content">
+                <div>
+                    <p>You can find the "<b>Settings</b>"-ScriptableObject under:</p>
+                    <p style="font-size: small; margin-top: .5em"><i>Custom Script Templates -> Settings</i></p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p>The Namespace settings are pretty self explanatory, just hover over them with your mouse, to get a tooltip with what they do.</p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p>The Menu Item settings are for the display name in the "<b>Create</b>"-Menu and its position.</p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p>The Templates list contains all .txt Templates you want to see as a Menu Item.</p>
+                    <p>So after you create a new .txt Template, add it to this List and hit the "<b><u style="color: #DBDCAA"><i>Compile Menu Items</i></u></b>"-<b>Button</b>.</p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <p><b>You only have to press the "<u style="color: #DBDCAA"><i>Compile Menu Items</i></u>"-Button when you made changes in the "<i>Menu Item Settings</i>" or the "<i>Templates List</i>".</b></p>
+                    <p><b>You don't have to press it after making changes in the "<i>Namespace Settings</i>".</b></p>
+                    <div style="margin-top: 1em; margin-bottom: -.5em" class="hr"></div>
+                    <h3 style="color: #ff6a00">IMPORTANT</h3>
+                    <p><b>In future updates, don't import the "<i>Settings</i>"-Folder!</b></p>
+                    <p><b>Your Templates and personalized Settings will be overwritten with the default ones if you also import this Folder.</b></p>
+                    <img style="margin-top: 1em; width: auto; height: 50%" src="Images/Import.png">
+                    <p><b><i style="color: #D0D0D0">Just uncheck the "<span style="color: #DBDCAA">Settings</span>"-Folder in the Import settings.</i></b></p>
+                </div>
+                <div style="align-self: center">
+                    <img src="Images/Settings.png">
+                </div>
+            </div>
+        </section>
+        <section id="contact">
+            <p><i style="color: #D0D0D0">If you have further questions, requests and/or feedback, you can contact me under: </i><a href="mailto:markherdt1508@gmail.com?subject=Support"><b>markherdt1508@gmail.com</b></a></p>
+        </section>
+    </div>
+    </body>
+</html>

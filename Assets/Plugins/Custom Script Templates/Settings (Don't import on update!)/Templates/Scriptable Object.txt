@@ -1,0 +1,10 @@
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+#NAMESPACE#
+[HideMonoScript]
+[CreateAssetMenu(menuName = "#SCRIPTNAME#", fileName = "#SCRIPTNAME#")]
+internal sealed class #SCRIPTNAME# : ScriptableObject
+{
+	
+}

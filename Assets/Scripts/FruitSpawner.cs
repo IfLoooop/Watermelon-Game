@@ -1,8 +1,9 @@
 using UnityEngine;
+using Watermelon_Game.Fruit;
 
 namespace Watermelon_Game
 {
-    public class FruitSpawner : MonoBehaviour
+    internal sealed class FruitSpawner : MonoBehaviour
     {
         #region Inspector Fields
         [SerializeField] private float movementSpeed = 25;
@@ -22,7 +23,7 @@ namespace Watermelon_Game
         /// The <see cref="FruitBehaviour"/> that is currently attached to this <see cref="FruitSpawner"/> 
         /// </summary>
         private FruitBehaviour fruitBehaviour;
-        private Fruit? lastFruit;
+        private Fruit.Fruit? lastFruit;
         
         /// <summary>
         /// Blocks movement input while this field is set to true

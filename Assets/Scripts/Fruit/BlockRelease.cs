@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace Watermelon_Game
+namespace Watermelon_Game.Fruit
 {
     /// <summary>
     /// Contains logic for a <see cref="FruitBehaviour"/>'s first collision <br/>
     /// This component is destroyed afterwards
     /// </summary>
-    public class BlockRelease : MonoBehaviour
+    internal sealed class BlockRelease : MonoBehaviour
     {
         #region Properties
         public FruitSpawner FruitSpawner { get; set; }

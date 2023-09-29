@@ -1,0 +1,5 @@
+#NAMESPACE#
+internal sealed class #SCRIPTNAME#
+{
+    
+}

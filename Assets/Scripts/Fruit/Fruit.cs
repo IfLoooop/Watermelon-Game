@@ -1,6 +1,6 @@
-namespace Watermelon_Game
+namespace Watermelon_Game.Fruit
 {
-    public enum Fruit
+    internal enum Fruit
     {
         Grape = 0,
         Cherry = 1,

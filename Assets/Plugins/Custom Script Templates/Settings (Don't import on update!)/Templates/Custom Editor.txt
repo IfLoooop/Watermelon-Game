@@ -1,0 +1,11 @@
+using UnityEditor;
+
+#NAMESPACE#
+[CustomEditor(typeof(#SCRIPTNAME#))]
+internal sealed class #SCRIPTNAME# : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        base.DrawDefaultInspector();
+    }
+}

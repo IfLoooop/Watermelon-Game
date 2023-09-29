@@ -1,0 +1,9 @@
+using Sirenix.OdinInspector;
+using UnityEngine;
+
+#NAMESPACE#
+[HideMonoScript]
+internal sealed class #SCRIPTNAME# : MonoBehaviour
+{
+	
+}
