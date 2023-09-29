@@ -84,7 +84,7 @@ namespace Watermelon_Game
         {
             this.blockInput = true;
             this.rigidbody2D.MovePosition(this.startingPosition);
-            this.fruitBehaviour = FruitBehaviour.SpawnFruit(this.rigidbody2D.position, this.transform, this.lastFruit);
+            this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform, this.lastFruit);
             this.lastFruit = fruitBehaviour.Fruit;
             this.boxCollider2D.size = new Vector2(this.fruitBehaviour.transform.localScale.x, boxCollider2D.size.y);
             this.blockInput = false;

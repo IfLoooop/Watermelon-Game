@@ -9,13 +9,17 @@ namespace Watermelon_Game.Fruit
     /// </summary>
     internal sealed class FruitBehaviour : MonoBehaviour
     {
+        #region Inspector Fields
+        [SerializeField] private Fruit fruit;
+        #endregion
+        
         #region Fields
         private new Rigidbody2D rigidbody2D;
         private BlockRelease blockRelease;
         #endregion
 
         #region Properties
-        public Fruit Fruit { get; private set; }
+        public Fruit Fruit => this.fruit;
         #endregion
         
         #region Methods
@@ -23,6 +27,11 @@ namespace Watermelon_Game.Fruit
         {
             this.rigidbody2D = this.GetComponent<Rigidbody2D>();
             this.blockRelease = this.GetComponent<BlockRelease>();
+        }
+
+        private void OnEnable()
+        {
+            GameController.AddFruit(this);
         }
 
         private void OnCollisionEnter2D(Collision2D _Other)
@@ -63,9 +72,6 @@ namespace Watermelon_Game.Fruit
             var _fruitData = GetRandomFruit(_PreviousFruit);
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity, _Parent).GetComponent<FruitBehaviour>();
 
-            GameController.AddFruit(_fruitBehaviour);
-            _fruitBehaviour.Fruit = _fruitData.Fruit;
-
             return _fruitBehaviour;
         }
 
@@ -78,9 +84,7 @@ namespace Watermelon_Game.Fruit
         {
             var _fruitData = FruitCollection.Instance.Fruits.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity).GetComponent<FruitBehaviour>();
-            
-            GameController.AddFruit(_fruitBehavior);
-            _fruitBehavior.Fruit = _fruitData.Fruit;
+
             _fruitBehavior.InitializeRigidBody();
         }
         
