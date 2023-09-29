@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using Watermelon_Game.Fruit;
 
-namespace Watermelon_Game
+namespace Watermelon_Game.Fruit_Spawn
 {
     /// <summary>
     /// Holds the next fruit that will be given to the <see cref="FruitSpawner"/>

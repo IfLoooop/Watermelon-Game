@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using Watermelon_Game.Fruit_Spawn;
 
 namespace Watermelon_Game.Fruit
 {

@@ -1,12 +1,14 @@
 using UnityEngine;
 using Watermelon_Game.Fruit;
 
-namespace Watermelon_Game
+namespace Watermelon_Game.Fruit_Spawn
 {
     internal sealed class FruitSpawner : MonoBehaviour
     {
         #region Inspector Fields
-        [SerializeField] private float movementSpeed = 25;
+        [SerializeField] private float movementSpeed = 20f;
+        [SerializeField] private float maxAccelerationSpeed = 15f;
+        [SerializeField] private float accelerationSpeed = 10f;
         #endregion
 
         #region Fields
@@ -15,6 +17,7 @@ namespace Watermelon_Game
         /// <b>Should not be modified afterwards</b>
         /// </summary>
         private Vector2 startingPosition;
+        private float speed;
         
         private new Rigidbody2D rigidbody2D;
         private BoxCollider2D boxCollider2D;
@@ -60,13 +63,17 @@ namespace Watermelon_Game
         {
             if (!this.blockInput)
             {
-                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+                if (Input.GetKey(KeyCode.A))
                 {
                     this.Move(Vector2.left);
                 }
-                else if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+                else if (Input.GetKey(KeyCode.D))
                 {
                     this.Move(Vector2.right);
+                }
+                else
+                {
+                    this.speed = Mathf.Clamp(this.speed - this.accelerationSpeed * Time.deltaTime * 5, 0, this.maxAccelerationSpeed);
                 }
 
                 // TODO: Check if the previous fruit has collided with any fruit before release is possible 
@@ -92,7 +99,8 @@ namespace Watermelon_Game
         
         private void Move(Vector2 _Direction)
         {
-            var _direction = _Direction * (this.movementSpeed * Time.deltaTime);
+            this.speed = Mathf.Clamp(this.speed + this.accelerationSpeed * Time.deltaTime, 0, this.maxAccelerationSpeed);
+            var _direction = _Direction * ((this.movementSpeed + this.speed) * Time.deltaTime);
             var _position = this.rigidbody2D.position + _direction;
             
             this.rigidbody2D.MovePosition(_position);

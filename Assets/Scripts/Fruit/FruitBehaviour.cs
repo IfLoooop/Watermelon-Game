@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using Watermelon_Game.Fruit_Spawn;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Fruit
@@ -36,7 +37,7 @@ namespace Watermelon_Game.Fruit
 
         private void OnCollisionEnter2D(Collision2D _Other)
         {
-            if (_Other.gameObject.layer == GameController.FRUIT_LAYER) 
+            if (_Other.gameObject.layer == LayerMask.NameToLayer("Fruit")) 
             {
                 GameController.FruitCollision(this.gameObject.GetHashCode(), _Other.gameObject.GetHashCode());
             }

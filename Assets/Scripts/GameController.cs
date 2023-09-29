@@ -8,10 +8,6 @@ namespace Watermelon_Game
 {
     internal sealed class GameController : MonoBehaviour
     {
-        #region Constants
-        public const int FRUIT_LAYER = 8;
-        #endregion
-
         #region Fields
         /// <summary>
         /// Contains all instantiated fruits in the scene <br/>
