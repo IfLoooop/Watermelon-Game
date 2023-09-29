@@ -1,5 +1,8 @@
 namespace Watermelon_Game.Fruit
 {
+    /// <summary>
+    /// All possible fruits
+    /// </summary>
     internal enum Fruit
     {
         Grape = 0,

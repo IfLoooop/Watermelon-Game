@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e48ad5ad6010cd45831afa2501da93e, type: 3}
-  m_Name: FruitPrefabs
+  m_Name: FruitData
   m_EditorClassIdentifier: 
-  weightMultiplier: 25
+  spawnWeightMultiplier: 25
   fruits:
   - prefab: {fileID: 3765698940235238415, guid: 08d17b8df74f8a14caff7a0d6c29cdd6, type: 3}
     fruit: 0
@@ -29,3 +29,15 @@ MonoBehaviour:
   - prefab: {fileID: 3765698940235238415, guid: 83c687289f8349642b7cf3bf9605f917, type: 3}
     fruit: 4
     spawnWeight: 10
+  - prefab: {fileID: 3765698940235238415, guid: e56a745a8255a504fb383a45bc779ee2, type: 3}
+    fruit: 5
+    spawnWeight: 0
+  - prefab: {fileID: 3765698940235238415, guid: 309c72b7f1c061246ac2b235b2a0a361, type: 3}
+    fruit: 6
+    spawnWeight: 0
+  - prefab: {fileID: 3765698940235238415, guid: 1119e90d45d79fd4780e7cfd4ffce4c8, type: 3}
+    fruit: 7
+    spawnWeight: 0
+  - prefab: {fileID: 3765698940235238415, guid: e0a7c1dfd1c7357429b65bcfb535c09d, type: 3}
+    fruit: 8
+    spawnWeight: 0

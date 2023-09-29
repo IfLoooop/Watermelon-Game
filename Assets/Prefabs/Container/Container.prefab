@@ -118,8 +118,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67cd576e26e1ff4994e4a2c1e9175fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 60
-  fruitPrefab: {fileID: 7913849676234949797, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+  movementSpeed: 30
 --- !u!1 &1700848758044257525
 GameObject:
   m_ObjectHideFlags: 0

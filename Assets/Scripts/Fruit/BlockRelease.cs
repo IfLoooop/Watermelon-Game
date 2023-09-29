@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Watermelon_Game.Fruit
@@ -9,13 +10,17 @@ namespace Watermelon_Game.Fruit
     internal sealed class BlockRelease : MonoBehaviour
     {
         #region Properties
-        public FruitSpawner FruitSpawner { get; set; }
+        [CanBeNull] public FruitSpawner FruitSpawner { get; set; }
         #endregion
         
         #region Methods
         private void OnCollisionEnter2D(Collision2D _Other)
         {
-            this.FruitSpawner.BlockRelease = false;
+            if (this.FruitSpawner is {} _fruitSpawner)
+            {
+                _fruitSpawner.BlockRelease = false;
+            }
+
             Destroy(this);
         }
         #endregion
