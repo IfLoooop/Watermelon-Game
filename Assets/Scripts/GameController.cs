@@ -47,6 +47,8 @@ namespace Watermelon_Game
                     var _position = (_fruit1.transform.position + _fruit2.transform.position) / 2;
                     var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit1.Fruit + 1);
                     
+                    PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
+                    
                     //TODO: Move towards each other before destroying
                     Destroy(_fruit1.gameObject);
                     Destroy(_fruit2.gameObject);
