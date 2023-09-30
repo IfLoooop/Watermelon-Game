@@ -9,22 +9,18 @@ namespace Watermelon_Game.Fruit_Spawn
     /// </summary>
     internal sealed class NextFruit : MonoBehaviour
     {
-        #region Statics
-        private static NextFruit instance;
-        #endregion
-        
         #region Fields
         [CanBeNull] private FruitBehaviour fruitBehaviour;
         #endregion
 
         #region Properties
-        public static NextFruit Instance => instance;
+        public static NextFruit Instance { get; private set; }
         #endregion
         
         #region Methods
         private void Awake()
         {
-            instance = this;
+            Instance = this;
         }
 
         /// <summary>

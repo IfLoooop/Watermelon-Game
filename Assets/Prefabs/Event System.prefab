@@ -12,11 +12,11 @@ GameObject:
   - component: {fileID: 4927545907696163666}
   - component: {fileID: 4159813820380111188}
   m_Layer: 0
-  m_Name: EventSystem
+  m_Name: Event System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &3186569614082881236
 Transform:

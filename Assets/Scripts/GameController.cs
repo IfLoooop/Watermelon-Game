@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Watermelon_Game.Fruit;
+using Watermelon_Game.Skills;
 
 namespace Watermelon_Game
 {
     internal sealed class GameController : MonoBehaviour
     {
+        #region Inspector Fields
+        [SerializeField] private FruitCollection fruitCollection;
+        #endregion
+        
         #region Fields
         /// <summary>
         /// Contains all instantiated fruits in the scene <br/>
@@ -16,8 +21,18 @@ namespace Watermelon_Game
         /// </summary>
         private static readonly Dictionary<int, FruitBehaviour> fruits = new();
         #endregion
+
+        #region Properties
+        public static GameController Instance { get; private set; }
+        public FruitCollection FruitCollection => this.fruitCollection;
+        #endregion
         
-        #region Events
+        #region Methods
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         /// <summary>
         /// Adds a <see cref="FruitBehaviour"/> to <see cref="fruits"/>
         /// </summary>
@@ -53,12 +68,43 @@ namespace Watermelon_Game
                     Destroy(_fruit1.gameObject);
                     Destroy(_fruit2.gameObject);
                     
+                    // Nothing has to be spawned after a melon is evolved
                     if (_fruitIndex != (int)Fruit.Fruit.Grape)
                     {
-                        var _fruit = FruitCollection.Instance.Fruits[_fruitIndex].Fruit;
+                        var _fruit = Instance.FruitCollection.Fruits[_fruitIndex].Fruit;
                         FruitBehaviour.SpawnFruit(_position, _fruit);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Tries to evolve the fruit with the given HashCode
+        /// </summary>
+        /// <param name="_Fruit">The HashCode of the fruit to evolve</param>
+        public static void EvolveFruit(int _Fruit)
+        {
+            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
+
+            if (_fruit != null)
+            {
+                fruits.Remove(_Fruit);
+                SkillController.Instance.Skill_Evolve(_fruit);
+            }
+        }
+        
+        /// <summary>
+        /// Tries to destroy the fruit with the given HashCode
+        /// </summary>
+        /// <param name="_Fruit">The HashCode of the fruit to destroy</param>
+        public static void DestroyFruit(int _Fruit)
+        {
+            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
+
+            if (_fruit != null)
+            {
+                fruits.Remove(_Fruit);
+                SkillController.Instance.Skill_Destroy(_fruit);
             }
         }
         #endregion

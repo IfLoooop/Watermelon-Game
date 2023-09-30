@@ -15,7 +15,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &5782422175701491468
 Transform:
@@ -44,3 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69432abe431b66544ac9223603a924bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fruitCollection: {fileID: 11400000, guid: 620dc5b71f1f2fe40b688670ef0ddd07, type: 2}

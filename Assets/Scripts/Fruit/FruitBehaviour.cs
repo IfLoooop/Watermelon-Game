@@ -1,6 +1,7 @@
 using System.Linq;
 using UnityEngine;
 using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.Skills;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Fruit
@@ -21,6 +22,7 @@ namespace Watermelon_Game.Fruit
 
         #region Properties
         public Fruit Fruit => this.fruit;
+        public Skill? ActiveSkill { get; private set; }
         #endregion
         
         #region Methods
@@ -39,6 +41,19 @@ namespace Watermelon_Game.Fruit
         {
             if (_Other.gameObject.layer == LayerMask.NameToLayer("Fruit")) 
             {
+                if (this.ActiveSkill is Skill.Evolve)
+                {
+                    this.DeactivateSkill();
+                    GameController.EvolveFruit(_Other.gameObject.GetHashCode());
+                    return;
+                }
+                if (this.ActiveSkill is Skill.Destroy)
+                {
+                    this.DeactivateSkill();
+                    GameController.DestroyFruit(_Other.gameObject.GetHashCode());
+                    return;
+                }
+                
                 GameController.FruitCollision(this.gameObject.GetHashCode(), _Other.gameObject.GetHashCode());
             }
             
@@ -47,12 +62,18 @@ namespace Watermelon_Game.Fruit
         /// <summary>
         /// Drops the <see cref="Fruit"/> from the <see cref="FruitSpawner"/>
         /// </summary>
-        /// <param name="_FruitSpawner"></param>
-        public void Release(FruitSpawner _FruitSpawner)
+        /// <param name="_FruitSpawner"><see cref="FruitSpawner"/></param>
+        /// <param name="_Direction">The direction the <see cref="FruitSpawner"/> is currently facing</param>
+        public void Release(FruitSpawner _FruitSpawner, Vector2 _Direction)
         {
             this.blockRelease.FruitSpawner = _FruitSpawner;
             
             this.InitializeRigidBody();
+
+            if (this.ActiveSkill is Skill.Power)
+            {
+                SkillController.Instance.Skill_Power(this.rigidbody2D, _Direction);
+            }
         }
 
         private void InitializeRigidBody()
@@ -83,7 +104,7 @@ namespace Watermelon_Game.Fruit
         /// <param name="_Fruit">The <see cref="Watermelon_Game.Fruit.Fruit"/> to spawn</param>
         public static void SpawnFruit(Vector2 _Position, Fruit _Fruit)
         {
-            var _fruitData = FruitCollection.Instance.Fruits.First(_FruitData => _FruitData.Fruit == _Fruit);
+            var _fruitData = GameController.Instance.FruitCollection.Fruits.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity).GetComponent<FruitBehaviour>();
 
             _fruitBehavior.InitializeRigidBody();
@@ -93,12 +114,12 @@ namespace Watermelon_Game.Fruit
         {
             if (_PreviousFruit == null)
             {
-                return FruitCollection.Instance.Fruits.First(_FruitData => _FruitData.Fruit == Fruit.Grape);
+                return GameController.Instance.FruitCollection.Fruits.First(_FruitData => _FruitData.Fruit == Fruit.Grape);
             }
          
-            FruitCollection.Instance.SetWeightMultiplier(_PreviousFruit.Value);
+            GameController.Instance.FruitCollection.SetWeightMultiplier(_PreviousFruit.Value);
 
-            var _spawnableFruits = FruitCollection.Instance.Fruits.TakeWhile(_Fruit => (int)_Fruit.Fruit < (int)Fruit.Apple).ToArray();
+            var _spawnableFruits = GameController.Instance.FruitCollection.Fruits.TakeWhile(_Fruit => (int)_Fruit.Fruit < (int)Fruit.Apple).ToArray();
             
             var _max = _spawnableFruits.Sum(_Fruit => _Fruit.GetSpawnWeight());
             var _randomNumber = Random.Range(0, _max);
@@ -115,6 +136,23 @@ namespace Watermelon_Game.Fruit
             }
             
             return null;
+        }
+
+        /// <summary>
+        /// Sets the given <see cref="Skill"/> as currently active
+        /// </summary>
+        /// <param name="_ActiveSkill">The <see cref="Skill"/> to activate</param>
+        public void SetActiveSkill(Skill _ActiveSkill)
+        {
+            this.ActiveSkill = _ActiveSkill;
+        }
+        
+        /// <summary>
+        /// Deactivates the currently active <see cref="Skill"/>
+        /// </summary>
+        public void DeactivateSkill()
+        {
+            this.ActiveSkill = null;
         }
         #endregion
     }

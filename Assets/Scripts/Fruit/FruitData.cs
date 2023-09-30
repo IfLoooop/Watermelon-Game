@@ -33,7 +33,7 @@ namespace Watermelon_Game.Fruit
 
             if (this.SpawnWeightMultiplier)
             {
-                _spawnWeight += FruitCollection.Instance.SpawnWeightMultiplier;
+                _spawnWeight += GameController.Instance.FruitCollection.SpawnWeightMultiplier;
             }
 
             return _spawnWeight;

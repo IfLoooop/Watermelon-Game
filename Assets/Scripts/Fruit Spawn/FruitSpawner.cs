@@ -1,23 +1,28 @@
+using Unity.Mathematics;
 using UnityEngine;
 using Watermelon_Game.Fruit;
+using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Fruit_Spawn
 {
     internal sealed class FruitSpawner : MonoBehaviour
     {
         #region Inspector Fields
-        [SerializeField] private float movementSpeed = 20f;
-        [SerializeField] private float maxAccelerationSpeed = 15f;
-        [SerializeField] private float accelerationSpeed = 10f;
+        [SerializeField] private float movementSpeed = 30f;
+        [SerializeField] private float rotationStep = 50f;
+        [SerializeField] private float maxRotationAngle = 60f;
         #endregion
 
+        #region Statics
+        private static FruitSpawner instance;
+        #endregion
+        
         #region Fields
         /// <summary>
         /// Uses the position the GameObject has at start of game <br/>
         /// <b>Should not be modified afterwards</b>
         /// </summary>
         private Vector2 startingPosition;
-        private float speed;
         
         private new Rigidbody2D rigidbody2D;
         private BoxCollider2D boxCollider2D;
@@ -44,6 +49,7 @@ namespace Watermelon_Game.Fruit_Spawn
         #region Methods
         private void Awake()
         {
+            instance = this;
             this.rigidbody2D = this.GetComponent<Rigidbody2D>();
             this.boxCollider2D = this.GetComponent<BoxCollider2D>();
         }
@@ -71,17 +77,36 @@ namespace Watermelon_Game.Fruit_Spawn
                 {
                     this.Move(Vector2.right);
                 }
-                else
-                {
-                    this.speed = Mathf.Clamp(this.speed - this.accelerationSpeed * Time.deltaTime * 5, 0, this.maxAccelerationSpeed);
-                }
 
-                // TODO: Check if the previous fruit has collided with any fruit before release is possible 
                 if (Input.GetKeyDown(KeyCode.Space) && !this.BlockRelease)
                 {
                     this.ReleaseFruit();
                 }   
             }
+        }
+        
+        private void Move(Vector2 _Direction)
+        {
+            var _direction = _Direction * (this.movementSpeed * Time.deltaTime);
+
+            this.rigidbody2D.AddForce(_direction);
+        }
+
+        private void ReleaseFruit()
+        {
+            this.BlockRelease = true;
+            this.fruitBehaviour.transform.SetParent(null, true);
+            this.fruitBehaviour.Release(this, -this.transform.up);
+
+            if (this.fruitBehaviour.ActiveSkill != null)
+            {
+                var _value = SkillController.Instance.SkillPointRequirementsMap[this.fruitBehaviour.ActiveSkill.Value];
+                PointsController.Instance.SubtractPoints(_value);
+            }
+            
+            SkillController.Instance.DeactivateActiveSkill(true);
+            
+            this.Reset();
         }
 
         /// <summary>
@@ -97,22 +122,46 @@ namespace Watermelon_Game.Fruit_Spawn
             this.blockInput = false;
         }
         
-        private void Move(Vector2 _Direction)
+        /// <summary>
+        /// Rotates the <see cref="FruitSpawner"/> in the given direction
+        /// </summary>
+        /// <param name="_Direction">Negative value = left, positive value = right</param>
+        public static void Rotate(int _Direction)
         {
-            this.speed = Mathf.Clamp(this.speed + this.accelerationSpeed * Time.deltaTime, 0, this.maxAccelerationSpeed);
-            var _direction = _Direction * ((this.movementSpeed + this.speed) * Time.deltaTime);
-            var _position = this.rigidbody2D.position + _direction;
+            var _zRotation = _Direction * instance.rotationStep * Time.deltaTime;
+            var _currentRotation = Mathfx.SignedAngle(instance.transform.eulerAngles.z);
+            var _canRotateLeft = _Direction < 0 && _currentRotation > instance.maxRotationAngle * -1;
+            var _canRotateRight = _Direction > 0 && _currentRotation < instance.maxRotationAngle;
             
-            this.rigidbody2D.MovePosition(_position);
+            if (_canRotateLeft || _canRotateRight)
+            {
+                instance.transform.Rotate(new Vector3(0, 0,  _zRotation));   
+            }
         }
 
-        private void ReleaseFruit()
+        /// <summary>
+        /// Sets the rotation of the <see cref="FruitSpawner"/> back to zero
+        /// </summary>
+        public static void ResetAimRotation()
         {
-            this.BlockRelease = true;
-            this.fruitBehaviour.transform.SetParent(null, true);
-            this.fruitBehaviour.Release(this);
-            
-            this.Reset();
+            instance.transform.rotation = quaternion.Euler(0, 0, 0);
+        }
+
+        /// <summary>
+        /// Sets the currently active <see cref="Skill"/> on the <see cref="fruitBehaviour"/> currently held by the <see cref="FruitSpawner"/>
+        /// </summary>
+        /// <param name="_ActiveSkill">The currently active <see cref="Skill"/></param>
+        public static void SetActiveSkill(Skill _ActiveSkill)
+        {
+            instance.fruitBehaviour.SetActiveSkill(_ActiveSkill);
+        }
+
+        /// <summary>
+        /// Deactivates the <see cref="Skill"/> on the <see cref="fruitBehaviour"/> currently held by the <see cref="FruitSpawner"/>
+        /// </summary>
+        public static void DeactivateSkill()
+        {
+            instance.fruitBehaviour.DeactivateSkill();
         }
         #endregion
     }   

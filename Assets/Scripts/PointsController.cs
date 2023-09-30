@@ -2,6 +2,7 @@ using System.Collections;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using Watermelon_Game.Skills;
 
 namespace Watermelon_Game
 {
@@ -14,8 +15,8 @@ namespace Watermelon_Game
         #endregion
         
         #region Fields
-        private int currentPoints;
-        private int currentMultiplier;
+        private uint currentPoints;
+        private uint currentMultiplier;
         private float currentMultiplierDuration;
         private const float WAIT_TIME = .1f;
 
@@ -46,10 +47,20 @@ namespace Watermelon_Game
                 this.StartCoroutine(this.multiplierCoroutine);
             }
             
-            var _points = this.currentPoints + ((int)_Fruit + this.currentMultiplier) * 10;
+            var _points = this.currentPoints + (uint)_Fruit + this.currentMultiplier;
             this.SetPoints(_points);
+            
+            SkillController.Instance.PointsChanged(this.currentPoints);
         }
 
+        public void SubtractPoints(uint _Value) 
+        {
+            var _points = (uint)Mathf.Clamp(this.currentPoints - _Value, 0, uint.MaxValue);
+            this.SetPoints(_points);
+            
+            SkillController.Instance.PointsChanged(this.currentPoints);
+        }
+        
         private IEnumerator MultiplierDuration()
         {
             while (this.currentMultiplierDuration > 0)
@@ -65,17 +76,19 @@ namespace Watermelon_Game
             this.multiplier.enabled = false;
         }
 
-        private void SetMultiplier(int _Value)
+        // TODO: Animate multiplier on enable
+        private void SetMultiplier(uint _Value)
         {
             this.currentMultiplier = _Value;
-            this.multiplier.text = string.Concat("x", this.currentMultiplier.ToString());
+            this.multiplier.text = string.Concat("x", this.currentMultiplier);
             this.multiplier.enabled = true;
         }
         
-        private void SetPoints(int _Value)
+        // TODO: Add points over a period of time in a coroutine
+        private void SetPoints(uint _Value)
         {
             this.currentPoints = _Value;
-            this.points.text = this.currentPoints.ToString();
+            this.points.text = string.Concat(this.currentPoints, "P");
         }
         #endregion
     }

@@ -16,23 +16,12 @@ namespace Watermelon_Game.Fruit
         [SerializeField] private List<FruitData> fruits = new();
         #endregion
 
-        #region Fields
-        private static FruitCollection instance;
-        #endregion
-        
         #region Properties
-        public static FruitCollection Instance => instance;
-
         public int SpawnWeightMultiplier => this.spawnWeightMultiplier;
         public ReadOnlyCollection<FruitData> Fruits => this.fruits.AsReadOnly();
         #endregion
 
         #region Methods
-        private void OnEnable()
-        {
-            instance = this;
-        }
-
         public void SetWeightMultiplier(Fruit _PreviousFruit)
         {
             this.fruits.ForEach(_Fruit => _Fruit.ResetWeightMultiplier());
