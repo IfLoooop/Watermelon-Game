@@ -12,10 +12,15 @@ namespace Watermelon_Game
         #region Inspector Fields
         [SerializeField] private TextMeshProUGUI points;
         [SerializeField] private TextMeshProUGUI multiplier;
+        [SerializeField] private TextMeshProUGUI highScore;
         [SerializeField] private float multiplierDuration = 1f;
         [SerializeField] private float multiplierWaitTime = .1f;
         [SerializeField] private float pointsWaitTime = .05f;
         [SerializeField] private List<Color> multiplierColors;
+        #endregion
+
+        #region Constants
+        private const string HIGH_SCORE_KEY = "Highscore";
         #endregion
         
         #region Fields
@@ -45,6 +50,11 @@ namespace Watermelon_Game
             this.pointsWaitForSeconds = new WaitForSeconds(this.pointsWaitTime);
         }
 
+        private void Start()
+        {
+            this.highScore.text = PlayerPrefs.GetInt(HIGH_SCORE_KEY).ToString();
+        }
+
         public void AddPoints(Fruit.Fruit _Fruit)
         {
             this.currentMultiplierDuration = this.multiplierDuration;
@@ -64,8 +74,6 @@ namespace Watermelon_Game
 
         public void SubtractPoints(uint _PointsToSubtract) 
         {
-            //TODO
-            //var _points = (uint)Mathf.Clamp(this.currentPoints - _PointsToSubtract, 0, uint.MaxValue);
             this.SetPoints(-(int)_PointsToSubtract);
         }
         
@@ -143,6 +151,24 @@ namespace Watermelon_Game
             
             StopCoroutine(this.pointsCoroutine);
             this.pointsCoroutine = null;
+        }
+
+        public void ResetPoints()
+        {
+            this.currentPoints = 0;
+            this.pointsDelta = 0;
+            this.points.text = string.Concat(0, "P");
+        }
+
+        public void SavePoints()
+        {
+            var _currentHighScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY);
+
+            if (this.currentPoints > _currentHighScore)
+            {
+                PlayerPrefs.SetInt(HIGH_SCORE_KEY, (int)this.currentPoints);
+                this.highScore.text = this.currentPoints.ToString();
+            }
         }
         #endregion
     }

@@ -31,7 +31,7 @@ MonoBehaviour:
     spawnWeight: 10
   - prefab: {fileID: 3765698940235238415, guid: e56a745a8255a504fb383a45bc779ee2, type: 3}
     fruit: 5
-    spawnWeight: 0
+    spawnWeight: 5
   - prefab: {fileID: 3765698940235238415, guid: 309c72b7f1c061246ac2b235b2a0a361, type: 3}
     fruit: 6
     spawnWeight: 0

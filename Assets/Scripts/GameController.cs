@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Watermelon_Game.Fruit;
+using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Skills;
 
 namespace Watermelon_Game
@@ -31,6 +32,15 @@ namespace Watermelon_Game
         private void Awake()
         {
             Instance = this;
+        }
+
+        private void Update()
+        {
+            // TODO: Make better
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                StartGame();
+            }
         }
 
         /// <summary>
@@ -65,8 +75,8 @@ namespace Watermelon_Game
                     PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
                     
                     //TODO: Move towards each other before destroying
-                    Destroy(_fruit1.gameObject);
-                    Destroy(_fruit2.gameObject);
+                    _fruit1.Destroy();
+                    _fruit2.Destroy();
                     
                     // Nothing has to be spawned after a melon is evolved
                     if (_fruitIndex != (int)Fruit.Fruit.Grape)
@@ -106,6 +116,29 @@ namespace Watermelon_Game
                 fruits.Remove(_Fruit);
                 SkillController.Instance.Skill_Destroy(_fruit);
             }
+        }
+
+        public static void StartGame()
+        {
+            FruitSpawner.Instance.Reset();
+            FruitSpawnerAim.Enable(true);
+            PointsController.Instance.ResetPoints();
+        }
+        
+        public static void GameOver()
+        {
+            FruitSpawner.Instance.BlockInput = true;
+            FruitSpawnerAim.Enable(false);
+
+            // TODO: Destroy all fruit in a coroutine over time
+            foreach (var _fruitBehaviour in fruits.Values)
+            {
+                _fruitBehaviour.Destroy();
+            }
+            
+            fruits.Clear();
+            
+            PointsController.Instance.SavePoints();
         }
         #endregion
     }

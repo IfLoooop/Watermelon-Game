@@ -7,6 +7,8 @@ namespace Watermelon_Game.Fruit_Spawn
     internal sealed class FruitSpawnerAim : MonoBehaviour
     {
         #region Fields
+        private static FruitSpawnerAim instance;
+        
         private LineRenderer lineRenderer;
         private ContactFilter2D contactFilter2D;
         private readonly List<RaycastHit2D> raycastHits2D = new();
@@ -15,6 +17,7 @@ namespace Watermelon_Game.Fruit_Spawn
         #region Methods
         private void Awake()
         {
+            instance = this;
             this.lineRenderer = this.GetComponent<LineRenderer>();
             this.contactFilter2D.SetLayerMask(LayerMask.GetMask("Container", "Fruit"));
         }
@@ -33,6 +36,11 @@ namespace Watermelon_Game.Fruit_Spawn
 
             var _rayCastHit2D = this.raycastHits2D.First();
             this.lineRenderer.SetPosition(1, new Vector3(0, -_rayCastHit2D.distance, 1));
+        }
+
+        public static void Enable(bool _Value)
+        {
+            instance.lineRenderer.enabled = _Value;
         }
         #endregion
     }

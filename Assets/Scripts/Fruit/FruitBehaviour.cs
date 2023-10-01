@@ -119,10 +119,11 @@ namespace Watermelon_Game.Fruit
          
             GameController.Instance.FruitCollection.SetWeightMultiplier(_PreviousFruit.Value);
 
-            var _spawnableFruits = GameController.Instance.FruitCollection.Fruits.TakeWhile(_Fruit => (int)_Fruit.Fruit < (int)Fruit.Apple).ToArray();
+            var _highestFruitSpawn = GameController.Instance.FruitCollection.Fruits.First(_Fruit => _Fruit.GetSpawnWeight() == 0).Fruit;
+            var _spawnableFruits = GameController.Instance.FruitCollection.Fruits.TakeWhile(_Fruit => (int)_Fruit.Fruit < (int)_highestFruitSpawn).ToArray();
             
-            var _max = _spawnableFruits.Sum(_Fruit => _Fruit.GetSpawnWeight());
-            var _randomNumber = Random.Range(0, _max);
+            var _combinedSpawnWeights = _spawnableFruits.Sum(_Fruit => _Fruit.GetSpawnWeight());
+            var _randomNumber = Random.Range(0, _combinedSpawnWeights);
             var _spawnWeight = 0;
 
             foreach (var _fruitData in _spawnableFruits)
@@ -153,6 +154,23 @@ namespace Watermelon_Game.Fruit
         public void DeactivateSkill()
         {
             this.ActiveSkill = null;
+        }
+
+        /// <summary>
+        /// Shoots the fruit with increased force in  the given direction
+        /// </summary>
+        /// <param name="_Direction">The direction to shoot the fruit in</param>
+        public void Shoot(Vector2 _Direction)
+        {
+            this.rigidbody2D.AddForce(_Direction * (SkillController.Instance.ShootForceMultiplier * this.rigidbody2D.mass), ForceMode2D.Impulse);
+        }
+
+        /// <summary>
+        /// Destroys this <see cref="GameObject"/>
+        /// </summary>
+        public void Destroy()
+        {
+            Destroy(this.gameObject);
         }
         #endregion
     }

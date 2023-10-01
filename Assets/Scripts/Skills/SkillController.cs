@@ -21,9 +21,10 @@ namespace Watermelon_Game.Skills
         [SerializeField] private GameObject power;
         [SerializeField] private GameObject evolve;
         [SerializeField] private GameObject destroy;
-        [SerializeField] private uint powerPointsRequirement = 10;
+        [SerializeField] private uint powerPointsRequirement = 25;
         [SerializeField] private uint evolvePointsRequirement = 100;
         [SerializeField] private uint destroyPointsRequirement = 100;
+        [SerializeField] private float shootForceMultiplier = 100;
         [SerializeField] private float powerSkillForce = 10000f;
         [SerializeField] private float powerSkillMass = 100f;
         #endregion
@@ -32,13 +33,14 @@ namespace Watermelon_Game.Skills
         private SkillData powerSkill;
         private SkillData evolveSkill;
         private SkillData destroySkill;
-        
+
         private readonly WaitForSeconds massResetWaitTime = new(2);
         #endregion
         
         #region Properties
         public static SkillController Instance { get; private set; }
         public ReadOnlyDictionary<Skill, uint> SkillPointRequirementsMap { get; private set; }
+        public float ShootForceMultiplier => this.shootForceMultiplier;
         #endregion
 
         #region Methods
@@ -223,7 +225,7 @@ namespace Watermelon_Game.Skills
                     
             PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
             
-            Destroy(_FruitBehaviour.gameObject);
+            _FruitBehaviour.Destroy();
                     
             // Nothing has to be spawned after a melon is evolved
             if (_fruitIndex != (int)Fruit.Fruit.Grape)
@@ -235,7 +237,7 @@ namespace Watermelon_Game.Skills
 
         public void Skill_Destroy(FruitBehaviour _FruitBehaviour)
         {
-            Destroy(_FruitBehaviour.gameObject);
+            _FruitBehaviour.Destroy();
         }
         #endregion
     }

@@ -22,6 +22,10 @@ namespace Watermelon_Game.Fruit
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Enables the spawn weight multiplier based on the given previous fruit
+        /// </summary>
+        /// <param name="_PreviousFruit">Previous fruit spawn</param>
         public void SetWeightMultiplier(Fruit _PreviousFruit)
         {
             this.fruits.ForEach(_Fruit => _Fruit.ResetWeightMultiplier());
@@ -32,10 +36,10 @@ namespace Watermelon_Game.Fruit
             {
                 this.fruits[_index - 1].SpawnWeightMultiplier = true;
             }
-            if (_index + 1 <= this.fruits.Count - 1)
-            {
-                this.fruits[_index + 1].SpawnWeightMultiplier = true;
-            }
+            // if (_index + 1 <= this.fruits.Count - 1)
+            // {
+            //     this.fruits[_index + 1].SpawnWeightMultiplier = true;
+            // }
 
             this.fruits[_index].SpawnWeightMultiplier = true;
         }
