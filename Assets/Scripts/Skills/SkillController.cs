@@ -22,8 +22,8 @@ namespace Watermelon_Game.Skills
         [SerializeField] private GameObject evolve;
         [SerializeField] private GameObject destroy;
         [SerializeField] private uint powerPointsRequirement = 10;
-        [SerializeField] private uint evolvePointsRequirement = 20;
-        [SerializeField] private uint destroyPointsRequirement = 30;
+        [SerializeField] private uint evolvePointsRequirement = 100;
+        [SerializeField] private uint destroyPointsRequirement = 100;
         [SerializeField] private float powerSkillForce = 10000f;
         [SerializeField] private float powerSkillMass = 100f;
         #endregion
