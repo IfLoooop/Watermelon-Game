@@ -19,16 +19,16 @@ MonoBehaviour:
     spawnWeight: 50
   - prefab: {fileID: 3765698940235238415, guid: ef063bf83f67d8e43b4c6b481c20a30c, type: 3}
     fruit: 1
-    spawnWeight: 40
+    spawnWeight: 50
   - prefab: {fileID: 3765698940235238415, guid: 3a70dc2acf2beb04eb0ec076d73e54b2, type: 3}
     fruit: 2
-    spawnWeight: 30
+    spawnWeight: 50
   - prefab: {fileID: 3765698940235238415, guid: 41cbf90fed534094c95896d43de6bda1, type: 3}
     fruit: 3
-    spawnWeight: 20
+    spawnWeight: 30
   - prefab: {fileID: 3765698940235238415, guid: 83c687289f8349642b7cf3bf9605f917, type: 3}
     fruit: 4
-    spawnWeight: 10
+    spawnWeight: 25
   - prefab: {fileID: 3765698940235238415, guid: e56a745a8255a504fb383a45bc779ee2, type: 3}
     fruit: 5
     spawnWeight: 5
@@ -38,8 +38,11 @@ MonoBehaviour:
   - prefab: {fileID: 3765698940235238415, guid: 1119e90d45d79fd4780e7cfd4ffce4c8, type: 3}
     fruit: 7
     spawnWeight: 0
-  - prefab: {fileID: 3765698940235238415, guid: e0a7c1dfd1c7357429b65bcfb535c09d, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: a690f9cd3ed648448b3a3acbb0150bb4, type: 3}
     fruit: 8
     spawnWeight: 0
+  - prefab: {fileID: 3765698940235238415, guid: e0a7c1dfd1c7357429b65bcfb535c09d, type: 3}
+    fruit: 9
+    spawnWeight: 0
   goldenFruitPrefab: {fileID: 8771331538938211563, guid: e11c03ec9fd886f45aca3d7c8942fefe, type: 3}
-  goldenFruitChance: 1
+  goldenFruitChance: 0.1

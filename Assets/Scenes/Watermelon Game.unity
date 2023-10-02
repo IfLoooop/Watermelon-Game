@@ -189,7 +189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6410501513459255993, guid: fc1464c01cd556746988750ebb5859cf, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6838497466586388608, guid: fc1464c01cd556746988750ebb5859cf, type: 3}
       propertyPath: m_Enabled
@@ -512,10 +512,6 @@ PrefabInstance:
     - target: {fileID: 6988503501926244752, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_Offset.y
       value: -3.2593458
-      objectReference: {fileID: 0}
-    - target: {fileID: 7548692760508066968, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
-      propertyPath: forceEnableSkills
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7655928294371341779, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_CameraType

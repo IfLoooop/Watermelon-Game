@@ -14,15 +14,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4946083969665849143, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Color.b
-      value: 0
+      value: 0.2509804
       objectReference: {fileID: 0}
     - target: {fileID: 4946083969665849143, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Color.g
-      value: 0.5019608
+      value: 0.6745098
       objectReference: {fileID: 0}
     - target: {fileID: 4946083969665849143, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 0.8784314
       objectReference: {fileID: 0}
     - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_LocalScale.x
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7913849676234949797, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Name
-      value: 8_Melon
+      value: 7_Banana 1
       objectReference: {fileID: 0}
     - target: {fileID: 8630753985610350245, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Mass

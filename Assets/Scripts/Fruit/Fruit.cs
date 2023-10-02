@@ -13,6 +13,7 @@ namespace Watermelon_Game.Fruit
         Apple = 5,
         Pear = 6,
         Banana = 7,
-        Melon = 8
+        Pineapple = 8,
+        Melon = 9
     }
 }

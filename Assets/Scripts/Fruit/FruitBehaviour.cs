@@ -19,7 +19,8 @@ namespace Watermelon_Game.Fruit
         #region Fields
         private new Rigidbody2D rigidbody2D;
         private BlockRelease blockRelease;
-
+        
+        private bool hasBeenEvolved;
         private bool isGoldenFruit;
         #endregion
 
@@ -76,6 +77,11 @@ namespace Watermelon_Game.Fruit
 
         private void GoldenFruit()
         {
+            if (this.hasBeenEvolved)
+            {
+                return;
+            }
+            
             var _maxNumber = (int)(100 / GameController.Instance.FruitCollection.GoldenFruitChance); 
             var _numberToGet = Random.Range(1, _maxNumber);
             var _randomNumber = Random.Range(1, _maxNumber);
@@ -133,11 +139,13 @@ namespace Watermelon_Game.Fruit
         /// </summary>
         /// <param name="_Position">Where to spawn the fruit</param>
         /// <param name="_Fruit">The <see cref="Watermelon_Game.Fruit.Fruit"/> to spawn</param>
-        public static void SpawnFruit(Vector2 _Position, Fruit _Fruit)
+        /// <param name="_Evolve">Is the fruit being evolved ot a regular spawn</param>
+        public static void SpawnFruit(Vector2 _Position, Fruit _Fruit, bool _Evolve)
         {
             var _fruitData = GameController.Instance.FruitCollection.Fruits.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity).GetComponent<FruitBehaviour>();
 
+            _fruitBehavior.hasBeenEvolved = _Evolve;
             _fruitBehavior.InitializeRigidBody();
         }
         

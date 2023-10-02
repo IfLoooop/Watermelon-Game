@@ -16,14 +16,14 @@ namespace Watermelon_Game.Fruit
         [SerializeField] private List<FruitData> fruits = new();
         [SerializeField] private GameObject goldenFruitPrefab;
         [Tooltip("Chance for a Golden Fruit in %")]
-        [SerializeField] private uint goldenFruitChance = 1;
+        [SerializeField] private float goldenFruitChance = 0.1f;
         #endregion
 
         #region Properties
         public int SpawnWeightDecrease => this.spawnWeightDecrease;
         public ReadOnlyCollection<FruitData> Fruits => this.fruits.AsReadOnly();
         public GameObject GoldenFruitPrefab => this.goldenFruitPrefab;
-        public uint GoldenFruitChance => this.goldenFruitChance;
+        public float GoldenFruitChance => this.goldenFruitChance;
         #endregion
 
         #region Methods

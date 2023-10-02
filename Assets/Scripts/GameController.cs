@@ -98,7 +98,7 @@ namespace Watermelon_Game
                     if (_fruitIndex != (int)Fruit.Fruit.Melon)
                     {
                         var _fruit = Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
-                        FruitBehaviour.SpawnFruit(_position, _fruit);
+                        FruitBehaviour.SpawnFruit(_position, _fruit, true);
                     }
                 }
             }
