@@ -51,6 +51,22 @@ namespace Watermelon_Game
         {
             fruits.Add(_FruitBehaviour.gameObject.GetHashCode(), _FruitBehaviour);
         }
+
+        public static void GoldenFruitCollision(int _Fruit)
+        {
+            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
+
+            if (_fruit != null)
+            {
+                fruits.Remove(_Fruit);
+                
+                var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit.Fruit);
+                    
+                PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
+                
+                _fruit.Destroy();
+            }
+        }
         
         /// <summary>
         /// Determines what happens when two fruits collide with each other
@@ -70,7 +86,7 @@ namespace Watermelon_Game
                     fruits.Remove(_Fruit2);
 
                     var _position = (_fruit1.transform.position + _fruit2.transform.position) / 2;
-                    var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit1.Fruit + 1);
+                    var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit1.Fruit);
                     
                     PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
                     
@@ -79,9 +95,9 @@ namespace Watermelon_Game
                     _fruit2.Destroy();
                     
                     // Nothing has to be spawned after a melon is evolved
-                    if (_fruitIndex != (int)Fruit.Fruit.Grape)
+                    if (_fruitIndex != (int)Fruit.Fruit.Melon)
                     {
-                        var _fruit = Instance.FruitCollection.Fruits[_fruitIndex].Fruit;
+                        var _fruit = Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
                         FruitBehaviour.SpawnFruit(_position, _fruit);
                     }
                 }
@@ -120,7 +136,7 @@ namespace Watermelon_Game
 
         public static void StartGame()
         {
-            FruitSpawner.Instance.Reset();
+            FruitSpawner.Instance.Reset(true);
             FruitSpawnerAim.Enable(true);
             PointsController.Instance.ResetPoints();
         }

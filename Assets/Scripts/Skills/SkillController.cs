@@ -219,18 +219,17 @@ namespace Watermelon_Game.Skills
 
         public void Skill_Evolve(FruitBehaviour _FruitBehaviour)
         {
-            // TODO: Either add some force or remove the rotation  during this skill
             var _position = _FruitBehaviour.transform.position;
-            var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _FruitBehaviour.Fruit + 1);
+            var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _FruitBehaviour.Fruit);
                     
             PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
             
             _FruitBehaviour.Destroy();
                     
             // Nothing has to be spawned after a melon is evolved
-            if (_fruitIndex != (int)Fruit.Fruit.Grape)
+            if (_fruitIndex != (int)Fruit.Fruit.Melon)
             {
-                var _fruit = GameController.Instance.FruitCollection.Fruits[_fruitIndex].Fruit;
+                var _fruit = GameController.Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
                 FruitBehaviour.SpawnFruit(_position, _fruit);
             }
         }

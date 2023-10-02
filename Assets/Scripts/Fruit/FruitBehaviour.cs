@@ -1,5 +1,6 @@
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Skills;
 using Random = UnityEngine.Random;
@@ -18,6 +19,8 @@ namespace Watermelon_Game.Fruit
         #region Fields
         private new Rigidbody2D rigidbody2D;
         private BlockRelease blockRelease;
+
+        private bool isGoldenFruit;
         #endregion
 
         #region Properties
@@ -35,12 +38,18 @@ namespace Watermelon_Game.Fruit
         private void OnEnable()
         {
             GameController.AddFruit(this);
+            this.GoldenFruit();
         }
 
         private void OnCollisionEnter2D(Collision2D _Other)
         {
             if (_Other.gameObject.layer == LayerMask.NameToLayer("Fruit")) 
             {
+                if (this.isGoldenFruit)
+                {
+                    GameController.GoldenFruitCollision(_Other.gameObject.GetHashCode());
+                    return;
+                }
                 if (this.ActiveSkill is Skill.Evolve)
                 {
                     this.DeactivateSkill();
@@ -56,9 +65,31 @@ namespace Watermelon_Game.Fruit
                 
                 GameController.FruitCollision(this.gameObject.GetHashCode(), _Other.gameObject.GetHashCode());
             }
-            
+            else if (this.isGoldenFruit)
+            {
+                if (_Other.gameObject.CompareTag("Wall Bottom"))
+                {
+                    GameController.GoldenFruitCollision(this.gameObject.GetHashCode());
+                }
+            }
         }
 
+        private void GoldenFruit()
+        {
+            var _maxNumber = (int)(100 / GameController.Instance.FruitCollection.GoldenFruitChance); 
+            var _numberToGet = Random.Range(1, _maxNumber);
+            var _randomNumber = Random.Range(1, _maxNumber);
+
+            if (_numberToGet == _randomNumber)
+            {
+                this.isGoldenFruit = true;
+                var _goldenFruitPrefab = Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, this.rigidbody2D.position, Quaternion.identity, this.transform);
+                var _light2D = _goldenFruitPrefab.GetComponentInChildren<Light2D>();
+
+                _light2D.pointLightOuterRadius = this.transform.localScale.x / 2;
+            }
+        }
+        
         /// <summary>
         /// Drops the <see cref="Fruit"/> from the <see cref="FruitSpawner"/>
         /// </summary>

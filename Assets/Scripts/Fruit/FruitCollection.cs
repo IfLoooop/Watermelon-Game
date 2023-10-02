@@ -12,13 +12,18 @@ namespace Watermelon_Game.Fruit
     {
         #region Inspector Fields
         // TODO: Maybe use a different spawn weight for each individual fruit
-        [SerializeField] private int spawnWeightMultiplier = 25;
+        [SerializeField] private int spawnWeightDecrease = 25;
         [SerializeField] private List<FruitData> fruits = new();
+        [SerializeField] private GameObject goldenFruitPrefab;
+        [Tooltip("Chance for a Golden Fruit in %")]
+        [SerializeField] private uint goldenFruitChance = 1;
         #endregion
 
         #region Properties
-        public int SpawnWeightMultiplier => this.spawnWeightMultiplier;
+        public int SpawnWeightDecrease => this.spawnWeightDecrease;
         public ReadOnlyCollection<FruitData> Fruits => this.fruits.AsReadOnly();
+        public GameObject GoldenFruitPrefab => this.goldenFruitPrefab;
+        public uint GoldenFruitChance => this.goldenFruitChance;
         #endregion
 
         #region Methods
@@ -34,14 +39,14 @@ namespace Watermelon_Game.Fruit
 
             if (_index - 1 >= 0)
             {
-                this.fruits[_index - 1].SpawnWeightMultiplier = true;
+                this.fruits[_index - 1].SpawnWeightDecrease = true;
             }
             // if (_index + 1 <= this.fruits.Count - 1)
             // {
             //     this.fruits[_index + 1].SpawnWeightMultiplier = true;
             // }
 
-            this.fruits[_index].SpawnWeightMultiplier = true;
+            this.fruits[_index].SpawnWeightDecrease = true;
         }
         #endregion
     }

@@ -54,7 +54,7 @@ namespace Watermelon_Game.Fruit_Spawn
         private void Start()
         {
             this.startingPosition = this.transform.position;
-            this.Reset();
+            this.Reset(true);
         }
 
         private void Update()
@@ -108,16 +108,18 @@ namespace Watermelon_Game.Fruit_Spawn
             
             SkillController.Instance.DeactivateActiveSkill(true);
             
-            this.Reset();
+            this.Reset(false);
         }
 
         /// <summary>
         /// Resets the Fruit Spawner to its original position
         /// </summary>
-        public void Reset()
+        /// <param name="_ResetPosition">If true, resets the <see cref="FruitSpawner"/> position to <see cref="startingPosition"/></param>
+        public void Reset(bool _ResetPosition)
         {
             this.BlockInput = true;
-            this.rigidbody2D.MovePosition(this.startingPosition);
+            if (_ResetPosition)
+                this.rigidbody2D.MovePosition(this.startingPosition);
             this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform, this.lastFruit);
             this.lastFruit = fruitBehaviour.Fruit;
             boxCollider2D.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, boxCollider2D.size.y);

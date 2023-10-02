@@ -18,22 +18,22 @@ namespace Watermelon_Game.Fruit
         #region Properties
         public GameObject Prefab => this.prefab;
         public Fruit Fruit => this.fruit;
-        public bool SpawnWeightMultiplier { get; set; }
+        public bool SpawnWeightDecrease { get; set; }
         #endregion
 
         #region Methods
         public void ResetWeightMultiplier()
         {
-            this.SpawnWeightMultiplier = false;
+            this.SpawnWeightDecrease = false;
         }
 
         public int GetSpawnWeight()
         {
             var _spawnWeight = this.spawnWeight;
 
-            if (this.SpawnWeightMultiplier)
+            if (this.SpawnWeightDecrease)
             {
-                _spawnWeight = Mathf.Clamp(_spawnWeight - GameController.Instance.FruitCollection.SpawnWeightMultiplier, 0, int.MaxValue);
+                _spawnWeight = Mathf.Clamp(_spawnWeight - GameController.Instance.FruitCollection.SpawnWeightDecrease, 0, int.MaxValue);
             }
 
             return _spawnWeight;
