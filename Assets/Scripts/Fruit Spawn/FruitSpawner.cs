@@ -32,7 +32,7 @@ namespace Watermelon_Game.Fruit_Spawn
         #endregion
 
         #region Properties
-        public static FruitSpawner Instance { get; set; }
+        public static FruitSpawner Instance { get; private set; }
         /// <summary>
         /// Blocks movement input while this field is set to true
         /// </summary>
@@ -92,6 +92,7 @@ namespace Watermelon_Game.Fruit_Spawn
         private void ReleaseFruit()
         {
             this.BlockRelease = true;
+            FruitSpawnerAim.Enable(false);
             this.fruitBehaviour.transform.SetParent(null, true);
             this.fruitBehaviour.Release(this, -this.transform.up);
 
@@ -122,7 +123,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 this.rigidbody2D.MovePosition(this.startingPosition);
             this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform, this.lastFruit);
             this.lastFruit = fruitBehaviour.Fruit;
-            boxCollider2D.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, boxCollider2D.size.y);
+            this.boxCollider2D.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, this.boxCollider2D.size.y);
             this.BlockInput = false;
         }
         

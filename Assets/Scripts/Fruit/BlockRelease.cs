@@ -20,6 +20,7 @@ namespace Watermelon_Game.Fruit
             if (this.FruitSpawner is {} _fruitSpawner)
             {
                 _fruitSpawner.BlockRelease = false;
+                FruitSpawnerAim.Enable(true);
             }
 
             Destroy(this);

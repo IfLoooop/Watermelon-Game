@@ -10,8 +10,8 @@ namespace Watermelon_Game.Skills
     {
         #region Fields
         private readonly TextMeshProUGUI textMeshPro;
-        private readonly SpriteRenderer enabledSpriteRenderer;
-        private readonly SpriteRenderer activeSpriteRenderer;
+        private readonly SpriteRenderer buttonSpriteRenderer;
+        private readonly SpriteRenderer skillIconSpriteRenderer;
         #endregion
 
         #region Fields
@@ -25,11 +25,11 @@ namespace Watermelon_Game.Skills
         #endregion
 
         #region Constrcutor
-        public SkillData(TextMeshProUGUI _TextMeshPro, SpriteRenderer _EnabledSpriteRenderer, SpriteRenderer _ActiveSpriteRenderer, KeyCode _KeyToActivate, Skill _Skill)
+        public SkillData(TextMeshProUGUI _TextMeshPro, SpriteRenderer _ButtonSpriteRenderer, SpriteRenderer _SkillIconSpriteRenderer, KeyCode _KeyToActivate, Skill _Skill)
         {
             this.textMeshPro = _TextMeshPro;
-            this.enabledSpriteRenderer = _EnabledSpriteRenderer;
-            this.activeSpriteRenderer = _ActiveSpriteRenderer;
+            this.buttonSpriteRenderer = _ButtonSpriteRenderer;
+            this.skillIconSpriteRenderer = _SkillIconSpriteRenderer;
             this.KeyToActivate = _KeyToActivate;
             this.skill = _Skill;
         }
@@ -51,7 +51,7 @@ namespace Watermelon_Game.Skills
         public void EnableSkill()
         {
             this.CanBeActivated = true;
-            this.enabledSpriteRenderer.color = this.enabledSpriteRenderer.color.WithAlpha(1f);
+            this.buttonSpriteRenderer.gameObject.SetActive(true);
         }
         
         /// <summary>
@@ -60,7 +60,7 @@ namespace Watermelon_Game.Skills
         public void DisableSkill()
         {
             this.CanBeActivated = false;
-            this.enabledSpriteRenderer.color = this.enabledSpriteRenderer.color.WithAlpha(.5f);
+            this.buttonSpriteRenderer.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace Watermelon_Game.Skills
         public void ActivateSkill()
         {
             this.IsActive = true;
-            this.activeSpriteRenderer.enabled = true;
+            this.skillIconSpriteRenderer.color = this.skillIconSpriteRenderer.color.WithAlpha(1);
             SkillController.Instance.SetAimRotation(true);
             FruitSpawner.SetActiveSkill(this.skill);
         }
@@ -81,7 +81,7 @@ namespace Watermelon_Game.Skills
         public void DeactivateSkill(bool _OnlyVisuals)
         {
             this.IsActive = false;
-            this.activeSpriteRenderer.enabled = false;
+            this.skillIconSpriteRenderer.color = this.skillIconSpriteRenderer.color.WithAlpha(0.5f);
             SkillController.Instance.SetAimRotation(false);
             FruitSpawner.ResetAimRotation();
             if (!_OnlyVisuals)

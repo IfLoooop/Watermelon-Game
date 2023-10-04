@@ -39,9 +39,11 @@ namespace Watermelon_Game.Fruit_Spawn
             }
             
             var _fruitBehaviour = this.fruitBehaviour!;
+            _fruitBehaviour.EnableAnimation(false);
             _fruitBehaviour.transform.SetParent(_Parent, false);
             
             this.fruitBehaviour = FruitBehaviour.SpawnFruit(_transform.position, _transform, _fruitBehaviour.Fruit);
+            this.fruitBehaviour!.EnableAnimation(true);
                 
             return _fruitBehaviour;
         }

@@ -19,7 +19,10 @@ namespace Watermelon_Game.Fruit
         #region Fields
         private new Rigidbody2D rigidbody2D;
         private BlockRelease blockRelease;
-        
+        private new Animation animation;
+        private SpriteRenderer face;
+
+        private bool isHurt;
         private bool hasBeenEvolved;
         private bool isGoldenFruit;
         #endregion
@@ -34,6 +37,8 @@ namespace Watermelon_Game.Fruit
         {
             this.rigidbody2D = this.GetComponent<Rigidbody2D>();
             this.blockRelease = this.GetComponent<BlockRelease>();
+            this.animation = this.GetComponent<Animation>();
+            this.face = this.GetComponentsInChildren<SpriteRenderer>()[1];
         }
 
         private void OnEnable()
@@ -44,7 +49,14 @@ namespace Watermelon_Game.Fruit
 
         private void OnCollisionEnter2D(Collision2D _Other)
         {
-            if (_Other.gameObject.layer == LayerMask.NameToLayer("Fruit")) 
+            if (!this.isHurt)
+            {
+                this.isHurt = true;
+                this.face.sprite = GameController.Instance.FruitCollection.FaceHurt;
+                this.Invoke(nameof(this.ResetFace), 1);
+            }
+            
+            if (_Other.gameObject.layer == LayerMask.NameToLayer("Fruit"))
             {
                 if (this.isGoldenFruit)
                 {
@@ -94,6 +106,17 @@ namespace Watermelon_Game.Fruit
 
                 _light2D.pointLightOuterRadius = this.transform.localScale.x / 2;
             }
+        }
+
+        public void EnableAnimation(bool _Value)
+        {
+            this.animation.enabled = _Value;
+        }
+        
+        private void ResetFace()
+        {
+            this.face.sprite = GameController.Instance.FruitCollection.FaceDefault;
+            this.isHurt = false;
         }
         
         /// <summary>

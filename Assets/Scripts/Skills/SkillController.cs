@@ -25,8 +25,8 @@ namespace Watermelon_Game.Skills
         [SerializeField] private uint evolvePointsRequirement = 100;
         [SerializeField] private uint destroyPointsRequirement = 100;
         [SerializeField] private float shootForceMultiplier = 100;
-        [SerializeField] private float powerSkillForce = 10000f;
-        [SerializeField] private float powerSkillMass = 100f;
+        [SerializeField] private float powerSkillForce = 30000f;
+        [SerializeField] private float powerSkillMass = 200f;
         #endregion
 
         #region Fields
@@ -89,6 +89,8 @@ namespace Watermelon_Game.Skills
         {
             var _textMeshPro = _GameObject.GetComponentInChildren<TextMeshProUGUI>();
             var _spriteRenderers = _GameObject.GetComponentsInChildren<SpriteRenderer>();
+            
+            _spriteRenderers[0].gameObject.SetActive(false);
             
             return new SkillData(_textMeshPro, _spriteRenderers[0], _spriteRenderers[1], _KeyToActivate, _Skill);
         }
