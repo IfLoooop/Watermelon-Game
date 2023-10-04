@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using Watermelon_Game.Menu;
 using Watermelon_Game.Skills;
 
 namespace Watermelon_Game
@@ -17,10 +18,6 @@ namespace Watermelon_Game
         [SerializeField] private float multiplierWaitTime = .1f;
         [SerializeField] private float pointsWaitTime = .05f;
         [SerializeField] private List<Color> multiplierColors;
-        #endregion
-
-        #region Constants
-        private const string HIGH_SCORE_KEY = "Highscore";
         #endregion
         
         #region Fields
@@ -52,7 +49,7 @@ namespace Watermelon_Game
 
         private void Start()
         {
-            this.highScore.text = PlayerPrefs.GetInt(HIGH_SCORE_KEY).ToString();
+            this.highScore.text = PlayerPrefs.GetInt(StatsMenu.BEST_SCORE_KEY).ToString();
         }
 
         public void AddPoints(Fruit.Fruit _Fruit)
@@ -98,6 +95,11 @@ namespace Watermelon_Game
             this.multiplier.text = string.Concat("x", this.currentMultiplier);
             this.multiplierBackground.color = this.GetMultiplierColor(_CurrentMultiplier);
             this.multiplier.gameObject.SetActive(true);
+
+            if (_CurrentMultiplier > StatsMenu.Instance.HighestMultiplier)
+            {
+                StatsMenu.Instance.HighestMultiplier = _CurrentMultiplier;
+            }
         }
 
         private Color GetMultiplierColor(uint _CurrentMultiplier)
@@ -114,6 +116,10 @@ namespace Watermelon_Game
             return this.multiplierColors[(int)_CurrentMultiplier - 1];
         }
         
+        /// <summary>
+        /// Adds the given points to <see cref="currentPoints"/>
+        /// </summary>
+        /// <param name="_Points">The points to add/subtract to <see cref="currentPoints"/></param>
         private void SetPoints(int _Points)
         {
             this.currentPoints = (uint)Mathf.Clamp(this.currentPoints + _Points, 0, uint.MaxValue);
@@ -162,12 +168,12 @@ namespace Watermelon_Game
 
         public void SavePoints()
         {
-            var _currentHighScore = PlayerPrefs.GetInt(HIGH_SCORE_KEY);
+            var _currentHighScore = StatsMenu.Instance.BestScore;
 
             if (this.currentPoints > _currentHighScore)
             {
-                PlayerPrefs.SetInt(HIGH_SCORE_KEY, (int)this.currentPoints);
                 this.highScore.text = this.currentPoints.ToString();
+                StatsMenu.Instance.BestScore = this.currentPoints;
             }
         }
         #endregion

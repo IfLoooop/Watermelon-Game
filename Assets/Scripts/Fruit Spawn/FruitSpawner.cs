@@ -54,7 +54,6 @@ namespace Watermelon_Game.Fruit_Spawn
         private void Start()
         {
             this.startingPosition = this.transform.position;
-            this.Reset(true);
         }
 
         private void Update()

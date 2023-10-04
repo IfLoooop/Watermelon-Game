@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.Menu;
 
 namespace Watermelon_Game.Skills
 {
@@ -201,6 +202,8 @@ namespace Watermelon_Game.Skills
             _Rigidbody.mass = this.powerSkillMass;
             _Rigidbody.AddForce(_Direction * this.powerSkillForce, ForceMode2D.Impulse);
             StartCoroutine(this.ResetMass(_Rigidbody, _previousMass));
+            
+            StatsMenu.Instance.AddSkillCount(Skill.Power);
         }
 
         /// <summary>
@@ -234,11 +237,15 @@ namespace Watermelon_Game.Skills
                 var _fruit = GameController.Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
                 FruitBehaviour.SpawnFruit(_position, _fruit, true);
             }
+            
+            StatsMenu.Instance.AddSkillCount(Skill.Evolve);
         }
 
         public void Skill_Destroy(FruitBehaviour _FruitBehaviour)
         {
             _FruitBehaviour.Destroy();
+            
+            StatsMenu.Instance.AddSkillCount(Skill.Destroy);
         }
         #endregion
     }

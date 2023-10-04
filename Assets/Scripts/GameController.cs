@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.Menu;
 using Watermelon_Game.Skills;
 
 namespace Watermelon_Game
@@ -21,6 +22,8 @@ namespace Watermelon_Game
         /// <b>Value:</b> The <see cref="FruitBehaviour"/>
         /// </summary>
         private static readonly Dictionary<int, FruitBehaviour> fruits = new();
+
+        private bool gameOver;
         #endregion
 
         #region Properties
@@ -34,12 +37,16 @@ namespace Watermelon_Game
             Instance = this;
         }
 
+        private void Start()
+        {
+            this.StartGame();
+        }
+
         private void Update()
         {
-            // TODO: Make better
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (this.gameOver && Input.GetKeyDown(KeyCode.Escape))
             {
-                StartGame();
+                this.StartGame();
             }
         }
 
@@ -89,6 +96,7 @@ namespace Watermelon_Game
                     var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit1.Fruit);
                     
                     PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
+                    StatsMenu.Instance.AddFruitCount(_fruit1.Fruit);
                     
                     //TODO: Move towards each other before destroying
                     _fruit1.Destroy();
@@ -134,15 +142,18 @@ namespace Watermelon_Game
             }
         }
 
-        public static void StartGame()
+        public void StartGame()
         {
+            Instance.gameOver = false;
             FruitSpawner.Instance.Reset(true);
             FruitSpawnerAim.Enable(true);
             PointsController.Instance.ResetPoints();
+            StatsMenu.Instance.GamesPlayed++;
         }
         
         public static void GameOver()
         {
+            Instance.gameOver = true;
             FruitSpawner.Instance.BlockInput = true;
             FruitSpawnerAim.Enable(false);
 
@@ -155,6 +166,9 @@ namespace Watermelon_Game
             fruits.Clear();
             
             PointsController.Instance.SavePoints();
+            PointsController.Instance.ResetPoints();
+            // Needed for the SkillController.PointsChanged() method to be called
+            PointsController.Instance.SubtractPoints(0);
         }
         #endregion
     }
