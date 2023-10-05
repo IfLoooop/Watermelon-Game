@@ -246,8 +246,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1083308635195472788}
   m_HandleRect: {fileID: 6506451581332522111}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.39823008
+  m_Value: 0.9999998
+  m_Size: 0.39823005
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -374,6 +374,7 @@ GameObject:
   - component: {fileID: 9184640279367002319}
   - component: {fileID: 8605949554976592890}
   - component: {fileID: 8059456538153881697}
+  - component: {fileID: 586601995666149936}
   m_Layer: 5
   m_Name: Menu Scroll View
   m_TagString: Untagged
@@ -391,7 +392,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 504836748971596618}
   - {fileID: 7569634038961854834}
@@ -470,3 +471,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!111 &586601995666149936
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7877173066597943378}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: f356053dc9cd1204f9c0beaf1d98cb59, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: f356053dc9cd1204f9c0beaf1d98cb59, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0

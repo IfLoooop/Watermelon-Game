@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using Watermelon_Game.ExtensionMethods;
 
 namespace Watermelon_Game.Menu
 {
@@ -29,6 +30,7 @@ namespace Watermelon_Game.Menu
                 this.SetActive(_PreviousMenu);
             }
             
+            MenuController.Instance.AudioSource.Play(MenuController.Instance.AudioClipStartTime);
             var _active = this.SetActive(this);
 
             return _active ? this : null;

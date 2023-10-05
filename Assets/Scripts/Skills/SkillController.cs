@@ -34,6 +34,7 @@ namespace Watermelon_Game.Skills
         private SkillData powerSkill;
         private SkillData evolveSkill;
         private SkillData destroySkill;
+        private AudioSource audioSource;
 
         private readonly WaitForSeconds massResetWaitTime = new(2);
         #endregion
@@ -52,6 +53,7 @@ namespace Watermelon_Game.Skills
             this.powerSkill = InitializeSkill(this.power, KeyCode.Alpha1, Skill.Power);
             this.evolveSkill = InitializeSkill(this.evolve, KeyCode.Alpha2, Skill.Evolve);
             this.destroySkill = InitializeSkill(this.destroy, KeyCode.Alpha3, Skill.Destroy);
+            this.audioSource = this.GetComponent<AudioSource>();
 
             this.SkillPointRequirementsMap = new ReadOnlyDictionary<Skill, uint>(new Dictionary<Skill, uint>
             {
@@ -141,6 +143,8 @@ namespace Watermelon_Game.Skills
         {
             if (Input.GetKeyDown(_SkillToActivate.KeyToActivate) && _SkillToActivate.CanBeActivated)
             {
+                this.audioSource.Play();
+                
                 if (!_SkillToActivate.IsActive)
                 {
                     this.DeactivateActiveSkill(false);
@@ -224,13 +228,16 @@ namespace Watermelon_Game.Skills
 
         public void Skill_Evolve(FruitBehaviour _FruitBehaviour)
         {
+            // TODO: Combine this method with the "FruitCollision()"-method in "GameController.cs" 
+            
             var _position = _FruitBehaviour.transform.position;
             var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _FruitBehaviour.Fruit);
                     
             PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
+            GameController.Instance.FruitCollection.PlayEvolveSound();
             
             _FruitBehaviour.Destroy();
-                    
+            
             // Nothing has to be spawned after a melon is evolved
             if (_fruitIndex != (int)Fruit.Fruit.Melon)
             {

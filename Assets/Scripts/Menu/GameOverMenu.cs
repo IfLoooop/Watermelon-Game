@@ -1,5 +1,4 @@
 using System;
-using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
@@ -62,7 +61,7 @@ namespace Watermelon_Game.Menu
             // About to open
             else
             {
-                var _currentGameDuration = Time.time - GameController.Instance.currentGameTimeStamp;
+                var _currentGameDuration = Time.time - GameController.Instance.CurrentGameTimeStamp;
                 this.Duration = this.Duration.Add(TimeSpan.FromSeconds(_currentGameDuration));
             }
             

@@ -8,21 +8,27 @@ namespace Watermelon_Game.Menu
         #region Inspector Fields
         [SerializeField] private StatsMenu statsMenu;
         [SerializeField] private GameOverMenu gameOverMenu;
+        [SerializeField] private float audioClipStartTime = .1f;
         #endregion
 
         #region Fields
+        private AudioSource audioSource;
         [CanBeNull] private MenuBase previousActiveMenu;
         #endregion
 
         #region Properties
         public static MenuController Instance { get; private set; }
+
+        public AudioSource AudioSource => this.audioSource;
+        public float AudioClipStartTime => this.audioClipStartTime;
         #endregion
         
         #region Methods
         private void Awake()
         {
             Instance = this;
-            
+
+            this.audioSource = this.GetComponent<AudioSource>();
             this.InitializeMenu(this.statsMenu);
             this.InitializeMenu(this.gameOverMenu);
         }

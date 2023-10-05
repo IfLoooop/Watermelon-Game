@@ -41,7 +41,7 @@ namespace Watermelon_Game.Fruit
             this.face = this.GetComponentsInChildren<SpriteRenderer>()[1];
         }
 
-        private void OnEnable()
+        private void Start()
         {
             GameController.AddFruit(this);
             this.GoldenFruit();
@@ -89,7 +89,7 @@ namespace Watermelon_Game.Fruit
 
         private void GoldenFruit()
         {
-            if (this.hasBeenEvolved)
+            if (this.hasBeenEvolved || GameController.GetFruitCount() < GameController.Instance.FruitCollection.CanSpawnAfter)
             {
                 return;
             }
@@ -162,7 +162,7 @@ namespace Watermelon_Game.Fruit
         /// </summary>
         /// <param name="_Position">Where to spawn the fruit</param>
         /// <param name="_Fruit">The <see cref="Watermelon_Game.Fruit.Fruit"/> to spawn</param>
-        /// <param name="_Evolve">Is the fruit being evolved ot a regular spawn</param>
+        /// <param name="_Evolve">Is the fruit being evolved or is it a regular spawn</param>
         public static void SpawnFruit(Vector2 _Position, Fruit _Fruit, bool _Evolve)
         {
             var _fruitData = GameController.Instance.FruitCollection.Fruits.First(_FruitData => _FruitData.Fruit == _Fruit);

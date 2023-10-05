@@ -65,7 +65,6 @@ namespace Watermelon_Game.Menu
         }
         public TimeSpan TimeSpendInGame
         {
-            get => this.timeSpendInGame;
             set
             {
                 this.timeSpendInGame = value;
@@ -91,11 +90,11 @@ namespace Watermelon_Game.Menu
         {
             var _timeSpendInGame = new TimeSpan().Add(this.timeSpendInGame).Add(TimeSpan.FromSeconds(_Seconds));
 
-            if (this.timeSpendInGame.Hours > 0)
+            if (_timeSpendInGame.Hours > 0)
             {
                 this.stats.SetText1(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Hours, "h"));
             }
-            else if (this.timeSpendInGame.Minutes > 0)
+            else if (_timeSpendInGame.Minutes > 0)
             {
                 this.stats.SetText1(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Minutes, "min"));
             }

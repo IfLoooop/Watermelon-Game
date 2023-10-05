@@ -13,6 +13,7 @@ namespace Watermelon_Game
         private Animation borderLineAnimation;
         private Animation countdownAnimation;
         private TextMeshProUGUI countdownText;
+        private AudioSource audioSource;
         
         /// <summary>
         /// How many fruits are currently inside the trigger
@@ -24,9 +25,10 @@ namespace Watermelon_Game
         #region Methods
         private void Awake()
         {
-            this.borderLineAnimation = GetComponentInChildren<SpriteRenderer>().gameObject.GetComponent<Animation>();
-            this.countdownAnimation = GetComponent<Animation>();
-            this.countdownText = GetComponentInChildren<TextMeshProUGUI>();
+            this.borderLineAnimation = this.GetComponentInChildren<SpriteRenderer>().gameObject.GetComponent<Animation>();
+            this.countdownAnimation = this.GetComponent<Animation>();
+            this.countdownText = this.GetComponentInChildren<TextMeshProUGUI>();
+            this.audioSource = this.GetComponent<AudioSource>();
         }
 
         private void Start()
@@ -73,6 +75,11 @@ namespace Watermelon_Game
                 this.Reset();
                 GameController.GameOver();
             }
+
+            if (this.countdownText.enabled)
+            {
+                this.audioSource.Play();
+            }
         }
 
         private void Reset()
@@ -81,6 +88,7 @@ namespace Watermelon_Game
             this.countdownText.enabled = false;
             this.countdownAnimation.enabled = false;
             this.countdownAnimation.Rewind();
+            this.audioSource.Stop();
         }
         #endregion
     }

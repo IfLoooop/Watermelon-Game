@@ -44,6 +44,7 @@ MonoBehaviour:
   - prefab: {fileID: 3765698940235238415, guid: e0a7c1dfd1c7357429b65bcfb535c09d, type: 3}
     fruit: 9
     spawnWeight: 0
+  evolveSoundPrefab: {fileID: 2838837543315173791, guid: ee74dfb7e36e83f43aafcb448ce2a466, type: 3}
   goldenFruitPrefab: {fileID: 8771331538938211563, guid: e11c03ec9fd886f45aca3d7c8942fefe, type: 3}
   goldenFruitChance: 0.1
   faceDefault: {fileID: 21300000, guid: fd14006210195164fbf4ebb1bdc01efb, type: 3}

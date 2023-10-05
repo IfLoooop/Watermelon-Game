@@ -28,7 +28,7 @@ namespace Watermelon_Game
         public static GameController Instance { get; private set; }
         
         public FruitCollection FruitCollection => this.fruitCollection;
-        public float currentGameTimeStamp;
+        public float CurrentGameTimeStamp { get; private set; }
         #endregion
         
         #region Methods
@@ -74,6 +74,8 @@ namespace Watermelon_Game
         /// <param name="_Fruit2">HashCode of the second fruit</param>
         public static void FruitCollision(int _Fruit1, int _Fruit2)
         {
+            // TODO: Combine this method with the "Skill_Evolve()"-method in "SkillController.cs"
+            
             var _fruit1 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit1).Value;
             var _fruit2 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit2).Value;
 
@@ -89,6 +91,7 @@ namespace Watermelon_Game
                     
                     PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
                     GameOverMenu.Instance.AddFruitCount(_fruit1.Fruit);
+                    Instance.FruitCollection.PlayEvolveSound();
                     
                     //TODO: Move towards each other before destroying
                     _fruit1.Destroy();
@@ -140,7 +143,7 @@ namespace Watermelon_Game
             FruitSpawnerAim.Enable(true);
             PointsController.Instance.ResetPoints();
             StatsMenu.Instance.GamesPlayed++;
-            Instance.currentGameTimeStamp = Time.time;
+            Instance.CurrentGameTimeStamp = Time.time;
         }
         
         public static void GameOver()
@@ -148,7 +151,7 @@ namespace Watermelon_Game
             FruitSpawner.Instance.BlockInput = true;
             FruitSpawnerAim.Enable(false);
 
-            // TODO: Destroy all fruit in a coroutine over time
+            // TODO: Destroy all fruits in a coroutine over time
             foreach (var _fruitBehaviour in fruits.Values)
             {
                 _fruitBehaviour.Destroy();
@@ -161,6 +164,16 @@ namespace Watermelon_Game
             // Needed for the SkillController.PointsChanged() method to be called
             PointsController.Instance.SubtractPoints(0);
             MenuController.Instance.GameOver();
+        }
+
+        /// <summary>
+        /// Gets the current count of all fruits on the map <br/>
+        /// <i>Doesn't count the fruit on the <see cref="FruitSpawner"/> and <see cref="NextFruit"/></i>
+        /// </summary>
+        /// <returns>Returns the current count of all fruits on the map</returns>
+        public static int GetFruitCount()
+        {
+            return fruits.Count - 2;
         }
         #endregion
     }

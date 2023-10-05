@@ -1,5 +1,6 @@
 using Unity.Mathematics;
 using UnityEngine;
+using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Skills;
 
@@ -11,11 +12,17 @@ namespace Watermelon_Game.Fruit_Spawn
         [SerializeField] private float movementSpeed = 30f;
         [SerializeField] private float rotationStep = 50f;
         [SerializeField] private float maxRotationAngle = 60f;
+        [SerializeField] private AudioClip release;
+        [SerializeField] private float releaseClipVolume = .01f;
+        [SerializeField] private AudioClip shoot;
+        [SerializeField] private float shootClipStartTime = .1f;
+        [SerializeField] private float shootClipVolume = .05f;
         #endregion
         
         #region Fields
         private new Rigidbody2D rigidbody2D;
         private BoxCollider2D boxCollider2D;
+        private AudioSource audioSource;
         
         /// <summary>
         /// Uses the position the GameObject has at start of game <br/>
@@ -47,8 +54,10 @@ namespace Watermelon_Game.Fruit_Spawn
         private void Awake()
         {
             Instance = this;
+            
             this.rigidbody2D = this.GetComponent<Rigidbody2D>();
             this.boxCollider2D = this.GetComponent<BoxCollider2D>();
+            this.audioSource = this.GetComponent<AudioSource>();
         }
 
         private void Start()
@@ -87,7 +96,7 @@ namespace Watermelon_Game.Fruit_Spawn
 
             this.rigidbody2D.AddForce(_direction);
         }
-
+        
         private void ReleaseFruit()
         {
             this.BlockRelease = true;
@@ -97,6 +106,8 @@ namespace Watermelon_Game.Fruit_Spawn
 
             if (this.fruitBehaviour.ActiveSkill != null)
             {
+                this.audioSource.Play(this.shootClipStartTime, this.shoot, this.shootClipVolume);
+                
                 var _value = SkillController.Instance.SkillPointRequirementsMap[this.fruitBehaviour.ActiveSkill.Value];
                 PointsController.Instance.SubtractPoints(_value);
 
@@ -104,6 +115,10 @@ namespace Watermelon_Game.Fruit_Spawn
                 {
                     this.fruitBehaviour.Shoot(-this.transform.up);
                 }
+            }
+            else
+            {
+                this.audioSource.Play(0, this.release, this.releaseClipVolume);
             }
             
             SkillController.Instance.DeactivateActiveSkill(true);
