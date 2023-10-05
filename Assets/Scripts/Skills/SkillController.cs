@@ -23,8 +23,8 @@ namespace Watermelon_Game.Skills
         [SerializeField] private GameObject evolve;
         [SerializeField] private GameObject destroy;
         [SerializeField] private uint powerPointsRequirement = 25;
-        [SerializeField] private uint evolvePointsRequirement = 100;
-        [SerializeField] private uint destroyPointsRequirement = 100;
+        [SerializeField] private uint evolvePointsRequirement = 50;
+        [SerializeField] private uint destroyPointsRequirement = 50;
         [SerializeField] private float shootForceMultiplier = 100;
         [SerializeField] private float powerSkillForce = 30000f;
         [SerializeField] private float powerSkillMass = 200f;
@@ -66,7 +66,7 @@ namespace Watermelon_Game.Skills
             this.powerSkill.SetSkillPointRequirements(this.powerPointsRequirement);
             this.evolveSkill.SetSkillPointRequirements(this.evolvePointsRequirement);
             this.destroySkill.SetSkillPointRequirements(this.destroyPointsRequirement);
-
+            
 #if UNITY_EDITOR
             if (this.forceEnableSkills)
             {
@@ -203,7 +203,7 @@ namespace Watermelon_Game.Skills
             _Rigidbody.AddForce(_Direction * this.powerSkillForce, ForceMode2D.Impulse);
             StartCoroutine(this.ResetMass(_Rigidbody, _previousMass));
             
-            StatsMenu.Instance.AddSkillCount(Skill.Power);
+            GameOverMenu.Instance.AddSkillCount(Skill.Power);
         }
 
         /// <summary>
@@ -238,14 +238,14 @@ namespace Watermelon_Game.Skills
                 FruitBehaviour.SpawnFruit(_position, _fruit, true);
             }
             
-            StatsMenu.Instance.AddSkillCount(Skill.Evolve);
+            GameOverMenu.Instance.AddSkillCount(Skill.Evolve);
         }
 
         public void Skill_Destroy(FruitBehaviour _FruitBehaviour)
         {
             _FruitBehaviour.Destroy();
             
-            StatsMenu.Instance.AddSkillCount(Skill.Destroy);
+            GameOverMenu.Instance.AddSkillCount(Skill.Destroy);
         }
         #endregion
     }

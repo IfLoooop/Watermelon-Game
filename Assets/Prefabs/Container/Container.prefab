@@ -1057,8 +1057,8 @@ MonoBehaviour:
   evolve: {fileID: 7033121146106939018}
   destroy: {fileID: 5512739587830894152}
   powerPointsRequirement: 25
-  evolvePointsRequirement: 100
-  destroyPointsRequirement: 100
+  evolvePointsRequirement: 50
+  destroyPointsRequirement: 50
   shootForceMultiplier: 100
   powerSkillForce: 30000
   powerSkillMass: 200

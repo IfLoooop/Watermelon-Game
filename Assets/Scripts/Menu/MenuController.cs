@@ -7,19 +7,24 @@ namespace Watermelon_Game.Menu
     {
         #region Inspector Fields
         [SerializeField] private StatsMenu statsMenu;
-        [SerializeField] private SettingsMenu settingsMenu;
+        [SerializeField] private GameOverMenu gameOverMenu;
         #endregion
 
         #region Fields
-        [CanBeNull] private MenuBase currentActiveMenu;
+        [CanBeNull] private MenuBase previousActiveMenu;
         #endregion
 
+        #region Properties
+        public static MenuController Instance { get; private set; }
+        #endregion
+        
         #region Methods
-
         private void Awake()
         {
+            Instance = this;
+            
             this.InitializeMenu(this.statsMenu);
-            this.InitializeMenu(this.settingsMenu);
+            this.InitializeMenu(this.gameOverMenu);
         }
 
         private void Update()
@@ -28,9 +33,9 @@ namespace Watermelon_Game.Menu
             {
                 this.OpenMenu(this.statsMenu);
             }
-            if (Input.GetKeyDown(KeyCode.O))
+            if (this.previousActiveMenu is { Menu: Menu.GameOver } && Input.GetKeyDown(KeyCode.Escape))
             {
-                this.OpenMenu(this.settingsMenu);
+                this.OpenMenu(this.gameOverMenu);
             }
         }
 
@@ -51,18 +56,12 @@ namespace Watermelon_Game.Menu
         
         private void OpenMenu(MenuBase _Menu)
         {
-            if (this.currentActiveMenu == null)
-            {
-                this.currentActiveMenu = _Menu;
-            }
-            
-            this.currentActiveMenu!.Open_Close();
-            
-            if (this.currentActiveMenu.Menu != _Menu.Menu)
-            {
-                _Menu.Open_Close();
-                this.currentActiveMenu = _Menu;   
-            }
+            this.previousActiveMenu = _Menu.Open_Close(this.previousActiveMenu);
+        }
+
+        public void GameOver()
+        {
+            this.OpenMenu(this.gameOverMenu);
         }
         #endregion
     }

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Watermelon_Game.Menu
@@ -6,17 +7,39 @@ namespace Watermelon_Game.Menu
     {
         #region Fieds
         [SerializeField] private Menu menu;
+        [SerializeField] private bool canBeClosedByDifferentMenu;
         #endregion
 
         #region Properties
         public Menu Menu => this.menu;
+        public bool CanBeClosedByDifferentMenu => this.canBeClosedByDifferentMenu;
         #endregion
 
         #region Methods
-        public void Open_Close()
+        [CanBeNull]
+        public virtual MenuBase Open_Close([CanBeNull] MenuBase _PreviousMenu)
         {
-            var _active = this.gameObject.activeSelf;
-            this.gameObject.SetActive(!_active);
+            if (_PreviousMenu != null && _PreviousMenu.menu != this.menu)
+            {
+                if (!_PreviousMenu.CanBeClosedByDifferentMenu)
+                {
+                    return _PreviousMenu;   
+                }
+
+                this.SetActive(_PreviousMenu);
+            }
+            
+            var _active = this.SetActive(this);
+
+            return _active ? this : null;
+        }
+
+        private bool SetActive(MenuBase _Menu)
+        {
+            var _activeState = !_Menu.gameObject.activeSelf;
+            _Menu.gameObject.SetActive(_activeState);
+
+            return _activeState;
         }
         #endregion
     }

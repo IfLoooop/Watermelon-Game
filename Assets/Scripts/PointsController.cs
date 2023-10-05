@@ -96,9 +96,9 @@ namespace Watermelon_Game
             this.multiplierBackground.color = this.GetMultiplierColor(_CurrentMultiplier);
             this.multiplier.gameObject.SetActive(true);
 
-            if (_CurrentMultiplier > StatsMenu.Instance.HighestMultiplier)
+            if (_CurrentMultiplier > GameOverMenu.Instance.Stats.HighestMultiplier)
             {
-                StatsMenu.Instance.HighestMultiplier = _CurrentMultiplier;
+                GameOverMenu.Instance.Stats.HighestMultiplier = _CurrentMultiplier;
             }
         }
 
@@ -168,6 +168,7 @@ namespace Watermelon_Game
 
         public void SavePoints()
         {
+            GameOverMenu.Instance.Score = this.currentPoints;
             var _currentHighScore = StatsMenu.Instance.BestScore;
 
             if (this.currentPoints > _currentHighScore)

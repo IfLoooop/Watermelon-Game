@@ -22,13 +22,13 @@ namespace Watermelon_Game
         /// <b>Value:</b> The <see cref="FruitBehaviour"/>
         /// </summary>
         private static readonly Dictionary<int, FruitBehaviour> fruits = new();
-
-        private bool gameOver;
         #endregion
 
         #region Properties
         public static GameController Instance { get; private set; }
+        
         public FruitCollection FruitCollection => this.fruitCollection;
+        public float currentGameTimeStamp;
         #endregion
         
         #region Methods
@@ -39,17 +39,9 @@ namespace Watermelon_Game
 
         private void Start()
         {
-            this.StartGame();
+            StartGame();
         }
-
-        private void Update()
-        {
-            if (this.gameOver && Input.GetKeyDown(KeyCode.Escape))
-            {
-                this.StartGame();
-            }
-        }
-
+        
         /// <summary>
         /// Adds a <see cref="FruitBehaviour"/> to <see cref="fruits"/>
         /// </summary>
@@ -96,7 +88,7 @@ namespace Watermelon_Game
                     var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit1.Fruit);
                     
                     PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
-                    StatsMenu.Instance.AddFruitCount(_fruit1.Fruit);
+                    GameOverMenu.Instance.AddFruitCount(_fruit1.Fruit);
                     
                     //TODO: Move towards each other before destroying
                     _fruit1.Destroy();
@@ -142,18 +134,17 @@ namespace Watermelon_Game
             }
         }
 
-        public void StartGame()
+        public static void StartGame()
         {
-            Instance.gameOver = false;
             FruitSpawner.Instance.Reset(true);
             FruitSpawnerAim.Enable(true);
             PointsController.Instance.ResetPoints();
             StatsMenu.Instance.GamesPlayed++;
+            Instance.currentGameTimeStamp = Time.time;
         }
         
         public static void GameOver()
         {
-            Instance.gameOver = true;
             FruitSpawner.Instance.BlockInput = true;
             FruitSpawnerAim.Enable(false);
 
@@ -169,6 +160,7 @@ namespace Watermelon_Game
             PointsController.Instance.ResetPoints();
             // Needed for the SkillController.PointsChanged() method to be called
             PointsController.Instance.SubtractPoints(0);
+            MenuController.Instance.GameOver();
         }
         #endregion
     }
