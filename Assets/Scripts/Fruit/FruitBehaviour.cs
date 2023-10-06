@@ -2,6 +2,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.Menu;
 using Watermelon_Game.Skills;
 using Random = UnityEngine.Random;
 
@@ -105,6 +106,8 @@ namespace Watermelon_Game.Fruit
                 var _light2D = _goldenFruitPrefab.GetComponentInChildren<Light2D>();
 
                 _light2D.pointLightOuterRadius = this.transform.localScale.x / 2;
+
+                GameOverMenu.Instance.Stats.GoldenFruitCount++;
             }
         }
 

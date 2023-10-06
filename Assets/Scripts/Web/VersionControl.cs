@@ -5,7 +5,7 @@ namespace Watermelon_Game.Web
     internal sealed class VersionControl : WebBase
     {
         #region Constants
-        private const string CURRENT_VERSION = "0.0";
+        private const string CURRENT_VERSION = "1.0";
         private const string REQUEST_URI = "https://raw.githubusercontent.com/MarkHerdt/Watermelon-Game/main/CurrentVersion";
         #endregion
 

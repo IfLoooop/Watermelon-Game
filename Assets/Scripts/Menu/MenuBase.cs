@@ -4,7 +4,7 @@ using Watermelon_Game.ExtensionMethods;
 
 namespace Watermelon_Game.Menu
 {
-    internal class MenuBase : MonoBehaviour
+    internal abstract class MenuBase : MonoBehaviour
     {
         #region Fieds
         [SerializeField] private Menu menu;

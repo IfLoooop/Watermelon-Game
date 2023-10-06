@@ -64,11 +64,11 @@ namespace Watermelon_Game.Web
         }
         
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private static async void Init()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-#if !UNITY_EDITOR // TODO
-   
-#endif
+#if !UNITY_EDITOR
             await instance.CheckSettings().ContinueWith(_ =>
             {
                 foreach (var _kvp in instance.settingsMap)
@@ -79,6 +79,7 @@ namespace Watermelon_Game.Web
                 GameController.Instance.FruitCollection.ApplyWebSettings(instance.settingsMap, instance.fruitSpawnWeightMap);
                 SkillController.Instance.ApplyWebSettings(instance.settingsMap);    
             });
+#endif
         }
         
         private async Task CheckSettings()
