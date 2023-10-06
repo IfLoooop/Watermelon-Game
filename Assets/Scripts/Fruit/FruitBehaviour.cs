@@ -18,9 +18,13 @@ namespace Watermelon_Game.Fruit
         #endregion
         
         #region Fields
-        private new Rigidbody2D rigidbody2D;
+#pragma warning disable CS0108, CS0114
+        private Rigidbody2D rigidbody2D;
+#pragma warning restore CS0108, CS0114
         private BlockRelease blockRelease;
-        private new Animation animation;
+#pragma warning disable CS0108, CS0114
+        private Animation animation;
+#pragma warning restore CS0108, CS0114
         private SpriteRenderer face;
 
         private bool isHurt;

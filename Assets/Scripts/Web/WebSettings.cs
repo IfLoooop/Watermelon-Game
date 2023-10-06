@@ -68,7 +68,7 @@ namespace Watermelon_Game.Web
         private static async void Init()
 #pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !DEBUG
             await instance.CheckSettings().ContinueWith(_ =>
             {
                 foreach (var _kvp in instance.settingsMap)

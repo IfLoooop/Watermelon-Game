@@ -161,6 +161,7 @@ namespace Watermelon_Game.Menu
             StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Pineapple, this.stats.PineappleEvolvedCount);
             StatsMenu.Instance.AddFruitCount(Fruit.Fruit.HoneyMelon, this.stats.HoneyMelonEvolvedCount);
             StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Melon, this.stats.MelonEvolvedCount);
+            StatsMenu.Instance.Stats.GoldenFruitCount += this.Stats.GoldenFruitCount;
         }
 
         private void AddSkills()

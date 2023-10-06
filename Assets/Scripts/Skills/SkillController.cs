@@ -259,7 +259,7 @@ namespace Watermelon_Game.Skills
         public void Skill_Destroy(FruitBehaviour _FruitBehaviour)
         {
             _FruitBehaviour.Destroy();
-            
+            GameController.Instance.FruitCollection.PlayEvolveSound();
             GameOverMenu.Instance.AddSkillCount(Skill.Destroy);
         }
         #endregion

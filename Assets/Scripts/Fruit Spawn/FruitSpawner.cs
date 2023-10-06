@@ -21,7 +21,9 @@ namespace Watermelon_Game.Fruit_Spawn
         #endregion
         
         #region Fields
-        private new Rigidbody2D rigidbody2D;
+#pragma warning disable CS0108, CS0114
+        private Rigidbody2D rigidbody2D;
+#pragma warning restore CS0108, CS0114
         private BoxCollider2D boxCollider2D;
         private AudioSource audioSource;
         

@@ -62,6 +62,7 @@ namespace Watermelon_Game
                 var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit.Fruit);
                     
                 PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
+                Instance.FruitCollection.PlayEvolveSound();
                 
                 _fruit.Destroy();
             }

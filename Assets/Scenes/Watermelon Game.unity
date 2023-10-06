@@ -718,7 +718,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 229.5, y: -113.5}
+  m_AnchoredPosition: {x: 229.5, y: -113.499985}
   m_SizeDelta: {x: -1066, y: -600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &703788930
@@ -911,7 +911,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 283.09998, y: -45.299988}
+  m_AnchoredPosition: {x: 283.09998, y: -45.299973}
   m_SizeDelta: {x: -1066, y: -600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1042741939
@@ -1045,7 +1045,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 184, y: -109.900024}
+  m_AnchoredPosition: {x: 184, y: -109.90001}
   m_SizeDelta: {x: -1066, y: -600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1070901169
@@ -1179,7 +1179,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 143.59998, y: -80.099976}
+  m_AnchoredPosition: {x: 143.59998, y: -80.09996}
   m_SizeDelta: {x: -1066, y: -600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1273338808
@@ -1405,7 +1405,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 264.8, y: -81.29999}
+  m_AnchoredPosition: {x: 264.8, y: -81.29997}
   m_SizeDelta: {x: -1066, y: -600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1501159941
@@ -1812,7 +1812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 138.59998, y: -31.099976}
+  m_AnchoredPosition: {x: 138.59998, y: -31.09996}
   m_SizeDelta: {x: -1066, y: -600}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2049006424
@@ -2319,6 +2319,10 @@ PrefabInstance:
     - target: {fileID: 6728519022491653818, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -796
+      objectReference: {fileID: 0}
+    - target: {fileID: 7548692760508066968, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
+      propertyPath: forceEnableSkills
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7655928294371341779, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_CameraType
