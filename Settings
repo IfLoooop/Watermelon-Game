@@ -1,0 +1,20 @@
+[FruitCollection]
+spawnWeightMultiplier = -25
+lowerIndexWeight = true
+higherIndexWeight = false
+indexWeight = true
+grapeSpawnWeight = 50
+cherrySpawnWeight = 50
+strawberrySpawnWeight = 50
+lemonSpawnWeight = 25
+orangeSpawnWeight = 15
+appleSpawnWeight = 5
+pearSpawnWeight = 0
+pineAppleSpawnWeight = 0
+honeyMelonSpawnWeight = 0
+melonSpawnWeight = 0
+goldenFruitChance = 0.1
+[SkillController]
+powerPointsRequirement = 10
+evolvePointsRequirement = 50
+destroyPointsRequirement = 50
