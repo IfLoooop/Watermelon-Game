@@ -3,6 +3,7 @@ using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Skills;
+using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Fruit_Spawn
 {

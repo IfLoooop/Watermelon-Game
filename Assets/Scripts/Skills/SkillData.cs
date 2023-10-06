@@ -1,8 +1,8 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.ExtensionMethods;
 
 namespace Watermelon_Game.Skills
 {

@@ -1,6 +1,6 @@
-namespace Watermelon_Game
+namespace Watermelon_Game.Utility
 {
-    internal sealed class Mathfx
+    internal static class Mathfx
     {
         #region Methods
         /// <summary>
