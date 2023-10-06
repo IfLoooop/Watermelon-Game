@@ -15,6 +15,6 @@ honeyMelonSpawnWeight = 0
 melonSpawnWeight = 0
 goldenFruitChance = 0.1
 [SkillController]
-powerPointsRequirement = 10
+powerPointsRequirement = 20
 evolvePointsRequirement = 50
 destroyPointsRequirement = 50
