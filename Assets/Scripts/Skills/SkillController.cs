@@ -8,6 +8,7 @@ using UnityEngine;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
+using Watermelon_Game.Web;
 
 namespace Watermelon_Game.Skills
 {
@@ -22,7 +23,7 @@ namespace Watermelon_Game.Skills
         [SerializeField] private GameObject power;
         [SerializeField] private GameObject evolve;
         [SerializeField] private GameObject destroy;
-        [SerializeField] private uint powerPointsRequirement = 25;
+        [SerializeField] private uint powerPointsRequirement = 20;
         [SerializeField] private uint evolvePointsRequirement = 50;
         [SerializeField] private uint destroyPointsRequirement = 50;
         [SerializeField] private float shootForceMultiplier = 100;
@@ -96,6 +97,13 @@ namespace Watermelon_Game.Skills
             _spriteRenderers[0].gameObject.SetActive(false);
             
             return new SkillData(_textMeshPro, _spriteRenderers[0], _spriteRenderers[1], _KeyToActivate, _Skill);
+        }
+
+        public void ApplyWebSettings(Dictionary<string, object> _Settings)
+        {
+            WebSettings.TrySetValue(_Settings, nameof(this.powerPointsRequirement), ref this.powerPointsRequirement);
+            WebSettings.TrySetValue(_Settings, nameof(this.evolvePointsRequirement), ref this.evolvePointsRequirement);
+            WebSettings.TrySetValue(_Settings, nameof(this.destroyPointsRequirement), ref this.destroyPointsRequirement);
         }
         
         public void PointsChanged(uint _CurrentPoints)

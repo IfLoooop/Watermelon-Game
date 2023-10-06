@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e48ad5ad6010cd45831afa2501da93e, type: 3}
   m_Name: FruitCollection
   m_EditorClassIdentifier: 
-  spawnWeightMultiplier: 25
+  spawnWeightMultiplier: -25
+  lowerIndexWeight: 1
+  higherIndexWeight: 0
+  indexWeight: 1
   fruits:
   - prefab: {fileID: 3765698940235238415, guid: 08d17b8df74f8a14caff7a0d6c29cdd6, type: 3}
     fruit: 0
-    spawnWeight: 50
+    spawnWeight: 60
   - prefab: {fileID: 3765698940235238415, guid: ef063bf83f67d8e43b4c6b481c20a30c, type: 3}
     fruit: 1
     spawnWeight: 50
@@ -46,6 +49,7 @@ MonoBehaviour:
     spawnWeight: 0
   evolveSoundPrefab: {fileID: 2838837543315173791, guid: ee74dfb7e36e83f43aafcb448ce2a466, type: 3}
   goldenFruitPrefab: {fileID: 8771331538938211563, guid: e11c03ec9fd886f45aca3d7c8942fefe, type: 3}
+  canSpawnAfter: 5
   goldenFruitChance: 0.1
   faceDefault: {fileID: 21300000, guid: fd14006210195164fbf4ebb1bdc01efb, type: 3}
   faceHurt: {fileID: 21300000, guid: 6acaba7842d400549a29b8a9b49abb94, type: 3}

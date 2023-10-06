@@ -1159,7 +1159,7 @@ MonoBehaviour:
   power: {fileID: 571955665277294865}
   evolve: {fileID: 7033121146106939018}
   destroy: {fileID: 5512739587830894152}
-  powerPointsRequirement: 25
+  powerPointsRequirement: 20
   evolvePointsRequirement: 50
   destroyPointsRequirement: 50
   shootForceMultiplier: 100
