@@ -77,13 +77,8 @@ namespace Watermelon_Game.Menu
         private void Awake()
         {
             Instance = this;
-            
-            this.Load();
-        }
 
-        private void OnEnable()
-        {
-            this.SetTimeSpendText(Time.time);
+            this.Load();
         }
         
         private void SetTimeSpendText(float _Seconds = 0.0f)

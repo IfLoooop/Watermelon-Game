@@ -1,28 +1,46 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.UI;
 using Watermelon_Game.ExtensionMethods;
 
 namespace Watermelon_Game.Menu
 {
     internal abstract class MenuBase : MonoBehaviour
     {
-        #region Fieds
+        #region Inspector Fieds
         [SerializeField] private Menu menu;
         [SerializeField] private bool canBeClosedByDifferentMenu;
+        [SerializeField] protected ScrollRect scrollRect;
         #endregion
 
+        #region Fields
+        private float currentScrollPosition;
+        #endregion
+        
         #region Properties
         public Menu Menu => this.menu;
-        public bool CanBeClosedByDifferentMenu => this.canBeClosedByDifferentMenu;
         #endregion
 
         #region Methods
+        private void OnDisable()
+        {
+            this.currentScrollPosition = this.scrollRect.verticalScrollbar.value;
+        }
+        
+        /// <summary>
+        /// Is called at the end of the "MenuPopUp"-Animation
+        /// </summary>
+        private void SetScrollPosition()
+        {
+            this.scrollRect.verticalScrollbar.value = this.currentScrollPosition;
+        }
+        
         [CanBeNull]
         public virtual MenuBase Open_Close([CanBeNull] MenuBase _PreviousMenu)
         {
             if (_PreviousMenu != null && _PreviousMenu.menu != this.menu)
             {
-                if (!_PreviousMenu.CanBeClosedByDifferentMenu)
+                if (!_PreviousMenu.canBeClosedByDifferentMenu)
                 {
                     return _PreviousMenu;   
                 }

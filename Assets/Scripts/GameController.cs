@@ -82,6 +82,11 @@ namespace Watermelon_Game
 
             if (_fruit1 != null && _fruit2 != null)
             {
+                if (_fruit1.IsGoldenFruit || _fruit2.IsGoldenFruit)
+                {
+                    return;
+                }
+                
                 if (_fruit1.Fruit == _fruit2.Fruit)
                 {
                     fruits.Remove(_Fruit1);

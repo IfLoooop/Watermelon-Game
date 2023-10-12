@@ -263,7 +263,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 5
+  hasBeenEvolved: 1
 --- !u!1 &1257700312797715105
 GameObject:
   m_ObjectHideFlags: 0
@@ -527,7 +529,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 8
+  hasBeenEvolved: 1
 --- !u!1 &1602003424604017421
 GameObject:
   m_ObjectHideFlags: 0
@@ -791,7 +795,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 7
+  hasBeenEvolved: 1
 --- !u!1 &1997403341216005497
 GameObject:
   m_ObjectHideFlags: 0
@@ -928,7 +934,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 28.274334
+  m_Mass: 28.27434
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 9.81
@@ -971,7 +977,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 5
+  hasBeenEvolved: 1
 --- !u!1 &2170222644589786306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1192,7 +1200,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 3.1415927
+  m_Mass: 3.1415923
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 9.81
@@ -1235,7 +1243,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 0
+  hasBeenEvolved: 1
 --- !u!1 &2388103960293263974
 GameObject:
   m_ObjectHideFlags: 0
@@ -1499,7 +1509,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 4
+  hasBeenEvolved: 1
 --- !u!1 &3261170167479015763
 GameObject:
   m_ObjectHideFlags: 0
@@ -1679,7 +1691,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 3
+  hasBeenEvolved: 1
 --- !u!1 &3411575787280238291
 GameObject:
   m_ObjectHideFlags: 0
@@ -1816,7 +1830,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 10.081544
+  m_Mass: 10.081542
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 9.81
@@ -1859,7 +1873,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 3
+  hasBeenEvolved: 1
 --- !u!1 &3556288735452772452
 GameObject:
   m_ObjectHideFlags: 0
@@ -2123,7 +2139,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 2
+  hasBeenEvolved: 1
 --- !u!1 &3636111632067508613
 GameObject:
   m_ObjectHideFlags: 0
@@ -2303,7 +2321,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 2
+  hasBeenEvolved: 1
 --- !u!1 &4126415444620529716
 GameObject:
   m_ObjectHideFlags: 0
@@ -2483,7 +2503,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 4
+  hasBeenEvolved: 1
 --- !u!1 &4206340777163429373
 GameObject:
   m_ObjectHideFlags: 0
@@ -2956,7 +2978,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 26.821535
+  m_Mass: 26.82154
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 9.81
@@ -2999,7 +3021,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 6
+  hasBeenEvolved: 1
 --- !u!1 &4794379401512605071
 GameObject:
   m_ObjectHideFlags: 0
@@ -3179,7 +3203,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 2
+  hasBeenEvolved: 1
 --- !u!1 &5807192056155253696
 GameObject:
   m_ObjectHideFlags: 0
@@ -3863,7 +3889,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 0
+  hasBeenEvolved: 1
 --- !u!1 &6921430012142399274
 GameObject:
   m_ObjectHideFlags: 0
@@ -4043,7 +4071,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 6
+  hasBeenEvolved: 1
 --- !u!1 &6989554568968823962
 GameObject:
   m_ObjectHideFlags: 0
@@ -4391,7 +4421,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 2
+  hasBeenEvolved: 1
 --- !u!1 &7837647748883394230
 GameObject:
   m_ObjectHideFlags: 0
@@ -4571,7 +4603,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 0
+  hasBeenEvolved: 1
 --- !u!1 &8650369776006928887
 GameObject:
   m_ObjectHideFlags: 0
@@ -4757,7 +4791,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 70.74347
+  m_Mass: 70.743484
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 9.81
@@ -4800,4 +4834,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  test: {fileID: 0}
   fruit: 9
+  hasBeenEvolved: 1

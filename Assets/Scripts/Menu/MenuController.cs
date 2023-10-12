@@ -32,7 +32,7 @@ namespace Watermelon_Game.Menu
             this.InitializeMenu(this.statsMenu);
             this.InitializeMenu(this.gameOverMenu);
         }
-
+        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.P))

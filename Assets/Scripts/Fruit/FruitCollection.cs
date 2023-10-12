@@ -21,9 +21,9 @@ namespace Watermelon_Game.Fruit
         [SerializeField] private AudioSource evolveSoundPrefab;
         [SerializeField] private GameObject goldenFruitPrefab;
         [Tooltip("How many fruits need to be on the map for a golden fruit spawn to be possible")]
-        [SerializeField] private uint canSpawnAfter = 5;
+        [SerializeField] private uint canSpawnAfter = 10;
         [Tooltip("Chance for a Golden Fruit in %")]
-        [SerializeField] private float goldenFruitChance = 0.1f;
+        [SerializeField] private float goldenFruitChance = 0.01f;
         [SerializeField] private Sprite faceDefault;
         [SerializeField] private Sprite faceHurt;
         #endregion

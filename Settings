@@ -13,7 +13,7 @@ pearSpawnWeight = 0
 pineAppleSpawnWeight = 0
 honeyMelonSpawnWeight = 0
 melonSpawnWeight = 0
-goldenFruitChance = 0.1
+goldenFruitChance = 0.01
 [SkillController]
 powerPointsRequirement = 20
 evolvePointsRequirement = 50

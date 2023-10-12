@@ -6,20 +6,17 @@ using UnityEngine;
 
 namespace Watermelon_Game.Web
 {
-    internal abstract class WebBase : MonoBehaviour
+    public abstract class WebBase : MonoBehaviour
     {
-        #region Fields
-        private static readonly HttpClientHandler clientHandler = new()
-        {
-            ServerCertificateCustomValidationCallback = (_, _, _, _) => true
-        };
-        private readonly HttpClient client = new(clientHandler);
-        #endregion
-        
         #region Methods
-        protected async Task DownloadAsStreamAsync(string _RequestUri, Action<string> _Action)
+        protected static async Task DownloadAsStreamAsync(string _RequestUri, Action<string> _Action)
         {
-            await using var _websiteStream = await this.client.GetStreamAsync(_RequestUri);
+            var _client = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (_, _, _, _) => true
+            });
+            
+            await using var _websiteStream = await _client.GetStreamAsync(_RequestUri);
 
             if (_websiteStream == null)
             {
@@ -40,7 +37,7 @@ namespace Watermelon_Game.Web
         /// </summary>
         /// <param name="_String">A string that contains one web settings entry</param>
         /// <returns>The field name of a web settings entry</returns>
-        protected string GetKey(string _String)
+        protected static string GetKey(string _String)
         {
             const char EQUALS = '=';
             var _index = _String.IndexOf(EQUALS);
@@ -53,7 +50,7 @@ namespace Watermelon_Game.Web
         /// </summary>
         /// <param name="_String">A string that contains one web settings entry</param>
         /// <returns>The value of a web settings entry</returns>
-        protected string GetValue(string _String)
+        protected static string GetValue(string _String)
         {
             const char EQUALS = '=';
             var _index = _String.IndexOf(EQUALS) + 1;

@@ -29,12 +29,12 @@ namespace Watermelon_Game.Fruit
 
         private bool isHurt;
         private bool hasBeenEvolved;
-        private bool isGoldenFruit;
         #endregion
 
         #region Properties
         public Fruit Fruit => this.fruit;
         public Skill? ActiveSkill { get; private set; }
+        public bool IsGoldenFruit { get; private set; }
         #endregion
         
         #region Methods
@@ -63,7 +63,7 @@ namespace Watermelon_Game.Fruit
             
             if (_Other.gameObject.layer == LayerMask.NameToLayer("Fruit"))
             {
-                if (this.isGoldenFruit)
+                if (this.IsGoldenFruit)
                 {
                     GameController.GoldenFruitCollision(_Other.gameObject.GetHashCode());
                     return;
@@ -83,7 +83,7 @@ namespace Watermelon_Game.Fruit
                 
                 GameController.FruitCollision(this.gameObject.GetHashCode(), _Other.gameObject.GetHashCode());
             }
-            else if (this.isGoldenFruit)
+            else if (this.IsGoldenFruit)
             {
                 if (_Other.gameObject.CompareTag("Wall Bottom"))
                 {
@@ -91,7 +91,7 @@ namespace Watermelon_Game.Fruit
                 }
             }
         }
-
+        
         private void GoldenFruit()
         {
             if (this.hasBeenEvolved || GameController.GetFruitCount() < GameController.Instance.FruitCollection.CanSpawnAfter)
@@ -105,7 +105,7 @@ namespace Watermelon_Game.Fruit
 
             if (_numberToGet == _randomNumber)
             {
-                this.isGoldenFruit = true;
+                this.IsGoldenFruit = true;
                 var _goldenFruitPrefab = Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, this.rigidbody2D.position, Quaternion.identity, this.transform);
                 var _light2D = _goldenFruitPrefab.GetComponentInChildren<Light2D>();
 

@@ -84,12 +84,12 @@ namespace Watermelon_Game.Web
         
         private async Task CheckSettings()
         {
-            await base.DownloadAsStreamAsync(REQUEST_URI, _Line =>
+            await DownloadAsStreamAsync(REQUEST_URI, _Line =>
             {
                 if (Regex.IsMatch(_Line, @"\w*\s*[=]\s*\S*"))
                 {
-                    var _key = base.GetKey(_Line);
-                    var _value = base.GetValue(_Line);
+                    var _key = GetKey(_Line);
+                    var _value = GetValue(_Line);
                     
                     if (this.settingsMap.ContainsKey(_key))
                     {
