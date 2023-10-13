@@ -150,7 +150,7 @@ namespace Watermelon_Game
                     this.pointsDelta--;
                 }
                 
-                this.points.text = string.Concat(this.pointsDelta, "P");
+                this.SetPointsText(this.pointsDelta);
                 
                 yield return this.pointsWaitForSeconds;
             }
@@ -163,9 +163,14 @@ namespace Watermelon_Game
         {
             this.currentPoints = 0;
             this.pointsDelta = 0;
-            this.points.text = string.Concat(0, "P");
+            this.SetPointsText(0);
         }
 
+        private void SetPointsText(uint _Points)
+        {
+            this.points.text = string.Concat(_Points, 'P');
+        }
+        
         public void SavePoints()
         {
             GameOverMenu.Instance.Score = this.currentPoints;

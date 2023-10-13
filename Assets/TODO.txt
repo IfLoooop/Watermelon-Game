@@ -2,9 +2,9 @@
 -Games except the first one, started in the same session, don't start with a grape fruit, because the previous fruit is not null
 
 [ADDONS]
--Make fruit a golden fruit if it goes out of screen and comes back
--Show a second "Next Fruit" when some condition is met
--Add different fruit faces (Default and Hurt) and randomize them
 -Add falling fruit to the background
+-Show a second "Next Fruit" when some condition is met
+-Make fruit a golden fruit if it goes out of screen and comes back
+-Add different fruit faces (Default and Hurt) and randomize them
 -Add evolve animation to fruit evolves
 -Push surrounding fruits away on evolve
