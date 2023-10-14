@@ -13,3 +13,10 @@ v1.1 (12.10.2023)
 -Fixed a sizing glitch on the game over menu
 -Fixed a scaling issue with the fruit evolution image
 -Implemented a fix for the golden fruit despawning before reaching the floor
+------------------------------------------------------------------------------------------------------------------------
+v1.2 (TBA) // TODO: Set date
+[Changes]
+-Changed the fonts
+
+[Addons]
+-Added falling fruit to the background
