@@ -1738,7 +1738,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6130982989819499730, guid: 459f7f71334a990418636f6df32e275d, type: 3}
       propertyPath: m_text
-      value: 'Highest Multiplier:'
+      value: 'Best Multiplier:'
       objectReference: {fileID: 0}
     - target: {fileID: 8048855062314372236, guid: 459f7f71334a990418636f6df32e275d, type: 3}
       propertyPath: m_Name
@@ -2347,7 +2347,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6130982989819499730, guid: 459f7f71334a990418636f6df32e275d, type: 3}
       propertyPath: m_text
-      value: 'Highest Multiplier:'
+      value: 'Best Multiplier:'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6130982989819499730, guid: 459f7f71334a990418636f6df32e275d, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8048855062314372236, guid: 459f7f71334a990418636f6df32e275d, type: 3}
       propertyPath: m_Name

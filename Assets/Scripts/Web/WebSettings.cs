@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
+using Watermelon_Game.Background;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Skills;
 
@@ -16,10 +17,9 @@ namespace Watermelon_Game.Web
         #endregion
 
         #region Fields
-        private static WebSettings instance;
-        
-        private readonly Dictionary<string, object> settingsMap = new()
+        public static Dictionary<string, object> SettingsMap { get; } = new()
         {
+            
             // [FruitCollection]
             { "spawnWeightMultiplier", null },
             { "lowerIndexWeight", null },
@@ -39,10 +39,16 @@ namespace Watermelon_Game.Web
             // [SkillController]
             { "powerPointsRequirement", null },
             { "evolvePointsRequirement", null },
-            { "destroyPointsRequirement", null }
+            { "destroyPointsRequirement", null },
+            // [BackgroundCController]
+            { "fruitSpawnDelay", null },
+            { "sizeMultiplier", null },
+            { "forceMultiplier", null },
+            { "spriteAlphaValue", null },
+            
         };
-        
-        private readonly ReadOnlyDictionary<uint, string> fruitSpawnWeightMap = new(new Dictionary<uint, string>
+
+        public static ReadOnlyDictionary<uint, string> FruitSpawnWeightMap { get; } = new(new Dictionary<uint, string>
         {
             { 0, "grapeSpawnWeight" },
             { 1, "cherrySpawnWeight" },
@@ -55,34 +61,30 @@ namespace Watermelon_Game.Web
             { 8, "honeyMelonSpawnWeight" },
             { 9, "melonSpawnWeight" },
         });
+
         #endregion
 
         #region Methods
-        private void Awake()
-        {
-            instance = this;
-        }
-        
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
+        // Is called before all "Awake()"-Methods
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static async void Init()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-#if !UNITY_EDITOR && !DEBUG
-            await instance.CheckSettings().ContinueWith(_ =>
-            {
-                foreach (var _kvp in instance.settingsMap)
-                {
-                    Debug.Log(_kvp);
-                }
-            
-                GameController.Instance.FruitCollection.ApplyWebSettings(instance.settingsMap, instance.fruitSpawnWeightMap);
-                SkillController.Instance.ApplyWebSettings(instance.settingsMap);    
-            });
+#if DEBUG && !UNITY_EDITOR
+            return;
 #endif
+            if (!Application.isEditor)
+            {
+                await CheckSettings().ContinueWith(_ =>
+                {
+                    // TODO: Make event and subscribe from classes that need it
+                    GameController.Instance.FruitCollection.ApplyWebSettings();
+                    SkillController.Instance.ApplyWebSettings();
+                    BackgroundController.Instance.ApplyWebSettings();
+                });
+            }
         }
         
-        private async Task CheckSettings()
+        private static async Task CheckSettings()
         {
             await DownloadAsStreamAsync(REQUEST_URI, _Line =>
             {
@@ -91,17 +93,22 @@ namespace Watermelon_Game.Web
                     var _key = GetKey(_Line);
                     var _value = GetValue(_Line);
                     
-                    if (this.settingsMap.ContainsKey(_key))
+                    if (SettingsMap.ContainsKey(_key))
                     {
-                        this.settingsMap[_key] = _value;
+                        SettingsMap[_key] = _value;
+                    }
+                    else
+                    {
+                        // TODO: Save which setting couldn't be found in a .txt file
+                        Debug.Log($"<color=orange>\"{_key}\" is missing</color>");
                     }
                 }
             });
         }
 
-        public static void TrySetValue<T>(Dictionary<string, object> _Settings, string _Key, ref T _Field)
+        public static void TrySetValue<T>(string _Key, ref T _Field)
         {
-            _Settings.TryGetValue(_Key, out var _value);
+            SettingsMap.TryGetValue(_Key, out var _value);
             if (_value != null)
             {
                 try
@@ -112,9 +119,9 @@ namespace Watermelon_Game.Web
             }
         }
         
-        public static void TrySetValue(Dictionary<string, object> _Settings, string _Key, FruitData _FruitData)
+        public static void TrySetValue(string _Key, FruitData _FruitData)
         {
-            _Settings.TryGetValue(_Key, out var _value);
+            SettingsMap.TryGetValue(_Key, out var _value);
             if (_value != null)
             {
                 try

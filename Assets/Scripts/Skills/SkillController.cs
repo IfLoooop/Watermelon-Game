@@ -9,10 +9,11 @@ using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
 using Watermelon_Game.Web;
+using static Watermelon_Game.Web.WebSettings;
 
 namespace Watermelon_Game.Skills
 {
-    internal sealed class SkillController : MonoBehaviour
+    internal sealed class SkillController : MonoBehaviour, IWebSettings
     {
         #region Inspector Fields
 
@@ -99,11 +100,11 @@ namespace Watermelon_Game.Skills
             return new SkillData(_textMeshPro, _spriteRenderers[0], _spriteRenderers[1], _KeyToActivate, _Skill);
         }
 
-        public void ApplyWebSettings(Dictionary<string, object> _Settings)
+        public void ApplyWebSettings()
         {
-            WebSettings.TrySetValue(_Settings, nameof(this.powerPointsRequirement), ref this.powerPointsRequirement);
-            WebSettings.TrySetValue(_Settings, nameof(this.evolvePointsRequirement), ref this.evolvePointsRequirement);
-            WebSettings.TrySetValue(_Settings, nameof(this.destroyPointsRequirement), ref this.destroyPointsRequirement);
+            TrySetValue(nameof(this.powerPointsRequirement), ref this.powerPointsRequirement);
+            TrySetValue(nameof(this.evolvePointsRequirement), ref this.evolvePointsRequirement);
+            TrySetValue(nameof(this.destroyPointsRequirement), ref this.destroyPointsRequirement);
         }
         
         public void PointsChanged(uint _CurrentPoints)

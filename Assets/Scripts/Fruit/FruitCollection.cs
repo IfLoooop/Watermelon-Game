@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using UnityEngine;
 using Watermelon_Game.Web;
+using static Watermelon_Game.Web.WebSettings;
 
 namespace Watermelon_Game.Fruit
 {
@@ -9,7 +10,7 @@ namespace Watermelon_Game.Fruit
     /// Contains data and logic for all spawnable fruits
     /// </summary>
     [CreateAssetMenu(menuName = "ScriptableObjects/FruitCollection", fileName = "FruitCollection")]
-    internal sealed class FruitCollection : ScriptableObject
+    internal sealed class FruitCollection : ScriptableObject, IWebSettings
     {
         #region Inspector Fields
         // TODO: Maybe use a different spawn weight for each individual fruit
@@ -45,23 +46,23 @@ namespace Watermelon_Game.Fruit
         #endregion
 
         #region Methods
-        public void ApplyWebSettings(Dictionary<string, object> _Settings, ReadOnlyDictionary<uint, string> _FruitMap)
+        public void ApplyWebSettings()
         {
-            WebSettings.TrySetValue(_Settings, nameof(this.spawnWeightMultiplier), ref this.spawnWeightMultiplier);
-            WebSettings.TrySetValue(_Settings, nameof(this.lowerIndexWeight), ref this.lowerIndexWeight);
-            WebSettings.TrySetValue(_Settings, nameof(this.higherIndexWeight), ref this.higherIndexWeight);
-            WebSettings.TrySetValue(_Settings, nameof(this.indexWeight), ref this.indexWeight);
-            WebSettings.TrySetValue(_Settings, nameof(this.goldenFruitChance), ref this.goldenFruitChance);
-            WebSettings.TrySetValue(_Settings, _FruitMap[0], this.fruits[0]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[1], this.fruits[1]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[2], this.fruits[2]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[3], this.fruits[3]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[4], this.fruits[4]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[5], this.fruits[5]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[6], this.fruits[6]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[7], this.fruits[7]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[8], this.fruits[8]);
-            WebSettings.TrySetValue(_Settings, _FruitMap[9], this.fruits[9]);
+            TrySetValue(nameof(this.spawnWeightMultiplier), ref this.spawnWeightMultiplier);
+            TrySetValue(nameof(this.lowerIndexWeight), ref this.lowerIndexWeight);
+            TrySetValue(nameof(this.higherIndexWeight), ref this.higherIndexWeight);
+            TrySetValue(nameof(this.indexWeight), ref this.indexWeight);
+            TrySetValue(nameof(this.goldenFruitChance), ref this.goldenFruitChance);
+            TrySetValue(FruitSpawnWeightMap[0], this.fruits[0]);
+            TrySetValue(FruitSpawnWeightMap[1], this.fruits[1]);
+            TrySetValue(FruitSpawnWeightMap[2], this.fruits[2]);
+            TrySetValue(FruitSpawnWeightMap[3], this.fruits[3]);
+            TrySetValue(FruitSpawnWeightMap[4], this.fruits[4]);
+            TrySetValue(FruitSpawnWeightMap[5], this.fruits[5]);
+            TrySetValue(FruitSpawnWeightMap[6], this.fruits[6]);
+            TrySetValue(FruitSpawnWeightMap[7], this.fruits[7]);
+            TrySetValue(FruitSpawnWeightMap[8], this.fruits[8]);
+            TrySetValue(FruitSpawnWeightMap[9], this.fruits[9]);
         }
         
         /// <summary>
