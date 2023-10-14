@@ -22,4 +22,4 @@ destroyPointsRequirement = 50
 fruitSpawnDelay = 0.25
 sizeMultiplier = 2
 forceMultiplier = 25
-spriteAlphaValue = 85
+spriteAlphaValue = 0.33
