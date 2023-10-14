@@ -18,3 +18,8 @@ goldenFruitChance = 0.01
 powerPointsRequirement = 20
 evolvePointsRequirement = 50
 destroyPointsRequirement = 50
+[BackgroundController]
+fruitSpawnDelay = 25
+sizeMultiplier = 2
+forceMultiplier = 25
+spriteAlphaValue = 85
