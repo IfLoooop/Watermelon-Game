@@ -251,7 +251,8 @@ namespace Watermelon_Game.Skills
             if (_fruitIndex != (int)Fruit.Fruit.Melon)
             {
                 var _fruit = GameController.Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
-                FruitBehaviour.SpawnFruit(_position, _fruit, true);
+                var _fruitBehaviour = FruitBehaviour.SpawnFruit(_position, _fruit, true);
+                _fruitBehaviour.Evolve();
             }
             
             GameOverMenu.Instance.AddSkillCount(Skill.Evolve);

@@ -64,7 +64,6 @@ namespace Watermelon_Game.Fruit_Spawn
             
             // Spawn new fruit
             this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, this.nextFruitBehaviour.Fruit);
-            this.nextNextFruitBehaviour.EnableAnimation(true);
 
             return _fruitBehaviour;
         }
@@ -137,7 +136,6 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             this.nextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextFruit.transform.position, this.nextFruit.transform, null);
             this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, this.nextFruitBehaviour.Fruit);
-            this.nextFruitBehaviour.EnableAnimation(true);
         }
         #endregion
     }

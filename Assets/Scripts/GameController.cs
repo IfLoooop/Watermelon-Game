@@ -103,12 +103,13 @@ namespace Watermelon_Game
                     _fruit1.Destroy();
                     _fruit2.Destroy();
                     
-                    // Nothing has to be spawned after a melon is evolved
                     if (_fruitIndex != (int)Fruit.Fruit.Melon)
                     {
                         var _fruit = Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
-                        FruitBehaviour.SpawnFruit(_position, _fruit, true);
+                        var _fruitBehaviour = FruitBehaviour.SpawnFruit(_position, _fruit, true);
+                        _fruitBehaviour.Evolve();
                     }
+                    // When two Watermelons are evolved
                     else
                     {
                         NextFruit.Instance.ShowNextNextFruit();

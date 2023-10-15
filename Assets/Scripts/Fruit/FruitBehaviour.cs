@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
@@ -15,6 +17,12 @@ namespace Watermelon_Game.Fruit
         #region Inspector Fields
         [SerializeField] private Fruit fruit;
         #endregion
+
+        #region Constants
+        private const float EVOLVE_WAIT_TIME = .005f;
+        // Value must be a multiple of 5, otherwise it will overshoot the targeted scale
+        private const float EVOLVE_STEP = .5f;
+        #endregion
         
         #region Fields
 #pragma warning disable CS0108, CS0114
@@ -29,6 +37,8 @@ namespace Watermelon_Game.Fruit
         private bool isHurt;
         private bool hasBeenEvolved;
         private bool collisionWithMaxHeight;
+        [CanBeNull] private IEnumerator evolve;
+        private static readonly WaitForSeconds evolveWaitTime = new(EVOLVE_WAIT_TIME);
         #endregion
 
         #region Properties
@@ -124,7 +134,15 @@ namespace Watermelon_Game.Fruit
                 this.GoldenFruit(true);   
             }
         }
-        
+
+        private void OnDestroy()
+        {
+            if (this.evolve != null)
+            {
+                base.StopCoroutine(this.evolve);
+            }
+        }
+
         private void GoldenFruit(bool _ForceEnable = false)
         {
             if (!_ForceEnable)
@@ -192,7 +210,8 @@ namespace Watermelon_Game.Fruit
         }
         
         /// <summary>
-        /// Instantiates a random fruit
+        /// Instantiates a random fruit <br/>
+        /// <i>For <see cref="FruitSpawner"/> and <see cref="NextFruit"/></i>
         /// </summary>
         /// <param name="_Position">Where to spawn the fruit</param>
         /// <param name="_Parent">The parent object of the spawned fruit</param>
@@ -202,23 +221,29 @@ namespace Watermelon_Game.Fruit
         {
             var _fruitData = GetRandomFruit(_PreviousFruit);
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity, _Parent).GetComponent<FruitBehaviour>();
+            
+            _fruitBehaviour.gameObject.SetActive(true);
+            _fruitBehaviour.EnableAnimation(true);
 
             return _fruitBehaviour;
         }
 
         /// <summary>
-        /// Instantiates a specific fruit
+        /// Instantiates a specific fruit <br/>
+        /// <i>For evolved fruits</i>
         /// </summary>
         /// <param name="_Position">Where to spawn the fruit</param>
         /// <param name="_Fruit">The <see cref="Watermelon_Game.Fruit.Fruit"/> to spawn</param>
         /// <param name="_Evolve">Is the fruit being evolved or is it a regular spawn</param>
-        public static void SpawnFruit(Vector2 _Position, Fruit _Fruit, bool _Evolve)
+        /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
+        public static FruitBehaviour SpawnFruit(Vector2 _Position, Fruit _Fruit, bool _Evolve)
         {
             var _fruitData = GameController.Instance.FruitCollection.Fruits.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity).GetComponent<FruitBehaviour>();
 
             _fruitBehavior.hasBeenEvolved = _Evolve;
-            _fruitBehavior.InitializeRigidBody();
+
+            return _fruitBehavior;
         }
         
         private static FruitData GetRandomFruit(Fruit? _PreviousFruit)
@@ -250,6 +275,28 @@ namespace Watermelon_Game.Fruit
             return null;
         }
 
+        public void Evolve()
+        {
+            var _targetScale = base.transform.localScale;
+            base.transform.localScale = Vector3.zero;
+            base.gameObject.SetActive(true);
+            this.InitializeRigidBody();
+            
+            this.evolve = this.Evolve(_targetScale);
+            base.StartCoroutine(this.evolve);
+        }
+        
+        private IEnumerator Evolve(Vector3 _TargetScale)
+        {
+            var _scaleStep = new Vector3(EVOLVE_STEP, EVOLVE_STEP, EVOLVE_STEP);
+            
+            while (base.transform.localScale.x < _TargetScale.x)
+            {
+                base.transform.localScale += _scaleStep;
+                yield return evolveWaitTime;
+            }
+        }
+        
         /// <summary>
         /// Sets the given <see cref="Skill"/> as currently active
         /// </summary>

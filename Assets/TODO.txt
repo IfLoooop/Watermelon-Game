@@ -1,8 +1,6 @@
 v1.2
 [ADDONS]
--Push surrounding fruits away on evolve
 -Move evolving fruits together
--Add evolve animation to fruit evolves
 
 v1.3
 [BUGS]
