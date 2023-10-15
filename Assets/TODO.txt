@@ -1,6 +1,5 @@
 v1.2
 [ADDONS]
--Make fruit a golden fruit if it goes out of screen and comes back
 -Push surrounding fruits away on evolve
 -Move evolving fruits together
 -Add evolve animation to fruit evolves
@@ -20,6 +19,7 @@ v1.3
 v1.3_1
 [CHANGES]
 -Code and Project cleanup
+-Add a layer and tag controller
 [ADDONS]
 -Add Buttler to the build pipeline
 -Add a clickable link to the Itch page when an update is available
@@ -30,3 +30,4 @@ v1.3_1
 -Add a difficulty system
 -Add tabs to the menu (Global/Current Game)
 -Make the Dictionary-maps in "Websettings.cs" refactor resistant
+[BUGS]

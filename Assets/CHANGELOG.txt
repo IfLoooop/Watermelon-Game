@@ -19,7 +19,9 @@ v1.1 (12.10.2023)
 v1.2 (TBA) // TODO: Set date
 [Changes]
 -Changed the fonts
+-Changed the look of the golden fruits
 
 [Addons]
 -Added falling fruit to the background
 -A second "Next Fruit" will be shown for 5min after a melon has been evolved
+-Fruits now become a golden fruit when there are shot outside the visible map and come back

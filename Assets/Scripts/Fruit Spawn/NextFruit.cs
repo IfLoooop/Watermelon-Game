@@ -61,7 +61,6 @@ namespace Watermelon_Game.Fruit_Spawn
             // Take from from NextNextFruit
             this.nextFruitBehaviour = this.nextNextFruitBehaviour;
             this.nextNextFruitBehaviour.transform.SetParent(this.nextFruit.transform, false);
-            this.nextFruitBehaviour.EnableAnimation(true);
             
             // Spawn new fruit
             this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, this.nextFruitBehaviour.Fruit);

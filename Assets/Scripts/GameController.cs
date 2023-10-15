@@ -176,15 +176,15 @@ namespace Watermelon_Game
             MenuController.Instance.GameOver();
             NextFruit.Instance.GameOVer();
         }
-
+        
         /// <summary>
-        /// Gets the current count of all fruits on the map <br/>
-        /// <i>Doesn't count the fruit on the <see cref="FruitSpawner"/> and <see cref="NextFruit"/></i>
+        /// Gets the current count of all fruits on the map
         /// </summary>
+        /// <param name="_SubtractNextFruits">Subtracts this value from the count (for the next fruits)</param>
         /// <returns>Returns the current count of all fruits on the map</returns>
-        public static int GetFruitCount()
+        public static int GetFruitCount(int _SubtractNextFruits = 3)
         {
-            return fruits.Count - 2;
+            return fruits.Count - _SubtractNextFruits;
         }
         #endregion
     }

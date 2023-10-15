@@ -1,6 +1,5 @@
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
 using Watermelon_Game.Skills;
@@ -29,6 +28,7 @@ namespace Watermelon_Game.Fruit
 
         private bool isHurt;
         private bool hasBeenEvolved;
+        private bool collisionWithMaxHeight;
         #endregion
 
         #region Properties
@@ -61,27 +61,31 @@ namespace Watermelon_Game.Fruit
                 this.Invoke(nameof(this.ResetFace), 1);
             }
             
-            if (_Other.gameObject.layer == LayerMask.NameToLayer("Fruit"))
+            var _otherIsFruit = _Other.gameObject.layer == LayerMask.NameToLayer("Fruit"); 
+            
+            if (_otherIsFruit)
             {
+                var _otherHashCode = _Other.gameObject.GetHashCode();
+                
                 if (this.IsGoldenFruit)
                 {
-                    GameController.GoldenFruitCollision(_Other.gameObject.GetHashCode());
+                    GameController.GoldenFruitCollision(_otherHashCode);
                     return;
                 }
                 if (this.ActiveSkill is Skill.Evolve)
                 {
                     this.DeactivateSkill();
-                    GameController.EvolveFruit(_Other.gameObject.GetHashCode());
+                    GameController.EvolveFruit(_otherHashCode);
                     return;
                 }
                 if (this.ActiveSkill is Skill.Destroy)
                 {
                     this.DeactivateSkill();
-                    GameController.DestroyFruit(_Other.gameObject.GetHashCode());
+                    GameController.DestroyFruit(_otherHashCode);
                     return;
                 }
                 
-                GameController.FruitCollision(this.gameObject.GetHashCode(), _Other.gameObject.GetHashCode());
+                GameController.FruitCollision(this.gameObject.GetHashCode(), _otherHashCode);
             }
             else if (this.IsGoldenFruit)
             {
@@ -90,29 +94,67 @@ namespace Watermelon_Game.Fruit
                     GameController.GoldenFruitCollision(this.gameObject.GetHashCode());
                 }
             }
+
+        }
+
+        private void OnTriggerEnter2D(Collider2D _Other)
+        {
+            var _otherIsMaxHeight = _Other.gameObject.layer == LayerMask.NameToLayer("MaxHeight");
+            
+            if (_otherIsMaxHeight)
+            {
+                this.collisionWithMaxHeight = true;
+            }
+        }
+
+        private void OnTriggerExit2D(Collider2D _Other)
+        {
+            var _otherIsMaxHeight = _Other.gameObject.layer == LayerMask.NameToLayer("MaxHeight");
+
+            if (_otherIsMaxHeight)
+            {
+                this.collisionWithMaxHeight = false;
+            }
         }
         
-        private void GoldenFruit()
+        private void OnBecameInvisible()
         {
-            if (this.hasBeenEvolved || GameController.GetFruitCount() < GameController.Instance.FruitCollection.CanSpawnAfter)
+            if (this.collisionWithMaxHeight)
             {
-                return;
+                this.GoldenFruit(true);   
+            }
+        }
+        
+        private void GoldenFruit(bool _ForceEnable = false)
+        {
+            if (!_ForceEnable)
+            {
+                var _notEnoughFruitsOnMap =
+#if UNITY_EDITOR
+                    GameController.GetFruitCount(GameController.Instance.FruitCollection.GoldenFruitChance >= 100 ? 0 : 3) 
+#else
+                    GameController.GetFruitCount()
+#endif
+                    < GameController.Instance.FruitCollection.CanSpawnAfter;
+                
+                if (this.hasBeenEvolved || _notEnoughFruitsOnMap)
+                {
+                    return;
+                }
+                
+                var _maxNumber = (int)(100 / GameController.Instance.FruitCollection.GoldenFruitChance); 
+                var _numberToGet = Random.Range(1, _maxNumber);
+                var _randomNumber = Random.Range(1, _maxNumber);
+                
+                if (_numberToGet != _randomNumber)
+                {
+                    return;
+                }
             }
             
-            var _maxNumber = (int)(100 / GameController.Instance.FruitCollection.GoldenFruitChance); 
-            var _numberToGet = Random.Range(1, _maxNumber);
-            var _randomNumber = Random.Range(1, _maxNumber);
-
-            if (_numberToGet == _randomNumber)
-            {
-                this.IsGoldenFruit = true;
-                var _goldenFruitPrefab = Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, this.rigidbody2D.position, Quaternion.identity, this.transform);
-                var _light2D = _goldenFruitPrefab.GetComponentInChildren<Light2D>();
-
-                _light2D.pointLightOuterRadius = this.transform.localScale.x / 2;
-
-                GameOverMenu.Instance.Stats.GoldenFruitCount++;
-            }
+            this.IsGoldenFruit = true;
+            Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
+            GameOverMenu.Instance.Stats.GoldenFruitCount++;
         }
 
         public void EnableAnimation(bool _Value)
