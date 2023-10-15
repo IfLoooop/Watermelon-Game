@@ -13,11 +13,11 @@ namespace Watermelon_Game.Web
     internal sealed class WebSettings : WebBase
     {
         #region Constants
-        private const string REQUEST_URI = "https://raw.githubusercontent.com/MarkHerdt/Watermelon-Game/main/Settings";
+        private const string REQUEST_URI = "https://raw.githubusercontent.com/MarkHerdt/Watermelon-Game/main/Assets/SETTINGS.txt";
         #endregion
 
         #region Fields
-        public static Dictionary<string, object> SettingsMap { get; } = new()
+        private static Dictionary<string, object> SettingsMap { get; } = new()
         {
             
             // [FruitCollection]

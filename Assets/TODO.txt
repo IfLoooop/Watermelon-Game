@@ -1,18 +1,17 @@
 v1.2
 [ADDONS]
--Show a second "Next Fruit" after a melon evolution for 5 min
 -Make fruit a golden fruit if it goes out of screen and comes back
 -Push surrounding fruits away on evolve
 -Move evolving fruits together
+-Add evolve animation to fruit evolves
 
 v1.3
 [BUGS]
--Games except the first one, started in the same session, don't start with a grape fruit, because the previous fruit is not null
 -Game flashes/lights up when a golden fruit appears on the "Next Fruit" (some problem with "Light2D"-Component probably)
 [Changes]
+-Use events for "GameStar"/"GameOVer"
 -Add all stats immediately to the global stats, not just when the game ends
 [ADDONS]
--Add evolve animation to fruit evolves
 -Add different fruit faces (Default and Hurt) and randomize them
 -Add button to close the game
 -Play a holy sound when a golden fruit is in the fruit spawner, or some visual indicator (maybe a drop light or something similar)

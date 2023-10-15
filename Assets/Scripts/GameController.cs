@@ -109,6 +109,10 @@ namespace Watermelon_Game
                         var _fruit = Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
                         FruitBehaviour.SpawnFruit(_position, _fruit, true);
                     }
+                    else
+                    {
+                        NextFruit.Instance.ShowNextNextFruit();
+                    }
                 }
             }
         }
@@ -145,7 +149,7 @@ namespace Watermelon_Game
 
         public static void StartGame()
         {
-            FruitSpawner.Instance.Reset(true);
+            FruitSpawner.Instance.ResetFruitSpawner(true);
             FruitSpawnerAim.Enable(true);
             PointsController.Instance.ResetPoints();
             StatsMenu.Instance.GamesPlayed++;
@@ -170,6 +174,7 @@ namespace Watermelon_Game
             // Needed for the SkillController.PointsChanged() method to be called
             PointsController.Instance.SubtractPoints(0);
             MenuController.Instance.GameOver();
+            NextFruit.Instance.GameOVer();
         }
 
         /// <summary>
