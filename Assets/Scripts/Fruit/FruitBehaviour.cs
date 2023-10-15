@@ -19,6 +19,10 @@ namespace Watermelon_Game.Fruit
         #endregion
 
         #region Constants
+        // TODO: Move all these to a separate class
+        private const float EVOLVE_MASS = 100;
+        private const float MOVE_TOWARDS_WAIT_TIME = .01f;
+        private const float MOVE_TOWARDS_STEP_MULTIPLIER = .2f;
         private const float EVOLVE_WAIT_TIME = .005f;
         // Value must be a multiple of 5, otherwise it will overshoot the targeted scale
         private const float EVOLVE_STEP = .5f;
@@ -33,10 +37,14 @@ namespace Watermelon_Game.Fruit
         private Animation animation;
 #pragma warning restore CS0108, CS0114
         private SpriteRenderer face;
+        private EvolvingFruitTrigger evolvingFruitTrigger;
 
         private bool isHurt;
         private bool hasBeenEvolved;
         private bool collisionWithMaxHeight;
+        
+        [CanBeNull] private IEnumerator moveTowards;
+        private static readonly WaitForSeconds moveTowardsWaitTime = new(MOVE_TOWARDS_WAIT_TIME);
         [CanBeNull] private IEnumerator evolve;
         private static readonly WaitForSeconds evolveWaitTime = new(EVOLVE_WAIT_TIME);
         #endregion
@@ -45,15 +53,17 @@ namespace Watermelon_Game.Fruit
         public Fruit Fruit => this.fruit;
         public Skill? ActiveSkill { get; private set; }
         public bool IsGoldenFruit { get; private set; }
+        public bool IsEvolving { get; private set; }
         #endregion
         
         #region Methods
         private void Awake()
         {
-            this.rigidbody2D = this.GetComponent<Rigidbody2D>();
-            this.blockRelease = this.GetComponent<BlockRelease>();
-            this.animation = this.GetComponent<Animation>();
-            this.face = this.GetComponentsInChildren<SpriteRenderer>()[1];
+            this.rigidbody2D = base.GetComponent<Rigidbody2D>();
+            this.blockRelease = base.GetComponent<BlockRelease>();
+            this.animation = base.GetComponent<Animation>();
+            this.face = base.GetComponentsInChildren<SpriteRenderer>()[1];
+            this.evolvingFruitTrigger = base.GetComponentInChildren<EvolvingFruitTrigger>();
         }
 
         private void Start()
@@ -107,6 +117,12 @@ namespace Watermelon_Game.Fruit
 
         }
 
+        private void ResetFace()
+        {
+            this.face.sprite = GameController.Instance.FruitCollection.FaceDefault;
+            this.isHurt = false;
+        }
+        
         private void OnTriggerEnter2D(Collider2D _Other)
         {
             var _otherIsMaxHeight = _Other.gameObject.layer == LayerMask.NameToLayer("MaxHeight");
@@ -137,9 +153,15 @@ namespace Watermelon_Game.Fruit
 
         private void OnDestroy()
         {
+            // TODO: Temporary
+            GameController.RemoveFruit(base.gameObject.GetHashCode());
             if (this.evolve != null)
             {
                 base.StopCoroutine(this.evolve);
+            }
+            if (this.moveTowards != null)
+            {
+                base.StopCoroutine(this.moveTowards);
             }
         }
 
@@ -173,17 +195,6 @@ namespace Watermelon_Game.Fruit
             this.IsGoldenFruit = true;
             Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
             GameOverMenu.Instance.Stats.GoldenFruitCount++;
-        }
-
-        public void EnableAnimation(bool _Value)
-        {
-            this.animation.enabled = _Value;
-        }
-        
-        private void ResetFace()
-        {
-            this.face.sprite = GameController.Instance.FruitCollection.FaceDefault;
-            this.isHurt = false;
         }
         
         /// <summary>
@@ -228,6 +239,11 @@ namespace Watermelon_Game.Fruit
             return _fruitBehaviour;
         }
 
+        public void EnableAnimation(bool _Value)
+        {
+            this.animation.enabled = _Value;
+        }
+        
         /// <summary>
         /// Instantiates a specific fruit <br/>
         /// <i>For evolved fruits</i>
@@ -275,6 +291,38 @@ namespace Watermelon_Game.Fruit
             return null;
         }
 
+        public void MoveTowards(FruitBehaviour _FruitBehaviour)
+        {
+            this.IsEvolving = true;
+            this.evolvingFruitTrigger.SetFruitToEvolveWith(_FruitBehaviour);
+            base.gameObject.layer = LayerMask.NameToLayer("EvolvingFruit");
+            this.rigidbody2D.useAutoMass = false;
+            this.rigidbody2D.mass = EVOLVE_MASS;
+            this.moveTowards = InternalMoveTowards(_FruitBehaviour);
+            base.StartCoroutine(this.moveTowards);
+        }
+
+        private IEnumerator InternalMoveTowards(FruitBehaviour _FruitBehaviour)
+        {
+            this.rigidbody2D.velocity = Vector2.zero;
+            var _maxDistanceDelta = this.GetSize() * MOVE_TOWARDS_STEP_MULTIPLIER;
+            
+            while (base.transform.position != _FruitBehaviour.transform.position)
+            {
+                var _newPosition = Vector2.MoveTowards(base.transform.position, _FruitBehaviour.transform.position, _maxDistanceDelta);
+                this.rigidbody2D.MovePosition(_newPosition);
+                yield return moveTowardsWaitTime;
+            }
+            
+            base.StopCoroutine(this.moveTowards);
+        }
+
+        private float GetSize()
+        {
+            var _localScale = base.transform.localScale;
+            return (_localScale.x + _localScale.y + _localScale.z) / 3;
+        }
+        
         public void Evolve()
         {
             var _targetScale = base.transform.localScale;

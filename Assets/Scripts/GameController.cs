@@ -21,7 +21,13 @@ namespace Watermelon_Game
         /// <b>Key:</b> Hashcode of the fruit <see cref="GameObject"/> <br/>
         /// <b>Value:</b> The <see cref="FruitBehaviour"/>
         /// </summary>
-        private static readonly Dictionary<int, FruitBehaviour> fruits = new();
+        private static readonly Dictionary<int, FruitBehaviour> fruits = new(); // TODO: Change to "List<FruitBehaviour>"
+        /// <summary>
+        /// Fruits that are currently evolving <br/>
+        /// <b>Key:</b> Hashcode of the fruit <br/>
+        /// <b>Value:</b> Whether the fruit has reached the target position 
+        /// </summary>
+        private static readonly List<EvolvingFruits> evolvingFruits = new();
         #endregion
 
         #region Properties
@@ -42,112 +48,6 @@ namespace Watermelon_Game
             StartGame();
         }
         
-        /// <summary>
-        /// Adds a <see cref="FruitBehaviour"/> to <see cref="fruits"/>
-        /// </summary>
-        /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
-        public static void AddFruit(FruitBehaviour _FruitBehaviour)
-        {
-            fruits.Add(_FruitBehaviour.gameObject.GetHashCode(), _FruitBehaviour);
-        }
-
-        public static void GoldenFruitCollision(int _Fruit)
-        {
-            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
-
-            if (_fruit != null)
-            {
-                fruits.Remove(_Fruit);
-                
-                var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit.Fruit);
-                    
-                PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
-                Instance.FruitCollection.PlayEvolveSound();
-                
-                _fruit.Destroy();
-            }
-        }
-        
-        /// <summary>
-        /// Determines what happens when two fruits collide with each other
-        /// </summary>
-        /// <param name="_Fruit1">HashCode of the first fruit</param>
-        /// <param name="_Fruit2">HashCode of the second fruit</param>
-        public static void FruitCollision(int _Fruit1, int _Fruit2)
-        {
-            // TODO: Combine this method with the "Skill_Evolve()"-method in "SkillController.cs"
-            
-            var _fruit1 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit1).Value;
-            var _fruit2 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit2).Value;
-
-            if (_fruit1 != null && _fruit2 != null)
-            {
-                if (_fruit1.IsGoldenFruit || _fruit2.IsGoldenFruit)
-                {
-                    return;
-                }
-                
-                if (_fruit1.Fruit == _fruit2.Fruit)
-                {
-                    fruits.Remove(_Fruit1);
-                    fruits.Remove(_Fruit2);
-
-                    var _position = (_fruit1.transform.position + _fruit2.transform.position) / 2;
-                    var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit1.Fruit);
-                    
-                    PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
-                    GameOverMenu.Instance.AddFruitCount(_fruit1.Fruit);
-                    Instance.FruitCollection.PlayEvolveSound();
-                    
-                    //TODO: Move towards each other before destroying
-                    _fruit1.Destroy();
-                    _fruit2.Destroy();
-                    
-                    if (_fruitIndex != (int)Fruit.Fruit.Melon)
-                    {
-                        var _fruit = Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
-                        var _fruitBehaviour = FruitBehaviour.SpawnFruit(_position, _fruit, true);
-                        _fruitBehaviour.Evolve();
-                    }
-                    // When two Watermelons are evolved
-                    else
-                    {
-                        NextFruit.Instance.ShowNextNextFruit();
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Tries to evolve the fruit with the given HashCode
-        /// </summary>
-        /// <param name="_Fruit">The HashCode of the fruit to evolve</param>
-        public static void EvolveFruit(int _Fruit)
-        {
-            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
-
-            if (_fruit != null)
-            {
-                fruits.Remove(_Fruit);
-                SkillController.Instance.Skill_Evolve(_fruit);
-            }
-        }
-        
-        /// <summary>
-        /// Tries to destroy the fruit with the given HashCode
-        /// </summary>
-        /// <param name="_Fruit">The HashCode of the fruit to destroy</param>
-        public static void DestroyFruit(int _Fruit)
-        {
-            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
-
-            if (_fruit != null)
-            {
-                fruits.Remove(_Fruit);
-                SkillController.Instance.Skill_Destroy(_fruit);
-            }
-        }
-
         public static void StartGame()
         {
             FruitSpawner.Instance.ResetFruitSpawner(true);
@@ -179,6 +79,154 @@ namespace Watermelon_Game
         }
         
         /// <summary>
+        /// Determines what happens when two fruits collide with each other
+        /// </summary>
+        /// <param name="_Fruit1">HashCode of the first fruit</param>
+        /// <param name="_Fruit2">HashCode of the second fruit</param>
+        public static void FruitCollision(int _Fruit1, int _Fruit2)
+        {
+            // TODO: Combine this method with the "Skill_Evolve()"-method in "SkillController.cs"
+            
+            var _fruit1 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit1).Value;
+            var _fruit2 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit2).Value;
+
+            if (_fruit1 != null && _fruit2 != null)
+            {
+                if (_fruit1.IsGoldenFruit || _fruit2.IsGoldenFruit)
+                {
+                    return;
+                }
+                if (_fruit1.IsEvolving || _fruit2.IsEvolving)
+                {
+                    return;
+                }
+                
+                if (_fruit1.Fruit == _fruit2.Fruit)
+                {
+                    evolvingFruits.Add(new EvolvingFruits(_fruit1, _fruit2));
+                    
+                    _fruit1.MoveTowards(_fruit2);
+                    _fruit2.MoveTowards(_fruit1);
+                }
+            }
+        }
+
+        public static void Evolve(FruitBehaviour _FruitBehaviour, Vector3 _Position)
+        {
+            foreach (var _evolvingFruits in evolvingFruits)
+            {
+                var _fruitBehaviour1 = _evolvingFruits.Fruit1.FruitBehaviour;
+                var _fruitBehaviour2 = _evolvingFruits.Fruit2.FruitBehaviour;
+                
+                var _fruit1 = _fruitBehaviour1 == _FruitBehaviour;
+                var _fruit2 = _fruitBehaviour2 == _FruitBehaviour;
+                
+                if (_fruit1)
+                {
+                    _evolvingFruits.Fruit1Finished();
+                    if (_evolvingFruits.HaveBothFinished())
+                    {
+                        Evolve(_fruitBehaviour1, _fruitBehaviour2, _Position);
+                        break;
+                    }
+                }
+                else if (_fruit2)
+                {
+                    _evolvingFruits.Fruit2Finished();
+                    if (_evolvingFruits.HaveBothFinished())
+                    {
+                        Evolve(_fruitBehaviour1, _fruitBehaviour2, _Position);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        private static void Evolve(FruitBehaviour _Fruit1, FruitBehaviour _Fruit2, Vector3 _Position)
+        {
+            var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _Fruit1.Fruit);
+                    
+            PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
+            GameOverMenu.Instance.AddFruitCount(_Fruit1.Fruit);
+            Instance.FruitCollection.PlayEvolveSound();
+
+            evolvingFruits.RemoveAll(_EvolvingFruits => _EvolvingFruits.Contains(_Fruit1, _Fruit2));
+            fruits.Remove(_Fruit1.GetHashCode());
+            fruits.Remove(_Fruit2.GetHashCode());
+            
+            _Fruit1.Destroy();
+            _Fruit2.Destroy();
+                    
+            if (_fruitIndex != (int)Fruit.Fruit.Melon)
+            {
+                var _fruit = Instance.FruitCollection.Fruits[_fruitIndex + 1].Fruit;
+                var _fruitBehaviour = FruitBehaviour.SpawnFruit(_Position, _fruit, true);
+                _fruitBehaviour.Evolve();
+            }
+            // When two Watermelons are evolved
+            else
+            {
+                NextFruit.Instance.ShowNextNextFruit();
+            }
+        }
+        
+        public static void GoldenFruitCollision(int _Fruit)
+        {
+            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
+
+            if (_fruit != null)
+            {
+                fruits.Remove(_Fruit);
+                
+                var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit.Fruit);
+                    
+                PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
+                Instance.FruitCollection.PlayEvolveSound();
+                
+                _fruit.Destroy();
+            }
+        }
+        
+        /// <summary>
+        /// Tries to evolve the fruit with the given HashCode
+        /// </summary>
+        /// <param name="_Fruit">The HashCode of the fruit to evolve</param>
+        public static void EvolveFruit(int _Fruit)
+        {
+            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
+
+            if (_fruit != null)
+            {
+                fruits.Remove(_Fruit);
+                SkillController.Instance.Skill_Evolve(_fruit);
+            }
+        }
+        
+        /// <summary>
+        /// Tries to destroy the fruit with the given HashCode
+        /// </summary>
+        /// <param name="_Fruit">The HashCode of the fruit to destroy</param>
+        public static void DestroyFruit(int _Fruit)
+        {
+            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
+
+            if (_fruit != null)
+            {
+                fruits.Remove(_Fruit);
+                SkillController.Instance.Skill_Destroy(_fruit);
+            }
+        }
+        
+        /// <summary>
+        /// Adds a <see cref="FruitBehaviour"/> to <see cref="fruits"/>
+        /// </summary>
+        /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
+        public static void AddFruit(FruitBehaviour _FruitBehaviour)
+        {
+            fruits.Add(_FruitBehaviour.gameObject.GetHashCode(), _FruitBehaviour);
+        }
+        
+        /// <summary>
         /// Gets the current count of all fruits on the map
         /// </summary>
         /// <param name="_SubtractNextFruits">Subtracts this value from the count (for the next fruits)</param>
@@ -186,6 +234,12 @@ namespace Watermelon_Game
         public static int GetFruitCount(int _SubtractNextFruits = 3)
         {
             return fruits.Count - _SubtractNextFruits;
+        }
+
+        // TODO: Temporary
+        public static void RemoveFruit(int _FruitHashcode)
+        {
+            fruits.Remove(_FruitHashcode);
         }
         #endregion
     }

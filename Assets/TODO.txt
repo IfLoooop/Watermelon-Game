@@ -1,10 +1,11 @@
 v1.2
 [ADDONS]
--Move evolving fruits together
+-MaxHeight GoldenFruit indicator
+-Log Exceptions to a .txt file
 
 v1.3
 [BUGS]
--Game flashes/lights up when a golden fruit appears on the "Next Fruit" (some problem with "Light2D"-Component probably)
+-MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit.
 [Changes]
 -Use events for "GameStar"/"GameOVer"
 -Add all stats immediately to the global stats, not just when the game ends

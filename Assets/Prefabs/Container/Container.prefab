@@ -1140,7 +1140,7 @@ GameObject:
   - component: {fileID: 3066664071487176466}
   - component: {fileID: 3128778957537943521}
   - component: {fileID: 7650685283993315556}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Border Line
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2692,7 +2692,7 @@ GameObject:
   - component: {fileID: 5853220576377462814}
   - component: {fileID: 6119024899300205194}
   - component: {fileID: 3392972658731553383}
-  m_Layer: 9
+  m_Layer: 8
   m_Name: MaxHeight
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -9,14 +9,14 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ignore
   - Water
   - UI
   - Container
   - Spawner
-  - Fruit
   - MaxHeight
-  - 
+  - Fruit
+  - EvolvingFruit
   - 
   - 
   - 
