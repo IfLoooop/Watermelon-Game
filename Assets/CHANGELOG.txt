@@ -17,10 +17,14 @@ v1.1 (12.10.2023)
 ------------------------------------------------------------------------------------------------------------------------
 
 v1.2 (TBA) // TODO: Set date
+[BUGS]
+-Fixed a bug where the countdown would run, even after all fruits have left the height limit 
+
 [Changes]
 -Changed the font
 -Changed the look of the golden fruits
 -Fruits on the FruitSpawner are now displayed on top of all other fruits (when the fruit stack reached that height)
+-Fruits on the FruitSpawner can't be released while they overlap with another fruit
 
 [Addons]
 -Added falling fruit to the background
@@ -30,3 +34,4 @@ v1.2 (TBA) // TODO: Set date
 -Added a "grow" animation to evolving fruits
 -Fruits can push surrounding fruits away while they evolve
 -Error messages will now be logged at: "..\ROOT_FOLDER\Error Logs\LOG_FILE.txt"
+-A sound is played when a fruit can't be released due to overlapping with another fruit

@@ -889,6 +889,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3143062580096204648, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
+      propertyPath: releaseCooldown
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 3257401412337512997, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 52.299988

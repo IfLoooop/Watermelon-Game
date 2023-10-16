@@ -3,9 +3,8 @@ v1.2
 
 v1.3
 [BUGS]
--MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit.
+-MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit. (Should be fixed, needs more testing)
 [Changes]
--Add a minimum fruit release cooldown
 -Use events for "GameStar"/"GameOVer"
 -Add all stats immediately to the global stats, not just when the game ends
 [ADDONS]

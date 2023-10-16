@@ -37,6 +37,7 @@ namespace Watermelon_Game.Fruit
 #pragma warning disable CS0108, CS0114
         private Rigidbody2D rigidbody2D;
 #pragma warning restore CS0108, CS0114
+        private CircleCollider2D circleCollider2D;
         private BlockRelease blockRelease;
 #pragma warning disable CS0108, CS0114
         private Animation animation;
@@ -56,6 +57,7 @@ namespace Watermelon_Game.Fruit
 
         #region Properties
         public Fruit Fruit => this.fruit;
+        public float ColliderRadius => this.circleCollider2D.radius;
         public Skill? ActiveSkill { get; private set; }
         public bool IsGoldenFruit { get; private set; }
         public bool IsEvolving { get; private set; }
@@ -65,6 +67,7 @@ namespace Watermelon_Game.Fruit
         private void Awake()
         {
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
+            this.circleCollider2D = base.GetComponent<CircleCollider2D>();
             this.blockRelease = base.GetComponent<BlockRelease>();
             this.animation = base.GetComponent<Animation>();
             this.evolvingFruitTrigger = base.GetComponentInChildren<EvolvingFruitTrigger>();

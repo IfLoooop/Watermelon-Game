@@ -15,6 +15,8 @@ namespace Watermelon_Game.Fruit_Spawn
         [SerializeField] private float maxRotationAngle = 60f;
         [SerializeField] private AudioClip release;
         [SerializeField] private float releaseClipVolume = .01f;
+        [SerializeField] private AudioClip blockedRelease;
+        [SerializeField] private float blockedReleaseVolume = .0175f;
         [SerializeField] private AudioClip shoot;
         [SerializeField] private float shootClipStartTime = .1f;
         [SerializeField] private float shootClipVolume = .05f;
@@ -24,7 +26,8 @@ namespace Watermelon_Game.Fruit_Spawn
 #pragma warning disable CS0108, CS0114
         private Rigidbody2D rigidbody2D;
 #pragma warning restore CS0108, CS0114
-        private BoxCollider2D boxCollider2D;
+        private BoxCollider2D fruitSpawnerCollider;
+        private CircleCollider2D fruitTrigger;
         private AudioSource audioSource;
         
         /// <summary>
@@ -33,7 +36,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private Vector2 startingPosition;
         private const float COLLIDER_SIZE_OFFSET = 3.85f;
-
+        
         /// <summary>
         /// The <see cref="FruitBehaviour"/> that is currently attached to this <see cref="FruitSpawner"/> 
         /// </summary>
@@ -57,21 +60,22 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             Instance = this;
             
-            this.rigidbody2D = this.GetComponent<Rigidbody2D>();
-            this.boxCollider2D = this.GetComponent<BoxCollider2D>();
-            this.audioSource = this.GetComponent<AudioSource>();
+            this.rigidbody2D = base.GetComponent<Rigidbody2D>();
+            this.fruitSpawnerCollider = base.GetComponent<BoxCollider2D>();
+            this.fruitTrigger = base.GetComponentInChildren<CircleCollider2D>();
+            this.audioSource = base.GetComponent<AudioSource>();
         }
 
         private void Start()
         {
             this.startingPosition = this.transform.position;
         }
-
+        
         private void Update()
         {
             this.GetInput();
         }
-
+        
         private void GetInput()
         {
             if (!this.BlockInput)
@@ -101,6 +105,13 @@ namespace Watermelon_Game.Fruit_Spawn
         
         private void ReleaseFruit()
         {
+            var _fruitInTrigger = this.fruitTrigger.IsTouchingLayers(LayerMask.GetMask("Fruit"));
+            if (_fruitInTrigger)
+            {
+                this.audioSource.Play(0, this.blockedRelease, this.blockedReleaseVolume);
+                return;
+            }
+            
             this.BlockRelease = true;
             this.fruitBehaviour.SetOrderInLayer(0);
             FruitSpawnerAim.Enable(false);
@@ -140,8 +151,15 @@ namespace Watermelon_Game.Fruit_Spawn
                 this.rigidbody2D.MovePosition(this.startingPosition);
             this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform);
             this.fruitBehaviour.SetOrderInLayer(1);
-            this.boxCollider2D.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, this.boxCollider2D.size.y);
+            this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, this.fruitSpawnerCollider.size.y);
+            this.SetFruitTrigger(this.fruitBehaviour);
             this.BlockInput = false;
+        }
+
+        private void SetFruitTrigger(FruitBehaviour _Fruit)
+        {
+            this.fruitTrigger.transform.localScale = _Fruit.transform.localScale;
+            this.fruitTrigger.radius = _Fruit.ColliderRadius;
         }
         
         /// <summary>

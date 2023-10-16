@@ -14,16 +14,18 @@ namespace Watermelon_Game.MaxHeight
         #endregion
         
         #region Fields
+        private BoxCollider2D boxCollider2D;
         private Animation borderLineAnimation;
         private Animation countdownAnimation;
         private TextMeshProUGUI countdownText;
         private AudioSource audioSource;
         private GodRayFlicker godRayFlicker;
         
-        /// <summary>
-        /// How many fruits are currently inside the trigger
-        /// </summary>
-        private int triggerCount;
+        // TODO: Remove
+        // /// <summary>
+        // /// How many fruits are currently inside the trigger
+        // /// </summary>
+        // private int triggerCount;
         private uint currentCountdownTime;
         #endregion
         
@@ -35,6 +37,7 @@ namespace Watermelon_Game.MaxHeight
         private void Awake()
         {
             Instance = this;
+            this.boxCollider2D = base.GetComponent<BoxCollider2D>();
             this.borderLineAnimation = base.GetComponentInChildren<SpriteRenderer>().gameObject.GetComponent<Animation>();
             this.countdownAnimation = base.GetComponent<Animation>();
             this.countdownText = base.GetComponentInChildren<TextMeshProUGUI>();
@@ -49,9 +52,15 @@ namespace Watermelon_Game.MaxHeight
         
         private void OnTriggerEnter2D(Collider2D _Other)
         {
-            this.triggerCount++;
-            this.countdownAnimation.enabled = true;
-            this.borderLineAnimation.Play();
+            if (!this.countdownAnimation.enabled)
+            {
+                this.countdownAnimation.enabled = true;
+            }
+            
+            // TODO: Remove
+            // this.triggerCount++;
+            // this.countdownAnimation.enabled = true;
+            // this.borderLineAnimation.Play();
         }
 
         private void OnTriggerStay2D(Collider2D _Other)
@@ -64,12 +73,18 @@ namespace Watermelon_Game.MaxHeight
 
         private void OnTriggerExit2D(Collider2D _Other)
         {
-            this.triggerCount--;
-
-            if (this.triggerCount <= 0)
+            var _fruitInTrigger = this.boxCollider2D.IsTouchingLayers(LayerMask.GetMask("Fruit"));
+            if (!_fruitInTrigger)
             {
                 this.Reset();
             }
+            
+            // TODO: Remove
+            // this.triggerCount--;
+            // if (this.triggerCount <= 0)
+            // {
+            //     this.Reset();
+            // }
         }
 
         public void CountDown()
@@ -108,7 +123,7 @@ namespace Watermelon_Game.MaxHeight
             this.countdownAnimation.Rewind();
             this.audioSource.Stop();
         }
-
+        
         public void SetGodRays(bool _Enabled)
         {
             if (_Enabled)
