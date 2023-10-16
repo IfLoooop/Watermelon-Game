@@ -42,7 +42,7 @@ namespace Watermelon_Game
         {
             Instance = this;
         }
-
+        
         private void Start()
         {
             StartGame();

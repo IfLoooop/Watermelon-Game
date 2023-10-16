@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4413883939538818617}
   - component: {fileID: 5114902940987265364}
   - component: {fileID: 5598037749710729277}
-  - component: {fileID: 3143062580096204648}
   - component: {fileID: 4692112071213504400}
+  - component: {fileID: 3143062580096204648}
   m_Layer: 7
   m_Name: Fruit Spawner
   m_TagString: Untagged
@@ -109,26 +109,6 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 6
---- !u!114 &3143062580096204648
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 461100779152302891}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e67cd576e26e1ff4994e4a2c1e9175fa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 2
-  rotationStep: 50
-  maxRotationAngle: 80
-  release: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
-  releaseClipVolume: 0.01
-  shoot: {fileID: 8300000, guid: 7e26c9daf4c32483b9c2790e662d3f1b, type: 3}
-  shootClipStartTime: 0.1
-  shootClipVolume: 0.05
 --- !u!82 &4692112071213504400
 AudioSource:
   m_ObjectHideFlags: 0
@@ -225,6 +205,26 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &3143062580096204648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461100779152302891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67cd576e26e1ff4994e4a2c1e9175fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 2
+  rotationStep: 50
+  maxRotationAngle: 80
+  release: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
+  releaseClipVolume: 0.01
+  shoot: {fileID: 8300000, guid: 7e26c9daf4c32483b9c2790e662d3f1b, type: 3}
+  shootClipStartTime: 0.1
+  shootClipVolume: 0.05
 --- !u!1 &547782021356760046
 GameObject:
   m_ObjectHideFlags: 0

@@ -112,8 +112,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8888942529342501445}
-  - component: {fileID: 4686618415527089397}
   - component: {fileID: 7721585137889532341}
+  - component: {fileID: 4686618415527089397}
   m_Layer: 0
   m_Name: Menu Controller
   m_TagString: Untagged
@@ -137,21 +137,6 @@ Transform:
   - {fileID: 1962258329958274147}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4686618415527089397
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5359634708388064671}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55911d8f665e07946b042be37ce93961, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  statsMenu: {fileID: 7405376033566191119}
-  gameOverMenu: {fileID: 2849147349170412905}
-  audioClipStartTime: 0
 --- !u!82 &7721585137889532341
 AudioSource:
   m_ObjectHideFlags: 0
@@ -248,6 +233,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4686618415527089397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5359634708388064671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55911d8f665e07946b042be37ce93961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  statsMenu: {fileID: 7405376033566191119}
+  gameOverMenu: {fileID: 2849147349170412905}
+  audioClipStartTime: 0
 --- !u!1001 &967904039308467223
 PrefabInstance:
   m_ObjectHideFlags: 0

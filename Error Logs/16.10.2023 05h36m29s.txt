@@ -1,0 +1,14 @@
+Exception
+NullReferenceException: Object reference not set to an instance of an object
+Watermelon_Game.Menu.MenuController.InitializeMenu (Watermelon_Game.Menu.MenuBase _Menu) (at Assets/Scripts/Menu/MenuController.cs:59)
+Watermelon_Game.Menu.MenuController.Awake () (at Assets/Scripts/Menu/MenuController.cs:32)
+------------------------------------------------------------------------
+Exception
+NullReferenceException: Object reference not set to an instance of an object
+Watermelon_Game.GameController.StartGame () (at Assets/Scripts/GameController.cs:56)
+Watermelon_Game.GameController.Start () (at Assets/Scripts/GameController.cs:48)
+------------------------------------------------------------------------
+Exception
+NullReferenceException: Object reference not set to an instance of an object
+Watermelon_Game.Menu.MenuController.OnApplicationQuit () (at Assets/Scripts/Menu/MenuController.cs:50)
+------------------------------------------------------------------------
