@@ -2,12 +2,10 @@ v1.3
 [BUGS]
 -MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit. (Should be fixed, needs more testing)
 [Changes]
--Use events for "GameStar"/"GameOVer"
 -Add all stats immediately to the global stats, not just when the game ends
 [ADDONS]
 -Add different fruit faces (Default and Hurt) and randomize them
 -Add button to close the game
--Play a holy sound when a golden fruit is in the fruit spawner, or some visual indicator (maybe a drop light or something similar)
 -Add a master sound slider
 
 v1.3_1
@@ -15,8 +13,9 @@ v1.3_1
 -Code and Project cleanup
 -Add a layer and tag controller
 -Add a "Order in Layer"-Controller
+-Use events for "GameStar"/"GameOVer"
 [ADDONS]
--Add Buttler to the build pipeline
+-Add Butler to the build pipeline
 -Add a clickable link to the Itch page when an update is available
 
 [BACKLOG]
