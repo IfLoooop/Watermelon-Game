@@ -7,7 +7,20 @@ namespace Watermelon_Game.Editor
     internal static class Shortcuts
     {
         #region Methods
-        [MenuItem("Shortcuts/Start Build")]
+        [MenuItem("Build/Debug Build")]
+        private static void DebugBuild()
+        {
+            var _path = EditorUtility.SaveFolderPanel("Debug Build", "", "");
+            
+            if (!string.IsNullOrWhiteSpace(_path))
+            {
+                _path = BuildSettings.CreateDebugFolder(_path);
+                
+                BuildSettings.BuildPlayer(_path); 
+            }
+        }
+        
+        [MenuItem("Build/Release Build")]
         private static async void StartBuild()
         {
             var _version = await VersionControl.GetLatestVersion();
@@ -18,7 +31,7 @@ namespace Watermelon_Game.Editor
             }
             else
             {
-                var _path = EditorUtility.SaveFolderPanel("Choose Location", "", "");
+                var _path = EditorUtility.SaveFolderPanel("Release Build", "", "");
             
                 if (!string.IsNullOrWhiteSpace(_path))
                 {

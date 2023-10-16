@@ -30,6 +30,7 @@ namespace Watermelon_Game.Background
 
         #region Properties
         public static BackgroundController Instance { get; private set; }
+        public float YPosition => this.yPosition;
         public float SizeMultiplier => this.sizeMultiplier;
         public float ForceMultiplier => this.forceMultiplier;
         public ForceMode2D ForceMode => this.forceMode;

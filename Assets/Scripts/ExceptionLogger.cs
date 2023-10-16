@@ -53,6 +53,10 @@ namespace Watermelon_Game
 
         private static async void OnLogMessageReceived(string _Condition, string _Stacktrace, LogType _Type)
         {
+#if UNITY_EDITOR
+            return;
+#endif
+#pragma warning disable CS0162
             try
             {
                 var _message = string.Concat(_Type, Environment.NewLine, _Condition, Environment.NewLine, _Stacktrace, SEPARATOR, Environment.NewLine);
@@ -61,6 +65,7 @@ namespace Watermelon_Game
                 await streamWriter.FlushAsync();
             }
             catch { /* Ignored */ }
+#pragma warning restore CS0162
         }
         
         private static void OnApplicationQuit()

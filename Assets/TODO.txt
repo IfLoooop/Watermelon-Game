@@ -1,6 +1,5 @@
 v1.2
-[ADDONS]
--Log Exceptions to a .txt file
+
 
 v1.3
 [BUGS]

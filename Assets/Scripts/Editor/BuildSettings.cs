@@ -17,6 +17,7 @@ namespace Watermelon_Game.Editor
         private const string WINDOWS = "Windows";
         private const string LINUX = "Linux";
         private const string MAC = "Mac";
+        private const string DEBUG = "Debug";
 
         private const string BURST_DEBUG_INFORMATION = "_BurstDebugInformation_DoNotShip";
         private const string BACKUP_THIS_FOLDER = "_BackUpThisFolder_ButDontShipItWithYourGame";
@@ -34,8 +35,9 @@ namespace Watermelon_Game.Editor
             var _target = EditorUserBuildSettings.activeBuildTarget;
             var _group = BuildPipeline.GetBuildTargetGroup(_target);
             PlayerSettings.SetArchitecture(_group, 2);
-            
-            if (_Report.summary.platform == BuildTarget.StandaloneWindows64)
+
+            var _isWindowsBuild = _Report.summary.platform == BuildTarget.StandaloneWindows64;
+            if (_isWindowsBuild)
             {
                 PlayerSettings.SetScriptingBackend(_group, ScriptingImplementation.IL2CPP);
             }
@@ -43,10 +45,30 @@ namespace Watermelon_Game.Editor
             {
                 PlayerSettings.SetScriptingBackend(_group, ScriptingImplementation.Mono2x);
             }
+            
+            var _isDevelopmentBuild = (_Report.summary.options & BuildOptions.Development) != 0;
+            if (_isDevelopmentBuild)
+            {
+                PlayerSettings.SetIl2CppCompilerConfiguration(_group, Il2CppCompilerConfiguration.Debug);
+                PlayerSettings.SetManagedStrippingLevel(_group, ManagedStrippingLevel.Minimal);
+
+            }
+            else
+            {
+                PlayerSettings.SetIl2CppCompilerConfiguration(_group, Il2CppCompilerConfiguration.Master);
+                PlayerSettings.SetManagedStrippingLevel(_group, ManagedStrippingLevel.High);
+            }
         }
         
         public async void OnPostprocessBuild(BuildReport _Report)
         {
+            var _isDevelopmentBuild = (_Report.summary.options & BuildOptions.Development) != 0;
+
+            if (_isDevelopmentBuild)
+            {
+                return;
+            }
+            
             // Method is called somewhere at the end of the build, not exactly when the build has finished, so need to wait for the previous build to completely finish
             await Task.Delay(TASK_DELAY);
             
@@ -67,6 +89,17 @@ namespace Watermelon_Game.Editor
                 Debug.Log($"<color=green>Windows Build</color> {_Report.summary.outputPath}");
                 CleanUp(CreateInstallPath(_Report.summary.outputPath, WINDOWS, true), WINDOWS);
             }
+        }
+
+        public static string CreateDebugFolder(string _Directory)
+        {
+            var _debug = Path.Combine(_Directory, DEBUG);
+
+            Directory.CreateDirectory(_debug);
+            
+            DeleteAllFilesInDirectory(_debug);
+            
+            return Path.Combine(_debug, GetApplicationName(true));
         }
         
         public static string CreatePlatformFolders(string _Directory)
@@ -110,6 +143,13 @@ namespace Watermelon_Game.Editor
         private static string CreateInstallPath(string _Path, string _AddDirectory, bool _OnlyFolder = false)
         {
             return Path.Combine(Directory.GetParent(_Path)!.Parent!.FullName, _AddDirectory, _OnlyFolder ? "" : GetApplicationName(true));
+        }
+
+        public static void BuildPlayer(string _Path)
+        {
+            var _levels = new[] { SceneManager.GetActiveScene().path };
+            
+            BuildPipeline.BuildPlayer(_levels, _Path, BuildTarget.StandaloneWindows64, BuildOptions.Development | BuildOptions.CompressWithLz4);
         }
         
         public static void BuildPlayer(string _Path, BuildTarget _BuildTarget)

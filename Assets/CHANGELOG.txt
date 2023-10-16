@@ -20,10 +20,13 @@ v1.2 (TBA) // TODO: Set date
 [Changes]
 -Changed the font
 -Changed the look of the golden fruits
+-Fruits on the FruitSpawner are now displayed on top of all other fruits (when the fruit stack reached that height)
 
 [Addons]
 -Added falling fruit to the background
 -A second "Next Fruit" will be shown for 5min after a melon has been evolved
--Fruits now become a golden fruit when there are shot outside the visible map and come back
--Added a "grow" animation to evolving fruits
+-Fruits now become a golden fruit when they are shot outside the visible map and come back
 -Fruits move closer together just before they evolve
+-Added a "grow" animation to evolving fruits
+-Fruits can push surrounding fruits away while they evolve
+-Error messages will now be logged at: "..\ROOT_FOLDER\Error Logs\LOG_FILE.txt"

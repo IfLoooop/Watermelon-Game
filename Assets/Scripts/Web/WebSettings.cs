@@ -72,6 +72,7 @@ namespace Watermelon_Game.Web
 #if DEBUG && !UNITY_EDITOR
             return;
 #endif
+#pragma warning disable CS0162
             if (!Application.isEditor)
             {
                 await CheckSettings().ContinueWith(_ =>
@@ -82,6 +83,7 @@ namespace Watermelon_Game.Web
                     BackgroundController.Instance.ApplyWebSettings();
                 });
             }
+#pragma warning restore CS0162
         }
         
         private static async Task CheckSettings()

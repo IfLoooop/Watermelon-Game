@@ -2907,11 +2907,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   godRay: {fileID: 6931568583460836943}
   floodLight: {fileID: 8300000, guid: 79e6baad2fd414b82a6d49ce1568d2e5, type: 3}
-  flickerSound: {fileID: 8300000, guid: 6e8772b49f34d402a90016ed445d8a2f, type: 3}
+  flickerSound: {fileID: 8300000, guid: d1a25cf202625944996ce54a686ad573, type: 3}
   maxFlickerDuration: 0.25
-  flickerStep: {x: 0.035, y: 0.045}
-  floodLightVolume: 0.05
-  flickerVolume: 0.375
+  flickerStep: {x: 0.04, y: 0.06}
+  floodLightVolume: 0.0375
+  flickerVolume: 0.25
 --- !u!1 &8711353744565774243
 GameObject:
   m_ObjectHideFlags: 0

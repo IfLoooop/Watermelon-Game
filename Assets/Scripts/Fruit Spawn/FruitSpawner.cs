@@ -102,6 +102,7 @@ namespace Watermelon_Game.Fruit_Spawn
         private void ReleaseFruit()
         {
             this.BlockRelease = true;
+            this.fruitBehaviour.SetOrderInLayer(0);
             FruitSpawnerAim.Enable(false);
             this.fruitBehaviour.transform.SetParent(null, true);
             this.fruitBehaviour.Release(this, -this.transform.up);
@@ -138,6 +139,7 @@ namespace Watermelon_Game.Fruit_Spawn
             if (_ResetPosition)
                 this.rigidbody2D.MovePosition(this.startingPosition);
             this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform);
+            this.fruitBehaviour.SetOrderInLayer(1);
             this.boxCollider2D.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, this.boxCollider2D.size.y);
             this.BlockInput = false;
         }

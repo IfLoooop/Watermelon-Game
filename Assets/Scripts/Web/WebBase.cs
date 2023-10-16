@@ -15,20 +15,24 @@ namespace Watermelon_Game.Web
             {
                 ServerCertificateCustomValidationCallback = (_, _, _, _) => true
             });
-            
-            await using var _websiteStream = await _client.GetStreamAsync(_RequestUri);
 
-            if (_websiteStream == null)
+            try
             {
-                return;
-            }
+                await using var _websiteStream = await _client.GetStreamAsync(_RequestUri);
+                
+                if (_websiteStream == null)
+                {
+                    return;
+                }
             
-            using var _streamReader = new StreamReader(_websiteStream);
+                using var _streamReader = new StreamReader(_websiteStream);
 
-            while (await _streamReader.ReadLineAsync() is {} _currentLine)
-            {
-                _Action(_currentLine);
+                while (await _streamReader.ReadLineAsync() is {} _currentLine)
+                {
+                    _Action(_currentLine);
+                }
             }
+            catch { /* Ignored */ }
         }
 
         /// <summary>

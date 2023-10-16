@@ -2,6 +2,7 @@ using System.Collections;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
+using Watermelon_Game.Background;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
 using Watermelon_Game.Skills;
@@ -15,6 +16,10 @@ namespace Watermelon_Game.Fruit
     internal sealed class FruitBehaviour : MonoBehaviour
     {
         #region Inspector Fields
+        [Header("References")]
+        [SerializeField] private SpriteRenderer fruitSprite;
+        [SerializeField] private SpriteRenderer faceSprite;
+        [Header("Settings")]
         [SerializeField] private Fruit fruit;
         #endregion
 
@@ -36,7 +41,6 @@ namespace Watermelon_Game.Fruit
 #pragma warning disable CS0108, CS0114
         private Animation animation;
 #pragma warning restore CS0108, CS0114
-        private SpriteRenderer face;
         private EvolvingFruitTrigger evolvingFruitTrigger;
 
         private bool isHurt;
@@ -63,7 +67,6 @@ namespace Watermelon_Game.Fruit
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
             this.blockRelease = base.GetComponent<BlockRelease>();
             this.animation = base.GetComponent<Animation>();
-            this.face = base.GetComponentsInChildren<SpriteRenderer>()[1];
             this.evolvingFruitTrigger = base.GetComponentInChildren<EvolvingFruitTrigger>();
         }
 
@@ -78,7 +81,7 @@ namespace Watermelon_Game.Fruit
             if (!this.isHurt)
             {
                 this.isHurt = true;
-                this.face.sprite = GameController.Instance.FruitCollection.FaceHurt;
+                this.faceSprite.sprite = GameController.Instance.FruitCollection.FaceHurt;
                 this.Invoke(nameof(this.ResetFace), 1);
             }
             
@@ -120,7 +123,7 @@ namespace Watermelon_Game.Fruit
 
         private void ResetFace()
         {
-            this.face.sprite = GameController.Instance.FruitCollection.FaceDefault;
+            this.faceSprite.sprite = GameController.Instance.FruitCollection.FaceDefault;
             this.isHurt = false;
         }
         
@@ -148,8 +151,16 @@ namespace Watermelon_Game.Fruit
         {
             if (this.collisionWithMaxHeight)
             {
-                this.GoldenFruit(true);
-                MaxHeight.MaxHeight.Instance.SetGodRays(true);
+                var _centerPoint = base.transform.position.y;
+                var _extends = base.transform.localScale.y / 2;
+                var _lowestPoint = _centerPoint + _extends;
+                var _isOutOfScreen = _lowestPoint > BackgroundController.Instance.YPosition;
+                
+                if (_isOutOfScreen)
+                {
+                    this.GoldenFruit(true);
+                    MaxHeight.MaxHeight.Instance.SetGodRays(true);   
+                }
             }
         }
 
@@ -202,6 +213,12 @@ namespace Watermelon_Game.Fruit
             this.isUpgradedGoldenFruit = _ForceEnable;
             Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
             GameOverMenu.Instance.Stats.GoldenFruitCount++;
+        }
+
+        public void SetOrderInLayer(int _OrderInLayer)
+        {
+            this.fruitSprite.sortingOrder = _OrderInLayer;
+            this.faceSprite.sortingOrder = _OrderInLayer + 1;
         }
         
         /// <summary>

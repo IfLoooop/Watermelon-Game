@@ -11,9 +11,9 @@ namespace Watermelon_Game.MaxHeight
         [SerializeField] private AudioClip flickerSound;
         [Header("Settings")]
         [SerializeField] private float maxFlickerDuration = .25f;
-        [SerializeField] private Vector2 flickerStep = new(.035f, .045f);
-        [SerializeField] private float floodLightVolume = .05f;
-        [SerializeField] private float flickerVolume = .375f;
+        [SerializeField] private Vector2 flickerStep = new(.04f, .06f);
+        [SerializeField] private float floodLightVolume = .0375f;
+        [SerializeField] private float flickerVolume = .25f;
         #endregion
 
         #region Fields
@@ -30,6 +30,13 @@ namespace Watermelon_Game.MaxHeight
 
         private void OnEnable()
         {
+            var _isGodRayActive = this.godRay.gameObject.activeSelf;
+            if (!_isGodRayActive)
+            {
+                this.enabled = false;
+                return;
+            }
+            
             this.currentFlickerDuration = 0;
             this.nextFlicker = 0;
             this.audioSource.clip = this.flickerSound;
