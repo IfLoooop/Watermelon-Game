@@ -16,7 +16,7 @@ v1.1 (12.10.2023)
 
 ------------------------------------------------------------------------------------------------------------------------
 
-v1.2 (TBA) // TODO: Set date
+v1.2 (17.10.2023)
 [BUGS]
 -Fixed a bug where the countdown would run, even after all fruits have left the height limit 
 
