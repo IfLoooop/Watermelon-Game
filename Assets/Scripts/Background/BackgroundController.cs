@@ -41,11 +41,15 @@ namespace Watermelon_Game.Background
         {
             Instance = this;
             
-            this.InitializeFruits();
             this.SetPositionValues();
             
             this.fruitPool = new ObjectPool<BackgroundFruit>(this.backgroundFruitPrefab, base.transform);
             this.delay = this.fruitSpawnDelay;
+        }
+
+        private void Start()
+        {
+            this.InitializeFruits();
         }
 
         private void InitializeFruits()

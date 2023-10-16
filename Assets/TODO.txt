@@ -1,12 +1,12 @@
 v1.2
 [ADDONS]
--MaxHeight GoldenFruit indicator
 -Log Exceptions to a .txt file
 
 v1.3
 [BUGS]
 -MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit.
 [Changes]
+-Add a minimum fruit release cooldown
 -Use events for "GameStar"/"GameOVer"
 -Add all stats immediately to the global stats, not just when the game ends
 [ADDONS]
@@ -19,6 +19,7 @@ v1.3_1
 [CHANGES]
 -Code and Project cleanup
 -Add a layer and tag controller
+-Add a "Order in Layer"-Controller
 [ADDONS]
 -Add Buttler to the build pipeline
 -Add a clickable link to the Itch page when an update is available

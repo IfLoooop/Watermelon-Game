@@ -42,6 +42,7 @@ namespace Watermelon_Game.Fruit
         private bool isHurt;
         private bool hasBeenEvolved;
         private bool collisionWithMaxHeight;
+        private bool isUpgradedGoldenFruit;
         
         [CanBeNull] private IEnumerator moveTowards;
         private static readonly WaitForSeconds moveTowardsWaitTime = new(MOVE_TOWARDS_WAIT_TIME);
@@ -147,7 +148,8 @@ namespace Watermelon_Game.Fruit
         {
             if (this.collisionWithMaxHeight)
             {
-                this.GoldenFruit(true);   
+                this.GoldenFruit(true);
+                MaxHeight.MaxHeight.Instance.SetGodRays(true);
             }
         }
 
@@ -163,6 +165,10 @@ namespace Watermelon_Game.Fruit
             {
                 base.StopCoroutine(this.moveTowards);
             }
+            if (this.isUpgradedGoldenFruit)
+            {
+                MaxHeight.MaxHeight.Instance.SetGodRays(false);
+            }
         }
 
         private void GoldenFruit(bool _ForceEnable = false)
@@ -171,7 +177,7 @@ namespace Watermelon_Game.Fruit
             {
                 var _notEnoughFruitsOnMap =
 #if UNITY_EDITOR
-                    GameController.GetFruitCount(GameController.Instance.FruitCollection.GoldenFruitChance >= 100 ? 0 : 3) 
+                    (GameController.Instance.FruitCollection.GoldenFruitChance >= 100 ? GameController.Instance.FruitCollection.CanSpawnAfter : GameController.GetFruitCount())
 #else
                     GameController.GetFruitCount()
 #endif
@@ -193,6 +199,7 @@ namespace Watermelon_Game.Fruit
             }
             
             this.IsGoldenFruit = true;
+            this.isUpgradedGoldenFruit = _ForceEnable;
             Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
             GameOverMenu.Instance.Stats.GoldenFruitCount++;
         }

@@ -229,11 +229,11 @@ namespace Watermelon_Game
         /// <summary>
         /// Gets the current count of all fruits on the map
         /// </summary>
-        /// <param name="_SubtractNextFruits">Subtracts this value from the count (for the next fruits)</param>
         /// <returns>Returns the current count of all fruits on the map</returns>
-        public static int GetFruitCount(int _SubtractNextFruits = 3)
+        public static int GetFruitCount()
         {
-            return fruits.Count - _SubtractNextFruits;
+            // Subtracts "-3" for the "FruitSpawner", "NextFruit" and "NextNextFruit"
+            return fruits.Count - 3;
         }
 
         // TODO: Temporary

@@ -1,11 +1,15 @@
 using TMPro;
 using UnityEngine;
 
-namespace Watermelon_Game
+namespace Watermelon_Game.MaxHeight
 {
     internal sealed class MaxHeight : MonoBehaviour
     {
         #region Inspector Fields
+#if UNITY_EDITOR
+        [SerializeField] private bool disableCountDown;
+#endif
+        [Header("Settings")]
         [SerializeField] private uint countdownTime = 8;
         #endregion
         
@@ -14,6 +18,7 @@ namespace Watermelon_Game
         private Animation countdownAnimation;
         private TextMeshProUGUI countdownText;
         private AudioSource audioSource;
+        private GodRayFlicker godRayFlicker;
         
         /// <summary>
         /// How many fruits are currently inside the trigger
@@ -22,20 +27,26 @@ namespace Watermelon_Game
         private uint currentCountdownTime;
         #endregion
         
+        #region Properties
+        public static MaxHeight Instance { get; private set; }
+        #endregion
+        
         #region Methods
         private void Awake()
         {
-            this.borderLineAnimation = this.GetComponentInChildren<SpriteRenderer>().gameObject.GetComponent<Animation>();
-            this.countdownAnimation = this.GetComponent<Animation>();
-            this.countdownText = this.GetComponentInChildren<TextMeshProUGUI>();
-            this.audioSource = this.GetComponent<AudioSource>();
+            Instance = this;
+            this.borderLineAnimation = base.GetComponentInChildren<SpriteRenderer>().gameObject.GetComponent<Animation>();
+            this.countdownAnimation = base.GetComponent<Animation>();
+            this.countdownText = base.GetComponentInChildren<TextMeshProUGUI>();
+            this.audioSource = base.GetComponent<AudioSource>();
+            this.godRayFlicker = base.GetComponent<GodRayFlicker>();
         }
 
         private void Start()
         {
             this.currentCountdownTime = this.countdownTime;
         }
-
+        
         private void OnTriggerEnter2D(Collider2D _Other)
         {
             this.triggerCount++;
@@ -63,6 +74,13 @@ namespace Watermelon_Game
 
         public void CountDown()
         {
+#if UNITY_EDITOR
+            if (this.disableCountDown)
+            {
+                return;
+            }
+#endif
+            
             this.currentCountdownTime--;
             this.countdownText.text = this.currentCountdownTime.ToString();
 
@@ -89,6 +107,19 @@ namespace Watermelon_Game
             this.countdownAnimation.enabled = false;
             this.countdownAnimation.Rewind();
             this.audioSource.Stop();
+        }
+
+        public void SetGodRays(bool _Enabled)
+        {
+            if (_Enabled)
+            {
+                this.godRayFlicker.enabled = false;
+                this.godRayFlicker.EnableGodRay();
+            }
+            else
+            {
+                this.godRayFlicker.enabled = true;
+            }
         }
         #endregion
     }

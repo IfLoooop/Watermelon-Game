@@ -42,7 +42,10 @@ namespace Watermelon_Game.Fruit_Spawn
             Instance = this;
             this.timerText = this.timer.GetComponent<TextMeshProUGUI>();
             this.audioSource = base.GetComponent<AudioSource>();
-            
+        }
+
+        private void Start()
+        {
             this.SpawnFruits();
         }
 
