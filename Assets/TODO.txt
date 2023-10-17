@@ -1,22 +1,31 @@
 v1.3
-[BUGS]
--MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit. (Should be fixed, needs more testing)
 [Changes]
+-Increase the Mass of all fruits from teh FruitSpawner until first collision (after first collision, set back to default)
+-Replace the font in the "Fruit-Evolution" image
+-Play the Multiplier popup animation  every time it is increased
 -Add all stats immediately to the global stats, not just when the game ends
 [ADDONS]
 -Add different fruit faces (Default and Hurt) and randomize them
 -Add button to close the game
+-Add a restart button
 -Add a master sound slider
+-On Game over, destroy all fruits on the map with an animation
 
 v1.3_1
 [CHANGES]
 -Code and Project cleanup
 -Add a layer and tag controller
 -Add a "Order in Layer"-Controller
--Use events for "GameStar"/"GameOVer"
+-Use events for "GameStart"/"GameOver"
 [ADDONS]
 -Add Butler to the build pipeline
 -Add a clickable link to the Itch page when an update is available
+
+v1.4
+-Android Build
+
+v1.5
+-Multiplayer
 
 [BACKLOG]
 -Randomly select 2 fruits on the map, that give bonus points when combined together
@@ -26,3 +35,4 @@ v1.3_1
 -Make the Dictionary-maps in "Websettings.cs" refactor resistant
 [BUGS]
 -Null-reference in "BackgroundController.cs:122" when playmode is ending (only in editor)
+-MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit. (Should be fixed, needs more testing)
