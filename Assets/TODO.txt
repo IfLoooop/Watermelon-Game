@@ -1,6 +1,9 @@
 v1.3
 [Changes]
+-Make golden fruits no able to destroy each other when they collide
+-Change the font of the alarm
 -Increase the Mass of all fruits from teh FruitSpawner until first collision (after first collision, set back to default)
+-Set the scroll position to the top, when the game over menu pops up
 -Replace the font in the "Fruit-Evolution" image
 -Play the Multiplier popup animation  every time it is increased
 -Add all stats immediately to the global stats, not just when the game ends
