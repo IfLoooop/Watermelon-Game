@@ -26,7 +26,9 @@ namespace Watermelon_Game.MaxHeight
         // /// How many fruits are currently inside the trigger
         // /// </summary>
         // private int triggerCount;
+        
         private uint currentCountdownTime;
+        private uint goldenFruitsOnMap;
         #endregion
         
         #region Properties
@@ -128,12 +130,18 @@ namespace Watermelon_Game.MaxHeight
         {
             if (_Enabled)
             {
+                ++this.goldenFruitsOnMap;
                 this.godRayFlicker.enabled = false;
                 this.godRayFlicker.EnableGodRay();
             }
             else
             {
-                this.godRayFlicker.enabled = true;
+                --this.goldenFruitsOnMap;
+                var _noGoldenFruitOnMap = goldenFruitsOnMap == 0;
+                if (_noGoldenFruitOnMap)
+                {
+                    this.godRayFlicker.enabled = true;
+                }
             }
         }
         #endregion

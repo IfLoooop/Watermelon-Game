@@ -19,6 +19,7 @@ namespace Watermelon_Game.Fruit
         {
             if (this.FruitSpawner is {} _fruitSpawner)
             {
+                // TODO: Combine into a "FruitSpawner.cs"-Method
                 _fruitSpawner.BlockRelease = false;
                 FruitSpawnerAim.Enable(true);
             }

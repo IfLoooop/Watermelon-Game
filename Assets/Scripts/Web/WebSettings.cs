@@ -69,8 +69,11 @@ namespace Watermelon_Game.Web
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static async void Init()
         {
-#if DEBUG && !UNITY_EDITOR
-            return;
+#if DEBUG
+            if (!Application.isEditor)
+            {
+                return;   
+            }
 #endif
 #pragma warning disable CS0162
             if (!Application.isEditor)

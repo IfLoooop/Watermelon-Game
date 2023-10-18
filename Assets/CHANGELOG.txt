@@ -35,3 +35,12 @@ v1.2 (17.10.2023)
 -Fruits can push surrounding fruits away while they evolve
 -A sound is played when a fruit can't be released due to overlapping with another fruit
 -Error messages will now be logged at: "..\ROOT_FOLDER\Error Logs\LOG_FILE.txt"
+
+------------------------------------------------------------------------------------------------------------------------
+
+v1.3 (TBA) // TODO: Set date
+[BUGS]
+-Fixed a bug where the Godray would be disabled to early, when multiple GoldenFruits are on the map
+-GoldenFruits can't destroy each other anymore when colliding
+[CHANGES
+-Fruits that have become a GoldenFruit by being shot out of the map, only destroy one other fruit instead of previously all fruits they touched

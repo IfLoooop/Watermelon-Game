@@ -96,7 +96,14 @@ namespace Watermelon_Game.Fruit
                 
                 if (this.IsGoldenFruit)
                 {
-                    GameController.GoldenFruitCollision(_otherHashCode);
+                    if (this.isUpgradedGoldenFruit)
+                    {
+                        GameController.UpgradedGoldenFruitCollision(base.gameObject, _Other.gameObject);
+                    }
+                    else
+                    {
+                        GameController.GoldenFruitCollision(_Other.gameObject);
+                    }
                     return;
                 }
                 if (this.ActiveSkill is Skill.Evolve)
@@ -118,7 +125,7 @@ namespace Watermelon_Game.Fruit
             {
                 if (_Other.gameObject.CompareTag("Wall Bottom"))
                 {
-                    GameController.GoldenFruitCollision(this.gameObject.GetHashCode());
+                    GameController.GoldenFruitCollision(base.gameObject);
                 }
             }
 
@@ -185,6 +192,14 @@ namespace Watermelon_Game.Fruit
             }
         }
 
+#if DEBUG
+        public void GoldenFruit_Debug()
+        {
+            this.GoldenFruit(true);
+            MaxHeight.MaxHeight.Instance.SetGodRays(true); 
+        }
+#endif
+        
         private void GoldenFruit(bool _ForceEnable = false)
         {
             if (!_ForceEnable)

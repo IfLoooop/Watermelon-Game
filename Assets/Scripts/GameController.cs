@@ -170,20 +170,38 @@ namespace Watermelon_Game
             }
         }
         
-        public static void GoldenFruitCollision(int _Fruit)
+        public static void GoldenFruitCollision(GameObject _FruitToDestroy)
         {
-            var _fruit = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit).Value;
+            var _fruitToDestroyHashCode = _FruitToDestroy.GetHashCode();
+            var _fruitToDestroy = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _fruitToDestroyHashCode).Value;
 
-            if (_fruit != null)
+            if (_fruitToDestroy != null)
             {
-                fruits.Remove(_Fruit);
+                fruits.Remove(_fruitToDestroyHashCode);
                 
-                var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruit.Fruit);
+                var _fruitIndex = (int)Enum.GetValues(typeof(Fruit.Fruit)).Cast<Fruit.Fruit>().FirstOrDefault(_Fruit => _Fruit == _fruitToDestroy.Fruit);
                     
                 PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
                 Instance.FruitCollection.PlayEvolveSound();
                 
-                _fruit.Destroy();
+                _fruitToDestroy.Destroy();
+            }
+        }
+
+        public static void UpgradedGoldenFruitCollision(GameObject _UpgradedGoldenFruit, GameObject _FruitToDestroy)
+        {
+            var _fruitToDestroyHashCode = _FruitToDestroy.GetHashCode();
+            var _fruitToDestroy = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _fruitToDestroyHashCode).Value;
+
+            if (_fruitToDestroy != null)
+            {
+                if (_fruitToDestroy.IsGoldenFruit)
+                {
+                    return;
+                }
+                
+                GoldenFruitCollision(_FruitToDestroy);
+                GoldenFruitCollision(_UpgradedGoldenFruit);
             }
         }
         
