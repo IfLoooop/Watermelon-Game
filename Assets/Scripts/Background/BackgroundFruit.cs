@@ -8,9 +8,9 @@ namespace Watermelon_Game.Background
         #region Fields
         private Vector3 baseSize;
         private SpriteRenderer spriteRenderer;
-#pragma warning disable CS0108, CS0114
-        private Rigidbody2D rigidbody2D;
-#pragma warning restore CS0108, CS0114
+#pragma warning disable CS0109
+        private new Rigidbody2D rigidbody2D;
+#pragma warning restore CS0109
         private CircleCollider2D circleCollider2D;
         #endregion
         
