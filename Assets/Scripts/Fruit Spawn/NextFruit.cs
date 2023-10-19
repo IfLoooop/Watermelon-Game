@@ -101,12 +101,12 @@ namespace Watermelon_Game.Fruit_Spawn
             
             this.EnableNextNextFruit(false);
         }
-
+        
         private void EnableNextNextFruit(bool _Value)
         {
             if (_Value)
             {
-                this.audioSource.Play(.1f, nextNextFruitEnabledAudio);
+                this.audioSource.Play(.1f, this.nextNextFruitEnabledAudio);
                 this.nextNextFruitBehaviour.EnableAnimation(true);
                 this.nextNextFruit.clip = this.nextNextFruitEnabledAnimation;
                 this.nextNextFruit.Play();
@@ -115,7 +115,7 @@ namespace Watermelon_Game.Fruit_Spawn
             }
             else
             {
-                this.audioSource.Play(0, nextNextFruitDisabledAudio);
+                this.audioSource.Play(0, this.nextNextFruitDisabledAudio, .0375f);
                 this.nextNextFruit.clip = this.nextNextFruitDisabledAnimation;
                 this.nextNextFruit.Play();
                 this.timer.clip = this.nextNextFruitDisabledAnimation;

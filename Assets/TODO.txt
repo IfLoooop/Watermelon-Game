@@ -2,7 +2,6 @@ v1.3
 -MAKE SURE THE DEVELOPMENT_BUILD DEFINE SYMBOL WOKRS IN THE RELEASE BUILD-
 [BUGS]
 [Changes]
--Lower the volume of the sound that plays when the NextNextFruit disappears
 [ADDONS]
 -Add button to close the game
 -Add a restart button
