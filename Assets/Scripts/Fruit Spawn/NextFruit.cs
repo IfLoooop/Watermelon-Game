@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
@@ -137,8 +138,19 @@ namespace Watermelon_Game.Fruit_Spawn
 
         private void SpawnFruits()
         {
+            DestroyFruit(this.nextFruitBehaviour);
+            DestroyFruit(this.nextNextFruitBehaviour);
+            
             this.nextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextFruit.transform.position, this.nextFruit.transform, null);
             this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, this.nextFruitBehaviour.Fruit);
+        }
+
+        private void DestroyFruit([CanBeNull] FruitBehaviour _FruitBehaviour)
+        {
+            if (_FruitBehaviour != null)
+            {
+                Destroy(_FruitBehaviour.gameObject);
+            }
         }
         #endregion
     }

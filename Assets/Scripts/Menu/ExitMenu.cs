@@ -13,16 +13,6 @@ namespace Watermelon_Game.Menu
 #endif
             Application.Quit();
         }
-
-        public override MenuBase Open_Close(MenuBase _CurrentActiveMenu, bool _ForceClose = false)
-        {
-            if (_CurrentActiveMenu is { Menu: Menu.Exit })
-            {
-                GameController.Restart();
-            }
-            
-            return base.Open_Close(_CurrentActiveMenu, _ForceClose);
-        }
         
         /// <summary>
         /// TODO: Use different animation

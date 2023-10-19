@@ -2,8 +2,8 @@ v1.3
 -MAKE SURE THE DEVELOPMENT_BUILD DEFINE SYMBOL WOKRS IN THE RELEASE BUILD-
 [BUGS]
 [Changes]
+-Add a way to close the ExitMenu
 [ADDONS]
--On Game over, destroy all fruits on the map with an animation
 -Add a master sound slider (Mute button (on mouse click))
 
 v1.3_1
@@ -43,7 +43,8 @@ v1.5
 -Menus previous position is set to abruptly when a menu is opened (most likely due to the size change animation)
 -Randomize the drop and evolve sound (change the pitch)
 -Add a sound when a fruit collides with something (after a certain fall distance)
--Add a sound when a fruit is tossed in the air 
+-Add a sound when a fruit is tossed in the air
+-Play an animation when a fruit gameobject is destroyed "fruitbehavious.Destroy()"
 -Do something when a new HighScore was reached (animation maybe)
 -Add tabs to the menu (Global/Current Game)
 -Randomly select 2 fruits on the map, that give bonus points when combined together

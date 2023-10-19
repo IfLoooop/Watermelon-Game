@@ -113,10 +113,8 @@ namespace Watermelon_Game.Fruit_Spawn
                 return;
             }
             
-            this.BlockRelease = true;
-            this.fruitBehaviour.SetOrderInLayer(0);
             FruitSpawnerAim.Enable(false);
-            this.fruitBehaviour.transform.SetParent(null, true);
+            this.BlockRelease = true;
             this.fruitBehaviour.Release(this, -this.transform.up);
 
             if (this.fruitBehaviour.ActiveSkill != null)
@@ -203,6 +201,12 @@ namespace Watermelon_Game.Fruit_Spawn
         public static void DeactivateSkill()
         {
             Instance.fruitBehaviour.DeactivateSkill();
+        }
+
+        public static void GameOver()
+        {
+            Destroy(Instance.fruitBehaviour.gameObject);
+            Instance.fruitBehaviour = null;
         }
         #endregion
     }   

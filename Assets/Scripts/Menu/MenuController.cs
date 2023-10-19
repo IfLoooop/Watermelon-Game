@@ -21,6 +21,7 @@ namespace Watermelon_Game.Menu
         public static MenuController Instance { get; private set; }
         public AudioSource AudioSource { get; private set; }
         public float AudioClipStartTime => this.audioClipStartTime;
+        public bool BlockInput { get; set; }
         #endregion
         
         #region Methods
@@ -43,6 +44,11 @@ namespace Watermelon_Game.Menu
         
         private void Update()
         {
+            if (this.BlockInput)
+            {
+                return;
+            }
+            
             if (Input.GetKeyDown(KeyCode.Escape))
             {
                 if (this.currentActiveMenu is { Menu: Menu.Exit })
@@ -67,6 +73,7 @@ namespace Watermelon_Game.Menu
                 if (this.currentActiveMenu is { Menu: Menu.Exit })
                 {
                     this.Open_CloseMenu(this.exitMenu);
+                    GameController.Restart();
                 }
             }
         }
@@ -86,6 +93,14 @@ namespace Watermelon_Game.Menu
             this.currentActiveMenu = _Menu.Open_Close(this.currentActiveMenu, _ForceClose);
         }
 
+        public void CloseCurrentlyActiveMenu()
+        {
+            if (this.currentActiveMenu != null)
+            {
+                this.Open_CloseMenu(this.currentActiveMenu, true);   
+            }
+        }
+        
         public void GameOver()
         {
             this.Open_CloseMenu(this.gameOverMenu);

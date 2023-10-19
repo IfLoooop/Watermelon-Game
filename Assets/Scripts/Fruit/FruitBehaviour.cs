@@ -43,11 +43,12 @@ namespace Watermelon_Game.Fruit
         private new Animation animation;
 #pragma warning restore CS0109
         private EvolvingFruitTrigger evolvingFruitTrigger;
-
+        
         private bool isHurt;
         private bool hasBeenEvolved;
         private bool collisionWithMaxHeight;
         private bool isUpgradedGoldenFruit;
+        private bool disableEvolving;
         
         [CanBeNull] private IEnumerator moveTowards;
         private static readonly WaitForSeconds moveTowardsWaitTime = new(MOVE_TOWARDS_WAIT_TIME);
@@ -61,6 +62,7 @@ namespace Watermelon_Game.Fruit
         public Rigidbody2D Rigidbody2D => this.rigidbody2D;
         public bool IsGoldenFruit { get; private set; }
         public bool IsEvolving { get; private set; }
+        public bool CanBeAddedToFruitCollection { get; private set; } = true;
         public float ColliderRadius => this.circleCollider2D.radius;
         #endregion
         
@@ -73,7 +75,7 @@ namespace Watermelon_Game.Fruit
             this.animation = base.GetComponent<Animation>();
             this.evolvingFruitTrigger = base.GetComponentInChildren<EvolvingFruitTrigger>();
         }
-
+        
         private void Start()
         {
             GameController.AddFruit(this);
@@ -89,6 +91,11 @@ namespace Watermelon_Game.Fruit
                 this.Invoke(nameof(this.ResetFace), 1);
             }
 
+            if (this.disableEvolving)
+            {
+                return;
+            }
+            
             var _powerSkillNotActive = this.ActiveSkill is not Skill.Power;
             var _doesntUseAutoMass = this.rigidbody2D.useAutoMass == false;
             if (_powerSkillNotActive && _doesntUseAutoMass)
@@ -247,6 +254,13 @@ namespace Watermelon_Game.Fruit
             this.fruitSprite.sortingOrder = _OrderInLayer;
             this.faceSprite.sortingOrder = _OrderInLayer + 1;
         }
+
+#if DEBUG || DEVELOPMENT_BUILD
+        public void CanNotBeAddedToFruitCollection_DEBUG()
+        {
+            this.CanBeAddedToFruitCollection = false;
+        }
+#endif
         
         /// <summary>
         /// Drops the <see cref="Fruit"/> from the <see cref="FruitSpawner"/>
@@ -255,8 +269,12 @@ namespace Watermelon_Game.Fruit
         /// <param name="_Direction">The direction the <see cref="FruitSpawner"/> is currently facing</param>
         public void Release(FruitSpawner _FruitSpawner, Vector2 _Direction)
         {
+            base.transform.SetParent(null, true);
+            this.SetOrderInLayer(0);
             this.blockRelease.FruitSpawner = _FruitSpawner;
+            this.CanBeAddedToFruitCollection = true;
             this.InitializeRigidBody();
+            GameController.AddFruit(this);
 
             if (this.ActiveSkill is Skill.Power)
             {
@@ -300,7 +318,8 @@ namespace Watermelon_Game.Fruit
         {
             var _fruitData = GetRandomFruit(_PreviousFruit);
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity, _Parent).GetComponent<FruitBehaviour>();
-            
+
+            _fruitBehaviour.CanBeAddedToFruitCollection = false;
             _fruitBehaviour.gameObject.SetActive(true);
             _fruitBehaviour.EnableAnimation(true);
 
@@ -438,11 +457,17 @@ namespace Watermelon_Game.Fruit
             this.rigidbody2D.AddForce(_Direction * (SkillController.Instance.ShootForceMultiplier * this.rigidbody2D.mass), ForceMode2D.Impulse);
         }
 
+        public void DisableEvolving()
+        {
+            this.disableEvolving = true;
+        }
+        
         /// <summary>
         /// Destroys this <see cref="GameObject"/>
         /// </summary>
         public void Destroy()
         {
+            // TODO: Add a visual animation
             Destroy(this.gameObject);
         }
         #endregion

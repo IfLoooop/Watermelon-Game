@@ -74,6 +74,7 @@ namespace Watermelon_Game.Development
                 this.lastPressedKey = _KeyCode;
                 var _mouseWorldPosition = this.camera.ScreenToWorldPoint(Input.mousePosition);
                 this.currentFruit = FruitBehaviour.SpawnFruit(_mouseWorldPosition.WithZ(0), _Fruit, false);
+                this.currentFruit!.CanNotBeAddedToFruitCollection_DEBUG();
                 this.currentFruit!.gameObject.SetActive(true);
             }
         }

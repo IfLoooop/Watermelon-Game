@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
@@ -60,7 +62,7 @@ namespace Watermelon_Game
         {
             FruitSpawner.Instance.ResetFruitSpawner(true);
             FruitSpawnerAim.Enable(true);
-            PointsController.Instance.ResetPoints();
+            //PointsController.Instance.ResetPoints();
             StatsMenu.Instance.GamesPlayed++;
             GameOverMenu.Instance.Reset();
             Instance.CurrentGameTimeStamp = Time.time;
@@ -68,25 +70,32 @@ namespace Watermelon_Game
         
         public static void GameOver()
         {
-            ResetGame();
-            MenuController.Instance.GameOver();
+            Instance.StartCoroutine(ResetGame(MenuController.Instance.GameOver));
         }
 
         public static void Restart()
         {
-            ResetGame();
-            StartGame();
+            Instance.StartCoroutine(ResetGame(StartGame));
         }
-
-        private static void ResetGame()
+        
+        private static IEnumerator ResetGame(Action _Action)
         {
+            var _waitTime = new WaitForSeconds(.1f);
+
+            MenuController.Instance.CloseCurrentlyActiveMenu();
+            MenuController.Instance.BlockInput = true;
             FruitSpawner.Instance.BlockInput = true;
             FruitSpawnerAim.Enable(false);
-
-            // TODO: Destroy all fruits in a coroutine over time
-            foreach (var _fruitBehaviour in fruits.Values)
+            
+            fruits.Values.ForEach<FruitBehaviour>(_FruitBehaviour => _FruitBehaviour.DisableEvolving());
+            
+            // ReSharper disable once InconsistentNaming
+            for (var i = fruits.Values.Count - 1; i >= 0; i--)
             {
-                _fruitBehaviour.Destroy();
+                Instance.FruitCollection.PlayEvolveSound();
+                fruits.Values.ElementAt(i).Destroy();
+                
+                yield return _waitTime;
             }
             
             fruits.Clear();
@@ -95,7 +104,11 @@ namespace Watermelon_Game
             PointsController.Instance.ResetPoints();
             // Needed for the SkillController.PointsChanged() method to be called
             PointsController.Instance.SubtractPoints(0);
+            FruitSpawner.GameOver();
             NextFruit.Instance.GameOVer();
+
+            _Action();
+            MenuController.Instance.BlockInput = false;
         }
         
         /// <summary>
@@ -262,7 +275,10 @@ namespace Watermelon_Game
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
         public static void AddFruit(FruitBehaviour _FruitBehaviour)
         {
-            fruits.Add(_FruitBehaviour.gameObject.GetHashCode(), _FruitBehaviour);
+            if (_FruitBehaviour.CanBeAddedToFruitCollection)
+            {
+                fruits.Add(_FruitBehaviour.gameObject.GetHashCode(), _FruitBehaviour);
+            }
         }
         
         /// <summary>
