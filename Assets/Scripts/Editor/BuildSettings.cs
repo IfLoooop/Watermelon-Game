@@ -71,7 +71,7 @@ namespace Watermelon_Game.Editor
 #if DEVELOPMENT_BUILD
             return;
 #endif
-            
+#pragma warning disable CS0162
             // Method is called somewhere at the end of the build, not exactly when the build has finished, so need to wait for the previous build to completely finish
             await Task.Delay(TASK_DELAY);
             
@@ -92,6 +92,7 @@ namespace Watermelon_Game.Editor
                 Debug.Log($"<color=green>Windows Build</color> {_Report.summary.outputPath}");
                 CleanUp(CreateInstallPath(_Report.summary.outputPath, WINDOWS, true), WINDOWS);
             }
+#pragma warning restore CS0162
         }
 
         public static string CreateDebugFolder(string _Directory)

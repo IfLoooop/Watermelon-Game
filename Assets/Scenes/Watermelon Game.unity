@@ -1968,7 +1968,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7580633893289308254, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_Size
-      value: 1
+      value: 0.41666666
       objectReference: {fileID: 0}
     - target: {fileID: 7962523661530223837, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_fontSizeBase
@@ -2008,7 +2008,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8507304669231401427, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 900
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8693463394418122749, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_fontSizeBase

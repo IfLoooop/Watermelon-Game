@@ -5,11 +5,14 @@ using Watermelon_Game.Fruit;
 
 namespace Watermelon_Game.Development
 {
-    public class DeveloperTools : MonoBehaviour
+    public class DevelopmentTools : MonoBehaviour
     {
 #if DEBUG || DEVELOPMENT_BUILD
         #region Fields
+#pragma warning disable CS0109
         private new Camera camera;
+#pragma warning restore CS0109
+        private AudioSource audioSource;
         
         [CanBeNull] private FruitBehaviour currentFruit;
         private KeyCode? lastPressedKey;
@@ -29,6 +32,7 @@ namespace Watermelon_Game.Development
 
 #if DEBUG || DEVELOPMENT_BUILD
             this.camera = Camera.main;
+            this.audioSource = this.camera!.gameObject.GetComponent<AudioSource>();
 #endif
         }
 
@@ -49,17 +53,22 @@ namespace Watermelon_Game.Development
             this.ReleaseFruit();
             this.DeleteFruit();
             this.SpawnUpgradedFruit();
+            this.SetBackgroundMusic();
         }
 
         private void SpawnFruit(KeyCode _KeyCode, Fruit.Fruit _Fruit)
         {
             if (Input.GetKeyDown(_KeyCode))
             {
-                if (this.currentFruit != null && this.lastPressedKey == _KeyCode)
+                if (this.currentFruit != null)
                 {
                     Destroy(this.currentFruit!.gameObject);
                     this.currentFruit = null;
-                    return;
+                    
+                    if (this.lastPressedKey == _KeyCode)
+                    {
+                        return;   
+                    }
                 }
                 
                 this.lastPressedKey = _KeyCode;
@@ -116,6 +125,15 @@ namespace Watermelon_Game.Development
                 _fruitBehaviour.gameObject.SetActive(true);
                 _fruitBehaviour.GoldenFruit_Debug();
                 _fruitBehaviour.Release(null, Vector2.down);
+            }
+        }
+
+        private void SetBackgroundMusic()
+        {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                var _enabled = this.audioSource.enabled;
+                this.audioSource.enabled = !_enabled;   
             }
         }
 #endif

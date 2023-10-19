@@ -10,7 +10,7 @@ namespace Watermelon_Game.Editor
         [MenuItem("Build/Debug Build")]
         private static void DebugBuild()
         {
-            var _path = EditorUtility.SaveFolderPanel("Debug Build", "", "");
+            var _path = EditorUtility.SaveFolderPanel("Debug Build", @"C:\Users\herdt\OneDrive\Desktop\Builds", "");
             
             if (!string.IsNullOrWhiteSpace(_path))
             {
@@ -31,7 +31,7 @@ namespace Watermelon_Game.Editor
             }
             else
             {
-                var _path = EditorUtility.SaveFolderPanel("Release Build", "", "");
+                var _path = EditorUtility.SaveFolderPanel("Release Build", @"C:\Users\herdt\OneDrive\Desktop\Builds", "");
             
                 if (!string.IsNullOrWhiteSpace(_path))
                 {

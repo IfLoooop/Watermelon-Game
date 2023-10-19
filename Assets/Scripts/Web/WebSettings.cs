@@ -75,16 +75,13 @@ namespace Watermelon_Game.Web
             }
 #endif
 #pragma warning disable CS0162
-            if (!Application.isEditor)
+            await CheckSettings().ContinueWith(_ =>
             {
-                await CheckSettings().ContinueWith(_ =>
-                {
-                    // TODO: Make event and subscribe from classes that need it
-                    GameController.Instance.FruitCollection.ApplyWebSettings();
-                    SkillController.Instance.ApplyWebSettings();
-                    BackgroundController.Instance.ApplyWebSettings();
-                });
-            }
+                // TODO: Make event and subscribe from classes that need it
+                GameController.Instance.FruitCollection.ApplyWebSettings();
+                SkillController.Instance.ApplyWebSettings();
+                BackgroundController.Instance.ApplyWebSettings();
+            });
 #pragma warning restore CS0162
         }
         
