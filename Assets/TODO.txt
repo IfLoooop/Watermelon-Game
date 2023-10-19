@@ -2,7 +2,6 @@ v1.3
 -MAKE SURE THE DEVELOPMENT_BUILD DEFINE SYMBOL WOKRS IN THE RELEASE BUILD-
 [BUGS]
 [Changes]
--Add a way to close the ExitMenu
 [ADDONS]
 -Add a master sound slider (Mute button (on mouse click))
 

@@ -51,10 +51,6 @@ namespace Watermelon_Game.Menu
             
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (this.currentActiveMenu is { Menu: Menu.Exit })
-                {
-                    this.exitMenu.ExitGame();
-                }
                 if (this.currentActiveMenu == null)
                 {
                     this.Open_CloseMenu(this.exitMenu);
@@ -69,6 +65,13 @@ namespace Watermelon_Game.Menu
                 this.Open_CloseMenu(this.statsMenu);
             }
             else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (this.currentActiveMenu is { Menu: Menu.Exit })
+                {
+                    this.exitMenu.ExitGame();
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
             {
                 if (this.currentActiveMenu is { Menu: Menu.Exit })
                 {
