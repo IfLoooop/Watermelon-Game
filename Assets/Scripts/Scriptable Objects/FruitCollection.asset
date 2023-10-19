@@ -53,3 +53,4 @@ MonoBehaviour:
   goldenFruitChance: 0.01
   faceDefault: {fileID: 21300000, guid: fd14006210195164fbf4ebb1bdc01efb, type: 3}
   faceHurt: {fileID: 21300000, guid: 6acaba7842d400549a29b8a9b49abb94, type: 3}
+  massMultiplier: 2.5

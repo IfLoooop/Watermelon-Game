@@ -2,7 +2,6 @@ v1.3
 -MAKE SURE THE DEVELOPMENT_BUILD DEFINE SYMBOL WOKRS IN THE RELEASE BUILD-
 [BUGS]
 [Changes]
--Play the Multiplier popup animation  every time it is increased
 -Add all stats immediately to the global stats, not just when the game ends
 [ADDONS]
 -Add button to close the game

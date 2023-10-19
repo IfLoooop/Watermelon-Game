@@ -2,6 +2,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit;
+using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
 

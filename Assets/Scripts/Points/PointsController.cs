@@ -1,35 +1,28 @@
 using System.Collections;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Menu;
 using Watermelon_Game.Skills;
 
-namespace Watermelon_Game
+namespace Watermelon_Game.Points
 {
     internal sealed class PointsController : MonoBehaviour
     {
         #region Inspector Fields
+        [Header("References")]
         [SerializeField] private TextMeshProUGUI points;
-        [SerializeField] private TextMeshProUGUI multiplier;
         [SerializeField] private TextMeshProUGUI highScore;
-        [SerializeField] private float multiplierDuration = 1f;
-        [SerializeField] private float multiplierWaitTime = .1f;
+        [SerializeField] private Multiplier multiplier;
+        [Header("Settings")]
         [SerializeField] private float pointsWaitTime = .05f;
-        [SerializeField] private List<Color> multiplierColors;
         #endregion
         
         #region Fields
-        private SpriteRenderer multiplierBackground;
         private uint currentPoints;
         private uint pointsDelta;
-        private uint currentMultiplier;
-        private float currentMultiplierDuration;
-
-        [CanBeNull] private IEnumerator multiplierCoroutine;
+        
         [CanBeNull] private IEnumerator pointsCoroutine;
-        private WaitForSeconds multiplierWaitForSeconds;
         private WaitForSeconds pointsWaitForSeconds;
         #endregion
 
@@ -41,9 +34,7 @@ namespace Watermelon_Game
         private void Awake()
         {
             Instance = this;
-
-            this.multiplierBackground = this.multiplier.GetComponentInChildren<SpriteRenderer>();
-            this.multiplierWaitForSeconds = new WaitForSeconds(this.multiplierWaitTime);
+            
             this.pointsWaitForSeconds = new WaitForSeconds(this.pointsWaitTime);
         }
 
@@ -54,66 +45,15 @@ namespace Watermelon_Game
 
         public void AddPoints(Fruit.Fruit _Fruit)
         {
-            this.currentMultiplierDuration = this.multiplierDuration;
-            
-            var _multiplier = this.currentMultiplier + 1;
-            this.SetMultiplier(_multiplier);
+            this.multiplier.StartMultiplier();
 
-            if (this.multiplierCoroutine == null)
-            {
-                this.multiplierCoroutine = MultiplierDuration();
-                this.StartCoroutine(this.multiplierCoroutine);
-            }
-            
-            var _points = (int)((int)_Fruit + this.currentMultiplier);
+            var _points = (int)((int)_Fruit + this.multiplier.CurrentMultiplier);
             this.SetPoints(_points);
         }
 
         public void SubtractPoints(uint _PointsToSubtract) 
         {
             this.SetPoints(-(int)_PointsToSubtract);
-        }
-        
-        private IEnumerator MultiplierDuration()
-        {
-            while (this.currentMultiplierDuration > 0)
-            {
-                yield return this.multiplierWaitForSeconds;
-                this.currentMultiplierDuration -= multiplierWaitTime;
-            }
-            
-            this.SetMultiplier(0);
-            this.StopCoroutine(this.multiplierCoroutine);
-            this.multiplierCoroutine = null;
-            
-            this.multiplier.gameObject.SetActive(false);
-        }
-        
-        private void SetMultiplier(uint _CurrentMultiplier)
-        {
-            this.currentMultiplier = _CurrentMultiplier;
-            this.multiplier.text = string.Concat("x", this.currentMultiplier);
-            this.multiplierBackground.color = this.GetMultiplierColor(_CurrentMultiplier);
-            this.multiplier.gameObject.SetActive(true);
-
-            if (_CurrentMultiplier > GameOverMenu.Instance.Stats.HighestMultiplier)
-            {
-                GameOverMenu.Instance.Stats.HighestMultiplier = _CurrentMultiplier;
-            }
-        }
-
-        private Color GetMultiplierColor(uint _CurrentMultiplier)
-        {
-            if (_CurrentMultiplier == 0)
-            {
-                return Color.white;
-            }
-            if (_CurrentMultiplier > this.multiplierColors.Count)
-            {
-                return this.multiplierColors[^1];
-            }
-
-            return this.multiplierColors[(int)_CurrentMultiplier - 1];
         }
         
         /// <summary>

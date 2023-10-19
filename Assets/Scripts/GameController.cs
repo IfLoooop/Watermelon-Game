@@ -5,6 +5,7 @@ using UnityEngine;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
+using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
 
 namespace Watermelon_Game
