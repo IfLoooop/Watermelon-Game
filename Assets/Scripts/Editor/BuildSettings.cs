@@ -1,5 +1,7 @@
+using System;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEditor;
@@ -14,6 +16,10 @@ namespace Watermelon_Game.Editor
     internal sealed class BuildSettings : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         #region Constants
+        private const string BUILD_INFO = "BUILDINFO";
+        private const string DEVELOPMENT_BUILD = "DEVELOPMENT_BUILD";
+        private const string RELEASE_BUILD = "RELEASE_BUILD";
+        
         private const string WINDOWS = "Windows";
         private const string LINUX = "Linux";
         private const string MAC = "Mac";
@@ -27,47 +33,44 @@ namespace Watermelon_Game.Editor
         
         #region Properties
         public int callbackOrder { get; }
+        
+        private static string BuildInfoPath { get; } = Path.Combine(Application.dataPath, $"{BUILD_INFO}.txt");
         #endregion
 
         #region Methods
         public void OnPreprocessBuild(BuildReport _Report)
         {
-            var _target = EditorUserBuildSettings.activeBuildTarget;
-            var _group = BuildPipeline.GetBuildTargetGroup(_target);
-            PlayerSettings.SetArchitecture(_group, 2);
+            var _buildTarget = EditorUserBuildSettings.activeBuildTarget;
+            var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(_buildTarget);
+            PlayerSettings.SetArchitecture(_buildTargetGroup, 2);
 
             var _isWindowsBuild = _Report.summary.platform == BuildTarget.StandaloneWindows64;
             if (_isWindowsBuild)
             {
-                PlayerSettings.SetScriptingBackend(_group, ScriptingImplementation.IL2CPP);
+                PlayerSettings.SetScriptingBackend(_buildTargetGroup, ScriptingImplementation.IL2CPP);
             }
             else
             {
-                PlayerSettings.SetScriptingBackend(_group, ScriptingImplementation.Mono2x);
+                PlayerSettings.SetScriptingBackend(_buildTargetGroup, ScriptingImplementation.Mono2x);
             }
             
-            var _isDevelopmentBuild = (_Report.summary.options & BuildOptions.Development) != 0;
-            if (_isDevelopmentBuild)
-            {
-                PlayerSettings.SetIl2CppCompilerConfiguration(_group, Il2CppCompilerConfiguration.Debug);
-                PlayerSettings.SetManagedStrippingLevel(_group, ManagedStrippingLevel.Minimal);
-
-            }
-            else
-            {
-                PlayerSettings.SetIl2CppCompilerConfiguration(_group, Il2CppCompilerConfiguration.Master);
-                PlayerSettings.SetManagedStrippingLevel(_group, ManagedStrippingLevel.High);
-            }
+#if DEVELOPMENT_BUILD
+            PlayerSettings.SetIl2CppCompilerConfiguration(_buildTargetGroup, Il2CppCompilerConfiguration.Debug);
+            PlayerSettings.SetManagedStrippingLevel(_buildTargetGroup, ManagedStrippingLevel.Minimal);
+#else
+            PlayerSettings.SetIl2CppCompilerConfiguration(_buildTargetGroup, Il2CppCompilerConfiguration.Master);
+            PlayerSettings.SetManagedStrippingLevel(_buildTargetGroup, ManagedStrippingLevel.High);
+#endif
         }
         
         public async void OnPostprocessBuild(BuildReport _Report)
         {
-            var _isDevelopmentBuild = (_Report.summary.options & BuildOptions.Development) != 0;
-
-            if (_isDevelopmentBuild)
-            {
-                return;
-            }
+            // ReSharper disable once MethodHasAsyncOverload
+            File.WriteAllText(BuildInfoPath, string.Empty);
+            
+#if DEVELOPMENT_BUILD
+            return;
+#endif
             
             // Method is called somewhere at the end of the build, not exactly when the build has finished, so need to wait for the previous build to completely finish
             await Task.Delay(TASK_DELAY);
@@ -144,21 +147,78 @@ namespace Watermelon_Game.Editor
         {
             return Path.Combine(Directory.GetParent(_Path)!.Parent!.FullName, _AddDirectory, _OnlyFolder ? "" : GetApplicationName(true));
         }
-
+        
         public static void BuildPlayer(string _Path)
         {
-            var _levels = new[] { SceneManager.GetActiveScene().path };
-            
-            BuildPipeline.BuildPlayer(_levels, _Path, BuildTarget.StandaloneWindows64, BuildOptions.Development | BuildOptions.CompressWithLz4);
+            SetBuildInfo(DEVELOPMENT_BUILD, _Path, BuildTarget.StandaloneWindows64);
         }
         
         public static void BuildPlayer(string _Path, BuildTarget _BuildTarget)
         {
-            var _levels = new[] { SceneManager.GetActiveScene().path };
-            
-            BuildPipeline.BuildPlayer(_levels, _Path, _BuildTarget, BuildOptions.CompressWithLz4HC);
+            SetBuildInfo(RELEASE_BUILD, _Path, _BuildTarget);
         }
 
+        private static void SetBuildInfo(string _BuildInfo, string _Path, BuildTarget _BuildTarget)
+        {
+            var _text = string.Concat(_BuildInfo, Environment.NewLine, _Path, Environment.NewLine, _BuildTarget);
+            File.WriteAllText(BuildInfoPath, _text);
+            
+            SetScriptingDefineSymbols(_BuildInfo);
+        }
+        
+        /// <summary>
+        /// Adds or removes the <see cref="DEVELOPMENT_BUILD"/> scripting define symbol
+        /// </summary>
+        /// <param name="_BuildInfo">Use <see cref="DEVELOPMENT_BUILD"/> or <see cref="RELEASE_BUILD"/></param>
+        private static void SetScriptingDefineSymbols(string _BuildInfo)
+        {
+            var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(BuildTarget.StandaloneWindows64);
+            var _namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(_buildTargetGroup);
+            var _scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbols(_namedBuildTarget);
+            var _splitScriptingDefineSymbols = _scriptingDefineSymbols.Split(';').ToList();
+
+            if (_BuildInfo == DEVELOPMENT_BUILD && !_splitScriptingDefineSymbols.Contains(DEVELOPMENT_BUILD))
+            {
+                _splitScriptingDefineSymbols.Add(DEVELOPMENT_BUILD);
+            }
+            else if (_BuildInfo == RELEASE_BUILD && _splitScriptingDefineSymbols.Contains(DEVELOPMENT_BUILD))
+            {
+                _splitScriptingDefineSymbols.Remove(DEVELOPMENT_BUILD);
+            }
+            else
+            {
+                EditorUtility.RequestScriptReload();
+            }
+            
+            PlayerSettings.SetScriptingDefineSymbols(_namedBuildTarget, _splitScriptingDefineSymbols.ToArray());
+        }
+        
+        [UnityEditor.Callbacks.DidReloadScripts]
+        private static void OnScripsRecompiled()
+        {
+            var _text = File.ReadAllText(BuildInfoPath);
+
+            if (string.IsNullOrWhiteSpace(_text))
+            {
+                return;
+            }
+            
+            var _buildInfos = _text.Split(Environment.NewLine);
+            var _buildInfo = _buildInfos[0];
+            var _path = _buildInfos[1];
+            var _buildTarget = (BuildTarget)Enum.Parse(typeof(BuildTarget), _buildInfos[2]);
+            var _levels = new[] { SceneManager.GetActiveScene().path };
+            
+            if (_buildInfo == DEVELOPMENT_BUILD)
+            {
+                BuildPipeline.BuildPlayer(_levels, _path, _buildTarget, BuildOptions.CompressWithLz4);
+            }
+            else if (_buildInfo == RELEASE_BUILD)
+            {
+                BuildPipeline.BuildPlayer(_levels, _path, _buildTarget, BuildOptions.CompressWithLz4HC);
+            }
+        }
+        
         private static void CleanUp(string _Directory, string _Platform)
         {
             foreach (var _path in Directory.GetFileSystemEntries(_Directory))

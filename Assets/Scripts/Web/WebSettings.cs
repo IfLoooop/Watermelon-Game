@@ -69,7 +69,7 @@ namespace Watermelon_Game.Web
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static async void Init()
         {
-#if DEBUG
+#if DEBUG || DEVELOPMENT_BUILD
             if (!Application.isEditor)
             {
                 return;   

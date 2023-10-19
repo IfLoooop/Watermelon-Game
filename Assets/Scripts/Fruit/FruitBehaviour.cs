@@ -192,7 +192,7 @@ namespace Watermelon_Game.Fruit
             }
         }
 
-#if DEBUG
+#if DEBUG || DEVELOPMENT_BUILD
         public void GoldenFruit_Debug()
         {
             this.GoldenFruit(true);

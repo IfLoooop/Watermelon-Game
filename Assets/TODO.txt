@@ -1,6 +1,9 @@
 v1.3
+-MAKE SURE THE DEVELOPMENT_BUILD DEFINE SYMBOL WOKRS IN THE RELEASE BUILD-
+[BUGS]
+-Background fruits currently have a higher order layer than the bottom wall
 [Changes]
--Make golden fruits no able to destroy each other when they collide
+-Make the game start in windowed mode
 -Change the font of the alarm
 -Increase the Mass of all fruits from teh FruitSpawner until first collision (after first collision, set back to default)
 -Set the scroll position to the top, when the game over menu pops up
@@ -8,7 +11,6 @@ v1.3
 -Play the Multiplier popup animation  every time it is increased
 -Add all stats immediately to the global stats, not just when the game ends
 [ADDONS]
--Add different fruit faces (Default and Hurt) and randomize them
 -Add button to close the game
 -Add a restart button
 -Add a master sound slider
@@ -16,26 +18,44 @@ v1.3
 
 v1.3_1
 [CHANGES]
+-Remove "Updates Available"-image on Steam
+[ADDONS]
+-Steam release
+
+v1.3_2
+[CHANGES]
+-Add Rewired and enable controller support (For Xbox)
+-Add Odin to the project
 -Code and Project cleanup
 -Add a layer and tag controller
 -Add a "Order in Layer"-Controller
+-Add a AudioSource ObjectPool/Controller
 -Use events for "GameStart"/"GameOver"
+-Make the Dictionary-maps in "Websettings.cs" refactor resistant
 [ADDONS]
+-Add a Shortcut for a non Development Windows Test build
 -Add Butler to the build pipeline
 -Add a clickable link to the Itch page when an update is available
 
 v1.4
--Android Build
-
-v1.5
 -Multiplayer
 
+v1.5
+-Android Build
+-Microsoft Store
+
 [BACKLOG]
--Randomly select 2 fruits on the map, that give bonus points when combined together
+-Add an option to turn of all animations (Buttons/Background) that are not necessarily needed
+-Add different fruit faces (Default and Hurt) and randomize them
+-Menus previous position is set to abruptly when a menu is opened (most likely due to the size change animation)
+-Randomize the drop and evolve sound (change the pitch)
 -Add a sound when a fruit collides with something (after a certain fall distance)
--Add a difficulty system
 -Add tabs to the menu (Global/Current Game)
--Make the Dictionary-maps in "Websettings.cs" refactor resistant
+-Randomly select 2 fruits on the map, that give bonus points when combined together
+-Add changes to the level (maybe also music/sound effects) the longer the game is playing
+-Add a difficulty system
+-Add a challenge mode were fruits drop automatically after some time
 [BUGS]
+-(Warning) MaximizedWindow is not currently supported on Windows, setting to FullsceenWindow instead (Error Log in build)
 -Null-reference in "BackgroundController.cs:122" when playmode is ending (only in editor)
 -MaxHeight countdown started even though no fruit was inside the collider. Countdown stopped the FruitSpwner released its fruit. (Should be fixed, needs more testing)
