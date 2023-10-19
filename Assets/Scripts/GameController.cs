@@ -38,6 +38,13 @@ namespace Watermelon_Game
         #endregion
         
         #region Methods
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void SetScreen()
+        {
+            var _workArea = Screen.mainWindowDisplayInfo.workArea;
+            Screen.SetResolution(_workArea.width, _workArea.height, FullScreenMode.FullScreenWindow);
+        }
+        
         private void Awake()
         {
             Instance = this;
