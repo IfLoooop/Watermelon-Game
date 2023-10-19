@@ -68,6 +68,18 @@ namespace Watermelon_Game
         
         public static void GameOver()
         {
+            ResetGame();
+            MenuController.Instance.GameOver();
+        }
+
+        public static void Restart()
+        {
+            ResetGame();
+            StartGame();
+        }
+
+        private static void ResetGame()
+        {
             FruitSpawner.Instance.BlockInput = true;
             FruitSpawnerAim.Enable(false);
 
@@ -83,7 +95,6 @@ namespace Watermelon_Game
             PointsController.Instance.ResetPoints();
             // Needed for the SkillController.PointsChanged() method to be called
             PointsController.Instance.SubtractPoints(0);
-            MenuController.Instance.GameOver();
             NextFruit.Instance.GameOVer();
         }
         

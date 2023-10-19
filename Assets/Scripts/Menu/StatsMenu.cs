@@ -5,7 +5,7 @@ using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Menu
 {
-    internal sealed class StatsMenu : MenuBase
+    internal sealed class StatsMenu : ScrollRectBase
     {
         #region Inspector Fields
         [SerializeField] private TextMeshProUGUI bestScoreText;
@@ -80,11 +80,11 @@ namespace Watermelon_Game.Menu
             this.Load();
         }
         
-        public override MenuBase Open_Close(MenuBase _PreviousMenu)
+        public override MenuBase Open_Close(MenuBase _PreviousMenu, bool _ForceClose = false)
         {
             this.SetTimeSpendText(Time.time);
             
-            return base.Open_Close(_PreviousMenu);
+            return base.Open_Close(_PreviousMenu, _ForceClose);
         }
 
         private void SetTimeSpendText(float _DurationToAdd = 0)

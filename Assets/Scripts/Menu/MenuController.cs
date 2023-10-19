@@ -9,18 +9,17 @@ namespace Watermelon_Game.Menu
         #region Inspector Fields
         [SerializeField] private StatsMenu statsMenu;
         [SerializeField] private GameOverMenu gameOverMenu;
+        [SerializeField] private ExitMenu exitMenu;
         [SerializeField] private float audioClipStartTime = .1f;
         #endregion
 
         #region Fields
-        private AudioSource audioSource;
-        [CanBeNull] private MenuBase previousActiveMenu;
+        [CanBeNull] private MenuBase currentActiveMenu;
         #endregion
 
         #region Properties
         public static MenuController Instance { get; private set; }
-
-        public AudioSource AudioSource => this.audioSource;
+        public AudioSource AudioSource { get; private set; }
         public float AudioClipStartTime => this.audioClipStartTime;
         #endregion
         
@@ -29,11 +28,13 @@ namespace Watermelon_Game.Menu
         {
             Instance = this;
 
-            this.audioSource = this.GetComponent<AudioSource>();
+            this.AudioSource = this.GetComponent<AudioSource>();
             this.InitializeMenu(this.statsMenu);
             this.InitializeMenu(this.gameOverMenu);
+            this.InitializeMenu(this.exitMenu);
         }
         
+        // Won't get called in "StatsMenu.cs" for some reason
         private void OnApplicationQuit()
         {
             StatsMenu.Instance.NewBestScore(PointsController.Instance.CurrentPoints);
@@ -42,13 +43,31 @@ namespace Watermelon_Game.Menu
         
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                this.OpenMenu(this.statsMenu);
+                if (this.currentActiveMenu is { Menu: Menu.Exit })
+                {
+                    this.exitMenu.ExitGame();
+                }
+                if (this.currentActiveMenu == null)
+                {
+                    this.Open_CloseMenu(this.exitMenu);
+                }
+                else
+                {
+                    this.Open_CloseMenu(this.currentActiveMenu, true);
+                }
             }
-            if (this.previousActiveMenu is { Menu: Menu.GameOver } && Input.GetKeyDown(KeyCode.Escape))
+            else if (Input.GetKeyDown(KeyCode.P))
             {
-                this.OpenMenu(this.gameOverMenu);
+                this.Open_CloseMenu(this.statsMenu);
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                if (this.currentActiveMenu is { Menu: Menu.Exit })
+                {
+                    this.Open_CloseMenu(this.exitMenu);
+                }
             }
         }
         
@@ -62,14 +81,14 @@ namespace Watermelon_Game.Menu
             _Menu.gameObject.SetActive(false);
         }
         
-        private void OpenMenu(MenuBase _Menu)
+        private void Open_CloseMenu(MenuBase _Menu, bool _ForceClose = false)
         {
-            this.previousActiveMenu = _Menu.Open_Close(this.previousActiveMenu);
+            this.currentActiveMenu = _Menu.Open_Close(this.currentActiveMenu, _ForceClose);
         }
 
         public void GameOver()
         {
-            this.OpenMenu(this.gameOverMenu);
+            this.Open_CloseMenu(this.gameOverMenu);
         }
         #endregion
     }

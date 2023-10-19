@@ -1,6 +1,5 @@
 using JetBrains.Annotations;
 using UnityEngine;
-using UnityEngine.UI;
 using Watermelon_Game.ExtensionMethods;
 
 namespace Watermelon_Game.Menu
@@ -9,12 +8,7 @@ namespace Watermelon_Game.Menu
     {
         #region Inspector Fieds
         [SerializeField] private Menu menu;
-        [SerializeField] private bool canBeClosedByDifferentMenu;
-        [SerializeField] protected ScrollRect scrollRect;
-        #endregion
-
-        #region Fields
-        private float currentScrollPosition;
+        [SerializeField] private bool canNotBeClosedByDifferentMenu;
         #endregion
         
         #region Properties
@@ -22,51 +16,42 @@ namespace Watermelon_Game.Menu
         #endregion
 
         #region Methods
-        private void OnDisable()
-        {
-            this.currentScrollPosition = this.scrollRect.verticalScrollbar.value;
-        }
-        
-        /// <summary>
-        /// Is called at the end of the "MenuPopUp"-Animation
-        /// </summary>
-        private void SetScrollPosition()
-        {
-            if (this.menu == Menu.GameOver)
-            {
-                this.scrollRect.verticalScrollbar.value = 1;   
-            }
-            else
-            {
-                this.scrollRect.verticalScrollbar.value = this.currentScrollPosition;   
-            }
-        }
-        
         [CanBeNull]
-        public virtual MenuBase Open_Close([CanBeNull] MenuBase _PreviousMenu)
+        public virtual MenuBase Open_Close([CanBeNull] MenuBase _CurrentActiveMenu, bool _ForceClose = false)
         {
-            if (_PreviousMenu != null && _PreviousMenu.menu != this.menu)
+            if (_ForceClose && _CurrentActiveMenu != null)
             {
-                if (!_PreviousMenu.canBeClosedByDifferentMenu)
+                this.SwitchActiveState(_CurrentActiveMenu, true);
+                return null;
+            }
+            
+            if (_CurrentActiveMenu != null && _CurrentActiveMenu.menu != this.menu)
+            {
+                if (_CurrentActiveMenu.canNotBeClosedByDifferentMenu)
                 {
-                    return _PreviousMenu;   
+                    return _CurrentActiveMenu;   
                 }
 
-                this.SetActive(_PreviousMenu);
+                this.SwitchActiveState(_CurrentActiveMenu);
             }
             
             MenuController.Instance.AudioSource.Play(MenuController.Instance.AudioClipStartTime);
-            var _active = this.SetActive(this);
+            var _active = this.SwitchActiveState(this);
 
             return _active ? this : null;
         }
 
-        private bool SetActive(MenuBase _Menu)
+        private bool SwitchActiveState(MenuBase _Menu, bool _ForceClose = false)
         {
-            var _activeState = !_Menu.gameObject.activeSelf;
-            _Menu.gameObject.SetActive(_activeState);
-
-            return _activeState;
+            if (!_ForceClose)
+            {
+                var _activeState = !_Menu.gameObject.activeSelf;
+                _Menu.gameObject.SetActive(_activeState);
+                return _activeState;   
+            }
+            
+            _Menu.gameObject.SetActive(false);
+            return false;
         }
         #endregion
     }
