@@ -32,7 +32,14 @@ namespace Watermelon_Game.Menu
         /// </summary>
         private void SetScrollPosition()
         {
-            this.scrollRect.verticalScrollbar.value = this.currentScrollPosition;
+            if (this.menu == Menu.GameOver)
+            {
+                this.scrollRect.verticalScrollbar.value = 1;   
+            }
+            else
+            {
+                this.scrollRect.verticalScrollbar.value = this.currentScrollPosition;   
+            }
         }
         
         [CanBeNull]
