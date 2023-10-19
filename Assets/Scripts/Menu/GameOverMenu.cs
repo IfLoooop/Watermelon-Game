@@ -26,7 +26,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.score = value;
-                this.stats.SetText1(this.scoreText, this.score.ToString());
+                this.stats.SetForText(this.scoreText, this.score);
             } 
         }
         public Stats Stats => this.stats;
@@ -52,10 +52,6 @@ namespace Watermelon_Game.Menu
             // About to close
             if (this.gameObject.activeSelf)
             {
-                this.SetMultiplier();
-                this.AddFruits();
-                this.AddSkills();
-                this.Reset();
                 GameController.StartGame();
             }
             // About to open
@@ -85,93 +81,20 @@ namespace Watermelon_Game.Menu
                 _duration = string.Concat(_duration, $"{this.duration.Seconds}sec");
             }
             
-            this.stats.SetText1(this.durationText, _duration);
+            this.stats.SetForText(this.durationText, _duration);
         }
         
         public void AddFruitCount(Fruit.Fruit _Fruit)
         {
-            switch (_Fruit)
-            {
-                case Fruit.Fruit.Grape:
-                    this.stats.GrapeEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Cherry:
-                    this.stats.CherryEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Strawberry:
-                    this.stats.StrawberryEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Lemon:
-                    this.stats.LemonEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Orange:
-                    this.stats.OrangeEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Apple:
-                    this.stats.AppleEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Pear:
-                    this.stats.PearEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Pineapple:
-                    this.stats.PineappleEvolvedCount++;
-                    break;
-                case Fruit.Fruit.HoneyMelon:
-                    this.stats.HoneyMelonEvolvedCount++;
-                    break;
-                case Fruit.Fruit.Melon:
-                    this.stats.MelonEvolvedCount++;
-                    break;
-            }
+            this.stats.AddFruitCount(_Fruit);
         }
 
         public void AddSkillCount(Skill _Skill)
         {
-            switch (_Skill)
-            {
-                case Skill.Power:
-                    this.stats.PowerSkillUsedCount++;
-                    break;
-                case Skill.Evolve:
-                    this.stats.EvolveSkillUsedCount++;
-                    break;
-                case Skill.Destroy:
-                    this.stats.DestroySkillUsedCount++;
-                    break;
-            }
-        }
-
-        private void SetMultiplier()
-        {
-            if (StatsMenu.Instance.Stats.HighestMultiplier < this.stats.HighestMultiplier)
-            {
-                StatsMenu.Instance.Stats.HighestMultiplier = this.stats.HighestMultiplier;
-            }
+            this.stats.AddSkillCount(_Skill);
         }
         
-        private void AddFruits()
-        {
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Grape, this.stats.GrapeEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Cherry, this.stats.CherryEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Strawberry, this.stats.StrawberryEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Lemon, this.stats.LemonEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Orange, this.stats.OrangeEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Apple, this.stats.AppleEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Pear, this.stats.PearEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Pineapple, this.stats.PineappleEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.HoneyMelon, this.stats.HoneyMelonEvolvedCount);
-            StatsMenu.Instance.AddFruitCount(Fruit.Fruit.Melon, this.stats.MelonEvolvedCount);
-            StatsMenu.Instance.Stats.GoldenFruitCount += this.Stats.GoldenFruitCount;
-        }
-
-        private void AddSkills()
-        {
-            StatsMenu.Instance.AddSkillCount(Skill.Power, this.stats.PowerSkillUsedCount);
-            StatsMenu.Instance.AddSkillCount(Skill.Evolve, this.stats.EvolveSkillUsedCount);
-            StatsMenu.Instance.AddSkillCount(Skill.Destroy, this.stats.DestroySkillUsedCount);
-        }
-
-        private void Reset()
+        public void Reset()
         {
             this.Score = 0;
             this.stats.HighestMultiplier = 0;
@@ -186,6 +109,7 @@ namespace Watermelon_Game.Menu
             this.stats.PineappleEvolvedCount = 0;
             this.stats.HoneyMelonEvolvedCount = 0;
             this.stats.MelonEvolvedCount = 0;
+            this.Stats.GoldenFruitCount = 0;
             this.stats.PowerSkillUsedCount = 0;
             this.stats.EvolveSkillUsedCount = 0;
             this.stats.DestroySkillUsedCount = 0;

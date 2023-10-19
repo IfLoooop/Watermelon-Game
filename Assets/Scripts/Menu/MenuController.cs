@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using Watermelon_Game.Points;
 
 namespace Watermelon_Game.Menu
 {
@@ -33,6 +34,12 @@ namespace Watermelon_Game.Menu
             this.InitializeMenu(this.gameOverMenu);
         }
         
+        private void OnApplicationQuit()
+        {
+            StatsMenu.Instance.NewBestScore(PointsController.Instance.CurrentPoints);
+            StatsMenu.Instance.Save();
+        }
+        
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.P))
@@ -44,12 +51,7 @@ namespace Watermelon_Game.Menu
                 this.OpenMenu(this.gameOverMenu);
             }
         }
-
-        private void OnApplicationQuit()
-        {
-            this.statsMenu.Save();
-        }
-
+        
         /// <summary>
         /// Needed to set the "Instance" properties in the Menu class
         /// </summary>

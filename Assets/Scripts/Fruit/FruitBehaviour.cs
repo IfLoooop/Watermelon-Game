@@ -239,6 +239,7 @@ namespace Watermelon_Game.Fruit
             this.isUpgradedGoldenFruit = _ForceEnable;
             Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
             GameOverMenu.Instance.Stats.GoldenFruitCount++;
+            StatsMenu.Instance.Stats.GoldenFruitCount++;
         }
 
         public void SetOrderInLayer(int _OrderInLayer)

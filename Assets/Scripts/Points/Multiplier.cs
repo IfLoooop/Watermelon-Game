@@ -86,6 +86,10 @@ namespace Watermelon_Game.Points
             {
                 GameOverMenu.Instance.Stats.HighestMultiplier = _CurrentMultiplier;
             }
+            if (_CurrentMultiplier > StatsMenu.Instance.Stats.HighestMultiplier)
+            {
+                StatsMenu.Instance.Stats.HighestMultiplier = _CurrentMultiplier;
+            }
         }
 
         private Color GetMultiplierColor(uint _CurrentMultiplier)

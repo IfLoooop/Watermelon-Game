@@ -28,6 +28,7 @@ namespace Watermelon_Game.Points
 
         #region Properties
         public static PointsController Instance { get; private set; }
+        public uint CurrentPoints => this.currentPoints;
         #endregion
 
         #region Methods
@@ -114,12 +115,10 @@ namespace Watermelon_Game.Points
         public void SavePoints()
         {
             GameOverMenu.Instance.Score = this.currentPoints;
-            var _currentHighScore = StatsMenu.Instance.BestScore;
-
-            if (this.currentPoints > _currentHighScore)
+            var _newHighScore = StatsMenu.Instance.NewBestScore(this.currentPoints);
+            if (_newHighScore)
             {
                 this.highScore.text = this.currentPoints.ToString();
-                StatsMenu.Instance.BestScore = this.currentPoints;
             }
         }
         #endregion

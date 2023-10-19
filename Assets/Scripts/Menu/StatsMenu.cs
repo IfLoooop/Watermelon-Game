@@ -46,11 +46,10 @@ namespace Watermelon_Game.Menu
 
         public uint BestScore
         {
-            get => this.bestScore;
             set
             {
                 this.bestScore = value;
-                this.stats.SetText1(this.bestScoreText, this.bestScore.ToString());
+                this.stats.SetForText(this.bestScoreText, this.bestScore);
             } 
         }
         public Stats Stats => this.stats;
@@ -60,7 +59,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.gamesPlayed = value;
-                this.stats.SetText1(this.gamesPlayedText, this.gamesPlayed.ToString());
+                this.stats.SetForText(this.gamesPlayedText, this.gamesPlayed);
             } 
         }
         public TimeSpan TimeSpendInGame
@@ -81,21 +80,28 @@ namespace Watermelon_Game.Menu
             this.Load();
         }
         
-        private void SetTimeSpendText(float _Seconds = 0.0f)
+        public override MenuBase Open_Close(MenuBase _PreviousMenu)
         {
-            var _timeSpendInGame = new TimeSpan().Add(this.timeSpendInGame).Add(TimeSpan.FromSeconds(_Seconds));
+            this.SetTimeSpendText(Time.time);
+            
+            return base.Open_Close(_PreviousMenu);
+        }
+
+        private void SetTimeSpendText(float _DurationToAdd = 0)
+        {
+            var _timeSpendInGame = new TimeSpan().Add(this.timeSpendInGame).Add(TimeSpan.FromSeconds(_DurationToAdd));
 
             if (_timeSpendInGame.Hours > 0)
             {
-                this.stats.SetText1(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Hours, "h"));
+                this.stats.SetForText(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Hours, "h"));
             }
             else if (_timeSpendInGame.Minutes > 0)
             {
-                this.stats.SetText1(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Minutes, "min"));
+                this.stats.SetForText(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Minutes, "min"));
             }
             else
             {
-                this.stats.SetText1(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Seconds, "sec"));
+                this.stats.SetForText(this.timeSpendInGameText, string.Concat(_timeSpendInGame.Seconds, "sec"));
             }
         }
         
@@ -144,57 +150,26 @@ namespace Watermelon_Game.Menu
             PlayerPrefs.SetString(TIME_SPEND_KEY, this.timeSpendInGame.Add(TimeSpan.FromSeconds(Time.time)).ToString());
         }
 
-        public void AddFruitCount(Fruit.Fruit _Fruit, uint _Amount)
+        public bool NewBestScore(uint _CurrentPoints)
         {
-            switch (_Fruit)
+            var _newHighScore = _CurrentPoints > this.bestScore;
+            if (_newHighScore)
             {
-                case Fruit.Fruit.Grape:
-                    this.stats.GrapeEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Cherry:
-                    this.stats.CherryEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Strawberry:
-                    this.stats.StrawberryEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Lemon:
-                    this.stats.LemonEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Orange:
-                    this.stats.OrangeEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Apple:
-                    this.stats.AppleEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Pear:
-                    this.stats.PearEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Pineapple:
-                    this.stats.PineappleEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.HoneyMelon:
-                    this.stats.HoneyMelonEvolvedCount += _Amount;
-                    break;
-                case Fruit.Fruit.Melon:
-                    this.stats.MelonEvolvedCount += _Amount;
-                    break;
+                // TODO: Do something when a new HighScore was reached (animation maybe)
+                this.BestScore = _CurrentPoints;
             }
+
+            return _newHighScore;
         }
         
-        public void AddSkillCount(Skill _Skill, uint _Amount)
+        public void AddFruitCount(Fruit.Fruit _Fruit)
         {
-            switch (_Skill)
-            {
-                case Skill.Power:
-                    this.stats.PowerSkillUsedCount += _Amount;
-                    break;
-                case Skill.Evolve:
-                    this.stats.EvolveSkillUsedCount += _Amount;
-                    break;
-                case Skill.Destroy:
-                    this.stats.DestroySkillUsedCount += _Amount;
-                    break;
-            }
+            this.stats.AddFruitCount(_Fruit);
+        }
+        
+        public void AddSkillCount(Skill _Skill)
+        {
+            this.stats.AddSkillCount(_Skill);
         }
         #endregion
     }

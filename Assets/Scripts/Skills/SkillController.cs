@@ -215,6 +215,7 @@ namespace Watermelon_Game.Skills
             StartCoroutine(this.ResetMass(_FruitBehaviour));
             
             GameOverMenu.Instance.AddSkillCount(Skill.Power);
+            StatsMenu.Instance.AddSkillCount(Skill.Power);
         }
 
         /// <summary>
@@ -253,6 +254,7 @@ namespace Watermelon_Game.Skills
             }
             
             GameOverMenu.Instance.AddSkillCount(Skill.Evolve);
+            StatsMenu.Instance.AddSkillCount(Skill.Evolve);
         }
 
         public void Skill_Destroy(FruitBehaviour _FruitBehaviour)
@@ -260,6 +262,7 @@ namespace Watermelon_Game.Skills
             _FruitBehaviour.Destroy();
             GameController.Instance.FruitCollection.PlayEvolveSound();
             GameOverMenu.Instance.AddSkillCount(Skill.Destroy);
+            StatsMenu.Instance.AddSkillCount(Skill.Destroy);
         }
         #endregion
     }

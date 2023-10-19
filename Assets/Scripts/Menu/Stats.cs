@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Menu
 {
@@ -50,7 +51,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.highestMultiplier = value;
-                this.SetText1(this.highestMultiplierText, this.highestMultiplier.ToString());
+                this.SetForText(this.highestMultiplierText, this.highestMultiplier);
             } 
         }
         public uint GrapeEvolvedCount
@@ -59,7 +60,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.grapeEvolvedCount = value;
-                this.SetText2(this.grapeText, this.grapeEvolvedCount.ToString());
+                this.SetForImage(this.grapeText, this.grapeEvolvedCount);
             } 
         }
         public uint CherryEvolvedCount
@@ -68,7 +69,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.cherryEvolvedCount = value;
-                this.SetText2(this.cherryText, this.cherryEvolvedCount.ToString());
+                this.SetForImage(this.cherryText, this.cherryEvolvedCount);
             } 
         }
         public uint StrawberryEvolvedCount
@@ -77,7 +78,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.strawberryEvolvedCount = value;
-                this.SetText2(this.strawberryText, this.strawberryEvolvedCount.ToString());
+                this.SetForImage(this.strawberryText, this.strawberryEvolvedCount);
             }
         }
         public uint LemonEvolvedCount
@@ -86,7 +87,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.lemonEvolvedCount = value;
-                this.SetText2(this.lemonText, this.lemonEvolvedCount.ToString());
+                this.SetForImage(this.lemonText, this.lemonEvolvedCount);
             } 
         }
         public uint OrangeEvolvedCount
@@ -95,7 +96,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.orangeEvolvedCount = value;
-                this.SetText2(this.orangeText, this.orangeEvolvedCount.ToString());
+                this.SetForImage(this.orangeText, this.orangeEvolvedCount);
             } 
         }
         public uint AppleEvolvedCount
@@ -104,7 +105,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.appleEvolvedCount = value;
-                this.SetText2(this.appleText, this.appleEvolvedCount.ToString());
+                this.SetForImage(this.appleText, this.appleEvolvedCount);
             } 
         }
         public uint PearEvolvedCount
@@ -113,7 +114,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.pearEvolvedCount = value;
-                this.SetText2(this.pearText, this.pearEvolvedCount.ToString());
+                this.SetForImage(this.pearText, this.pearEvolvedCount);
             } 
         }
         public uint PineappleEvolvedCount
@@ -122,7 +123,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.pineappleEvolvedCount = value;
-                this.SetText2(this.pineappleText, this.pineappleEvolvedCount.ToString());
+                this.SetForImage(this.pineappleText, this.pineappleEvolvedCount);
             } 
         }
         public uint HoneyMelonEvolvedCount
@@ -131,7 +132,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.honeyMelonEvolvedCount = value;
-                this.SetText2(this.honeMelonText, this.honeyMelonEvolvedCount.ToString());
+                this.SetForImage(this.honeMelonText, this.honeyMelonEvolvedCount);
             } 
         }
         public uint MelonEvolvedCount
@@ -140,7 +141,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.melonEvolvedCount = value;
-                this.SetText2(this.melonText, this.melonEvolvedCount.ToString());
+                this.SetForImage(this.melonText, this.melonEvolvedCount);
             } 
         }
         public uint GoldenFruitCount
@@ -149,7 +150,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.goldenFruitCount = value;
-                this.SetText1(this.goldenFruitText, this.goldenFruitCount.ToString());
+                this.SetForText(this.goldenFruitText, this.goldenFruitCount);
             } 
         }
         public uint PowerSkillUsedCount
@@ -158,7 +159,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.powerSkillUsedCount = value;
-                this.SetText2(this.powerText, this.powerSkillUsedCount.ToString());
+                this.SetForImage(this.powerText, this.powerSkillUsedCount);
             } 
         }
         public uint EvolveSkillUsedCount
@@ -167,7 +168,7 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.evolveSkillUsedCount = value;
-                this.SetText2(this.evolveText, this.evolveSkillUsedCount.ToString());
+                this.SetForImage(this.evolveText, this.evolveSkillUsedCount);
             } 
         }
         public uint DestroySkillUsedCount
@@ -176,20 +177,78 @@ namespace Watermelon_Game.Menu
             set
             {
                 this.destroySkillUsedCount = value;
-                this.SetText2(this.destroyText, this.destroySkillUsedCount.ToString());
+                this.SetForImage(this.destroyText, this.destroySkillUsedCount);
             } 
         }
         #endregion
 
         #region Methods
-        public void SetText1(TextMeshProUGUI _Text, string _Value)
+        public void SetForText(TextMeshProUGUI _Text, uint _Value)
+        {
+            this.SetForText(_Text, _Value.ToString());
+        }
+
+        public void SetForText(TextMeshProUGUI _Text, string _Value)
         {
             _Text.text = string.Concat(_Text.gameObject.name, $" {_Value}");
         }
-
-        public void SetText2(TextMeshProUGUI _Text, string _Value)
+        
+        public void SetForImage(TextMeshProUGUI _Text, uint _Value)
         {
             _Text.text = string.Concat($": {_Value}");
+        }
+        
+        public void AddFruitCount(Fruit.Fruit _Fruit)
+        {
+            switch (_Fruit)
+            {
+                case Fruit.Fruit.Grape:
+                    this.GrapeEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Cherry:
+                    this.CherryEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Strawberry:
+                    this.StrawberryEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Lemon:
+                    this.LemonEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Orange:
+                    this.OrangeEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Apple:
+                    this.AppleEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Pear:
+                    this.PearEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Pineapple:
+                    this.PineappleEvolvedCount++;
+                    break;
+                case Fruit.Fruit.HoneyMelon:
+                    this.HoneyMelonEvolvedCount++;
+                    break;
+                case Fruit.Fruit.Melon:
+                    this.MelonEvolvedCount++;
+                    break;
+            }
+        }
+        
+        public void AddSkillCount(Skill _Skill)
+        {
+            switch (_Skill)
+            {
+                case Skill.Power:
+                    this.PowerSkillUsedCount++;
+                    break;
+                case Skill.Evolve:
+                    this.EvolveSkillUsedCount++;
+                    break;
+                case Skill.Destroy:
+                    this.DestroySkillUsedCount ++;
+                    break;
+            }
         }
         #endregion
     }

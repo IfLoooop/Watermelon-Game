@@ -2,17 +2,18 @@ v1.3
 -MAKE SURE THE DEVELOPMENT_BUILD DEFINE SYMBOL WOKRS IN THE RELEASE BUILD-
 [BUGS]
 [Changes]
--Add all stats immediately to the global stats, not just when the game ends
+-Lower the volume of the sound that plays when the NextNextFruit disappears
 [ADDONS]
 -Add button to close the game
 -Add a restart button
--Add a master sound slider
+-Add a master sound slider (Mute button (on mouse click))
 -On Game over, destroy all fruits on the map with an animation
 
 v1.3_1
 [CHANGES]
 -Remove "Updates Available"-image on Steam
 [ADDONS]
+-Add Steamworks SDK
 -Steam release
 
 v1.3_2
@@ -24,7 +25,7 @@ v1.3_2
 -Add a "Order in Layer"-Controller
 -Add a AudioSource ObjectPool/Controller
 -Use events for "GameStart"/"GameOver"
--Make the Dictionary-maps in "Websettings.cs" refactor resistant
+-Make the Dictionary-maps in "WebSettings.cs" refactor resistant
 [ADDONS]
 -Add a Shortcut for a non Development Windows Test build
 -Add Butler to the build pipeline
@@ -38,11 +39,13 @@ v1.5
 -Microsoft Store
 
 [BACKLOG]
+-Also use arrow keys for movement
 -Add an option to turn of all animations (Buttons/Background) that are not necessarily needed
 -Add different fruit faces (Default and Hurt) and randomize them
 -Menus previous position is set to abruptly when a menu is opened (most likely due to the size change animation)
 -Randomize the drop and evolve sound (change the pitch)
 -Add a sound when a fruit collides with something (after a certain fall distance)
+-Do something when a new HighScore was reached (animation maybe)
 -Add tabs to the menu (Global/Current Game)
 -Randomly select 2 fruits on the map, that give bonus points when combined together
 -Add changes to the level (maybe also music/sound effects) the longer the game is playing

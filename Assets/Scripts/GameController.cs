@@ -62,6 +62,7 @@ namespace Watermelon_Game
             FruitSpawnerAim.Enable(true);
             PointsController.Instance.ResetPoints();
             StatsMenu.Instance.GamesPlayed++;
+            GameOverMenu.Instance.Reset();
             Instance.CurrentGameTimeStamp = Time.time;
         }
         
@@ -156,6 +157,7 @@ namespace Watermelon_Game
                     
             PointsController.Instance.AddPoints((Fruit.Fruit)_fruitIndex);
             GameOverMenu.Instance.AddFruitCount(_Fruit1.Fruit);
+            StatsMenu.Instance.AddFruitCount(_Fruit1.Fruit);
             Instance.FruitCollection.PlayEvolveSound();
 
             evolvingFruits.RemoveAll(_EvolvingFruits => _EvolvingFruits.Contains(_Fruit1, _Fruit2));

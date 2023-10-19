@@ -51,3 +51,4 @@ v1.3 (TBA) // TODO: Set date
 -On Game Over, the scroll position of the menu is set to the top of the menu
 -Increased the mass of all fruits when their being released. Mass is set to the default value after their first collision
 -The multiplier popup animation is now played every time the multiplier is increased
+-Stats for the current game are now immediately added to the global stats, (previously only at end of game)
