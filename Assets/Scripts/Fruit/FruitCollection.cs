@@ -27,6 +27,7 @@ namespace Watermelon_Game.Fruit
         [SerializeField] private float goldenFruitChance = 0.01f;
         [SerializeField] private Sprite faceDefault;
         [SerializeField] private Sprite faceHurt;
+        [SerializeField] private float massMultiplier = 2.5f;
         #endregion
 
         #region Properties
@@ -43,6 +44,7 @@ namespace Watermelon_Game.Fruit
         public float GoldenFruitChance => this.goldenFruitChance;
         public Sprite FaceDefault => this.faceDefault;
         public Sprite FaceHurt => this.faceHurt;
+        public float MassMultiplier => this.massMultiplier;
         #endregion
 
         #region Methods
@@ -53,6 +55,7 @@ namespace Watermelon_Game.Fruit
             TrySetValue(nameof(this.higherIndexWeight), ref this.higherIndexWeight);
             TrySetValue(nameof(this.indexWeight), ref this.indexWeight);
             TrySetValue(nameof(this.goldenFruitChance), ref this.goldenFruitChance);
+            TrySetValue(nameof(this.massMultiplier), ref this.massMultiplier);
             TrySetValue(FruitSpawnWeightMap[0], this.fruits[0]);
             TrySetValue(FruitSpawnWeightMap[1], this.fruits[1]);
             TrySetValue(FruitSpawnWeightMap[2], this.fruits[2]);

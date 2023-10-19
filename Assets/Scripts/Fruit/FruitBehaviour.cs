@@ -34,14 +34,14 @@ namespace Watermelon_Game.Fruit
         #endregion
         
         #region Fields
-#pragma warning disable CS0108, CS0114
-        private Rigidbody2D rigidbody2D;
-#pragma warning restore CS0108, CS0114
+#pragma warning disable CS0109
+        private new Rigidbody2D rigidbody2D;
+#pragma warning restore CS0109
         private CircleCollider2D circleCollider2D;
         private BlockRelease blockRelease;
-#pragma warning disable CS0108, CS0114
-        private Animation animation;
-#pragma warning restore CS0108, CS0114
+#pragma warning disable CS0109
+        private new Animation animation;
+#pragma warning restore CS0109
         private EvolvingFruitTrigger evolvingFruitTrigger;
 
         private bool isHurt;
@@ -57,10 +57,11 @@ namespace Watermelon_Game.Fruit
 
         #region Properties
         public Fruit Fruit => this.fruit;
-        public float ColliderRadius => this.circleCollider2D.radius;
         public Skill? ActiveSkill { get; private set; }
+        public Rigidbody2D Rigidbody2D => this.rigidbody2D;
         public bool IsGoldenFruit { get; private set; }
         public bool IsEvolving { get; private set; }
+        public float ColliderRadius => this.circleCollider2D.radius;
         #endregion
         
         #region Methods
@@ -86,6 +87,13 @@ namespace Watermelon_Game.Fruit
                 this.isHurt = true;
                 this.faceSprite.sprite = GameController.Instance.FruitCollection.FaceHurt;
                 this.Invoke(nameof(this.ResetFace), 1);
+            }
+
+            var _powerSkillNotActive = this.ActiveSkill is not Skill.Power;
+            var _doesntUseAutoMass = this.rigidbody2D.useAutoMass == false;
+            if (_powerSkillNotActive && _doesntUseAutoMass)
+            {
+                this.SetMass(true, 0);
             }
             
             var _otherIsFruit = _Other.gameObject.layer == LayerMask.NameToLayer("Fruit"); 
@@ -247,15 +255,32 @@ namespace Watermelon_Game.Fruit
         public void Release(FruitSpawner _FruitSpawner, Vector2 _Direction)
         {
             this.blockRelease.FruitSpawner = _FruitSpawner;
-            
             this.InitializeRigidBody();
 
             if (this.ActiveSkill is Skill.Power)
             {
-                SkillController.Instance.Skill_Power(this.rigidbody2D, _Direction);
+                SkillController.Instance.Skill_Power(this, _Direction);
+            }
+            else
+            {
+                var _mass = this.rigidbody2D.mass * GameController.Instance.FruitCollection.MassMultiplier;
+                this.SetMass(false, _mass);
             }
         }
 
+        public void SetMass(bool _Reset, float _Mass)
+        {
+            if (_Reset)
+            {
+                this.rigidbody2D.useAutoMass = true;
+            }
+            else
+            {
+                this.rigidbody2D.useAutoMass = false;
+                this.rigidbody2D.mass = _Mass;
+            }
+        }
+        
         private void InitializeRigidBody()
         {
             this.rigidbody2D.simulated = true;
@@ -338,8 +363,7 @@ namespace Watermelon_Game.Fruit
             this.IsEvolving = true;
             this.evolvingFruitTrigger.SetFruitToEvolveWith(_FruitBehaviour);
             base.gameObject.layer = LayerMask.NameToLayer("EvolvingFruit");
-            this.rigidbody2D.useAutoMass = false;
-            this.rigidbody2D.mass = EVOLVE_MASS;
+            this.SetMass(false, EVOLVE_MASS);
             this.moveTowards = InternalMoveTowards(_FruitBehaviour);
             base.StartCoroutine(this.moveTowards);
         }

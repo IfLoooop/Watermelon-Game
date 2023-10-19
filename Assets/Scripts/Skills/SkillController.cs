@@ -205,33 +205,29 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// Shoots the fruit with enhanced force and mass
         /// </summary>
-        /// <param name="_Rigidbody">The <see cref="Rigidbody2D"/> of the <see cref="FruitBehaviour"/></param>
+        /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to set the mass of</param>
         /// <param name="_Direction">The direction to shoot the fruit in</param>
-        public void Skill_Power(Rigidbody2D _Rigidbody, Vector2 _Direction)
+        public void Skill_Power(FruitBehaviour _FruitBehaviour, Vector2 _Direction)
         {
-            var _previousMass = _Rigidbody.mass;
-            
-            _Rigidbody.useAutoMass = false;
-            _Rigidbody.mass = this.powerSkillMass;
-            _Rigidbody.AddForce(_Direction * this.powerSkillForce, ForceMode2D.Impulse);
-            StartCoroutine(this.ResetMass(_Rigidbody, _previousMass));
+            _FruitBehaviour.SetMass(false, this.powerSkillMass);
+            _FruitBehaviour.Rigidbody2D.AddForce(_Direction * this.powerSkillForce, ForceMode2D.Impulse);
+            StartCoroutine(this.ResetMass(_FruitBehaviour));
             
             GameOverMenu.Instance.AddSkillCount(Skill.Power);
         }
 
         /// <summary>
-        /// Resets the <see cref="Rigidbody2D.mass"/> of the given <see cref="Rigidbody2D"/>
+        /// Resets the <see cref="Rigidbody2D.mass"/> of the given <see cref="FruitBehaviour"/>
         /// </summary>
-        /// <param name="_Rigidbody">The <see cref="Rigidbody2D"/> to reset the <see cref="Rigidbody2D.mass"/> on</param>
-        /// <param name="_PreviousMass">The <see cref="Rigidbody2D.mass"/> to set</param>
-        /// <returns></returns>
-        private IEnumerator ResetMass(Rigidbody2D _Rigidbody, float _PreviousMass)
+        /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to set the mass of</param>
+        /// <returns>Waits for the duration in <see cref="massResetWaitTime"/></returns>
+        private IEnumerator ResetMass(FruitBehaviour _FruitBehaviour)
         {
             yield return this.massResetWaitTime;
             
-            if (_Rigidbody != null)
+            if (_FruitBehaviour != null)
             {
-                _Rigidbody.mass = _PreviousMass;
+                _FruitBehaviour.SetMass(true, 0);
             }
         }
 

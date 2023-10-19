@@ -14,6 +14,7 @@ pineAppleSpawnWeight = 0
 honeyMelonSpawnWeight = 0
 melonSpawnWeight = 0
 goldenFruitChance = 0.01
+massMultiplier = 2.5
 [SkillController]
 powerPointsRequirement = 20
 evolvePointsRequirement = 50

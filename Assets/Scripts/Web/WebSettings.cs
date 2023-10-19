@@ -19,7 +19,6 @@ namespace Watermelon_Game.Web
         #region Fields
         private static Dictionary<string, object> SettingsMap { get; } = new()
         {
-            
             // [FruitCollection]
             { "spawnWeightMultiplier", null },
             { "lowerIndexWeight", null },
@@ -36,6 +35,7 @@ namespace Watermelon_Game.Web
             { "honeyMelonSpawnWeight", null },
             { "melonSpawnWeight", null },
             { "goldenFruitChance", null },
+            { "massMultiplier", null },
             // [SkillController]
             { "powerPointsRequirement", null },
             { "evolvePointsRequirement", null },
@@ -45,7 +45,6 @@ namespace Watermelon_Game.Web
             { "sizeMultiplier", null },
             { "forceMultiplier", null },
             { "spriteAlphaValue", null },
-            
         };
 
         public static ReadOnlyDictionary<uint, string> FruitSpawnWeightMap { get; } = new(new Dictionary<uint, string>
