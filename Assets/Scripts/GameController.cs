@@ -92,6 +92,8 @@ namespace Watermelon_Game
             PointsController.Instance.SavePoints();
             PointsController.Instance.ResetPoints();
             
+            NextFruit.Instance.GameOVer();
+            
             fruits.Values.ForEach<FruitBehaviour>(_FruitBehaviour => _FruitBehaviour.DisableEvolving());
             
             // ReSharper disable once InconsistentNaming
@@ -106,7 +108,6 @@ namespace Watermelon_Game
             fruits.Clear();
             
             FruitSpawner.GameOver();
-            NextFruit.Instance.GameOVer();
 
             _Action();
             MenuController.Instance.BlockInput = false;
