@@ -352,14 +352,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67cd576e26e1ff4994e4a2c1e9175fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fruitSpawnerAim: {fileID: 7205611210074970412}
+  blockedRelease: {fileID: 8300000, guid: 724131bc8a7f34041bb9f1701f0cb58d, type: 3}
+  release: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
+  shoot: {fileID: 8300000, guid: 7e26c9daf4c32483b9c2790e662d3f1b, type: 3}
   movementSpeed: 2
   rotationStep: 50
   maxRotationAngle: 80
-  release: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
-  releaseClipVolume: 0.01
-  blockedRelease: {fileID: 8300000, guid: 724131bc8a7f34041bb9f1701f0cb58d, type: 3}
   blockedReleaseVolume: 0.0175
-  shoot: {fileID: 8300000, guid: 7e26c9daf4c32483b9c2790e662d3f1b, type: 3}
+  releaseClipVolume: 0.01
   shootClipStartTime: 0.1
   shootClipVolume: 0.05
 --- !u!1 &547782021356760046

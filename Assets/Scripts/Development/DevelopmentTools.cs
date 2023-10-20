@@ -94,7 +94,7 @@ namespace Watermelon_Game.Development
             {
                 if (this.currentFruit != null)
                 {
-                    this.currentFruit.Release(null, Vector2.down);
+                    this.currentFruit.Release(null);
                     this.currentFruit = null;
                 }   
             }
@@ -126,7 +126,7 @@ namespace Watermelon_Game.Development
                 _fruitBehaviour.CanNotBeAddedToFruitCollection_DEBUG();
                 _fruitBehaviour.gameObject.SetActive(true);
                 _fruitBehaviour.GoldenFruit_Debug();
-                _fruitBehaviour.Release(null, Vector2.down);
+                _fruitBehaviour.Release(null);
             }
         }
 

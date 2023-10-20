@@ -9,14 +9,17 @@ namespace Watermelon_Game.Fruit_Spawn
     internal sealed class FruitSpawner : MonoBehaviour
     {
         #region Inspector Fields
+        [Header("References")] 
+        [SerializeField] private FruitSpawnerAim fruitSpawnerAim;
+        [SerializeField] private AudioClip blockedRelease;
+        [SerializeField] private AudioClip release;
+        [SerializeField] private AudioClip shoot;
+        [Header("Settings")]
         [SerializeField] private float movementSpeed = 30f;
         [SerializeField] private float rotationStep = 50f;
         [SerializeField] private float maxRotationAngle = 60f;
-        [SerializeField] private AudioClip release;
-        [SerializeField] private float releaseClipVolume = .01f;
-        [SerializeField] private AudioClip blockedRelease;
         [SerializeField] private float blockedReleaseVolume = .0175f;
-        [SerializeField] private AudioClip shoot;
+        [SerializeField] private float releaseClipVolume = .01f;
         [SerializeField] private float shootClipStartTime = .1f;
         [SerializeField] private float shootClipVolume = .05f;
         #endregion
@@ -116,26 +119,32 @@ namespace Watermelon_Game.Fruit_Spawn
             
             FruitSpawnerAim.Enable(false);
             this.BlockRelease = true;
-            this.fruitBehaviour.Release(this, -this.transform.up);
-
-            // TODO: Move to FruitBehaviour.cs
+            this.fruitBehaviour.Release(this);
+            
             if (this.fruitBehaviour.ActiveSkill != null)
             {
                 SkillController.Instance.SkillUsed(this.fruitBehaviour.ActiveSkill.Value);
                 
                 this.audioSource.Play(this.shootClipStartTime, this.shoot, this.shootClipVolume);
                 
-                if (this.fruitBehaviour.ActiveSkill is Skill.Evolve or Skill.Destroy)
+                switch (this.fruitBehaviour.ActiveSkill)
                 {
-                    this.fruitBehaviour.Shoot(-this.transform.up);
+                    case Skill.Evolve or Skill.Destroy:
+                        this.fruitBehaviour.Shoot(-this.fruitSpawnerAim.transform.up);
+                        break;
+                    case Skill.Power:
+                        SkillController.Instance.Skill_Power(this.fruitBehaviour, -this.fruitSpawnerAim.transform.up);
+                        break;
                 }
+                
+                SkillController.Instance.DeactivateActiveSkill(true);
             }
             else
             {
+                var _mass = this.fruitBehaviour.Rigidbody2D.mass * GameController.Instance.FruitCollection.MassMultiplier;
+                this.fruitBehaviour.SetMass(false, _mass);
                 this.audioSource.Play(0, this.release, this.releaseClipVolume);
             }
-            
-            SkillController.Instance.DeactivateActiveSkill(true);
             
             this.ResetFruitSpawner(false);
         }
@@ -151,6 +160,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 this.rigidbody2D.MovePosition(this.startingPosition);
             this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform);
             this.fruitBehaviour.SetOrderInLayer(1);
+            this.fruitSpawnerAim.ResetAim();
             this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, this.fruitSpawnerCollider.size.y);
             this.SetFruitTrigger(this.fruitBehaviour);
             this.BlockInput = false;

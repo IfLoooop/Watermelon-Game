@@ -91,6 +91,11 @@ namespace Watermelon_Game.Fruit_Spawn
                 base.transform.Rotate(new Vector3(0, 0,  _zRotation));   
             }
         }
+
+        public void ResetAim()
+        {
+            this.transform.rotation = Quaternion.Euler(Vector3.zero);
+        }
         
         public static void Enable(bool _Value)
         {

@@ -280,8 +280,7 @@ namespace Watermelon_Game.Fruit
         /// Drops the <see cref="Fruit"/> from the <see cref="FruitSpawner"/>
         /// </summary>
         /// <param name="_FruitSpawner"><see cref="FruitSpawner"/></param>
-        /// <param name="_Direction">The direction the <see cref="FruitSpawner"/> is currently facing</param>
-        public void Release(FruitSpawner _FruitSpawner, Vector2 _Direction)
+        public void Release(FruitSpawner _FruitSpawner)
         {
             base.transform.SetParent(null, true);
             this.SetOrderInLayer(0);
@@ -289,16 +288,6 @@ namespace Watermelon_Game.Fruit
             this.CanBeAddedToFruitCollection = true;
             this.InitializeRigidBody();
             GameController.AddFruit(this);
-
-            if (this.ActiveSkill is Skill.Power)
-            {
-                SkillController.Instance.Skill_Power(this, _Direction);
-            }
-            else
-            {
-                var _mass = this.rigidbody2D.mass * GameController.Instance.FruitCollection.MassMultiplier;
-                this.SetMass(false, _mass);
-            }
         }
 
         public void SetMass(bool _Reset, float _Mass)
