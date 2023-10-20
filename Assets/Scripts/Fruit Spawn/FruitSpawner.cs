@@ -173,11 +173,11 @@ namespace Watermelon_Game.Fruit_Spawn
         }
         
         /// <summary>
-        /// Sets the rotation of the <see cref="FruitSpawner"/> back to zero
+        /// Sets the rotation of the <see cref="fruitSpawnerAim"/> back to zero
         /// </summary>
         public static void ResetAimRotation()
         {
-            Instance.transform.rotation = quaternion.Euler(0, 0, 0);
+            Instance.fruitSpawnerAim.ResetAim();
         }
 
         /// <summary>
