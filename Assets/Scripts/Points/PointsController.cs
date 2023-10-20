@@ -56,14 +56,28 @@ namespace Watermelon_Game.Points
         {
             this.SetPoints(-(int)_PointsToSubtract);
         }
+
+        public void ResetPoints()
+        {
+            this.SetPoints(0);
+        }
         
         /// <summary>
-        /// Adds the given points to <see cref="currentPoints"/>
+        /// Adds the given points to <see cref="currentPoints"/> <br/>
+        /// <i>Set to 0, to reset <see cref="currentPoints"/> and <see cref="pointsDelta"/></i>
         /// </summary>
         /// <param name="_Points">The points to add/subtract to <see cref="currentPoints"/></param>
         private void SetPoints(int _Points)
         {
-            this.currentPoints = (uint)Mathf.Clamp(this.currentPoints + _Points, 0, uint.MaxValue);
+            if (_Points == 0)
+            {
+                this.currentPoints = 0;
+                this.pointsDelta = 1;
+            }
+            else
+            {
+                this.currentPoints = (uint)Mathf.Clamp(this.currentPoints + _Points, 0, uint.MaxValue);
+            }
 
             if (this.pointsCoroutine == null)
             {
@@ -99,14 +113,7 @@ namespace Watermelon_Game.Points
             StopCoroutine(this.pointsCoroutine);
             this.pointsCoroutine = null;
         }
-
-        public void ResetPoints()
-        {
-            this.currentPoints = 0;
-            this.pointsDelta = 0;
-            this.SetPointsText(0);
-        }
-
+        
         private void SetPointsText(uint _Points)
         {
             this.points.text = string.Concat(_Points, 'P');

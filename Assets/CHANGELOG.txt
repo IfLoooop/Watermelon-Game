@@ -43,9 +43,9 @@ v1.3 (20.10.2023)
 -Fixed a bug where the Godray would be disabled to early, when multiple GoldenFruits are on the map
 -GoldenFruits can't destroy each other anymore when colliding
 -Fruits in the background are now properly displayed behind the container walls
--The game now starts in windowed fullscreen mode
 
 [CHANGES]
+-The game now starts in windowed fullscreen mode
 -Fruits that have become a GoldenFruit by being shot out of the map, only destroy one other fruit instead of previously all fruits they touched
 -Changed the font of the countdown
 -Replaced the font in the Evolutions-Chart on the right
@@ -59,3 +59,11 @@ v1.3 (20.10.2023)
 -Added a button to restart the game
 -Added a fruit destroy animation when the game is restarted
 -Added a volume slider and a mute button
+
+------------------------------------------------------------------------------------------------------------------------
+
+v1.3_1 (TBA) TODO: Set date
+[BUGS]
+-Active skills are now disabled on restart
+[CHANGES]
+-Changed the font of the version number in the upper left corner

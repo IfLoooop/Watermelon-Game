@@ -89,6 +89,9 @@ namespace Watermelon_Game
             FruitSpawner.Instance.BlockInput = true;
             FruitSpawnerAim.Enable(false);
             
+            PointsController.Instance.SavePoints();
+            PointsController.Instance.ResetPoints();
+            
             fruits.Values.ForEach<FruitBehaviour>(_FruitBehaviour => _FruitBehaviour.DisableEvolving());
             
             // ReSharper disable once InconsistentNaming
@@ -102,10 +105,6 @@ namespace Watermelon_Game
             
             fruits.Clear();
             
-            PointsController.Instance.SavePoints();
-            PointsController.Instance.ResetPoints();
-            // Needed for the SkillController.PointsChanged() method to be called
-            PointsController.Instance.SubtractPoints(0);
             FruitSpawner.GameOver();
             NextFruit.Instance.GameOVer();
 

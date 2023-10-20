@@ -1,5 +1,10 @@
 v1.3_1
 [CHANGES]
+-NextNextFruit should be disabled sooner on restart
+-Adjust the UI size and placement on left side of the container
+-Moving the FruitSpawner and rotating it at the same time isn't smooth enough (Maybe move rotation to LateUpdate)
+-Make skills cost more points each time they are used (10%? - WebSettings)
+-Make the BGM-Volume Icon look like a clickable button
 -Remove "Updates Available"-image on Steam
 [ADDONS]
 -Add Steamworks SDK
@@ -7,17 +12,16 @@ v1.3_1
 
 v1.3_2
 [CHANGES]
--Add Rewired and enable controller support (For Xbox)g
--Add Odin to the project
 -Code and Project cleanup
+-Add Odin to the project
 -Add a layer and tag controller
 -Add a "Order in Layer"-Controller
 -Add a AudioSource ObjectPool/Controller
 -Use events for "GameStart"/"GameOver"
 -Make the Dictionary-maps in "WebSettings.cs" refactor resistant
+-Add Rewired and enable controller support (For Xbox)
 -Add all characters to the font
 [ADDONS]
--Add a Shortcut for a non Development Windows Test build
 -Add Butler to the build pipeline
 -Add a clickable link to the Itch page when an update is available
 
@@ -39,6 +43,7 @@ v1.5
 -Play an animation when a fruit gameobject is destroyed "fruitbehavious.Destroy()"
 -Do something when a new HighScore was reached (animation maybe)
 -Add tabs to the menu (Global/Current Game)
+-Make the menus look nicer (Border)
 -Randomly select 2 fruits on the map, that give bonus points when combined together
 -Add changes to the level (maybe also music/sound effects) the longer the game is playing
 -Add a difficulty system

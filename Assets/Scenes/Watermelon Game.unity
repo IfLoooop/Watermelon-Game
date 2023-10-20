@@ -1480,6 +1480,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7548692760508066968, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
+      propertyPath: forceEnableSkills
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7655928294371341779, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_CameraType
       value: 1

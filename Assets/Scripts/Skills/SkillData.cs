@@ -61,6 +61,7 @@ namespace Watermelon_Game.Skills
         {
             this.CanBeActivated = false;
             this.buttonSpriteRenderer.gameObject.SetActive(false);
+            this.DeactivateSkill(true);
         }
 
         /// <summary>
