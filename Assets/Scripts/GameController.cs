@@ -46,7 +46,7 @@ namespace Watermelon_Game
         private static void SetScreen()
         {
             var _workArea = Screen.mainWindowDisplayInfo.workArea;
-            Screen.SetResolution(_workArea.width, _workArea.height, FullScreenMode.MaximizedWindow);
+            Screen.SetResolution(_workArea.width, _workArea.height, FullScreenMode.FullScreenWindow);
         }
         
         private void Awake()
@@ -279,7 +279,15 @@ namespace Watermelon_Game
         {
             if (_FruitBehaviour.CanBeAddedToFruitCollection)
             {
-                fruits.Add(_FruitBehaviour.gameObject.GetHashCode(), _FruitBehaviour);
+                var _hashCode = _FruitBehaviour.gameObject.GetHashCode();
+                
+#if DEBUG || DEVELOPMENT_BUILD
+                if (fruits.ContainsKey(_hashCode))
+                {
+                    return;
+                }
+#endif
+                fruits.Add(_hashCode, _FruitBehaviour);
             }
         }
         

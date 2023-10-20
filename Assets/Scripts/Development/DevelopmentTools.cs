@@ -123,6 +123,7 @@ namespace Watermelon_Game.Development
             if (Input.GetKeyDown(KeyCode.G))
             {
                 var _fruitBehaviour = FruitBehaviour.SpawnFruit(base.transform.position, Fruit.Fruit.Grape, false);
+                _fruitBehaviour.CanNotBeAddedToFruitCollection_DEBUG();
                 _fruitBehaviour.gameObject.SetActive(true);
                 _fruitBehaviour.GoldenFruit_Debug();
                 _fruitBehaviour.Release(null, Vector2.down);

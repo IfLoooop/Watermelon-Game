@@ -7,7 +7,7 @@ v1.3_1
 
 v1.3_2
 [CHANGES]
--Add Rewired and enable controller support (For Xbox)
+-Add Rewired and enable controller support (For Xbox)g
 -Add Odin to the project
 -Code and Project cleanup
 -Add a layer and tag controller

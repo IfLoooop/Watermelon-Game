@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Watermelon_Game.Fruit;
 
 namespace Watermelon_Game.MaxHeight
 {
@@ -22,7 +23,6 @@ namespace Watermelon_Game.MaxHeight
         private GodRayFlicker godRayFlicker;
         
         private uint currentCountdownTime;
-        private uint goldenFruitsOnMap;
         #endregion
         
         #region Properties
@@ -71,6 +71,21 @@ namespace Watermelon_Game.MaxHeight
             }
         }
 
+        private void Update()
+        {
+            // TODO: Dirty fix, sometimes the GodRay stays active even though all GoldenFruits are destroyed  
+            if (this.godRayFlicker.GodRay.gameObject.activeSelf)
+            {
+                if (!this.godRayFlicker.enabled)
+                {
+                    if (FruitBehaviour.GoldenFruitsCount <= 0)
+                    {
+                        this.godRayFlicker.enabled = true;
+                    }
+                }       
+            }
+        }
+
         public void CountDown()
         {
 #if UNITY_EDITOR
@@ -112,14 +127,12 @@ namespace Watermelon_Game.MaxHeight
         {
             if (_Enabled)
             {
-                ++this.goldenFruitsOnMap;
                 this.godRayFlicker.enabled = false;
                 this.godRayFlicker.EnableGodRay();
             }
             else
             {
-                --this.goldenFruitsOnMap;
-                var _noGoldenFruitOnMap = goldenFruitsOnMap == 0;
+                var _noGoldenFruitOnMap = FruitBehaviour.GoldenFruitsCount <= 0;
                 if (_noGoldenFruitOnMap)
                 {
                     this.godRayFlicker.enabled = true;
