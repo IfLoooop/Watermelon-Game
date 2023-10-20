@@ -37,6 +37,18 @@ namespace Watermelon_Game.Web
 
         public async void CheckLatestVersion()
         {
+#if UNITY_EDITOR
+            goto skipSteamManager;
+#endif
+#pragma warning disable CS0162
+            if (SteamManager.Initialized)
+            {
+                return;
+            }
+#pragma warning restore CS0162
+#if UNITY_EDITOR
+            skipSteamManager:
+#endif
             await DownloadAsStreamAsync(REQUEST_URI, _Line =>
             {
                 if (_Line.Contains(VERSION_KEY))
