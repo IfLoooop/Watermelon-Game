@@ -38,12 +38,13 @@ v1.2 (17.10.2023)
 
 ------------------------------------------------------------------------------------------------------------------------
 
-v1.3 (TBA) // TODO: Set date
+v1.3 (20.10.2023)
 [BUGS]
 -Fixed a bug where the Godray would be disabled to early, when multiple GoldenFruits are on the map
 -GoldenFruits can't destroy each other anymore when colliding
 -Fruits in the background are now properly displayed behind the container walls
 -The game now starts in windowed fullscreen mode
+
 [CHANGES]
 -Fruits that have become a GoldenFruit by being shot out of the map, only destroy one other fruit instead of previously all fruits they touched
 -Changed the font of the countdown
@@ -52,6 +53,7 @@ v1.3 (TBA) // TODO: Set date
 -Increased the mass of all fruits when their being released. Mass is set to the default value after their first collision
 -The multiplier popup animation is now played every time the multiplier is increased
 -Stats for the current game are now immediately added to the global stats, (previously only at end of game)
+
 [ADDONS]
 -Added a button to close the game
 -Added a button to restart the game
