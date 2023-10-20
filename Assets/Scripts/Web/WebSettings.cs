@@ -40,6 +40,7 @@ namespace Watermelon_Game.Web
             { "powerPointsRequirement", null },
             { "evolvePointsRequirement", null },
             { "destroyPointsRequirement", null },
+            { "skillPointIncrease", null },
             // [BackgroundCController]
             { "fruitSpawnDelay", null },
             { "sizeMultiplier", null },

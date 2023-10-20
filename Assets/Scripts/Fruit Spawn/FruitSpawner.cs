@@ -2,7 +2,6 @@ using Unity.Mathematics;
 using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit;
-using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Fruit_Spawn
@@ -119,13 +118,13 @@ namespace Watermelon_Game.Fruit_Spawn
             this.BlockRelease = true;
             this.fruitBehaviour.Release(this, -this.transform.up);
 
+            // TODO: Move to FruitBehaviour.cs
             if (this.fruitBehaviour.ActiveSkill != null)
             {
+                SkillController.Instance.SkillUsed(this.fruitBehaviour.ActiveSkill.Value);
+                
                 this.audioSource.Play(this.shootClipStartTime, this.shoot, this.shootClipVolume);
                 
-                var _value = SkillController.Instance.SkillPointRequirementsMap[this.fruitBehaviour.ActiveSkill.Value];
-                PointsController.Instance.SubtractPoints(_value);
-
                 if (this.fruitBehaviour.ActiveSkill is Skill.Evolve or Skill.Destroy)
                 {
                     this.fruitBehaviour.Shoot(-this.transform.up);

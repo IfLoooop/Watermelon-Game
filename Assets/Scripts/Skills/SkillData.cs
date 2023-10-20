@@ -16,22 +16,33 @@ namespace Watermelon_Game.Skills
 
         #region Fields
         private readonly Skill skill;
+        private uint currentPointsRequirement;
         #endregion
         
         #region Properties
+        public uint CurrentPointsRequirement
+        {
+            get => this.currentPointsRequirement;
+            set
+            {
+                this.currentPointsRequirement = value;
+                this.SetSkillPointRequirementText();
+            }
+        }
         public bool CanBeActivated { get; private set; }
         public bool IsActive { get; private set; }
         public KeyCode KeyToActivate { get; }
         #endregion
 
         #region Constrcutor
-        public SkillData(TextMeshProUGUI _TextMeshPro, SpriteRenderer _ButtonSpriteRenderer, SpriteRenderer _SkillIconSpriteRenderer, KeyCode _KeyToActivate, Skill _Skill)
+        public SkillData(TextMeshProUGUI _TextMeshPro, SpriteRenderer _ButtonSpriteRenderer, SpriteRenderer _SkillIconSpriteRenderer, KeyCode _KeyToActivate, Skill _Skill, uint _PointRequirement)
         {
             this.textMeshPro = _TextMeshPro;
             this.buttonSpriteRenderer = _ButtonSpriteRenderer;
             this.skillIconSpriteRenderer = _SkillIconSpriteRenderer;
             this.KeyToActivate = _KeyToActivate;
             this.skill = _Skill;
+            this.CurrentPointsRequirement = _PointRequirement;
         }
         #endregion
 
@@ -39,10 +50,9 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// Sets the visible skill point requirements in <see cref="textMeshPro"/>
         /// </summary>
-        /// <param name="_Value">How much points are needed to use this skill</param>
-        public void SetSkillPointRequirements(uint _Value)
+        private void SetSkillPointRequirementText()
         {
-            this.textMeshPro.text = string.Concat(_Value, "P");
+            this.textMeshPro.text = string.Concat(this.CurrentPointsRequirement, "P");
         }
 
         /// <summary>

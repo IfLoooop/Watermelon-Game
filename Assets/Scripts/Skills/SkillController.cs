@@ -31,6 +31,7 @@ namespace Watermelon_Game.Skills
         [SerializeField] private float shootForceMultiplier = 100;
         [SerializeField] private float powerSkillForce = 30000f;
         [SerializeField] private float powerSkillMass = 200f;
+        [SerializeField] private float skillPointIncrease = .1f;
         #endregion
 
         #region Fields
@@ -44,7 +45,7 @@ namespace Watermelon_Game.Skills
         
         #region Properties
         public static SkillController Instance { get; private set; }
-        public ReadOnlyDictionary<Skill, uint> SkillPointRequirementsMap { get; private set; }
+        public ReadOnlyDictionary<Skill, SkillData> SkillPointRequirementsMap { get; private set; }
         public float ShootForceMultiplier => this.shootForceMultiplier;
         #endregion
 
@@ -52,25 +53,25 @@ namespace Watermelon_Game.Skills
         private void Awake()
         {
             Instance = this;
-
-            this.powerSkill = InitializeSkill(this.power, KeyCode.Alpha1, Skill.Power);
-            this.evolveSkill = InitializeSkill(this.evolve, KeyCode.Alpha2, Skill.Evolve);
-            this.destroySkill = InitializeSkill(this.destroy, KeyCode.Alpha3, Skill.Destroy);
+            
+            this.powerSkill = InitializeSkill(this.power, KeyCode.Alpha1, Skill.Power, this.powerPointsRequirement);
+            this.evolveSkill = InitializeSkill(this.evolve, KeyCode.Alpha2, Skill.Evolve, this.evolvePointsRequirement);
+            this.destroySkill = InitializeSkill(this.destroy, KeyCode.Alpha3, Skill.Destroy, this.destroyPointsRequirement);
             this.audioSource = this.GetComponent<AudioSource>();
 
-            this.SkillPointRequirementsMap = new ReadOnlyDictionary<Skill, uint>(new Dictionary<Skill, uint>
+            this.SkillPointRequirementsMap = new ReadOnlyDictionary<Skill, SkillData>(new Dictionary<Skill, SkillData>
             {
-                { Skill.Power, this.powerPointsRequirement },
-                { Skill.Evolve, this.evolvePointsRequirement },
-                { Skill.Destroy, this.destroyPointsRequirement }
+                { Skill.Power, this.powerSkill },
+                { Skill.Evolve, this.evolveSkill },
+                { Skill.Destroy, this.destroySkill }
             });
         }
 
         private void Start()
         {
-            this.powerSkill.SetSkillPointRequirements(this.powerPointsRequirement);
-            this.evolveSkill.SetSkillPointRequirements(this.evolvePointsRequirement);
-            this.destroySkill.SetSkillPointRequirements(this.destroyPointsRequirement);
+            // this.powerSkill.SetSkillPointRequirementText();
+            // this.evolveSkill.SetSkillPointRequirementText();
+            // this.destroySkill.SetSkillPointRequirementText();
             
 #if UNITY_EDITOR
             if (this.forceEnableSkills)
@@ -89,14 +90,14 @@ namespace Watermelon_Game.Skills
             this.SkillInput(this.destroySkill);
         }
 
-        private static SkillData InitializeSkill(GameObject _GameObject, KeyCode _KeyToActivate, Skill _Skill)
+        private static SkillData InitializeSkill(GameObject _GameObject, KeyCode _KeyToActivate, Skill _Skill, uint _PointRequirements)
         {
             var _textMeshPro = _GameObject.GetComponentInChildren<TextMeshProUGUI>();
             var _spriteRenderers = _GameObject.GetComponentsInChildren<SpriteRenderer>();
             
             _spriteRenderers[0].gameObject.SetActive(false);
             
-            return new SkillData(_textMeshPro, _spriteRenderers[0], _spriteRenderers[1], _KeyToActivate, _Skill);
+            return new SkillData(_textMeshPro, _spriteRenderers[0], _spriteRenderers[1], _KeyToActivate, _Skill, _PointRequirements);
         }
 
         public void ApplyWebSettings()
@@ -104,6 +105,7 @@ namespace Watermelon_Game.Skills
             TrySetValue(nameof(this.powerPointsRequirement), ref this.powerPointsRequirement);
             TrySetValue(nameof(this.evolvePointsRequirement), ref this.evolvePointsRequirement);
             TrySetValue(nameof(this.destroyPointsRequirement), ref this.destroyPointsRequirement);
+            TrySetValue(nameof(this.skillPointIncrease), ref this.skillPointIncrease);
         }
         
         public void PointsChanged(uint _CurrentPoints)
@@ -115,7 +117,7 @@ namespace Watermelon_Game.Skills
             }
 #endif
             
-            if (_CurrentPoints >= this.powerPointsRequirement)
+            if (_CurrentPoints >= this.powerSkill.CurrentPointsRequirement)
             {
                 this.powerSkill.EnableSkill();
             }
@@ -124,7 +126,7 @@ namespace Watermelon_Game.Skills
                 this.powerSkill.DisableSkill();
             }
             
-            if (_CurrentPoints >= this.evolvePointsRequirement)
+            if (_CurrentPoints >= this.evolveSkill.CurrentPointsRequirement)
             {
                 this.evolveSkill.EnableSkill();
             }
@@ -133,7 +135,7 @@ namespace Watermelon_Game.Skills
                 this.evolveSkill.DisableSkill();
             }
             
-            if (_CurrentPoints >= this.destroyPointsRequirement)
+            if (_CurrentPoints >= this.destroySkill.CurrentPointsRequirement)
             {
                 this.destroySkill.EnableSkill();
             }
@@ -237,6 +239,22 @@ namespace Watermelon_Game.Skills
             GameController.Instance.FruitCollection.PlayEvolveSound();
             GameOverMenu.Instance.AddSkillCount(Skill.Destroy);
             StatsMenu.Instance.AddSkillCount(Skill.Destroy);
+        }
+
+        public void SkillUsed(Skill _Skill)
+        {
+            var _skill = SkillPointRequirementsMap[_Skill];
+
+            PointsController.Instance.SubtractPoints(_skill.CurrentPointsRequirement);
+
+            _skill.CurrentPointsRequirement += (uint)(_skill.CurrentPointsRequirement * this.skillPointIncrease);
+        }
+
+        public void ResetSkillPointsRequirement()
+        {
+            this.powerSkill.CurrentPointsRequirement = this.powerPointsRequirement;
+            this.evolveSkill.CurrentPointsRequirement = this.evolvePointsRequirement;
+            this.destroySkill.CurrentPointsRequirement = this.destroyPointsRequirement;
         }
         #endregion
     }

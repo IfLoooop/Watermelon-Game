@@ -86,13 +86,15 @@ namespace Watermelon_Game
 
             MenuController.Instance.CloseCurrentlyActiveMenu();
             MenuController.Instance.BlockInput = true;
+            
             FruitSpawner.Instance.BlockInput = true;
             FruitSpawnerAim.Enable(false);
+            NextFruit.Instance.GameOVer();
             
             PointsController.Instance.SavePoints();
             PointsController.Instance.ResetPoints();
             
-            NextFruit.Instance.GameOVer();
+            SkillController.Instance.ResetSkillPointsRequirement();
             
             fruits.Values.ForEach<FruitBehaviour>(_FruitBehaviour => _FruitBehaviour.DisableEvolving());
             

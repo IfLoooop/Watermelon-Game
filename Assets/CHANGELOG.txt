@@ -68,3 +68,4 @@ v1.3_1 (TBA) TODO: Set date
 -Fixed the jerky motion when moving the FruitSpawner and rotation it at the same time
 [CHANGES]
 -Changed the font of the version number in the upper left corner
+-Points requirements to activate a skill are now increased by 10% each time they are used (Is reset at restart)

@@ -1,8 +1,7 @@
 v1.3_1
 [CHANGES]
--Adjust the UI size and placement on left side of the container
--Make skills cost more points each time they are used (10%? - WebSettings)
 -Make the BGM-Volume Icon look like a clickable button
+-Adjust the UI size and placement on left side of the container
 -Remove "Updates Available"-image on Steam
 [ADDONS]
 -Add Steamworks SDK
