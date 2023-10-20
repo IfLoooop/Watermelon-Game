@@ -1,6 +1,5 @@
 v1.3_1
 [CHANGES]
--Moving the FruitSpawner and rotating it at the same time isn't smooth enough (Maybe move rotation to LateUpdate)
 -Adjust the UI size and placement on left side of the container
 -Make skills cost more points each time they are used (10%? - WebSettings)
 -Make the BGM-Volume Icon look like a clickable button

@@ -1144,7 +1144,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forceEnableSkills: 0
-  rotationButtons: {fileID: 9000886865165022110}
   power: {fileID: 571955665277294865}
   evolve: {fileID: 7033121146106939018}
   destroy: {fileID: 5512739587830894152}
@@ -2800,6 +2799,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e1d60ed46d62254580dbac1f7137e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotationButtons: {fileID: 9000886865165022110}
 --- !u!1 &7884683519191026145
 GameObject:
   m_ObjectHideFlags: 0

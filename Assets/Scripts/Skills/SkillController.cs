@@ -6,7 +6,6 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Fruit;
-using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
 using Watermelon_Game.Points;
 using Watermelon_Game.Web;
@@ -21,10 +20,11 @@ namespace Watermelon_Game.Skills
 #if UNITY_EDITOR
         [SerializeField] private bool forceEnableSkills;
 #endif
-        [SerializeField] private GameObject rotationButtons;
+        [Header("References")]
         [SerializeField] private GameObject power;
         [SerializeField] private GameObject evolve;
         [SerializeField] private GameObject destroy;
+        [Header("Settings")]
         [SerializeField] private uint powerPointsRequirement = 20;
         [SerializeField] private uint evolvePointsRequirement = 50;
         [SerializeField] private uint destroyPointsRequirement = 50;
@@ -87,8 +87,6 @@ namespace Watermelon_Game.Skills
             this.SkillInput(this.powerSkill);
             this.SkillInput(this.evolveSkill);
             this.SkillInput(this.destroySkill);
-            
-            this.RotateAim();
         }
 
         private static SkillData InitializeSkill(GameObject _GameObject, KeyCode _KeyToActivate, Skill _Skill)
@@ -179,30 +177,6 @@ namespace Watermelon_Game.Skills
             this.destroySkill.DeactivateSkill(_OnlyVisuals);
         }
         
-        /// <summary>
-        /// Activates/Deactivates the aim rotation controls
-        /// </summary>
-        /// <param name="_Enable">True to activate, false to deactivate</param>
-        public void SetAimRotation(bool _Enable)
-        {
-            this.rotationButtons.SetActive(_Enable);
-        }
-
-        private void RotateAim()
-        {
-            if (this.rotationButtons.activeSelf)
-            {
-                if (Input.GetKey(KeyCode.Q))
-                {
-                    FruitSpawner.Rotate(-1);
-                }
-                if (Input.GetKey(KeyCode.E))
-                {
-                    FruitSpawner.Rotate(1);
-                }
-            }
-        }
-
         /// <summary>
         /// Shoots the fruit with enhanced force and mass
         /// </summary>

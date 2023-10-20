@@ -65,5 +65,6 @@ v1.3 (20.10.2023)
 v1.3_1 (TBA) TODO: Set date
 [BUGS]
 -Active skills are now disabled on restart
+-Fixed the jerky motion when moving the FruitSpawner and rotation it at the same time
 [CHANGES]
 -Changed the font of the version number in the upper left corner

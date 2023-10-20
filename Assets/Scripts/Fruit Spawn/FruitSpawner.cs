@@ -4,7 +4,6 @@ using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
-using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Fruit_Spawn
 {
@@ -54,6 +53,9 @@ namespace Watermelon_Game.Fruit_Spawn
         /// Blocks fruit release while this Property is set to true 
         /// </summary>
         public bool BlockRelease { get; set; }
+
+        public float RotationStep => this.rotationStep;
+        public float MaxRotationAngle => this.maxRotationAngle;
         #endregion
         
         #region Methods
@@ -161,23 +163,6 @@ namespace Watermelon_Game.Fruit_Spawn
             this.fruitTrigger.radius = _Fruit.ColliderRadius;
         }
         
-        /// <summary>
-        /// Rotates the <see cref="FruitSpawner"/> in the given direction
-        /// </summary>
-        /// <param name="_Direction">Negative value = left, positive value = right</param>
-        public static void Rotate(int _Direction)
-        {
-            var _zRotation = _Direction * Instance.rotationStep * Time.deltaTime;
-            var _currentRotation = Mathfx.SignedAngle(Instance.transform.eulerAngles.z);
-            var _canRotateLeft = _Direction < 0 && _currentRotation > Instance.maxRotationAngle * -1;
-            var _canRotateRight = _Direction > 0 && _currentRotation < Instance.maxRotationAngle;
-            
-            if (_canRotateLeft || _canRotateRight)
-            {
-                Instance.transform.Rotate(new Vector3(0, 0,  _zRotation));   
-            }
-        }
-
         /// <summary>
         /// Sets the rotation of the <see cref="FruitSpawner"/> back to zero
         /// </summary>
