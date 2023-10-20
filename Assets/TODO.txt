@@ -1,9 +1,3 @@
-v1.3
--MAKE SURE THE DEVELOPMENT_BUILD DEFINE SYMBOL WOKRS IN THE RELEASE BUILD-
-[BUGS]
-[Changes]
-[ADDONS]
-
 v1.3_1
 [CHANGES]
 -Remove "Updates Available"-image on Steam

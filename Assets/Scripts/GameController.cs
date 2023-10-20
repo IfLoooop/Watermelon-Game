@@ -46,7 +46,7 @@ namespace Watermelon_Game
         private static void SetScreen()
         {
             var _workArea = Screen.mainWindowDisplayInfo.workArea;
-            Screen.SetResolution(_workArea.width, _workArea.height, FullScreenMode.FullScreenWindow);
+            Screen.SetResolution(_workArea.width, _workArea.height, FullScreenMode.MaximizedWindow);
         }
         
         private void Awake()

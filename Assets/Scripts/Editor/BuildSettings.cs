@@ -42,7 +42,8 @@ namespace Watermelon_Game.Editor
         {
             var _buildTarget = EditorUserBuildSettings.activeBuildTarget;
             var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(_buildTarget);
-            PlayerSettings.SetArchitecture(_buildTargetGroup, 2);
+            // TODO: Check if this is needed
+            //PlayerSettings.SetArchitecture(_buildTargetGroup, 2);
 
             var _isWindowsBuild = _Report.summary.platform == BuildTarget.StandaloneWindows64;
             if (_isWindowsBuild)
