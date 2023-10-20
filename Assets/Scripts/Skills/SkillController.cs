@@ -69,10 +69,6 @@ namespace Watermelon_Game.Skills
 
         private void Start()
         {
-            // this.powerSkill.SetSkillPointRequirementText();
-            // this.evolveSkill.SetSkillPointRequirementText();
-            // this.destroySkill.SetSkillPointRequirementText();
-            
 #if UNITY_EDITOR
             if (this.forceEnableSkills)
             {
