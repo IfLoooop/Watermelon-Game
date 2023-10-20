@@ -56,3 +56,4 @@ v1.3 (TBA) // TODO: Set date
 -Added a button to close the game
 -Added a button to restart the game
 -Added a fruit destroy animation when the game is restarted
+-Added a volume slider and a mute button

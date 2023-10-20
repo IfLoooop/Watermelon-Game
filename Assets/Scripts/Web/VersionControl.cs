@@ -14,7 +14,7 @@ namespace Watermelon_Game.Web
         #endregion
 
         #region Fields
-        private static VersionControl instance;
+        public static VersionControl Instance;
         
         private TextMeshProUGUI version;
         private Image updatesAvailable;
@@ -23,6 +23,7 @@ namespace Watermelon_Game.Web
         #region Methods
         private void Awake()
         {
+            Instance = this;
             this.version = base.GetComponent<TextMeshProUGUI>();
             this.updatesAvailable = base.GetComponentInChildren<Image>();
             this.CheckLatestVersion();
@@ -34,7 +35,7 @@ namespace Watermelon_Game.Web
             this.updatesAvailable.gameObject.SetActive(false);
         }
 
-        private async void CheckLatestVersion()
+        public async void CheckLatestVersion()
         {
             await DownloadAsStreamAsync(REQUEST_URI, _Line =>
             {

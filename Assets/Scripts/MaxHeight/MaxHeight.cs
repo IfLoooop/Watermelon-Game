@@ -21,12 +21,6 @@ namespace Watermelon_Game.MaxHeight
         private AudioSource audioSource;
         private GodRayFlicker godRayFlicker;
         
-        // TODO: Remove
-        // /// <summary>
-        // /// How many fruits are currently inside the trigger
-        // /// </summary>
-        // private int triggerCount;
-        
         private uint currentCountdownTime;
         private uint goldenFruitsOnMap;
         #endregion
@@ -58,11 +52,6 @@ namespace Watermelon_Game.MaxHeight
             {
                 this.countdownAnimation.enabled = true;
             }
-            
-            // TODO: Remove
-            // this.triggerCount++;
-            // this.countdownAnimation.enabled = true;
-            // this.borderLineAnimation.Play();
         }
 
         private void OnTriggerStay2D(Collider2D _Other)
@@ -80,13 +69,6 @@ namespace Watermelon_Game.MaxHeight
             {
                 this.Reset();
             }
-            
-            // TODO: Remove
-            // this.triggerCount--;
-            // if (this.triggerCount <= 0)
-            // {
-            //     this.Reset();
-            // }
         }
 
         public void CountDown()

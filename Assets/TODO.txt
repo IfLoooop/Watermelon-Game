@@ -3,7 +3,6 @@ v1.3
 [BUGS]
 [Changes]
 [ADDONS]
--Add a master sound slider (Mute button (on mouse click))
 
 v1.3_1
 [CHANGES]

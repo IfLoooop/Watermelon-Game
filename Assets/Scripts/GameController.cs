@@ -9,6 +9,7 @@ using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
 using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
+using Watermelon_Game.Web;
 
 namespace Watermelon_Game
 {
@@ -60,6 +61,7 @@ namespace Watermelon_Game
         
         public static void StartGame()
         {
+            VersionControl.Instance.CheckLatestVersion();
             FruitSpawner.Instance.ResetFruitSpawner(true);
             FruitSpawnerAim.Enable(true);
             //PointsController.Instance.ResetPoints();
