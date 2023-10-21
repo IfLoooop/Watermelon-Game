@@ -9,6 +9,12 @@ namespace Watermelon_Game.Web
 {
     public sealed class VersionControl : WebBase
     {
+#if DEBUG || DEVELOPMENT_BUILD
+        #region Inspector Fields
+        [SerializeField] private bool skipVersionCheck;
+        #endregion
+#endif
+        
         #region Constants
         private const string REQUEST_URI = "https://raw.githubusercontent.com/MarkHerdt/Watermelon-Game/main/CurrentVersion";
         private const string VERSION_KEY = "CURRENT_VERSION";
@@ -38,6 +44,12 @@ namespace Watermelon_Game.Web
 
         public async void CheckLatestVersion()
         {
+#if DEBUG || DEVELOPMENT_BUILD
+            if (this.skipVersionCheck)
+            {
+                return;
+            }
+#endif
 #if UNITY_EDITOR
             goto skipSteamManager;
 #endif
