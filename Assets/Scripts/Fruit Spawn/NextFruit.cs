@@ -72,6 +72,18 @@ namespace Watermelon_Game.Fruit_Spawn
             return _fruitBehaviour;
         }
 
+#if DEBUG || DEVELOPMENT_BUILD
+        public FruitBehaviour GetFruit(Transform _NewParent, Fruit.Fruit _Fruit)
+        {
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(_NewParent.transform.position, _Fruit, false);
+            _fruitBehaviour.transform.SetParent(_NewParent, true);
+            _fruitBehaviour.gameObject.SetActive(true);
+            _fruitBehaviour.SetAnimation(false);
+            
+            return _fruitBehaviour;
+        }
+#endif
+        
         public void ShowNextNextFruit()
         {
             var _waitTime = new WaitForSeconds(1);

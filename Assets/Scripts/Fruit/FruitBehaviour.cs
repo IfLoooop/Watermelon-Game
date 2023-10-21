@@ -336,7 +336,8 @@ namespace Watermelon_Game.Fruit
         
         /// <summary>
         /// Instantiates a specific fruit <br/>
-        /// <i>For evolved fruits</i>
+        /// <i>For evolved fruits</i> <br/>
+        /// <b>The fruit GameObject will not be active</b>
         /// </summary>
         /// <param name="_Position">Where to spawn the fruit</param>
         /// <param name="_Fruit">The <see cref="Watermelon_Game.Fruit.Fruit"/> to spawn</param>

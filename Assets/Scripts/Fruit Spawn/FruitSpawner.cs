@@ -161,17 +161,40 @@ namespace Watermelon_Game.Fruit_Spawn
         /// Resets the Fruit Spawner to its original position
         /// </summary>
         /// <param name="_ResetPosition">If true, resets the <see cref="FruitSpawner"/> position to <see cref="startingPosition"/></param>
-        public void ResetFruitSpawner(bool _ResetPosition)
+        /// <param name="_Fruit">Gives the <see cref="FruitSpawner"/> a specific fruit <b>Can only be used during development</b></param>
+        public void ResetFruitSpawner
+        (
+            bool _ResetPosition
+#if DEBUG || DEVELOPMENT_BUILD
+            , Fruit.Fruit? _Fruit = null
+#endif
+        )
         {
-            this.BlockInput = true;
             if (_ResetPosition)
                 this.rigidbody2D.MovePosition(this.startingPosition);
+
+#if DEBUG || DEVELOPMENT_BUILD
+            if (_Fruit != null)
+            {
+                if (this.fruitBehaviour != null)
+                {
+                    Destroy(this.fruitBehaviour.gameObject);
+                }
+                this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform, _Fruit.Value);
+                goto skipGetFruit;
+            }
+#endif
+            
             this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform);
+
+#if DEBUG || DEVELOPMENT_BUILD
+            skipGetFruit:;
+#endif
+            
             this.fruitBehaviour.SetOrderInLayer(1);
             this.fruitSpawnerAim.ResetAim();
             this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, this.fruitSpawnerCollider.size.y);
             this.SetFruitTrigger(this.fruitBehaviour);
-            this.BlockInput = false;
         }
 
         private void SetFruitTrigger(FruitBehaviour _Fruit)

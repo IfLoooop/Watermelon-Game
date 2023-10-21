@@ -57,6 +57,7 @@ namespace Watermelon_Game.Development
 #if DEBUG || DEVELOPMENT_BUILD
         private void Update()
         {
+            this.SpawnGrape();
             this.SpawnFruit(KeyCode.F1, Fruit.Fruit.Grape);
             this.SpawnFruit(KeyCode.F2, Fruit.Fruit.Cherry);
             this.SpawnFruit(KeyCode.F3, Fruit.Fruit.Strawberry);
@@ -71,13 +72,21 @@ namespace Watermelon_Game.Development
             this.ReleaseFruit();
             this.MoveFruit();
             this.DeleteFruit();
+            this.SaveFruitsOnMap();
+            this.LoadFruit();
             this.SpawnUpgradedFruit();
             this.SetPoints();
             this.SetBackgroundMusic();
-            this.SaveFruitsOnMap();
-            this.LoadFruit();
         }
 
+        private void SpawnGrape()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha0))
+            {
+                FruitSpawner.Instance.ResetFruitSpawner(false, Fruit.Fruit.Grape);
+            }
+        }
+        
         private void SpawnFruit(KeyCode _KeyCode, Fruit.Fruit _Fruit)
         {
             if (Input.GetKeyDown(_KeyCode))
@@ -175,42 +184,6 @@ namespace Watermelon_Game.Development
             return _raycastHit2D;
         }
         
-        private void SpawnUpgradedFruit()
-        {
-            if (Input.GetKeyDown(KeyCode.G))
-            {
-                var _fruitBehaviour = this.SpawnFruit(base.transform.position, Fruit.Fruit.Grape, Quaternion.identity, false);
-                _fruitBehaviour.GoldenFruit_Debug();
-                _fruitBehaviour.Release(null);
-            }
-        }
-        
-        private void SetPoints()
-        {
-            if (Input.GetKeyDown(KeyCode.KeypadPlus))
-            {
-                var _maxFruit = Enum.GetValues(typeof(Fruit.Fruit)).Length - 1;
-                var _randomFruit = (Fruit.Fruit)Random.Range(0, _maxFruit);
-                
-                PointsController.Instance.AddPoints(_randomFruit);
-            }
-            else if (Input.GetKeyDown(KeyCode.KeypadMinus))
-            {
-                var _randomNumber = (uint)Random.Range(1, 10);
-                
-                PointsController.Instance.SubtractPoints(_randomNumber);
-            }
-        }
-        
-        private void SetBackgroundMusic()
-        {
-            if (Input.GetKeyDown(KeyCode.M))
-            {
-                var _enabled = this.audioSource.enabled;
-                this.audioSource.enabled = !_enabled;   
-            }
-        }
-
         private void SaveFruitsOnMap()
         {
             if (Input.GetKeyDown(KeyCode.RightShift))
@@ -265,7 +238,43 @@ namespace Watermelon_Game.Development
                 }
             }
         }
-
+        
+        private void SpawnUpgradedFruit()
+        {
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                var _fruitBehaviour = this.SpawnFruit(base.transform.position, Fruit.Fruit.Grape, Quaternion.identity, false);
+                _fruitBehaviour.GoldenFruit_Debug();
+                _fruitBehaviour.Release(null);
+            }
+        }
+        
+        private void SetPoints()
+        {
+            if (Input.GetKeyDown(KeyCode.KeypadPlus))
+            {
+                var _maxFruit = Enum.GetValues(typeof(Fruit.Fruit)).Length - 1;
+                var _randomFruit = (Fruit.Fruit)Random.Range(0, _maxFruit);
+                
+                PointsController.Instance.AddPoints(_randomFruit);
+            }
+            else if (Input.GetKeyDown(KeyCode.KeypadMinus))
+            {
+                var _randomNumber = (uint)Random.Range(1, 10);
+                
+                PointsController.Instance.SubtractPoints(_randomNumber);
+            }
+        }
+        
+        private void SetBackgroundMusic()
+        {
+            if (Input.GetKeyDown(KeyCode.M))
+            {
+                var _enabled = this.audioSource.enabled;
+                this.audioSource.enabled = !_enabled;   
+            }
+        }
+        
         private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit.Fruit _Fruit, Quaternion _Rotation, bool _SetAnimation)
         {
             var _fruitBehaviour = FruitBehaviour.SpawnFruit(_Position, _Fruit, false, _Rotation);

@@ -118,6 +118,7 @@ namespace Watermelon_Game
 
             _Action();
             MenuController.Instance.BlockInput = false;
+            FruitSpawner.Instance.BlockInput = false;
         }
         
         /// <summary>
