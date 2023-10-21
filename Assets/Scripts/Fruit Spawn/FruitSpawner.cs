@@ -1,4 +1,3 @@
-using Unity.Mathematics;
 using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit;
@@ -38,6 +37,8 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private Vector2 startingPosition;
         private const float COLLIDER_SIZE_OFFSET = 3.85f;
+
+        private bool blockRelease;
         
         /// <summary>
         /// The <see cref="FruitBehaviour"/> that is currently attached to this <see cref="FruitSpawner"/> 
@@ -54,7 +55,15 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// Blocks fruit release while this Property is set to true 
         /// </summary>
-        public bool BlockRelease { get; set; }
+        public bool BlockRelease
+        {
+            get => this.blockRelease;
+            set
+            {
+                this.blockRelease = value;
+                FruitSpawnerAim.Enable(!this.blockRelease);
+            }
+        }
 
         public float RotationStep => this.rotationStep;
         public float MaxRotationAngle => this.maxRotationAngle;
@@ -117,7 +126,6 @@ namespace Watermelon_Game.Fruit_Spawn
                 return;
             }
             
-            FruitSpawnerAim.Enable(false);
             this.BlockRelease = true;
             this.fruitBehaviour.Release(this);
             

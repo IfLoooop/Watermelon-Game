@@ -651,6 +651,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1429983307263897380, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
+      propertyPath: logKey
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1870128486164793139, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
+      propertyPath: m_AdditionalShaderChannelsFlag
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 5159398336636352956, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1275,7 +1283,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5412855143142276591, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5498744604153409809, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_fontColor.b

@@ -59,7 +59,7 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             // Give fruit to FruitSpawner
             var _fruitBehaviour = this.nextFruitBehaviour;
-            _fruitBehaviour.EnableAnimation(false);
+            _fruitBehaviour.SetAnimation(false);
             _fruitBehaviour.transform.SetParent(_NewParent, false);
             
             // Take from from NextNextFruit
@@ -108,7 +108,7 @@ namespace Watermelon_Game.Fruit_Spawn
             if (_Value)
             {
                 this.audioSource.Play(.1f, this.nextNextFruitEnabledAudio);
-                this.nextNextFruitBehaviour.EnableAnimation(true);
+                this.nextNextFruitBehaviour.SetAnimation(true);
                 this.nextNextFruit.clip = this.nextNextFruitEnabledAnimation;
                 this.nextNextFruit.Play();
                 this.timer.clip = this.nextNextFruitEnabledAnimation;

@@ -324,12 +324,12 @@ namespace Watermelon_Game.Fruit
 
             _fruitBehaviour.CanBeAddedToFruitCollection = false;
             _fruitBehaviour.gameObject.SetActive(true);
-            _fruitBehaviour.EnableAnimation(true);
+            _fruitBehaviour.SetAnimation(true);
 
             return _fruitBehaviour;
         }
 
-        public void EnableAnimation(bool _Value)
+        public void SetAnimation(bool _Value)
         {
             this.animation.enabled = _Value;
         }
@@ -341,11 +341,12 @@ namespace Watermelon_Game.Fruit
         /// <param name="_Position">Where to spawn the fruit</param>
         /// <param name="_Fruit">The <see cref="Watermelon_Game.Fruit.Fruit"/> to spawn</param>
         /// <param name="_Evolve">Is the fruit being evolved or is it a regular spawn</param>
+        /// <param name="_Rotation">The rotation of the spawned fruit</param>
         /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
-        public static FruitBehaviour SpawnFruit(Vector2 _Position, Fruit _Fruit, bool _Evolve)
+        public static FruitBehaviour SpawnFruit(Vector2 _Position, Fruit _Fruit, bool _Evolve, Quaternion? _Rotation = null)
         {
             var _fruitData = GameController.Instance.FruitCollection.Fruits.First(_FruitData => _FruitData.Fruit == _Fruit);
-            var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity).GetComponent<FruitBehaviour>();
+            var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, _Rotation ?? Quaternion.identity).GetComponent<FruitBehaviour>();
 
             _fruitBehavior.hasBeenEvolved = _Evolve;
 

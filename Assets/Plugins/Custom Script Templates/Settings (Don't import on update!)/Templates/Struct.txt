@@ -1,5 +1,5 @@
 #NAMESPACE#
-internal sealed struct #SCRIPTNAME#
+internal struct #SCRIPTNAME#
 {
     
 }

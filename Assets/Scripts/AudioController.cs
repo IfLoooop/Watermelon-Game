@@ -6,6 +6,7 @@ namespace Watermelon_Game
     internal sealed class AudioController : MonoBehaviour
     {
         #region Inspector Fields
+        [Header("References")]
         [SerializeField] private GameObject bgmDisabledIcon;
         [SerializeField] private Slider slider;
         #endregion

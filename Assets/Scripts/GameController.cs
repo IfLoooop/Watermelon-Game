@@ -39,6 +39,11 @@ namespace Watermelon_Game
         
         public FruitCollection FruitCollection => this.fruitCollection;
         public float CurrentGameTimeStamp { get; private set; }
+
+#if DEBUG || DEVELOPMENT_BUILD
+        // ReSharper disable once InconsistentNaming
+        public static Dictionary<int, FruitBehaviour> Fruits_Debug => fruits;
+#endif
         #endregion
         
         #region Methods
