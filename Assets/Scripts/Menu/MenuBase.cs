@@ -35,7 +35,6 @@ namespace Watermelon_Game.Menu
                 this.SwitchActiveState(_CurrentActiveMenu);
             }
             
-            MenuController.Instance.AudioSource.Play(MenuController.Instance.AudioClipStartTime);
             var _active = this.SwitchActiveState(this);
 
             return _active ? this : null;
@@ -43,6 +42,8 @@ namespace Watermelon_Game.Menu
 
         private bool SwitchActiveState(MenuBase _Menu, bool _ForceClose = false)
         {
+            MenuController.Instance.AudioSource.Play(MenuController.Instance.AudioClipStartTime);
+            
             if (!_ForceClose)
             {
                 var _activeState = !_Menu.gameObject.activeSelf;
