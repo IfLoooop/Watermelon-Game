@@ -81,7 +81,7 @@ namespace Watermelon_Game.Skills
         {
             this.IsActive = true;
             this.skillIconSpriteRenderer.color = this.skillIconSpriteRenderer.color.WithAlpha(1);
-            FruitSpawnerAim.Instance.SetAimRotation(true);
+            FruitSpawnerAim.Instance.AllowAimRotation(true);
             FruitSpawner.SetActiveSkill(this.skill);
         }
 
@@ -93,8 +93,8 @@ namespace Watermelon_Game.Skills
         {
             this.IsActive = false;
             this.skillIconSpriteRenderer.color = this.skillIconSpriteRenderer.color.WithAlpha(0.5f);
-            FruitSpawnerAim.Instance.SetAimRotation(false);
-            FruitSpawner.ResetAimRotation();
+            FruitSpawnerAim.Instance.AllowAimRotation(false);
+            
             if (!_OnlyVisuals)
             {
                 FruitSpawner.DeactivateSkill();   

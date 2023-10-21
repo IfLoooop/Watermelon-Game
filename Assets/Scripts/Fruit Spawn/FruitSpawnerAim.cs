@@ -54,10 +54,10 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// Activates/Deactivates the aim rotation controls
         /// </summary>
-        /// <param name="_Enable">True to activate, false to deactivate</param>
-        public void SetAimRotation(bool _Enable)
+        /// <param name="_Value">True to activate, false to deactivate</param>
+        public void AllowAimRotation(bool _Value)
         {
-            this.rotationButtons.SetActive(_Enable);
+            this.rotationButtons.SetActive(_Value);
         }
         
         private void RotateAim()
@@ -94,7 +94,7 @@ namespace Watermelon_Game.Fruit_Spawn
 
         public void ResetAim()
         {
-            this.transform.rotation = Quaternion.Euler(Vector3.zero);
+            this.transform.rotation = Quaternion.Euler(0, 0, 0);
         }
         
         public static void Enable(bool _Value)

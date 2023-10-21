@@ -6,6 +6,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Fruit;
+using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
 using Watermelon_Game.Points;
 using Watermelon_Game.Web;
@@ -160,6 +161,7 @@ namespace Watermelon_Game.Skills
                 else
                 {
                     _SkillToActivate.DeactivateSkill(false);
+                    FruitSpawner.ResetAimRotation();
                 }
             }
         }

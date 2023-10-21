@@ -135,13 +135,15 @@ namespace Watermelon_Game.Fruit_Spawn
                 
                 this.audioSource.Play(this.shootClipStartTime, this.shoot, this.shootClipVolume);
                 
+                var _direction = -this.fruitSpawnerAim.transform.up;
+                
                 switch (this.fruitBehaviour.ActiveSkill)
                 {
                     case Skill.Evolve or Skill.Destroy:
-                        this.fruitBehaviour.Shoot(-this.fruitSpawnerAim.transform.up);
+                        this.fruitBehaviour.Shoot(_direction);
                         break;
                     case Skill.Power:
-                        SkillController.Instance.Skill_Power(this.fruitBehaviour, -this.fruitSpawnerAim.transform.up);
+                        SkillController.Instance.Skill_Power(this.fruitBehaviour, _direction);
                         break;
                 }
                 
