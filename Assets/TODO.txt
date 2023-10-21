@@ -1,6 +1,6 @@
 [BUGS]
 
 [CHANGES]
--Make the BGM-Volume Icon look like a clickable button (Maybe)
+-Change the color of the slider knob on hover
 
 [ADDONS]
