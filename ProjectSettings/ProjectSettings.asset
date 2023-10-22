@@ -135,7 +135,7 @@ PlayerSettings:
   vulkanEnableLateAcquireNextImage: 0
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
-  bundleVersion: 1.4
+  bundleVersion: 1.4.0.0
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -771,6 +771,7 @@ PlayerSettings:
     Standalone: UNITY_POST_PROCESSING_STACK_V2;STEAMWORKS_NET
     VisionOS: UNITY_POST_PROCESSING_STACK_V2
     WebGL: UNITY_POST_PROCESSING_STACK_V2
+    Windows Store Apps: WINDOWS_UWP;DISABLESTEAMWORKS;STEAMWORKS_NET
     XboxOne: UNITY_POST_PROCESSING_STACK_V2
     tvOS: UNITY_POST_PROCESSING_STACK_V2
   additionalCompilerArguments: {}
@@ -778,6 +779,7 @@ PlayerSettings:
     Standalone: 2
   scriptingBackend:
     Standalone: 1
+    Windows Store Apps: 1
   il2cppCompilerConfiguration:
     Standalone: 2
   il2cppCodeGeneration:
@@ -810,12 +812,12 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Watermelon-Game
-  metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroPackageVersion: 1.4.0.0
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: MomSesImSpcl
+  metroCertificateIssuer: MomSesImSpcl
+  metroCertificateNotAfter: 003086eced23db01
   metroApplicationDescription: Combine fruits to get points
   wsaImages:
     65636: Assets/Sprites/Icons/50.png

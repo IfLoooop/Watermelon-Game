@@ -3,7 +3,9 @@ using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+#if !DISABLESTEAMWORKS
 using Watermelon_Game.Steamworks.NET;
+#endif
 
 namespace Watermelon_Game.Web
 {
@@ -44,6 +46,10 @@ namespace Watermelon_Game.Web
 
         public async void CheckLatestVersion()
         {
+#if  WINDOWS_UWP && !UNITY_EDITOR
+            return;
+#endif
+            
 #if DEBUG || DEVELOPMENT_BUILD
             if (this.skipVersionCheck)
             {
@@ -54,13 +60,15 @@ namespace Watermelon_Game.Web
 #if UNITY_EDITOR
             goto skipSteamManager;
 #endif
-            
+
+#if !DISABLESTEAMWORKS
 #pragma warning disable CS0162
             if (SteamManager.Initialized)
             {
                 return;
             }
 #pragma warning restore CS0162
+#endif
             
 #if UNITY_EDITOR
             skipSteamManager:

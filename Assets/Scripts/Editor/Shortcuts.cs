@@ -1,3 +1,4 @@
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Watermelon_Game.Web;
@@ -15,8 +16,8 @@ namespace Watermelon_Game.Editor
             if (!string.IsNullOrWhiteSpace(_path))
             {
                 _path = BuildSettings.CreateDebugFolder(_path);
-                
-                BuildSettings.BuildPlayer(_path); 
+
+                BuildSettings.BuildPlayer(_path);
             }
         }
         
@@ -35,11 +36,22 @@ namespace Watermelon_Game.Editor
             
                 if (!string.IsNullOrWhiteSpace(_path))
                 {
-                    _path = BuildSettings.CreatePlatformFolders(_path);
+                    const BuildTarget BUILD_TARGET = BuildTarget.WSAPlayer;
                     
-                    BuildSettings.BuildPlayer(_path, BuildTarget.StandaloneOSX);   
+                    _path = BuildSettings.CreatePlatformFolders(_path, BUILD_TARGET);
+                    
+                    BuildSettings.BuildPlayer(_path, BUILD_TARGET); 
                 }
             }
+        }
+
+        [MenuItem("Test/Test")]
+        private static void Test()
+        {
+            var _field = typeof(Debug).GetField("s_Logger", BindingFlags.Static | BindingFlags.NonPublic);
+            
+            Debug.Log(_field.GetValue(_field));
+            
         }
         #endregion
     }

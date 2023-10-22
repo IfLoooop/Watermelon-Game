@@ -4,3 +4,31 @@
 -Change the color of the slider knob on hover
 
 [ADDONS]
+
+
+
+
+
+
+
+
+
+
+
+Assertion failed on expression: 'GetApplication().MayUpdate()'
+UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)
+Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
+
+
+Resolve of invalid GC handle. The handle is from a previous domain. The resolve operation is skipped.
+UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)
+Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
+
+
+Assertion failed on expression: '!performAutorepaint || GetApplication().MayUpdate()'
+UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)
+Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
+
+
+
+
