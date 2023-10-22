@@ -11,7 +11,7 @@ PlayerSettings:
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
-  accelerometerFrequency: 60
+  accelerometerFrequency: 100
   companyName: MomSesImSpcl
   productName: Watermelon Game
   defaultCursor: {fileID: 0}
@@ -40,8 +40,8 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos: []
-  m_VirtualRealitySplashScreen: {fileID: 0}
-  m_HolographicTrackingLossScreen: {fileID: 0}
+  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: c4bc28ebd7bf7144b982030eb70e2644, type: 3}
+  m_HolographicTrackingLossScreen: {fileID: 2800000, guid: c4bc28ebd7bf7144b982030eb70e2644, type: 3}
   defaultScreenWidth: 800
   defaultScreenHeight: 600
   defaultScreenWidthWeb: 960
@@ -57,8 +57,8 @@ PlayerSettings:
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: -1
   iosUseCustomAppBackgroundBehavior: 0
-  allowedAutorotateToPortrait: 1
-  allowedAutorotateToPortraitUpsideDown: 1
+  allowedAutorotateToPortrait: 0
+  allowedAutorotateToPortraitUpsideDown: 0
   allowedAutorotateToLandscapeRight: 1
   allowedAutorotateToLandscapeLeft: 1
   useOSAutorotation: 1
@@ -330,92 +330,116 @@ PlayerSettings:
   m_BuildTargetPlatformIcons:
   - m_BuildTarget: Android
     m_Icons:
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 71502d715fd4d224c98126c96915ed73, type: 3}
+      - {fileID: 2800000, guid: 860d752ba79a62545ba0135b2e96277d, type: 3}
       m_Width: 432
       m_Height: 432
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 3272f7160f83209438531bc6e32d05a3, type: 3}
+      - {fileID: 2800000, guid: c7464610870bd214a8c08d087ca060ba, type: 3}
       m_Width: 324
       m_Height: 324
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: e9fb2f49f5bc7f04a914447fc64a88e9, type: 3}
+      - {fileID: 2800000, guid: d27bf9c98e5fc5d469426e8b6c3a5ec8, type: 3}
       m_Width: 216
       m_Height: 216
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: f24a7aa04c9aebc46ad16346e27e1c8f, type: 3}
+      - {fileID: 2800000, guid: f9c5b300436516447a49299790d1e5ac, type: 3}
       m_Width: 162
       m_Height: 162
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 18ed8ad93490a0f4da3cb6051e8b003e, type: 3}
+      - {fileID: 2800000, guid: 171a31ccc9c91fd4aa2d319222d381cf, type: 3}
       m_Width: 108
       m_Height: 108
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 1f6a8b28efb05cf46a56074de949a35f, type: 3}
+      - {fileID: 2800000, guid: 39e414b4844288e4282be51fd0267549, type: 3}
       m_Width: 81
       m_Height: 81
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 3558b296fb6509c4a859f535087707e1, type: 3}
       m_Width: 192
       m_Height: 192
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 05e95bd4df87b6e48acb40b887b51a44, type: 3}
       m_Width: 144
       m_Height: 144
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: c160a29673d61eb45954a086fb738a4f, type: 3}
       m_Width: 96
       m_Height: 96
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 812b386b6a9befa4e8126bf1a19d5066, type: 3}
       m_Width: 72
       m_Height: 72
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: a94d71acc45595446bda4c5516969775, type: 3}
       m_Width: 48
       m_Height: 48
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 640d5cc14347ad0409fdb17d9c401976, type: 3}
       m_Width: 36
       m_Height: 36
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 3558b296fb6509c4a859f535087707e1, type: 3}
       m_Width: 192
       m_Height: 192
       m_Kind: 0
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 05e95bd4df87b6e48acb40b887b51a44, type: 3}
       m_Width: 144
       m_Height: 144
       m_Kind: 0
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: c160a29673d61eb45954a086fb738a4f, type: 3}
       m_Width: 96
       m_Height: 96
       m_Kind: 0
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 812b386b6a9befa4e8126bf1a19d5066, type: 3}
       m_Width: 72
       m_Height: 72
       m_Kind: 0
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: a94d71acc45595446bda4c5516969775, type: 3}
       m_Width: 48
       m_Height: 48
       m_Kind: 0
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 640d5cc14347ad0409fdb17d9c401976, type: 3}
       m_Width: 36
       m_Height: 36
       m_Kind: 0
@@ -428,7 +452,7 @@ PlayerSettings:
   - m_BuildTarget: Switch
     m_GraphicsJobs: 0
   - m_BuildTarget: MetroSupport
-    m_GraphicsJobs: 0
+    m_GraphicsJobs: 1
   - m_BuildTarget: AppleTVSupport
     m_GraphicsJobs: 0
   - m_BuildTarget: BJMSupport
@@ -708,8 +732,8 @@ PlayerSettings:
   ps4IncludedModules: []
   ps4attribVROutputEnabled: 0
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 0}
-  splashScreenBackgroundSourcePortrait: {fileID: 0}
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 71502d715fd4d224c98126c96915ed73, type: 3}
+  splashScreenBackgroundSourcePortrait: {fileID: 21300000, guid: c4bc28ebd7bf7144b982030eb70e2644, type: 3}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 
   webGLMemorySize: 32
@@ -770,7 +794,7 @@ PlayerSettings:
     Standalone: 3
     VisionOS: 1
     WebGL: 1
-    Windows Store Apps: 1
+    Windows Store Apps: 3
     XboxOne: 1
     iPhone: 1
     tvOS: 1
@@ -793,12 +817,52 @@ PlayerSettings:
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Combine fruits to get points
-  wsaImages: {}
+  wsaImages:
+    65636: Assets/Sprites/Icons/50.png
+    65661: Assets/Sprites/Icons/63.png
+    65686: Assets/Sprites/Icons/75.png
+    65736: Assets/Sprites/Icons/100.png
+    65936: Assets/Sprites/Icons/200.png
+    131172: Assets/Sprites/Icons/620x300.png
+    131197: Assets/Sprites/Icons/775x375.png
+    131222: Assets/Sprites/Icons/930x450.png
+    131272: Assets/Sprites/Icons/1240x600.png
+    131472: Assets/Sprites/Icons/2480x1200.png
+    2031632: Assets/Sprites/Icons/16.png
+    2031640: Assets/Sprites/Icons/24.png
+    2031648: Assets/Sprites/Icons/32.png
+    2031664: Assets/Sprites/Icons/48.png
+    2031716: Assets/Sprites/Icons/44.png
+    2031741: Assets/Sprites/Icons/55.png
+    2031766: Assets/Sprites/Icons/66.png
+    2031816: Assets/Sprites/Icons/88.png
+    2031872: Assets/Sprites/Icons/256.png
+    2032016: Assets/Sprites/Icons/176.png
+    2097252: Assets/Sprites/Icons/71.png
+    2097277: Assets/Sprites/Icons/89.png
+    2097302: Assets/Sprites/Icons/107.png
+    2097352: Assets/Sprites/Icons/142.png
+    2097552: Assets/Sprites/Icons/284.png
+    2162788: Assets/Sprites/Icons/150.png
+    2162813: Assets/Sprites/Icons/188.png
+    2162838: Assets/Sprites/Icons/225.png
+    2162888: Assets/Sprites/Icons/300.png
+    2163088: Assets/Sprites/Icons/600.png
+    2228324: Assets/Sprites/Icons/310.png
+    2228349: Assets/Sprites/Icons/388.png
+    2228374: Assets/Sprites/Icons/465.png
+    2228424: Assets/Sprites/Icons/620.png
+    2228624: Assets/Sprites/Icons/1240.png
+    2293860: Assets/Sprites/Icons/310x150.png
+    2293885: Assets/Sprites/Icons/388x188.png
+    2293910: Assets/Sprites/Icons/465x225.png
+    2293960: Assets/Sprites/Icons/620x300.png
+    2294160: Assets/Sprites/Icons/1240x600.png
   metroTileShortName: Watermelon-Game
   metroTileShowName: 0
-  metroMediumTileShowName: 0
-  metroLargeTileShowName: 0
-  metroWideTileShowName: 0
+  metroMediumTileShowName: 1
+  metroLargeTileShowName: 1
+  metroWideTileShowName: 1
   metroSupportStreamingInstall: 0
   metroLastRequiredScene: 0
   metroDefaultTileSize: 1
