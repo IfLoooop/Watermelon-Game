@@ -432,6 +432,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 2485604369998629814, guid: 626d0b31a1fd7c6459a4b7f8933501e3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1879,7 +1883,7 @@ PrefabInstance:
     - target: {fileID: 5939659809533086090, guid: 7acbe5871156f5843b02e00ca8aeaa1e, type: 3}
       propertyPath: m_Camera
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 118434409}
     - target: {fileID: 5939659809533086090, guid: 7acbe5871156f5843b02e00ca8aeaa1e, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25

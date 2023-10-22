@@ -79,8 +79,10 @@ namespace Watermelon_Game.Editor
             if (_Report.summary.platform == BuildTarget.StandaloneOSX)
             {
                 Debug.Log($"<color=green>Mac Build</color> {_Report.summary.outputPath}");
-                CleanUp(CreateInstallPath(_Report.summary.outputPath, MAC, true), MAC);
-                BuildPlayer(CreateInstallPath(_Report.summary.outputPath, LINUX), BuildTarget.StandaloneLinux64);
+                var _installPath = CreateInstallPath(_Report.summary.outputPath, MAC, true);
+                CleanUp(_installPath, MAC);
+                _installPath = CreateInstallPath(_Report.summary.outputPath, LINUX);
+                BuildPlayer(_installPath, BuildTarget.StandaloneLinux64);
             }
             else if (_Report.summary.platform == BuildTarget.StandaloneLinux64)
             {
@@ -109,10 +111,11 @@ namespace Watermelon_Game.Editor
         
         public static string CreatePlatformFolders(string _Directory)
         {
-            var _windows = Path.Combine(_Directory, WINDOWS);
-            var _linux = Path.Combine(_Directory, LINUX);
-            var _mac = Path.Combine(_Directory, MAC);
-
+            var _baseDirectory = GetApplicationName(false);
+            var _windows = Path.Combine(_Directory, WINDOWS, _baseDirectory);
+            var _linux = Path.Combine(_Directory, LINUX, _baseDirectory);
+            var _mac = Path.Combine(_Directory, MAC, _baseDirectory);
+            
             Directory.CreateDirectory(_windows);
             Directory.CreateDirectory(_linux);
             Directory.CreateDirectory(_mac);
@@ -147,7 +150,10 @@ namespace Watermelon_Game.Editor
         
         private static string CreateInstallPath(string _Path, string _AddDirectory, bool _OnlyFolder = false)
         {
-            return Path.Combine(Directory.GetParent(_Path)!.Parent!.FullName, _AddDirectory, _OnlyFolder ? "" : GetApplicationName(true));
+            var _buildsFolder = Directory.GetParent(_Path)!.Parent!.Parent!.FullName;
+            var _baseDirectory = GetApplicationName(false);
+            var _fileExtension = _OnlyFolder ? "" : GetApplicationName(true);
+            return Path.Combine(_buildsFolder, _AddDirectory, _baseDirectory, _fileExtension);
         }
         
         public static void BuildPlayer(string _Path)
@@ -234,12 +240,15 @@ namespace Watermelon_Game.Editor
             // Unity is still not completely done at this point, so need to wait a little before creating the .zip file 
             Task.Delay(TASK_DELAY);
             
-            var _destinationArchiveFileName = Path.Combine(Directory.GetParent(_Directory)!.FullName, string.Concat(GetApplicationName(false), " ", _Platform, ".zip"));
+            var _buildFolder = Directory.GetParent(_Directory)!.Parent!.FullName;
+            var _zipFileName = string.Concat(GetApplicationName(false), " ", _Platform, ".zip");
+            var _destinationArchiveFileName = Path.Combine(_buildFolder, _zipFileName);
+            
             if (File.Exists(_destinationArchiveFileName))
             {
                 File.Delete(_destinationArchiveFileName);
             }
-            ZipFile.CreateFromDirectory(_Directory, _destinationArchiveFileName, CompressionLevel.Optimal, false, Encoding.UTF8);
+            ZipFile.CreateFromDirectory(_Directory, _destinationArchiveFileName, CompressionLevel.Optimal, true, Encoding.UTF8);
         }
         #endregion
     }
