@@ -1,4 +1,3 @@
-using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using Watermelon_Game.Web;
@@ -38,20 +37,11 @@ namespace Watermelon_Game.Editor
                 {
                     const BuildTarget BUILD_TARGET = BuildTarget.WSAPlayer;
                     
-                    _path = BuildSettings.CreatePlatformFolders(_path, BUILD_TARGET);
+                    _path = BuildSettings.CreatePlatformFolder(_path, BUILD_TARGET);
                     
                     BuildSettings.BuildPlayer(_path, BUILD_TARGET); 
                 }
             }
-        }
-
-        [MenuItem("Test/Test")]
-        private static void Test()
-        {
-            var _field = typeof(Debug).GetField("s_Logger", BindingFlags.Static | BindingFlags.NonPublic);
-            
-            Debug.Log(_field.GetValue(_field));
-            
         }
         #endregion
     }

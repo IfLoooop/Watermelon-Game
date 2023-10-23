@@ -713,7 +713,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7227235252016211821, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
       propertyPath: m_Name
-      value: Developer Tools
+      value: Development Tools
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8277177683254706058, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}

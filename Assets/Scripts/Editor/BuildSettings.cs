@@ -57,6 +57,7 @@ namespace Watermelon_Game.Editor
                 EditorUserBuildSettings.wsaMinUWPSDK = "10.0.10240.0";
                 EditorUserBuildSettings.wsaMinUWPSDK = "Visual Studio 2022"; // TODO: Check if this info can be gotten automatically from somewhere
                 EditorUserBuildSettings.wsaBuildAndRunDeployTarget = WSABuildAndRunDeployTarget.LocalMachine;
+                EditorUserBuildSettings.development = false;
                 UnityEditor.UWP.UserBuildSettings.buildConfiguration = WSABuildType.Master;
             }
             else if (_reportedBuildTarget == BuildTarget.StandaloneOSX)
@@ -129,17 +130,18 @@ namespace Watermelon_Game.Editor
 
         private void Build(BuildReport _Report, BuildTarget _CurrentBuildTarget, string _CurrentOS, BuildTarget? _NextBuildTarget, string _NextOS)
         {
-            string _installPath;
-            var _outputPath = _Report.summary.outputPath;
-            
             if (_Report.summary.platform == _CurrentBuildTarget)
             {
+                var _outputPath = _Report.summary.outputPath;
                 Debug.Log($"<color=green>{_CurrentOS} Build finished</color> {_outputPath}");
-                _installPath = CreateInstallPath(_outputPath, _CurrentOS, true);
+                var _buildsFolder = Directory.GetParent(_outputPath)!.Parent!.Parent!.FullName;
+                var _installPath = CreateInstallPath(_buildsFolder, _CurrentOS, true);
                 CleanUp(_installPath, _CurrentOS);
+                
                 if (_NextBuildTarget != null)
                 {
-                    _installPath = CreateInstallPath(_outputPath, _NextOS, false);
+                    _installPath = CreateInstallPath(_buildsFolder, _NextOS, false);
+                    CreatePlatformFolder(_buildsFolder, _NextBuildTarget.Value);
                     BuildPlayer(_installPath, _NextBuildTarget.Value);   
                 }
             }
@@ -156,37 +158,25 @@ namespace Watermelon_Game.Editor
             return Path.Combine(_debug, GetApplicationName(true));
         }
         
-        public static string CreatePlatformFolders(string _Directory, BuildTarget _BuildTarget)
+        public static string CreatePlatformFolder(string _Directory, BuildTarget _BuildTarget)
         {
             var _baseDirectoryName = GetApplicationName(false);
-            var _uwp = Path.Combine(_Directory, UWP, _baseDirectoryName);
-            var _linux = Path.Combine(_Directory, LINUX, _baseDirectoryName);
-            var _mac = Path.Combine(_Directory, MAC, _baseDirectoryName);
-            var _windows = Path.Combine(_Directory, WINDOWS, _baseDirectoryName);
+            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
+            var _path = _BuildTarget switch
+            {
+                BuildTarget.WSAPlayer => Path.Combine(_Directory, UWP, _baseDirectoryName),
+                BuildTarget.StandaloneLinux64 => Path.Combine(_Directory, LINUX, _baseDirectoryName),
+                BuildTarget.StandaloneOSX => Path.Combine(_Directory, MAC, _baseDirectoryName),
+                BuildTarget.StandaloneWindows64 => Path.Combine(_Directory, WINDOWS, _baseDirectoryName),
+                _ => throw new ArgumentException($"The passed {nameof(BuildTarget)} {_BuildTarget} can currently not be used")
+            };
 
-            Directory.CreateDirectory(_uwp);
-            Directory.CreateDirectory(_linux);
-            Directory.CreateDirectory(_mac);
-            Directory.CreateDirectory(_windows);
-            
-            DeleteAllFilesInDirectory(_uwp);
-            DeleteAllFilesInDirectory(_linux);
-            DeleteAllFilesInDirectory(_mac);
-            DeleteAllFilesInDirectory(_windows);
+            Directory.CreateDirectory(_path);
+            DeleteAllFilesInDirectory(_path);
 
             var _applicationName = GetApplicationName(true);
 
-#pragma warning disable CS8509
-            // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
-            return _BuildTarget switch
-#pragma warning restore CS8509
-            {
-                BuildTarget.WSAPlayer => Path.Combine(_uwp, _applicationName),
-                BuildTarget.StandaloneLinux64 => Path.Combine(_linux, _applicationName),
-                BuildTarget.StandaloneOSX => Path.Combine(_mac, _applicationName),
-                BuildTarget.StandaloneWindows64 => Path.Combine(_windows, _applicationName),
-                _ => throw new ArgumentException($"The passed {nameof(BuildTarget)} {_BuildTarget} can currently not be used")
-            };
+            return Path.Combine(_path, _applicationName);
         }
         
         private static void DeleteAllFilesInDirectory(string _Directory)
@@ -210,13 +200,12 @@ namespace Watermelon_Game.Editor
             return string.Concat(Application.productName, _WithExtension ? ".exe" : "");
         }
         
-        private static string CreateInstallPath(string _Path, string _AddDirectory, bool _OnlyFolder)
+        private static string CreateInstallPath(string _BuildsFolder, string _AddDirectory, bool _OnlyFolder)
         {
-            var _buildsFolder = Directory.GetParent(_Path)!.Parent!.Parent!.FullName;
             var _baseDirectory = GetApplicationName(false);
             var _fileExtension = _OnlyFolder ? "" : GetApplicationName(true);
             
-            return Path.Combine(_buildsFolder, _AddDirectory, _baseDirectory, _fileExtension);
+            return Path.Combine(_BuildsFolder, _AddDirectory, _baseDirectory, _fileExtension);
         }
         
         public static void BuildPlayer(string _Path)
@@ -363,9 +352,9 @@ namespace Watermelon_Game.Editor
             }
         }
         
-        private static void CleanUp(string _Directory, string _Platform)
+        private static void CleanUp(string _InstallDirectory, string _Platform)
         {
-            foreach (var _path in Directory.GetFileSystemEntries(_Directory))
+            foreach (var _path in Directory.GetFileSystemEntries(_InstallDirectory))
             {
                 if (_path.Contains(BURST_DEBUG_INFORMATION) ||_path.Contains(BACKUP_THIS_FOLDER))
                 {
@@ -376,7 +365,7 @@ namespace Watermelon_Game.Editor
             // Unity is still not completely done at this point, so need to wait a little before creating the .zip file 
             Task.Delay(TASK_DELAY);
             
-            var _buildFolder = Directory.GetParent(_Directory)!.Parent!.FullName;
+            var _buildFolder = Directory.GetParent(_InstallDirectory)!.Parent!.FullName;
             var _zipFileName = string.Concat(GetApplicationName(false), " ", _Platform, ".zip");
             var _destinationArchiveFileName = Path.Combine(_buildFolder, _zipFileName);
             
@@ -384,7 +373,7 @@ namespace Watermelon_Game.Editor
             {
                 File.Delete(_destinationArchiveFileName);
             }
-            ZipFile.CreateFromDirectory(_Directory, _destinationArchiveFileName, CompressionLevel.Optimal, true, Encoding.UTF8);
+            ZipFile.CreateFromDirectory(_InstallDirectory, _destinationArchiveFileName, CompressionLevel.Optimal, true, Encoding.UTF8);
         }
         #endregion
     }
