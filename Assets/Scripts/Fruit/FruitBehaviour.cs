@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using UnityEngine;
@@ -55,8 +54,6 @@ namespace Watermelon_Game.Fruit
         private static readonly WaitForSeconds moveTowardsWaitTime = new(MOVE_TOWARDS_WAIT_TIME);
         [CanBeNull] private IEnumerator evolve;
         private static readonly WaitForSeconds evolveWaitTime = new(EVOLVE_WAIT_TIME);
-
-        private static readonly List<FruitBehaviour> goldenFruits = new();
         #endregion
 
         #region Properties
@@ -67,8 +64,6 @@ namespace Watermelon_Game.Fruit
         public bool IsEvolving { get; private set; }
         public bool CanBeAddedToFruitCollection { get; private set; } = true;
         public float ColliderRadius => this.circleCollider2D.radius;
-
-        public static int GoldenFruitsCount => goldenFruits.Count;
         #endregion
         
         #region Methods
@@ -196,7 +191,7 @@ namespace Watermelon_Game.Fruit
                     }
                     
                     this.GoldenFruit(true);
-                    MaxHeight.MaxHeight.Instance.SetGodRays(true);   
+                    MaxHeight.MaxHeight.Instance.EnableGodRay();   
                 }
             }
         }
@@ -213,18 +208,13 @@ namespace Watermelon_Game.Fruit
             {
                 base.StopCoroutine(this.moveTowards);
             }
-            if (this.isUpgradedGoldenFruit)
-            {
-                goldenFruits.Remove(this);
-                MaxHeight.MaxHeight.Instance.SetGodRays(false);
-            }
         }
 
 #if DEBUG || DEVELOPMENT_BUILD
         public void GoldenFruit_Debug()
         {
             this.GoldenFruit(true);
-            MaxHeight.MaxHeight.Instance.SetGodRays(true); 
+            MaxHeight.MaxHeight.Instance.EnableGodRay(); 
         }
 #endif
         
@@ -255,7 +245,6 @@ namespace Watermelon_Game.Fruit
                 }
             }
             
-            goldenFruits.Add(this);
             this.IsGoldenFruit = true;
             this.isUpgradedGoldenFruit = _ForceEnable;
             Instantiate(GameController.Instance.FruitCollection.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);

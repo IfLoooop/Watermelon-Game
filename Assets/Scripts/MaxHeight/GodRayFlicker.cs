@@ -21,10 +21,6 @@ namespace Watermelon_Game.MaxHeight
         private float currentFlickerDuration;
         private float nextFlicker;
         #endregion
-
-        #region Properties
-        public ParticleSystem GodRay => this.godRay;
-        #endregion
         
         #region Methods
         private void Awake()
@@ -52,6 +48,7 @@ namespace Watermelon_Game.MaxHeight
             this.Flicker();
         }
         
+        // TODO: Use coroutine
         private void Flicker()
         {
             if (this.currentFlickerDuration >= nextFlicker)
@@ -71,12 +68,13 @@ namespace Watermelon_Game.MaxHeight
                 this.godRay.gameObject.SetActive(false);
             }
         }
-
+        
         public void EnableGodRay()
         {
             this.audioSource.clip = this.floodLight;
             this.audioSource.volume = this.floodLightVolume;
             this.godRay.gameObject.SetActive(true);
+            this.audioSource.Play();
         }
         #endregion
     }

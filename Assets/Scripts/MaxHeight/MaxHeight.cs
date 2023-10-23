@@ -1,6 +1,7 @@
+using System.Collections;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
-using Watermelon_Game.Fruit;
 
 namespace Watermelon_Game.MaxHeight
 {
@@ -12,6 +13,7 @@ namespace Watermelon_Game.MaxHeight
 #endif
         [Header("Settings")]
         [SerializeField] private uint countdownTime = 8;
+        [SerializeField] private float godRayDuration = 1.5f;
         #endregion
         
         #region Fields
@@ -21,6 +23,8 @@ namespace Watermelon_Game.MaxHeight
         private TextMeshProUGUI countdownText;
         private AudioSource audioSource;
         private GodRayFlicker godRayFlicker;
+        [CanBeNull] private IEnumerator enableFlicker;
+        private WaitForSeconds timeBeforeStart;
         
         private uint currentCountdownTime;
         #endregion
@@ -39,6 +43,7 @@ namespace Watermelon_Game.MaxHeight
             this.countdownText = base.GetComponentInChildren<TextMeshProUGUI>();
             this.audioSource = base.GetComponent<AudioSource>();
             this.godRayFlicker = base.GetComponent<GodRayFlicker>();
+            this.timeBeforeStart = new WaitForSeconds(this.godRayDuration);
         }
 
         private void Start()
@@ -70,22 +75,7 @@ namespace Watermelon_Game.MaxHeight
                 this.Reset();
             }
         }
-
-        private void Update()
-        {
-            // TODO: Dirty fix, sometimes the GodRay stays active even though all GoldenFruits are destroyed  
-            if (this.godRayFlicker.GodRay.gameObject.activeSelf)
-            {
-                if (!this.godRayFlicker.enabled)
-                {
-                    if (FruitBehaviour.GoldenFruitsCount <= 0)
-                    {
-                        this.godRayFlicker.enabled = true;
-                    }
-                }       
-            }
-        }
-
+        
         public void CountDown()
         {
 #if UNITY_EDITOR
@@ -123,21 +113,25 @@ namespace Watermelon_Game.MaxHeight
             this.audioSource.Stop();
         }
         
-        public void SetGodRays(bool _Enabled)
+        public void EnableGodRay()
         {
-            if (_Enabled)
+            if (this.enableFlicker != null)
             {
-                this.godRayFlicker.enabled = false;
-                this.godRayFlicker.EnableGodRay();
+                base.StopCoroutine(this.enableFlicker);
             }
-            else
-            {
-                var _noGoldenFruitOnMap = FruitBehaviour.GoldenFruitsCount <= 0;
-                if (_noGoldenFruitOnMap)
-                {
-                    this.godRayFlicker.enabled = true;
-                }
-            }
+            
+            this.godRayFlicker.enabled = false;
+            this.godRayFlicker.EnableGodRay();
+
+            this.enableFlicker = this.EnableFlicker();
+            base.StartCoroutine(this.enableFlicker);
+        }
+
+        private IEnumerator EnableFlicker()
+        {
+            yield return this.timeBeforeStart;
+            this.godRayFlicker.enabled = true;
+            this.enableFlicker = null;
         }
         #endregion
     }
