@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5159398336636352956}
   - component: {fileID: 1429983307263897380}
-  - component: {fileID: 2376418353856281898}
   m_Layer: 0
   m_Name: Development Tools
   m_TagString: Untagged

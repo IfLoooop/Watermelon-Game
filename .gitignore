@@ -72,5 +72,15 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
 # User-specific files
-Error Logs/*
 Social Media/*
+Error Logs/*
+Assets/Plugins/Sirenix/*
+Assets/Plugins/Sirenix/Odin Inspector/*
+!Assets/Plugins/Sirenix
+!Assets/Plugins/Sirenix.meta
+!Assets/Plugins/Sirenix/Odin Inspector
+!Assets/Plugins/Sirenix/Odin Inspector.meta
+!Assets/Plugins/Sirenix/Odin Inspector/Config/
+!Assets/Plugins/Sirenix/Odin Inspector/Config.meta
+Assets/Plugins/Rewired/*
+Assets/Plugins/Rewired.meta

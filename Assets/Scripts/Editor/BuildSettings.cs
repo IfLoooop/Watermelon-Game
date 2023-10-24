@@ -23,10 +23,10 @@ namespace Watermelon_Game.Editor
         private const string RELEASE_BUILD = "RELEASE_BUILD";
 
         private const string DEBUG = "Debug";
-        private const string UWP = "UWP";
-        private const string MAC = "Mac";
-        private const string LINUX = "Linux";
         private const string WINDOWS = "Windows";
+        private const string LINUX = "Linux";
+        private const string MAC = "Mac";
+        private const string UWP = "UWP";
 
         private const string BURST_DEBUG_INFORMATION = "_BurstDebugInformation_DoNotShip";
         private const string BACKUP_THIS_FOLDER = "_BackUpThisFolder_ButDontShipItWithYourGame";
@@ -45,11 +45,15 @@ namespace Watermelon_Game.Editor
         {
             var _activeBuildTarget = EditorUserBuildSettings.activeBuildTarget;
             var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(_activeBuildTarget);
-            // TODO: Check if this is needed
-            //PlayerSettings.SetArchitecture(_buildTargetGroup, 2);
-
             var _reportedBuildTarget = _Report.summary.platform;
-            if (_reportedBuildTarget == BuildTarget.WSAPlayer)
+            // TODO: Check if this is needed (Maybe for Android builds)
+            //PlayerSettings.SetArchitecture(_buildTargetGroup, 2);
+            
+            if (_reportedBuildTarget == BuildTarget.StandaloneOSX)
+            {
+                UnityEditor.OSXStandalone.UserBuildSettings.architecture = OSArchitecture.x64ARM64;
+            }
+            else if (_reportedBuildTarget == BuildTarget.WSAPlayer)
             {
                 EditorUserBuildSettings.wsaArchitecture = "x64";
                 EditorUserBuildSettings.wsaUWPBuildType = WSAUWPBuildType.D3D;
@@ -58,10 +62,6 @@ namespace Watermelon_Game.Editor
                 EditorUserBuildSettings.wsaMinUWPSDK = "Visual Studio 2022"; // TODO: Check if this info can be gotten automatically from somewhere
                 EditorUserBuildSettings.wsaBuildAndRunDeployTarget = WSABuildAndRunDeployTarget.LocalMachine;
                 UnityEditor.UWP.UserBuildSettings.buildConfiguration = WSABuildType.Master;
-            }
-            else if (_reportedBuildTarget == BuildTarget.StandaloneOSX)
-            {
-                UnityEditor.OSXStandalone.UserBuildSettings.architecture = OSArchitecture.x64ARM64;
             }
             
 #if DEVELOPMENT_BUILD
@@ -121,10 +121,10 @@ namespace Watermelon_Game.Editor
             // Method is called somewhere at the end of the build, not exactly when the build has finished, so need to wait for the previous build to completely finish
             await Task.Delay(TASK_DELAY);
             
-            Build(_Report, BuildTarget.WSAPlayer, UWP, BuildTarget.StandaloneLinux64, LINUX);
+            Build(_Report, BuildTarget.StandaloneWindows64, WINDOWS, BuildTarget.StandaloneLinux64, LINUX);
             Build(_Report, BuildTarget.StandaloneLinux64, LINUX, BuildTarget.StandaloneOSX, MAC);
-            Build(_Report, BuildTarget.StandaloneOSX, MAC, BuildTarget.StandaloneWindows64, WINDOWS);
-            Build(_Report, BuildTarget.StandaloneWindows64, WINDOWS, null, string.Empty);
+            Build(_Report, BuildTarget.StandaloneOSX, MAC, BuildTarget.WSAPlayer, UWP);
+            Build(_Report, BuildTarget.WSAPlayer, UWP, null, string.Empty);
 #pragma warning restore CS0162
         }
 
@@ -143,6 +143,11 @@ namespace Watermelon_Game.Editor
                     _installPath = CreateInstallPath(_buildsFolder, _NextOS, false);
                     CreatePlatformFolder(_buildsFolder, _NextBuildTarget.Value);
                     BuildPlayer(_installPath, _NextBuildTarget.Value);   
+                }
+                else
+                {
+                    var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(BuildTarget.StandaloneWindows64);
+                    EditorUserBuildSettings.SwitchActiveBuildTarget(_buildTargetGroup, BuildTarget.StandaloneWindows64);
                 }
             }
         }
@@ -164,10 +169,10 @@ namespace Watermelon_Game.Editor
             // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
             var _path = _BuildTarget switch
             {
-                BuildTarget.WSAPlayer => Path.Combine(_Directory, UWP, _baseDirectoryName),
+                BuildTarget.StandaloneWindows64 => Path.Combine(_Directory, WINDOWS, _baseDirectoryName),
                 BuildTarget.StandaloneLinux64 => Path.Combine(_Directory, LINUX, _baseDirectoryName),
                 BuildTarget.StandaloneOSX => Path.Combine(_Directory, MAC, _baseDirectoryName),
-                BuildTarget.StandaloneWindows64 => Path.Combine(_Directory, WINDOWS, _baseDirectoryName),
+                BuildTarget.WSAPlayer => Path.Combine(_Directory, UWP, _baseDirectoryName),
                 _ => throw new ArgumentException($"The passed {nameof(BuildTarget)} {_BuildTarget} can currently not be used")
             };
 
@@ -227,7 +232,7 @@ namespace Watermelon_Game.Editor
             var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(_BuildTarget);
             EditorUserBuildSettings.SwitchActiveBuildTarget(_buildTargetGroup, _BuildTarget);
             
-            if (_BuildTarget == BuildTarget.WSAPlayer)
+            if (_BuildTarget == BuildTarget.StandaloneWindows64)
             {
                 PlayerSettings.SetScriptingBackend(_buildTargetGroup, ScriptingImplementation.IL2CPP);
             }
@@ -239,7 +244,7 @@ namespace Watermelon_Game.Editor
             {
                 PlayerSettings.SetScriptingBackend(_buildTargetGroup, ScriptingImplementation.Mono2x);
             }
-            else if (_BuildTarget == BuildTarget.StandaloneWindows64)
+            else if (_BuildTarget == BuildTarget.WSAPlayer)
             {
                 PlayerSettings.SetScriptingBackend(_buildTargetGroup, ScriptingImplementation.IL2CPP);
             }
