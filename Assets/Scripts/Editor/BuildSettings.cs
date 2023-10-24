@@ -57,7 +57,6 @@ namespace Watermelon_Game.Editor
                 EditorUserBuildSettings.wsaMinUWPSDK = "10.0.10240.0";
                 EditorUserBuildSettings.wsaMinUWPSDK = "Visual Studio 2022"; // TODO: Check if this info can be gotten automatically from somewhere
                 EditorUserBuildSettings.wsaBuildAndRunDeployTarget = WSABuildAndRunDeployTarget.LocalMachine;
-                EditorUserBuildSettings.development = false;
                 UnityEditor.UWP.UserBuildSettings.buildConfiguration = WSABuildType.Master;
             }
             else if (_reportedBuildTarget == BuildTarget.StandaloneOSX)
@@ -115,6 +114,7 @@ namespace Watermelon_Game.Editor
             }
             
 #if DEVELOPMENT_BUILD
+            Debug.Log($"<color=green>{DEBUG} Build finished</color> {_Report.summary.outputPath}");
             return;
 #endif
 #pragma warning disable CS0162

@@ -103,7 +103,7 @@ namespace Watermelon_Game.Fruit_Spawn
                     this.Move(Vector2.right);
                 }
 
-                if (Input.GetKeyDown(KeyCode.Space) && !this.BlockRelease)
+                if (Input.GetKey(KeyCode.Space) && !this.BlockRelease)
                 {
                     this.ReleaseFruit();
                 }   
@@ -122,7 +122,10 @@ namespace Watermelon_Game.Fruit_Spawn
             var _fruitInTrigger = this.fruitTrigger.IsTouchingLayers(LayerMask.GetMask("Fruit"));
             if (_fruitInTrigger)
             {
-                this.audioSource.Play(0, this.blockedRelease, this.blockedReleaseVolume);
+                if (!this.audioSource.isPlaying)
+                {
+                    this.audioSource.Play(0, this.blockedRelease, this.blockedReleaseVolume);
+                }
                 return;
             }
             
