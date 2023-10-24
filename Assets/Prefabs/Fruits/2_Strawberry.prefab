@@ -540,21 +540,25 @@ PrefabInstance:
       propertyPath: m_Name
       value: 2_Strawberry
       objectReference: {fileID: 0}
+    - target: {fileID: 7913849676234949797, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8630753985610350245, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Mass
-      value: 4.992864
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Radius
-      value: 0.4202219
+      value: 0.5389018
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Offset.x
-      value: 0.025192976
+      value: 0.018211922
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Offset.y
-      value: -0.026592731
+      value: -0.07685717
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

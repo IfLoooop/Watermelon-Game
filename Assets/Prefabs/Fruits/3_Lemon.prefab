@@ -516,9 +516,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: 3_Lemon
       objectReference: {fileID: 0}
+    - target: {fileID: 7913849676234949797, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8630753985610350245, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Mass
-      value: 10.081544
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Radius
