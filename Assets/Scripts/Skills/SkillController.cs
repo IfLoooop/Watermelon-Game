@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menu;
@@ -19,6 +20,7 @@ namespace Watermelon_Game.Skills
         #region Inspector Fields
 
 #if UNITY_EDITOR
+        [Header("Development")]
         [SerializeField] private bool forceEnableSkills;
 #endif
         [Header("References")]
@@ -89,12 +91,9 @@ namespace Watermelon_Game.Skills
 
         private static SkillData InitializeSkill(GameObject _GameObject, KeyCode _KeyToActivate, Skill _Skill, uint _PointRequirements)
         {
-            var _textMeshPro = _GameObject.GetComponentInChildren<TextMeshProUGUI>();
-            var _spriteRenderers = _GameObject.GetComponentsInChildren<SpriteRenderer>();
+            var _skillReferences = _GameObject.GetComponent<SkillReferences>();
             
-            _spriteRenderers[0].gameObject.SetActive(false);
-            
-            return new SkillData(_textMeshPro, _spriteRenderers[0], _spriteRenderers[1], _KeyToActivate, _Skill, _PointRequirements);
+            return new SkillData(_skillReferences, _KeyToActivate, _Skill, _PointRequirements);
         }
 
         public void ApplyWebSettings()

@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using Watermelon_Game.Fruit;
 using Watermelon_Game.Fruit_Spawn;
@@ -9,9 +8,7 @@ namespace Watermelon_Game.Skills
     internal sealed class SkillData
     {
         #region Fields
-        private readonly TextMeshProUGUI textMeshPro;
-        private readonly SpriteRenderer buttonSpriteRenderer;
-        private readonly SpriteRenderer skillIconSpriteRenderer;
+        private readonly SkillReferences skillReferences;
         #endregion
 
         #region Fields
@@ -35,11 +32,9 @@ namespace Watermelon_Game.Skills
         #endregion
 
         #region Constrcutor
-        public SkillData(TextMeshProUGUI _TextMeshPro, SpriteRenderer _ButtonSpriteRenderer, SpriteRenderer _SkillIconSpriteRenderer, KeyCode _KeyToActivate, Skill _Skill, uint _PointRequirement)
+        public SkillData(SkillReferences _SkillReferences, KeyCode _KeyToActivate, Skill _Skill, uint _PointRequirement)
         {
-            this.textMeshPro = _TextMeshPro;
-            this.buttonSpriteRenderer = _ButtonSpriteRenderer;
-            this.skillIconSpriteRenderer = _SkillIconSpriteRenderer;
+            this.skillReferences = _SkillReferences;
             this.KeyToActivate = _KeyToActivate;
             this.skill = _Skill;
             this.CurrentPointsRequirement = _PointRequirement;
@@ -48,11 +43,11 @@ namespace Watermelon_Game.Skills
 
         #region Methos
         /// <summary>
-        /// Sets the visible skill point requirements in <see cref="textMeshPro"/>
+        /// Sets the visible skill point requirements in <see cref="skillReferences"/>
         /// </summary>
         private void SetSkillPointRequirementText()
         {
-            this.textMeshPro.text = string.Concat(this.CurrentPointsRequirement, "P");
+            this.skillReferences.PointCost.text = string.Concat(this.CurrentPointsRequirement, "P");
         }
 
         /// <summary>
@@ -61,7 +56,7 @@ namespace Watermelon_Game.Skills
         public void EnableSkill()
         {
             this.CanBeActivated = true;
-            this.buttonSpriteRenderer.gameObject.SetActive(true);
+            this.skillReferences.ButtonImage.gameObject.SetActive(true);
         }
         
         /// <summary>
@@ -70,7 +65,7 @@ namespace Watermelon_Game.Skills
         public void DisableSkill()
         {
             this.CanBeActivated = false;
-            this.buttonSpriteRenderer.gameObject.SetActive(false);
+            this.skillReferences.ButtonImage.gameObject.SetActive(false);
             this.DeactivateSkill(true);
         }
 
@@ -80,7 +75,7 @@ namespace Watermelon_Game.Skills
         public void ActivateSkill()
         {
             this.IsActive = true;
-            this.skillIconSpriteRenderer.color = this.skillIconSpriteRenderer.color.WithAlpha(1);
+            this.skillReferences.SkillIconImage.color = this.skillReferences.SkillIconImage.color.WithAlpha(1);
             FruitSpawnerAim.Instance.AllowAimRotation(true);
             FruitSpawner.SetActiveSkill(this.skill);
         }
@@ -92,7 +87,7 @@ namespace Watermelon_Game.Skills
         public void DeactivateSkill(bool _OnlyVisuals)
         {
             this.IsActive = false;
-            this.skillIconSpriteRenderer.color = this.skillIconSpriteRenderer.color.WithAlpha(0.5f);
+            this.skillReferences.SkillIconImage.color = this.skillReferences.SkillIconImage.color.WithAlpha(0.5f);
             FruitSpawnerAim.Instance.AllowAimRotation(false);
             
             if (!_OnlyVisuals)

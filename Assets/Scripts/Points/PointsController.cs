@@ -11,9 +11,9 @@ namespace Watermelon_Game.Points
     {
         #region Inspector Fields
         [Header("References")]
-        [SerializeField] private TextMeshProUGUI points;
-        [SerializeField] private TextMeshProUGUI highScore;
         [SerializeField] private Multiplier multiplier;
+        [SerializeField] private TextMeshProUGUI pointsAmount;
+        [SerializeField] private TextMeshProUGUI bestScoreAmount;
         [Header("Settings")]
         [SerializeField] private float pointsWaitTime = .05f;
         #endregion
@@ -41,7 +41,7 @@ namespace Watermelon_Game.Points
 
         private void Start()
         {
-            this.highScore.text = PlayerPrefs.GetInt(StatsMenu.BEST_SCORE_KEY).ToString();
+            this.bestScoreAmount.text = PlayerPrefs.GetInt(StatsMenu.BEST_SCORE_KEY).ToString();
         }
 
         public void AddPoints(Fruit.Fruit _Fruit)
@@ -116,7 +116,7 @@ namespace Watermelon_Game.Points
         
         private void SetPointsText(uint _Points)
         {
-            this.points.text = string.Concat(_Points, 'P');
+            this.pointsAmount.text = string.Concat(_Points, 'P');
         }
         
         public void SavePoints()
@@ -125,7 +125,7 @@ namespace Watermelon_Game.Points
             var _newHighScore = StatsMenu.Instance.NewBestScore(this.currentPoints);
             if (_newHighScore)
             {
-                this.highScore.text = this.currentPoints.ToString();
+                this.bestScoreAmount.text = this.currentPoints.ToString();
             }
         }
         #endregion

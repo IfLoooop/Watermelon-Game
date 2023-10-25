@@ -17,6 +17,7 @@ namespace Watermelon_Game.Fruit_Spawn
         [SerializeField] private float movementSpeed = 30f;
         [SerializeField] private float rotationStep = 50f;
         [SerializeField] private float maxRotationAngle = 60f;
+        [SerializeField] private float releaseCooldown = .375f;
         [SerializeField] private float blockedReleaseVolume = .0175f;
         [SerializeField] private float releaseClipVolume = .01f;
         [SerializeField] private float shootClipStartTime = .1f;
@@ -36,7 +37,8 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <b>Should not be modified afterwards</b>
         /// </summary>
         private Vector2 startingPosition;
-        private const float COLLIDER_SIZE_OFFSET = 3.85f;
+        private float lastRelease;
+        private const float COLLIDER_SIZE_OFFSET = 3.85f; // TODO: Make "SerializeField"
 
         private bool blockRelease;
         
@@ -119,8 +121,9 @@ namespace Watermelon_Game.Fruit_Spawn
         
         private void ReleaseFruit()
         {
+            var _releaseCooldown = Time.time - this.releaseCooldown < this.lastRelease;
             var _fruitInTrigger = this.fruitTrigger.IsTouchingLayers(LayerMask.GetMask("Fruit"));
-            if (_fruitInTrigger)
+            if (_releaseCooldown || _fruitInTrigger)
             {
                 if (!this.audioSource.isPlaying)
                 {
@@ -130,6 +133,7 @@ namespace Watermelon_Game.Fruit_Spawn
             }
             
             this.BlockRelease = true;
+            this.lastRelease = Time.time;
             this.fruitBehaviour.Release(this);
             
             if (this.fruitBehaviour.ActiveSkill != null)

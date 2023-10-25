@@ -7,6 +7,7 @@ namespace Watermelon_Game.Menu
     internal abstract class MenuBase : MonoBehaviour
     {
         #region Inspector Fieds
+        [Header("Settings")]
         [SerializeField] private Menu menu;
         [SerializeField] private bool canNotBeClosedByDifferentMenu;
         #endregion

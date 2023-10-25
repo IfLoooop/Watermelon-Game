@@ -6,6 +6,7 @@ namespace Watermelon_Game.Menu
     internal abstract class ScrollRectBase : MenuBase
     {
         #region Inspector Fields
+        [Header("References")]
         [SerializeField] protected ScrollRect scrollRect;
         #endregion
 
@@ -24,6 +25,7 @@ namespace Watermelon_Game.Menu
         /// </summary>
         private void SetScrollPosition()
         {
+            // TODO: Call this method in "OnValueChanged" of the scrollbar
             if (base.Menu == Menu.GameOver)
             {
                 this.scrollRect.verticalScrollbar.value = 1;   

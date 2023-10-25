@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using Watermelon_Game.Menu;
 
 namespace Watermelon_Game.Points
@@ -13,8 +14,8 @@ namespace Watermelon_Game.Points
 
         [Header("References")]
         [SerializeField] private Animation popup;
-        [SerializeField] private TextMeshProUGUI textMeshPro;
-        [SerializeField] private SpriteRenderer background;
+        [SerializeField] private Image background;
+        [SerializeField] private TextMeshProUGUI multiplier;
         [Header("Settings")]
         [SerializeField] private float multiplierDuration = 1f;
         [SerializeField] private float multiplierWaitTime = .1f;
@@ -78,7 +79,7 @@ namespace Watermelon_Game.Points
         private void SetMultiplier(uint _CurrentMultiplier)
         {
             this.CurrentMultiplier = _CurrentMultiplier;
-            this.textMeshPro.text = string.Concat("x", this.CurrentMultiplier);
+            this.multiplier.text = string.Concat("x", this.CurrentMultiplier);
             this.background.color = this.GetMultiplierColor(_CurrentMultiplier);
             this.gameObject.SetActive(true);
 

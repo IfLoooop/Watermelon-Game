@@ -9,7 +9,7 @@ namespace Watermelon_Game.Menu
     internal sealed class Stats
     {
         #region Inspector Fields
-        [SerializeField] private TextMeshProUGUI highestMultiplierText;
+        [SerializeField] private TextMeshProUGUI bestMultiplierText;
         [SerializeField] private TextMeshProUGUI grapeText;
         [SerializeField] private TextMeshProUGUI cherryText;
         [SerializeField] private TextMeshProUGUI strawberryText;
@@ -19,26 +19,26 @@ namespace Watermelon_Game.Menu
         [SerializeField] private TextMeshProUGUI pearText;
         [SerializeField] private TextMeshProUGUI pineappleText;
         [SerializeField] private TextMeshProUGUI honeMelonText;
-        [SerializeField] private TextMeshProUGUI melonText;
-        [SerializeField] private TextMeshProUGUI goldenFruitText;
+        [SerializeField] private TextMeshProUGUI watermelonText;
+        [SerializeField] private TextMeshProUGUI goldenFruitsText;
         [SerializeField] private TextMeshProUGUI powerText;
         [SerializeField] private TextMeshProUGUI evolveText;
         [SerializeField] private TextMeshProUGUI destroyText;
         #endregion
 
         #region Fields
-        private uint highestMultiplier;
-        private uint grapeEvolvedCount;
-        private uint cherryEvolvedCount;
-        private uint strawberryEvolvedCount;
-        private uint lemonEvolvedCount;
-        private uint orangeEvolvedCount;
-        private uint appleEvolvedCount;
-        private uint pearEvolvedCount;
-        private uint pineappleEvolvedCount;
-        private uint honeyMelonEvolvedCount;
-        private uint melonEvolvedCount;
-        private uint goldenFruitCount;
+        private uint bestMultiplier;
+        private uint grapesEvolvedCount;
+        private uint cherriesEvolvedCount;
+        private uint strawberriesEvolvedCount;
+        private uint lemonsEvolvedCount;
+        private uint orangesEvolvedCount;
+        private uint applesEvolvedCount;
+        private uint pearsEvolvedCount;
+        private uint pineapplesEvolvedCount;
+        private uint honeymelonsEvolvedCount;
+        private uint watermelonsEvolvedCount;
+        private uint goldenFruitsCount;
         private uint powerSkillUsedCount;
         private uint evolveSkillUsedCount;
         private uint destroySkillUsedCount;
@@ -47,110 +47,110 @@ namespace Watermelon_Game.Menu
         #region Properties
         public uint HighestMultiplier
         {
-            get => this.highestMultiplier;
+            get => this.bestMultiplier;
             set
             {
-                this.highestMultiplier = value;
-                this.SetForText(this.highestMultiplierText, this.highestMultiplier);
+                this.bestMultiplier = value;
+                this.SetForText(this.bestMultiplierText, this.bestMultiplier);
             } 
         }
         public uint GrapeEvolvedCount
         {
-            get => this.grapeEvolvedCount;
+            get => this.grapesEvolvedCount;
             set
             {
-                this.grapeEvolvedCount = value;
-                this.SetForImage(this.grapeText, this.grapeEvolvedCount);
+                this.grapesEvolvedCount = value;
+                this.SetForImage(this.grapeText, this.grapesEvolvedCount);
             } 
         }
         public uint CherryEvolvedCount
         {
-            get => this.cherryEvolvedCount;
+            get => this.cherriesEvolvedCount;
             set
             {
-                this.cherryEvolvedCount = value;
-                this.SetForImage(this.cherryText, this.cherryEvolvedCount);
+                this.cherriesEvolvedCount = value;
+                this.SetForImage(this.cherryText, this.cherriesEvolvedCount);
             } 
         }
         public uint StrawberryEvolvedCount
         {
-            get => this.strawberryEvolvedCount;
+            get => this.strawberriesEvolvedCount;
             set
             {
-                this.strawberryEvolvedCount = value;
-                this.SetForImage(this.strawberryText, this.strawberryEvolvedCount);
+                this.strawberriesEvolvedCount = value;
+                this.SetForImage(this.strawberryText, this.strawberriesEvolvedCount);
             }
         }
         public uint LemonEvolvedCount
         {
-            get => this.lemonEvolvedCount;
+            get => this.lemonsEvolvedCount;
             set
             {
-                this.lemonEvolvedCount = value;
-                this.SetForImage(this.lemonText, this.lemonEvolvedCount);
+                this.lemonsEvolvedCount = value;
+                this.SetForImage(this.lemonText, this.lemonsEvolvedCount);
             } 
         }
         public uint OrangeEvolvedCount
         {
-            get => this.orangeEvolvedCount;
+            get => this.orangesEvolvedCount;
             set
             {
-                this.orangeEvolvedCount = value;
-                this.SetForImage(this.orangeText, this.orangeEvolvedCount);
+                this.orangesEvolvedCount = value;
+                this.SetForImage(this.orangeText, this.orangesEvolvedCount);
             } 
         }
         public uint AppleEvolvedCount
         {
-            get => this.appleEvolvedCount;
+            get => this.applesEvolvedCount;
             set
             {
-                this.appleEvolvedCount = value;
-                this.SetForImage(this.appleText, this.appleEvolvedCount);
+                this.applesEvolvedCount = value;
+                this.SetForImage(this.appleText, this.applesEvolvedCount);
             } 
         }
         public uint PearEvolvedCount
         {
-            get => this.pearEvolvedCount;
+            get => this.pearsEvolvedCount;
             set
             {
-                this.pearEvolvedCount = value;
-                this.SetForImage(this.pearText, this.pearEvolvedCount);
+                this.pearsEvolvedCount = value;
+                this.SetForImage(this.pearText, this.pearsEvolvedCount);
             } 
         }
         public uint PineappleEvolvedCount
         {
-            get => this.pineappleEvolvedCount;
+            get => this.pineapplesEvolvedCount;
             set
             {
-                this.pineappleEvolvedCount = value;
-                this.SetForImage(this.pineappleText, this.pineappleEvolvedCount);
+                this.pineapplesEvolvedCount = value;
+                this.SetForImage(this.pineappleText, this.pineapplesEvolvedCount);
             } 
         }
         public uint HoneyMelonEvolvedCount
         {
-            get => this.honeyMelonEvolvedCount;
+            get => this.honeymelonsEvolvedCount;
             set
             {
-                this.honeyMelonEvolvedCount = value;
-                this.SetForImage(this.honeMelonText, this.honeyMelonEvolvedCount);
+                this.honeymelonsEvolvedCount = value;
+                this.SetForImage(this.honeMelonText, this.honeymelonsEvolvedCount);
             } 
         }
         public uint MelonEvolvedCount
         {
-            get => this.melonEvolvedCount;
+            get => this.watermelonsEvolvedCount;
             set
             {
-                this.melonEvolvedCount = value;
-                this.SetForImage(this.melonText, this.melonEvolvedCount);
+                this.watermelonsEvolvedCount = value;
+                this.SetForImage(this.watermelonText, this.watermelonsEvolvedCount);
             } 
         }
         public uint GoldenFruitCount
         {
-            get => this.goldenFruitCount;
+            get => this.goldenFruitsCount;
             set
             {
-                this.goldenFruitCount = value;
-                this.SetForText(this.goldenFruitText, this.goldenFruitCount);
+                this.goldenFruitsCount = value;
+                this.SetForText(this.goldenFruitsText, this.goldenFruitsCount);
             } 
         }
         public uint PowerSkillUsedCount
@@ -190,7 +190,7 @@ namespace Watermelon_Game.Menu
 
         public void SetForText(TextMeshProUGUI _Text, string _Value)
         {
-            _Text.text = string.Concat(_Text.gameObject.name, $" {_Value}");
+            _Text.text = string.Concat(_Text.gameObject.name, $": {_Value}");
         }
         
         public void SetForImage(TextMeshProUGUI _Text, uint _Value)

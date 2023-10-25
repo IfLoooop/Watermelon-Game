@@ -8,13 +8,13 @@ namespace Watermelon_Game.Menu
     internal sealed class GameOverMenu : ScrollRectBase
     {
         #region Inspector Fields
-        [SerializeField] private TextMeshProUGUI scoreText;
+        [SerializeField] private TextMeshProUGUI pointsText;
         [SerializeField] private Stats stats;
         [SerializeField] private TextMeshProUGUI durationText;
         #endregion
 
         #region Fields
-        private uint score;
+        private uint points;
         private TimeSpan duration;
         #endregion
         
@@ -25,8 +25,8 @@ namespace Watermelon_Game.Menu
         {
             set
             {
-                this.score = value;
-                this.stats.SetForText(this.scoreText, this.score);
+                this.points = value;
+                this.stats.SetForText(this.pointsText, this.points);
             } 
         }
         public Stats Stats => this.stats;
