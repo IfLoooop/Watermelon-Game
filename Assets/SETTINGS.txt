@@ -16,6 +16,7 @@ melonSpawnWeight = 0
 goldenFruitChance = 0.01
 massMultiplier = 2.5
 [SkillController]
+test = 33
 powerPointsRequirement = 20
 evolvePointsRequirement = 50
 destroyPointsRequirement = 50
