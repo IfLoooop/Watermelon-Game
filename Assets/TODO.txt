@@ -1,16 +1,18 @@
-[BUGS]
-
-[CHANGES]
--Change the color of the slider knob on hover
-
-[ADDONS]
-
-
-
-
-
-
-
+[LayerController]
+-Background
+-Points
+-Skills
+-Next Fruit
+-Menus
+-Controls
+-Fruit/Face
+-Godray
+-MaxHeight
+-Version
+-Development Tools
+-Fruit Spawner Aim
+-Container Walls
+-Evolution Chart
 
 
 

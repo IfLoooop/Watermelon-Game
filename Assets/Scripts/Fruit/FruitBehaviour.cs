@@ -252,12 +252,26 @@ namespace Watermelon_Game.Fruit
             StatsMenu.Instance.Stats.GoldenFruitCount++;
         }
 
-        public void SetOrderInLayer(int _OrderInLayer)
+        public void IncreaseSortingOrder()
         {
-            this.fruitSprite.sortingOrder = _OrderInLayer;
-            this.faceSprite.sortingOrder = _OrderInLayer + 1;
+            const int VALUE = 1;
+            
+            this.SetSortingOrder(VALUE);
         }
-
+        
+        private void DecreaseSortingOrder()
+        {
+            const int VALUE = -1;
+            
+            this.SetSortingOrder(VALUE);
+        }
+        
+        private void SetSortingOrder(int _Value)
+        {
+            this.fruitSprite.sortingOrder += _Value;
+            this.faceSprite.sortingOrder += _Value;
+        }
+        
 #if DEBUG || DEVELOPMENT_BUILD
         public void CanNotBeAddedToFruitCollection_DEBUG()
         {
@@ -272,7 +286,7 @@ namespace Watermelon_Game.Fruit
         public void Release(FruitSpawner _FruitSpawner)
         {
             base.transform.SetParent(null, true);
-            this.SetOrderInLayer(0);
+            this.DecreaseSortingOrder();
             this.blockRelease.FruitSpawner = _FruitSpawner;
             this.CanBeAddedToFruitCollection = true;
             this.InitializeRigidBody();

@@ -200,7 +200,7 @@ namespace Watermelon_Game.Fruit_Spawn
             skipGetFruit:;
 #endif
             
-            this.fruitBehaviour.SetOrderInLayer(1);
+            this.fruitBehaviour.IncreaseSortingOrder();
             this.fruitSpawnerAim.ResetAim();
             this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.transform.localScale.x + COLLIDER_SIZE_OFFSET, this.fruitSpawnerCollider.size.y);
             this.SetFruitTrigger(this.fruitBehaviour);
