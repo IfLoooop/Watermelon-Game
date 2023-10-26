@@ -1,27 +1,27 @@
 [FruitCollection]
-spawnWeightModifier = -25
-lowerIndexWeight = true
-higherIndexWeight = false
-indexWeight = true
-grapeSpawnWeight = 50
-cherrySpawnWeight = 50
-strawberrySpawnWeight = 50
-lemonSpawnWeight = 25
-orangeSpawnWeight = 15
-appleSpawnWeight = 5
-pearSpawnWeight = 0
-pineappleSpawnWeight = 0
-honeymelonSpawnWeight = 0
-watermelonSpawnWeight = 0
-goldenFruitChance = 0.01
-massMultiplier = 2.5
+SpawnWeightModifier = -25
+LowerIndexWeight = true
+HigherIndexWeight = false
+IndexWeight = true
+GrapeSpawnWeight = 50
+CherrySpawnWeight = 50
+StrawberrySpawnWeight = 50
+LemonSpawnWeight = 25
+OrangeSpawnWeight = 15
+AppleSpawnWeight = 5
+PearSpawnWeight = 0
+PineappleSpawnWeight = 0
+HoneymelonSpawnWeight = 0
+WatermelonSpawnWeight = 0
+GoldenFruitChance = 0.01
+MassMultiplier = 2.5
 [SkillController]
-powerPointsRequirement = 20
-evolvePointsRequirement = 50
-destroyPointsRequirement = 50
-skillPointIncrease = 0.1
-[BackgroundController]
-fruitSpawnDelay = 0.25
-sizeMultiplier = 0.2
-forceMultiplier = 25
-spriteAlphaValue = 0.33
+PowerPointsRequirement = 20
+EvolvePointsRequirement = 50
+DestroyPointsRequirement = 50
+SkillPointIncrease = 0.1
+[BackgroundFruitController]
+FruitSpawnDelay = 0.25
+SizeMultiplier = 0.2
+ForceMultiplier = 25
+SpriteAlphaValue = 0.33
