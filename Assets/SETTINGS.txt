@@ -1,5 +1,5 @@
 [FruitCollection]
-spawnWeightMultiplier = -25
+spawnWeightModifier = -25
 lowerIndexWeight = true
 higherIndexWeight = false
 indexWeight = true
