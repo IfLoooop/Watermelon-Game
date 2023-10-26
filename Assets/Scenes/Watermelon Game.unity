@@ -612,14 +612,6 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5279240899708289698, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5279240899708289698, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6358755319039117638, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -976,14 +968,6 @@ PrefabInstance:
     - target: {fileID: 2353307411210837748, guid: b02438c114d7c044c9b072ba99a732c4, type: 3}
       propertyPath: m_Name
       value: Background
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142865266314008779, guid: b02438c114d7c044c9b072ba99a732c4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5142865266314008779, guid: b02438c114d7c044c9b072ba99a732c4, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5864367709653996849, guid: b02438c114d7c044c9b072ba99a732c4, type: 3}
       propertyPath: m_Camera
