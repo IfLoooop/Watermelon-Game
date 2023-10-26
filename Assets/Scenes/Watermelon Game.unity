@@ -432,10 +432,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 329033343753496632, guid: e0887a7ad3b9fd24f9ddfb587092497c, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 250
-      objectReference: {fileID: 0}
-    - target: {fileID: 329033343753496632, guid: e0887a7ad3b9fd24f9ddfb587092497c, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 0
       objectReference: {fileID: 0}
@@ -455,10 +451,6 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: d192a1208ebdd6f40a3ee4fab52d4c5c, type: 3}
-    - target: {fileID: 2993612876548497658, guid: e0887a7ad3b9fd24f9ddfb587092497c, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -100
-      objectReference: {fileID: 0}
     - target: {fileID: 5664008438482579975, guid: e0887a7ad3b9fd24f9ddfb587092497c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
@@ -478,10 +470,6 @@ PrefabInstance:
     - target: {fileID: 6796430775681193439, guid: e0887a7ad3b9fd24f9ddfb587092497c, type: 3}
       propertyPath: m_text
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7126281050395883427, guid: e0887a7ad3b9fd24f9ddfb587092497c, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 7126281050395883427, guid: e0887a7ad3b9fd24f9ddfb587092497c, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -2429,6 +2417,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2652970488515526434, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2664757613377868311, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -2871,7 +2863,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9003234547473015572, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 3700
+      value: 4882.5
       objectReference: {fileID: 0}
     - target: {fileID: 9003234547473015572, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_ConstrainProportionsScale
@@ -2947,6 +2939,7 @@ SceneRoots:
   - {fileID: 6272330384851948325}
   - {fileID: 1164984953}
   - {fileID: 917190652641784509}
+  - {fileID: 1428903100}
   - {fileID: 1537860402}
   - {fileID: 2103502953}
   - {fileID: 1444130079}
@@ -2956,4 +2949,3 @@ SceneRoots:
   - {fileID: 118434408}
   - {fileID: 2053583861}
   - {fileID: 979978450967598022}
-  - {fileID: 1428903100}
