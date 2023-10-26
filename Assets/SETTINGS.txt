@@ -10,9 +10,9 @@ lemonSpawnWeight = 25
 orangeSpawnWeight = 15
 appleSpawnWeight = 5
 pearSpawnWeight = 0
-pineAppleSpawnWeight = 0
-honeyMelonSpawnWeight = 0
-melonSpawnWeight = 0
+pineappleSpawnWeight = 0
+honeymelonSpawnWeight = 0
+watermelonSpawnWeight = 0
 goldenFruitChance = 0.01
 massMultiplier = 2.5
 [SkillController]
