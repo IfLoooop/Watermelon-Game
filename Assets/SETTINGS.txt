@@ -22,6 +22,6 @@ destroyPointsRequirement = 50
 skillPointIncrease = 0.1
 [BackgroundController]
 fruitSpawnDelay = 0.25
-sizeMultiplier = 2
+sizeMultiplier = 0.2
 forceMultiplier = 25
 spriteAlphaValue = 0.33
