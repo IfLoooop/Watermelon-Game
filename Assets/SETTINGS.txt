@@ -2,7 +2,7 @@
 SpawnWeightModifier = -25
 LowerIndexWeight = true
 HigherIndexWeight = false
-IndexWeight = true
+SameIndexWeight = true
 GrapeSpawnWeight = 50
 CherrySpawnWeight = 50
 StrawberrySpawnWeight = 50
