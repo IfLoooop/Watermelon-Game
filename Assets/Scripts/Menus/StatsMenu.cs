@@ -21,7 +21,7 @@ namespace Watermelon_Game.Menus
         [SerializeField] private TextMeshProUGUI timeSpendInGameText;
         #endregion
 
-        #region Constants
+        #region Playerprefs keys
         // TODO: Use safe-controller
         private const string BEST_SCORE_KEY = "Highscore";
         private const string HIGHEST_MULTIPLIER_KEY = "Multiplier";
@@ -43,65 +43,51 @@ namespace Watermelon_Game.Menus
         private const string TIME_SPEND_KEY = "TimeSpend";
         #endregion
         
-        #region Fields
-        /// <summary>
-        /// All time best score
-        /// </summary>
-        private uint bestScore;
-        /// <summary>
-        /// Total amount of games player
-        /// </summary>
-        private uint gamesPlayed;
-        /// <summary>
-        /// Total time spend in game
-        /// </summary>
-        private TimeSpan timeSpendInGame;
-        #endregion
-
         #region Properties
         /// <summary>
         /// Singleton of <see cref="StatsMenu"/>
         /// </summary>
         public static StatsMenu Instance { get; private set; }
-
-        /// <summary>
-        /// <see cref="bestScore"/>
-        /// </summary>
-        public uint BestScore
-        {
-            get => this.bestScore;
-            set
-            {
-                this.bestScore = value;
-                this.stats.SetForText(this.bestScoreText, this.bestScore);
-            } 
-        }
+        
         /// <summary>
         /// <see cref="Menus.Stats"/>
         /// </summary>
         public Stats Stats => this.stats;
+        
         /// <summary>
-        /// <see cref="gamesPlayed"/>
+        /// <see cref="StatsValues.BestScore"/>
         /// </summary>
-        public uint GamesPlayed
+        public int BestScore
         {
-            get => this.gamesPlayed;
-            set
+            get => this.stats.StatsValues.BestScore;
+            private set
             {
-                this.gamesPlayed = value;
-                this.stats.SetForText(this.gamesPlayedText, this.gamesPlayed);
+                this.stats.BestScore = value;
+                this.stats.SetForText(this.bestScoreText, this.stats.BestScore);
             } 
         }
         /// <summary>
-        /// <see cref="timeSpendInGame"/>
+        /// <see cref="StatsValues.GamesPlayed"/>
         /// </summary>
-        public TimeSpan TimeSpendInGame
+        private int GamesPlayed
         {
-            get => this.timeSpendInGame;
+            get => this.stats.StatsValues.GamesPlayed;
             set
             {
-                this.timeSpendInGame = value;
-                SetTimeSpendText();
+                this.stats.GamesPlayed = value;
+                this.stats.SetForText(this.gamesPlayedText, this.stats.GamesPlayed);
+            } 
+        }
+        /// <summary>
+        /// <see cref="StatsValues.TimeSpendInGame"/>
+        /// </summary>
+        private TimeSpan TimeSpendInGame
+        {
+            get => this.stats.StatsValues.TimeSpendInGame;
+            set
+            {
+                this.stats.TimeSpendInGame = value;
+                SetTimeSpendInGameText();
             } 
         }
         #endregion
@@ -111,7 +97,7 @@ namespace Watermelon_Game.Menus
         {
             Instance = this;
 
-            this.Load();
+            this.Load(true);
         }
         
         /// <summary>
@@ -122,19 +108,19 @@ namespace Watermelon_Game.Menus
         /// <returns>The new active <see cref="Menus.Menu"/> or null if all menus are closed</returns>
         public override MenuBase Open_Close(MenuBase _CurrentActiveMenu, bool _ForceClose = false)
         {
-            this.SetTimeSpendText(Time.time);
+            this.SetTimeSpendInGameText(Time.time);
             
             return base.Open_Close(_CurrentActiveMenu, _ForceClose);
         }
 
         // TODO: Try to combine with "GameOverMenu.cs" "SetDurationText()"-Method
         /// <summary>
-        /// Sets a formatted value of <see cref="timeSpendInGame"/> in <see cref="timeSpendInGameText"/>
+        /// Sets a formatted value of <see cref="StatsValues.TimeSpendInGame"/> in <see cref="timeSpendInGameText"/>
         /// </summary>
         /// <param name="_DurationToAdd">Seconds to add</param>
-        private void SetTimeSpendText(float _DurationToAdd = 0)
+        private void SetTimeSpendInGameText(float _DurationToAdd = 0)
         {
-            var _timeSpendInGame = new TimeSpan().Add(this.timeSpendInGame).Add(TimeSpan.FromSeconds(_DurationToAdd));
+            var _timeSpendInGame = new TimeSpan().Add(this.TimeSpendInGame).Add(TimeSpan.FromSeconds(_DurationToAdd));
 
             if (_timeSpendInGame.Hours > 0)
             {
@@ -153,27 +139,74 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Loads all settings from the <see cref="PlayerPrefs"/>
         /// </summary>
-        private void Load()
+        /// <param name="_Set">If true, sets the loaded values to their respective properties in <see cref="StatsMenu"/></param>
+        /// <returns><see cref="StatsValues"/></returns>
+        private StatsValues Load(bool _Set)
         {
-            this.BestScore = (uint)PlayerPrefs.GetInt(BEST_SCORE_KEY);
-            this.stats.BestMultiplier = (uint)PlayerPrefs.GetInt(HIGHEST_MULTIPLIER_KEY);
-            this.stats.GrapeEvolvedCount = (uint)PlayerPrefs.GetInt(GRAPE_KEY);
-            this.stats.CherryEvolvedCount = (uint)PlayerPrefs.GetInt(CHERRY_KEY);
-            this.stats.StrawberryEvolvedCount = (uint)PlayerPrefs.GetInt(STRAWBERRY_KEY);
-            this.stats.LemonEvolvedCount = (uint)PlayerPrefs.GetInt(LEMON_KEY);
-            this.stats.OrangeEvolvedCount = (uint)PlayerPrefs.GetInt(ORANGE_KEY);
-            this.stats.AppleEvolvedCount = (uint)PlayerPrefs.GetInt(APPLE_KEY); 
-            this.stats.PearEvolvedCount = (uint)PlayerPrefs.GetInt(PEAR_KEY);
-            this.stats.PineappleEvolvedCount = (uint)PlayerPrefs.GetInt(PINEAPPLE_KEY);
-            this.stats.HoneymelonEvolvedCount = (uint)PlayerPrefs.GetInt(HONEY_MELON_KEY);
-            this.stats.WatermelonEvolvedCount = (uint)PlayerPrefs.GetInt(MELON_KEY);
-            this.stats.GoldenFruitCount = (uint)PlayerPrefs.GetInt(GOLDEN_FRUIT_KEY);
-            this.stats.PowerSkillUsedCount = (uint)PlayerPrefs.GetInt(POWER_KEY);
-            this.stats.EvolveSkillUsedCount = (uint)PlayerPrefs.GetInt(EVOLVE_KEY);
-            this.stats.DestroySkillUsedCount = (uint)PlayerPrefs.GetInt(DESTROY_KEY);
-            this.GamesPlayed = (uint)PlayerPrefs.GetInt(GAMES_PLAYED_KEY);
+            var _bestScore = PlayerPrefs.GetInt(BEST_SCORE_KEY);
+            var _bestMultiplier = PlayerPrefs.GetInt(HIGHEST_MULTIPLIER_KEY);
+            var _grapeEvolvedCount = PlayerPrefs.GetInt(GRAPE_KEY);
+            var _cherryEvolvedCount = PlayerPrefs.GetInt(CHERRY_KEY);
+            var _strawberryEvolvedCount = PlayerPrefs.GetInt(STRAWBERRY_KEY);
+            var _lemonEvolvedCount = PlayerPrefs.GetInt(LEMON_KEY);
+            var _orangeEvolvedCount = PlayerPrefs.GetInt(ORANGE_KEY);
+            var _appleEvolvedCount = PlayerPrefs.GetInt(APPLE_KEY); 
+            var _pearEvolvedCount = PlayerPrefs.GetInt(PEAR_KEY);
+            var _pineappleEvolvedCount = PlayerPrefs.GetInt(PINEAPPLE_KEY);
+            var _honeymelonEvolvedCount = PlayerPrefs.GetInt(HONEY_MELON_KEY);
+            var _watermelonEvolvedCount = PlayerPrefs.GetInt(MELON_KEY);
+            var _goldenFruitCount = PlayerPrefs.GetInt(GOLDEN_FRUIT_KEY);
+            var _powerSkillUsedCount = PlayerPrefs.GetInt(POWER_KEY);
+            var _evolveSkillUsedCount = PlayerPrefs.GetInt(EVOLVE_KEY);
+            var _destroySkillUsedCount = PlayerPrefs.GetInt(DESTROY_KEY);
+            var _gamesPlayed = PlayerPrefs.GetInt(GAMES_PLAYED_KEY);
             TimeSpan.TryParse(PlayerPrefs.GetString(TIME_SPEND_KEY), out var _timeSPendInGame);
-            this.TimeSpendInGame = _timeSPendInGame;
+
+            var _statsValues = new StatsValues
+            (
+                _bestScore,
+                _bestMultiplier,
+                _grapeEvolvedCount,
+                _cherryEvolvedCount,
+                _strawberryEvolvedCount,
+                _lemonEvolvedCount,
+                _orangeEvolvedCount,
+                _appleEvolvedCount,
+                _pearEvolvedCount,
+                _pineappleEvolvedCount,
+                _honeymelonEvolvedCount,
+                _watermelonEvolvedCount,
+                _goldenFruitCount,
+                _powerSkillUsedCount,
+                _evolveSkillUsedCount,
+                _destroySkillUsedCount,
+                _gamesPlayed,
+                _timeSPendInGame
+            );
+
+            if (_Set)
+            {
+                this.BestScore = _bestScore;
+                this.stats.BestMultiplier = _bestMultiplier;
+                this.stats.GrapeEvolvedCount = _grapeEvolvedCount;
+                this.stats.CherryEvolvedCount = _cherryEvolvedCount;
+                this.stats.StrawberryEvolvedCount = _strawberryEvolvedCount;
+                this.stats.LemonEvolvedCount = _lemonEvolvedCount;
+                this.stats.OrangeEvolvedCount = _orangeEvolvedCount;
+                this.stats.AppleEvolvedCount = _appleEvolvedCount;
+                this.stats.PearEvolvedCount = _pearEvolvedCount;
+                this.stats.PineappleEvolvedCount = _pineappleEvolvedCount;
+                this.stats.HoneymelonEvolvedCount = _honeymelonEvolvedCount;
+                this.stats.WatermelonEvolvedCount = _watermelonEvolvedCount;
+                this.stats.GoldenFruitCount = _goldenFruitCount;
+                this.stats.PowerSkillUsedCount = _powerSkillUsedCount;
+                this.stats.EvolveSkillUsedCount = _evolveSkillUsedCount;
+                this.stats.DestroySkillUsedCount = _destroySkillUsedCount;
+                this.GamesPlayed = _gamesPlayed;
+                this.TimeSpendInGame = _timeSPendInGame;
+            }
+
+            return _statsValues;
         }
         
         /// <summary>
@@ -181,28 +214,70 @@ namespace Watermelon_Game.Menus
         /// </summary>
         public void Save()
         {
-            PlayerPrefs.SetInt(BEST_SCORE_KEY, (int)this.bestScore);
-            PlayerPrefs.SetInt(HIGHEST_MULTIPLIER_KEY, (int)this.stats.BestMultiplier);
-            PlayerPrefs.SetInt(GRAPE_KEY, (int)this.stats.GrapeEvolvedCount);
-            PlayerPrefs.SetInt(CHERRY_KEY, (int)this.stats.CherryEvolvedCount);
-            PlayerPrefs.SetInt(STRAWBERRY_KEY, (int)this.stats.StrawberryEvolvedCount);
-            PlayerPrefs.SetInt(LEMON_KEY, (int)this.stats.LemonEvolvedCount);
-            PlayerPrefs.SetInt(ORANGE_KEY, (int)this.stats.OrangeEvolvedCount);
-            PlayerPrefs.SetInt(APPLE_KEY, (int)this.stats.AppleEvolvedCount);
-            PlayerPrefs.SetInt(PEAR_KEY, (int)this.stats.PearEvolvedCount);
-            PlayerPrefs.SetInt(PINEAPPLE_KEY, (int)this.stats.PineappleEvolvedCount);
-            PlayerPrefs.SetInt(HONEY_MELON_KEY, (int)this.stats.HoneymelonEvolvedCount);
-            PlayerPrefs.SetInt(MELON_KEY, (int)this.stats.WatermelonEvolvedCount);
-            PlayerPrefs.SetInt(GOLDEN_FRUIT_KEY, (int)this.stats.GoldenFruitCount);
-            PlayerPrefs.SetInt(POWER_KEY, (int)this.stats.PowerSkillUsedCount);
-            PlayerPrefs.SetInt(EVOLVE_KEY, (int)this.stats.EvolveSkillUsedCount);
-            PlayerPrefs.SetInt(DESTROY_KEY, (int)this.stats.DestroySkillUsedCount);
-            PlayerPrefs.SetInt(GAMES_PLAYED_KEY, (int)this.gamesPlayed);
-            PlayerPrefs.SetString(TIME_SPEND_KEY, this.timeSpendInGame.Add(TimeSpan.FromSeconds(Time.time)).ToString());
+            var _loadedStatsValues = this.Load(false);
+            var _currentStatsValues = this.GetCurrentStatsValues();
+            var _biggerStatsValues = _currentStatsValues.CheckIfBigger(_loadedStatsValues);
+
+            PlayerPrefs.SetInt(BEST_SCORE_KEY, _biggerStatsValues.BestScore);
+            PlayerPrefs.SetInt(HIGHEST_MULTIPLIER_KEY, _biggerStatsValues.BestMultiplier);
+            PlayerPrefs.SetInt(GRAPE_KEY, _biggerStatsValues.GrapeEvolvedCount);
+            PlayerPrefs.SetInt(CHERRY_KEY, _biggerStatsValues.CherryEvolvedCount);
+            PlayerPrefs.SetInt(STRAWBERRY_KEY, _biggerStatsValues.StrawberryEvolvedCount);
+            PlayerPrefs.SetInt(LEMON_KEY, _biggerStatsValues.LemonEvolvedCount);
+            PlayerPrefs.SetInt(ORANGE_KEY, _biggerStatsValues.OrangeEvolvedCount);
+            PlayerPrefs.SetInt(APPLE_KEY, _biggerStatsValues.AppleEvolvedCount);
+            PlayerPrefs.SetInt(PEAR_KEY, _biggerStatsValues.PearEvolvedCount);
+            PlayerPrefs.SetInt(PINEAPPLE_KEY, _biggerStatsValues.PineappleEvolvedCount);
+            PlayerPrefs.SetInt(HONEY_MELON_KEY, _biggerStatsValues.HoneymelonEvolvedCount);
+            PlayerPrefs.SetInt(MELON_KEY, _biggerStatsValues.WatermelonEvolvedCount);
+            PlayerPrefs.SetInt(GOLDEN_FRUIT_KEY, _biggerStatsValues.GoldenFruitCount);
+            PlayerPrefs.SetInt(POWER_KEY, _biggerStatsValues.PowerSkillUsedCount);
+            PlayerPrefs.SetInt(EVOLVE_KEY, _biggerStatsValues.EvolveSkillUsedCount);
+            PlayerPrefs.SetInt(DESTROY_KEY, _biggerStatsValues.DestroySkillUsedCount);
+            PlayerPrefs.SetInt(GAMES_PLAYED_KEY, _biggerStatsValues.GamesPlayed);
+            PlayerPrefs.SetString(TIME_SPEND_KEY, _biggerStatsValues.TimeSpendInGame.Add(TimeSpan.FromSeconds(Time.time)).ToString());
+        }
+        
+        /// <summary>
+        /// Creates a new <see cref="StatsValues"/> object with the values of this <see cref="StatsMenu"/>
+        /// </summary>
+        /// <returns>A new <see cref="StatsValues"/> object with the values of this <see cref="StatsMenu"/></returns>
+        private StatsValues GetCurrentStatsValues()
+        {
+            return new StatsValues
+            (
+                this.BestScore,
+                this.stats.BestMultiplier,
+                this.stats.GrapeEvolvedCount,
+                this.stats.CherryEvolvedCount,
+                this.stats.StrawberryEvolvedCount,
+                this.stats.LemonEvolvedCount,
+                this.stats.OrangeEvolvedCount,
+                this.stats.AppleEvolvedCount,
+                this.stats.PearEvolvedCount,
+                this.stats.PineappleEvolvedCount,
+                this.stats.HoneymelonEvolvedCount,
+                this.stats.WatermelonEvolvedCount,
+                this.stats.GoldenFruitCount,
+                this.stats.PowerSkillUsedCount,
+                this.stats.EvolveSkillUsedCount,
+                this.stats.DestroySkillUsedCount,
+                this.GamesPlayed,
+                this.TimeSpendInGame
+            );
         }
 
         /// <summary>
-        /// Increments <see cref="gamesPlayed"/>
+        /// Sets <see cref="BestScore"/> to the given value
+        /// </summary>
+        /// <param name="_NewBestScore">The value to set <see cref="BestScore"/> to</param>
+        public void SetBestScore(int _NewBestScore)
+        {
+            this.BestScore = _NewBestScore;
+        }
+        
+        /// <summary>
+        /// Increments <see cref="StatsValues.GamesPlayed"/>
         /// </summary>
         public void AddGamesPlayed()
         {

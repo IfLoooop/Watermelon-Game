@@ -886,10 +886,6 @@ PrefabInstance:
       propertyPath: m_Mass
       value: 10.081544
       objectReference: {fileID: 0}
-    - target: {fileID: 1202009018912845099, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1337744543208942187, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
       propertyPath: m_Mass
       value: 70.74347
@@ -1447,7 +1443,7 @@ PrefabInstance:
       objectReference: {fileID: 979978450967598023}
     - target: {fileID: 3392972658731553383, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: disableCountDown
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3455867229384212972, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_IsActive

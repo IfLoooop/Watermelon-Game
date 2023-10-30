@@ -157,7 +157,7 @@ namespace Watermelon_Game.Menus
         private void ResetGameStarted()
         {
             var _points = PointsController.CurrentPoints;
-            this.gameOverMenu.Points = _points;
+            this.gameOverMenu.Points = (int)_points;
             this.CheckForNewBestScore(_points);
             this.CloseCurrentlyActiveMenu();
             this.DisableInput();
@@ -189,6 +189,7 @@ namespace Watermelon_Game.Menus
             if (_newBestScore)
             {
                 OnNewBestScore?.Invoke(_NewScore);
+                this.statsMenu.SetBestScore((int)_NewScore);
             }
         }
         
@@ -219,11 +220,11 @@ namespace Watermelon_Game.Menus
         {
             if (_CurrentMultiplier > this.gameOverMenu.Stats.BestMultiplier)
             {
-                this.gameOverMenu.Stats.BestMultiplier = _CurrentMultiplier;
+                this.gameOverMenu.Stats.BestMultiplier = (int)_CurrentMultiplier;
             }
             if (_CurrentMultiplier > this.statsMenu.Stats.BestMultiplier)
             {
-                this.statsMenu.Stats.BestMultiplier = _CurrentMultiplier;
+                this.statsMenu.Stats.BestMultiplier = (int)_CurrentMultiplier;
             }
         }
         

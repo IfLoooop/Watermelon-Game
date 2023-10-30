@@ -46,246 +46,220 @@ namespace Watermelon_Game.Menus
 
         #region Fields
         /// <summary>
-        /// Best multiplier
+        /// <see cref="StatsValues"/>
         /// </summary>
-        private uint bestMultiplier;
-        /// <summary>
-        /// Total evolved grape count
-        /// </summary>
-        private uint grapesEvolvedCount;
-        /// <summary>
-        /// Total evolved cherry count
-        /// </summary>
-        private uint cherriesEvolvedCount;
-        /// <summary>
-        /// Total evolved strawberry count
-        /// </summary>
-        private uint strawberriesEvolvedCount;
-        /// <summary>
-        /// Total evolved lemon count
-        /// </summary>
-        private uint lemonsEvolvedCount;
-        /// <summary>
-        /// Total evolved orange count
-        /// </summary>
-        private uint orangesEvolvedCount;
-        /// <summary>
-        /// Total evolved apple count
-        /// </summary>
-        private uint applesEvolvedCount;
-        /// <summary>
-        /// Total evolved pear count
-        /// </summary>
-        private uint pearsEvolvedCount;
-        /// <summary>
-        /// Total evolved pineapple count
-        /// </summary>
-        private uint pineapplesEvolvedCount;
-        /// <summary>
-        /// Total evolved honeymelon count
-        /// </summary>
-        private uint honeymelonsEvolvedCount;
-        /// <summary>
-        /// Total evolved watermelon count
-        /// </summary>
-        private uint watermelonsEvolvedCount;
-        /// <summary>
-        /// Total golden fruit count
-        /// </summary>
-        private uint goldenFruitsCount;
-        /// <summary>
-        /// Total amount of power skills used
-        /// </summary>
-        private uint powerSkillUsedCount;
-        /// <summary>
-        /// Total amount of evolve skills used
-        /// </summary>
-        private uint evolveSkillUsedCount;
-        /// <summary>
-        /// Total amount of destroy skills used
-        /// </summary>
-        private uint destroySkillUsedCount;
+        private StatsValues statsValues;
         #endregion
-
+        
         #region Properties
         /// <summary>
-        /// <see cref="bestMultiplier"/>
+        /// <see cref="statsValues"/>
         /// </summary>
-        public uint BestMultiplier
+        public StatsValues StatsValues => this.statsValues;
+        
+        /// <summary>
+        /// <see cref="StatsValues.BestScore"/>
+        /// </summary>
+        public int BestScore
         {
-            get => this.bestMultiplier;
+            get => this.statsValues.BestScore;
+            set => this.statsValues.BestScore = value;
+        }
+        /// <summary>
+        /// <see cref="StatsValues.GamesPlayed"/>
+        /// </summary>
+        public int GamesPlayed
+        {
+            get => this.statsValues.GamesPlayed;
+            set => this.statsValues.GamesPlayed = value;
+        }
+        /// <summary>
+        /// <see cref="StatsValues.TimeSpendInGame"/>
+        /// </summary>
+        public TimeSpan TimeSpendInGame
+        {
+            get => this.statsValues.TimeSpendInGame;
+            set => this.statsValues.TimeSpendInGame = value;
+        }
+        
+        /// <summary>
+        /// <see cref="StatsValues.BestMultiplier"/>
+        /// </summary>
+        public int BestMultiplier
+        {
+            get => this.statsValues.BestMultiplier;
             set
             {
-                this.bestMultiplier = value;
-                this.SetForText(this.bestMultiplierText, this.bestMultiplier);
+                this.statsValues.BestMultiplier = value;
+                this.SetForText(this.bestMultiplierText, this.statsValues.BestMultiplier);
             } 
         }
         /// <summary>
-        /// <see cref="grapesEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.GrapeEvolvedCount"/>
         /// </summary>
-        public uint GrapeEvolvedCount
+        public int GrapeEvolvedCount
         {
-            get => this.grapesEvolvedCount;
+            get => this.statsValues.GrapeEvolvedCount;
             set
             {
-                this.grapesEvolvedCount = value;
-                this.SetForImage(this.grapeText, this.grapesEvolvedCount);
+                this.statsValues.GrapeEvolvedCount = value;
+                this.SetForImage(this.grapeText, this.statsValues.GrapeEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="cherriesEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.CherryEvolvedCount"/>
         /// </summary>
-        public uint CherryEvolvedCount
+        public int CherryEvolvedCount
         {
-            get => this.cherriesEvolvedCount;
+            get => this.statsValues.CherryEvolvedCount;
             set
             {
-                this.cherriesEvolvedCount = value;
-                this.SetForImage(this.cherryText, this.cherriesEvolvedCount);
+                this.statsValues.CherryEvolvedCount = value;
+                this.SetForImage(this.cherryText, this.statsValues.CherryEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="strawberriesEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.StrawberryEvolvedCount"/>
         /// </summary>
-        public uint StrawberryEvolvedCount
+        public int StrawberryEvolvedCount
         {
-            get => this.strawberriesEvolvedCount;
+            get => this.statsValues.StrawberryEvolvedCount;
             set
             {
-                this.strawberriesEvolvedCount = value;
-                this.SetForImage(this.strawberryText, this.strawberriesEvolvedCount);
+                this.statsValues.StrawberryEvolvedCount = value;
+                this.SetForImage(this.strawberryText, this.statsValues.StrawberryEvolvedCount);
             }
         }
         /// <summary>
-        /// <see cref="lemonsEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.LemonEvolvedCount"/>
         /// </summary>
-        public uint LemonEvolvedCount
+        public int LemonEvolvedCount
         {
-            get => this.lemonsEvolvedCount;
+            get => this.statsValues.LemonEvolvedCount;
             set
             {
-                this.lemonsEvolvedCount = value;
-                this.SetForImage(this.lemonText, this.lemonsEvolvedCount);
+                this.statsValues.LemonEvolvedCount = value;
+                this.SetForImage(this.lemonText, this.statsValues.LemonEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="orangesEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.OrangeEvolvedCount"/>
         /// </summary>
-        public uint OrangeEvolvedCount
+        public int OrangeEvolvedCount
         {
-            get => this.orangesEvolvedCount;
+            get => this.statsValues.OrangeEvolvedCount;
             set
             {
-                this.orangesEvolvedCount = value;
-                this.SetForImage(this.orangeText, this.orangesEvolvedCount);
+                this.statsValues.OrangeEvolvedCount = value;
+                this.SetForImage(this.orangeText, this.statsValues.OrangeEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="applesEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.AppleEvolvedCount"/>
         /// </summary>
-        public uint AppleEvolvedCount
+        public int AppleEvolvedCount
         {
-            get => this.applesEvolvedCount;
+            get => this.statsValues.AppleEvolvedCount;
             set
             {
-                this.applesEvolvedCount = value;
-                this.SetForImage(this.appleText, this.applesEvolvedCount);
+                this.statsValues.AppleEvolvedCount = value;
+                this.SetForImage(this.appleText, this.statsValues.AppleEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="pearsEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.PearEvolvedCount"/>
         /// </summary>
-        public uint PearEvolvedCount
+        public int PearEvolvedCount
         {
-            get => this.pearsEvolvedCount;
+            get => this.statsValues.PearEvolvedCount;
             set
             {
-                this.pearsEvolvedCount = value;
-                this.SetForImage(this.pearText, this.pearsEvolvedCount);
+                this.statsValues.PearEvolvedCount = value;
+                this.SetForImage(this.pearText, this.statsValues.PearEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="pineapplesEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.PineappleEvolvedCount"/>
         /// </summary>
-        public uint PineappleEvolvedCount
+        public int PineappleEvolvedCount
         {
-            get => this.pineapplesEvolvedCount;
+            get => this.statsValues.PineappleEvolvedCount;
             set
             {
-                this.pineapplesEvolvedCount = value;
-                this.SetForImage(this.pineappleText, this.pineapplesEvolvedCount);
+                this.statsValues.PineappleEvolvedCount = value;
+                this.SetForImage(this.pineappleText, this.statsValues.PineappleEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="honeymelonsEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.HoneymelonEvolvedCount"/>
         /// </summary>
-        public uint HoneymelonEvolvedCount
+        public int HoneymelonEvolvedCount
         {
-            get => this.honeymelonsEvolvedCount;
+            get => this.statsValues.HoneymelonEvolvedCount;
             set
             {
-                this.honeymelonsEvolvedCount = value;
-                this.SetForImage(this.honeymelonText, this.honeymelonsEvolvedCount);
+                this.statsValues.HoneymelonEvolvedCount = value;
+                this.SetForImage(this.honeymelonText, this.statsValues.HoneymelonEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="watermelonsEvolvedCount"/>
+        /// <see cref="Menus.StatsValues.WatermelonEvolvedCount"/>
         /// </summary>
-        public uint WatermelonEvolvedCount
+        public int WatermelonEvolvedCount
         {
-            get => this.watermelonsEvolvedCount;
+            get => this.statsValues.WatermelonEvolvedCount;
             set
             {
-                this.watermelonsEvolvedCount = value;
-                this.SetForImage(this.watermelonText, this.watermelonsEvolvedCount);
+                this.statsValues.WatermelonEvolvedCount = value;
+                this.SetForImage(this.watermelonText, this.statsValues.WatermelonEvolvedCount);
             } 
         }
         /// <summary>
-        /// <see cref="goldenFruitsCount"/>
+        /// <see cref="Menus.StatsValues.GoldenFruitCount"/>
         /// </summary>
-        public uint GoldenFruitCount
+        public int GoldenFruitCount
         {
-            get => this.goldenFruitsCount;
+            get => this.statsValues.GoldenFruitCount;
             set
             {
-                this.goldenFruitsCount = value;
-                this.SetForText(this.goldenFruitsText, this.goldenFruitsCount);
+                this.statsValues.GoldenFruitCount = value;
+                this.SetForText(this.goldenFruitsText, this.statsValues.GoldenFruitCount);
             } 
         }
         /// <summary>
-        /// <see cref="powerSkillUsedCount"/>
+        /// <see cref="StatsValues.PowerSkillUsedCount"/>
         /// </summary>
-        public uint PowerSkillUsedCount
+        public int PowerSkillUsedCount
         {
-            get => this.powerSkillUsedCount;
+            get => this.statsValues.PowerSkillUsedCount;
             set
             {
-                this.powerSkillUsedCount = value;
-                this.SetForImage(this.powerText, this.powerSkillUsedCount);
+                this.statsValues.PowerSkillUsedCount = value;
+                this.SetForImage(this.powerText, this.statsValues.PowerSkillUsedCount);
             } 
         }
         /// <summary>
-        /// <see cref="evolveSkillUsedCount"/>
+        /// <see cref="StatsValues.EvolveSkillUsedCount"/>
         /// </summary>
-        public uint EvolveSkillUsedCount
+        public int EvolveSkillUsedCount
         {
-            get => this.evolveSkillUsedCount;
+            get => this.statsValues.EvolveSkillUsedCount;
             set
             {
-                this.evolveSkillUsedCount = value;
-                this.SetForImage(this.evolveText, this.evolveSkillUsedCount);
+                this.statsValues.EvolveSkillUsedCount = value;
+                this.SetForImage(this.evolveText, this.statsValues.EvolveSkillUsedCount);
             } 
         }
         /// <summary>
-        /// <see cref="destroySkillUsedCount"/>
+        /// <see cref="StatsValues.DestroySkillUsedCount"/>
         /// </summary>
-        public uint DestroySkillUsedCount
+        public int DestroySkillUsedCount
         {
-            get => this.destroySkillUsedCount;
+            get => this.statsValues.DestroySkillUsedCount;
             set
             {
-                this.destroySkillUsedCount = value;
-                this.SetForImage(this.destroyText, this.destroySkillUsedCount);
+                this.statsValues.DestroySkillUsedCount = value;
+                this.SetForImage(this.destroyText, this.statsValues.DestroySkillUsedCount);
             } 
         }
         #endregion
@@ -296,7 +270,7 @@ namespace Watermelon_Game.Menus
         /// </summary>
         /// <param name="_Text">The <see cref="TextMeshProUGUI"/> to set the <see cref="TextMeshProUGUI.text"/> of</param>
         /// <param name="_Value">The value to set into the <see cref="TextMeshProUGUI.text"/></param>
-        public void SetForText(TextMeshProUGUI _Text, uint _Value)
+        public void SetForText(TextMeshProUGUI _Text, int _Value)
         {
             this.SetForText(_Text, _Value.ToString());
         }
@@ -316,7 +290,7 @@ namespace Watermelon_Game.Menus
         /// </summary>
         /// <param name="_Text">The <see cref="TextMeshProUGUI"/> to set the <see cref="TextMeshProUGUI.text"/> of</param>
         /// <param name="_Value">The value to set into the <see cref="TextMeshProUGUI.text"/></param>
-        public void SetForImage(TextMeshProUGUI _Text, uint _Value)
+        public void SetForImage(TextMeshProUGUI _Text, int _Value)
         {
             _Text.text = string.Concat($": {_Value}");
         }

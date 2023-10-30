@@ -19,9 +19,14 @@ namespace Watermelon_Game.Menus
 
         #region Fields
         /// <summary>
+        /// Singleton of <see cref="GameOverMenu"/>
+        /// </summary>
+        private static GameOverMenu instance;
+        
+        /// <summary>
         /// Current points amount
         /// </summary>
-        private uint points;
+        private int points;
         /// <summary>
         /// Duration of the current game
         /// </summary>
@@ -30,14 +35,9 @@ namespace Watermelon_Game.Menus
         
         #region Properties
         /// <summary>
-        /// Singleton of <see cref="GameOverMenu"/>
-        /// </summary>
-        public static GameOverMenu Instance { get; private set; }
-
-        /// <summary>
         /// <see cref="points"/>
         /// </summary>
-        public uint Points
+        public int Points
         {
             set
             {
@@ -73,7 +73,7 @@ namespace Watermelon_Game.Menus
         #region Methods
         private void Awake()
         {
-            Instance = this;
+            instance = this;
         }
         
         /// <summary>
