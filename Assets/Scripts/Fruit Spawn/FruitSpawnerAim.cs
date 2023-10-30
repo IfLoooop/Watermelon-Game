@@ -103,10 +103,10 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_Direction">Negative value = left, positive value = right</param>
         private void Rotate(int _Direction)
         {
-            var _zRotation = _Direction * FruitSpawner.Instance.RotationSpeed * Time.fixedDeltaTime;
+            var _zRotation = _Direction * FruitSpawner.RotationSpeed * Time.fixedDeltaTime;
             var _currentRotation = Mathfx.SignedAngle(base.transform.eulerAngles.z);
-            var _canRotateLeft = _Direction < 0 && _currentRotation > FruitSpawner.Instance.MaxRotationAngle * -1;
-            var _canRotateRight = _Direction > 0 && _currentRotation < FruitSpawner.Instance.MaxRotationAngle;
+            var _canRotateLeft = _Direction < 0 && _currentRotation > FruitSpawner.MaxRotationAngle * -1;
+            var _canRotateRight = _Direction > 0 && _currentRotation < FruitSpawner.MaxRotationAngle;
             
             if (_canRotateLeft || _canRotateRight)
             {

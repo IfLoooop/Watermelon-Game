@@ -33,6 +33,11 @@ namespace Watermelon_Game.Fruit_Spawn
         #endregion
         
         #region Fields
+        /// <summary>
+        /// Singleton of <see cref="FruitSpawner"/>
+        /// </summary>
+        private static FruitSpawner instance;
+        
 #pragma warning disable CS0109
         /// <summary>
         /// <see cref="Rigidbody2D"/>
@@ -80,23 +85,19 @@ namespace Watermelon_Game.Fruit_Spawn
 
         #region Properties
         /// <summary>
-        /// Singleton of <see cref="FruitSpawner"/>
-        /// </summary>
-        public static FruitSpawner Instance { get; private set; }
-        /// <summary>
         /// <see cref="rotationSpeed"/>
         /// </summary>
-        public float RotationSpeed => this.rotationSpeed;
+        public static float RotationSpeed => instance.rotationSpeed;
         /// <summary>
         /// <see cref="maxRotationAngle"/>
         /// </summary>
-        public float MaxRotationAngle => this.maxRotationAngle;
+        public static float MaxRotationAngle => instance.maxRotationAngle;
         #endregion
         
         #region Methods
         private void Awake()
         {
-            Instance = this;
+            instance = this;
             
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
             this.fruitSpawnerCollider = base.GetComponent<BoxCollider2D>();
@@ -143,7 +144,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private void ResetGameStarted()
         {
-            this.FlipBlockInput();
+            this.BlockInput();
             this.fruitSpawnerAim.EnableAim(false);
         }
         
@@ -154,38 +155,28 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             Destroy(this.fruitBehaviour.gameObject);
             this.fruitBehaviour = null;
-            this.FlipBlockInput();
+            this.UnblockInput();
+        }
+        
+        /// <summary>
+        /// Sets <see cref="blockInput"/> to false
+        /// </summary>
+        private void UnblockInput()
+        {
+            this.blockInput = false;
+        }
+        
+        /// <summary>
+        /// Sets <see cref="blockInput"/> to true
+        /// </summary>
+        private void BlockInput()
+        {
+            this.blockInput = true;
         }
         
         private void Update()
         {
             this.GetInput();
-        }
-        
-        /// <summary>
-        /// Flips the value of <see cref="blockInput"/>
-        /// </summary>
-        private void FlipBlockInput() // TODO: Check if safe, or remove the flip
-        {
-            this.blockInput = !this.blockInput;
-        }
-
-        /// <summary>
-        /// Sets <see cref="blockRelease"/> to false
-        /// </summary>
-        private void UnblockRelease()
-        {
-            this.BlockRelease(false);
-        }
-        
-        /// <summary>
-        /// Sets <see cref="blockRelease"/> to the given value
-        /// </summary>
-        /// <param name="_Value">The value <see cref="blockRelease"/> should be set to</param>
-        private void BlockRelease(bool _Value)
-        {
-            this.blockRelease = _Value;
-            this.fruitSpawnerAim.EnableAim(!this.blockRelease);
         }
         
         /// <summary>
@@ -253,6 +244,24 @@ namespace Watermelon_Game.Fruit_Spawn
             this.ResetFruitSpawner(false);
         }
 
+        /// <summary>
+        /// Sets <see cref="blockRelease"/> to the given value
+        /// </summary>
+        /// <param name="_Value">The value <see cref="blockRelease"/> should be set to</param>
+        private void BlockRelease(bool _Value)
+        {
+            this.blockRelease = _Value;
+            this.fruitSpawnerAim.EnableAim(!this.blockRelease);
+        }
+        
+        /// <summary>
+        /// Sets <see cref="blockRelease"/> to false
+        /// </summary>
+        private void UnblockRelease()
+        {
+            this.BlockRelease(false);
+        }
+        
 #if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
         /// <see cref="ResetFruitSpawner"/> <br/>
@@ -261,16 +270,16 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_Fruit">The <see cref="Fruit"/> to give to the <see cref="FruitSpawner"/></param>
         public static void ResetFruitSpawner_DEVELOPMENT(Fruit _Fruit)
         {
-            if (Instance.fruitBehaviour != null)
+            if (instance.fruitBehaviour != null)
             {
-                Destroy(Instance.fruitBehaviour.gameObject);
+                Destroy(instance.fruitBehaviour.gameObject);
             }
             
-            Instance.fruitBehaviour = NextFruit.Instance.GetFruit(Instance.transform, _Fruit);
-            Instance.fruitBehaviour.IncreaseSortingOrder();
-            Instance.fruitSpawnerAim.ResetAimRotation();
-            Instance.fruitSpawnerCollider.size = new Vector2(Instance.fruitBehaviour.GetSize() + Instance.colliderSizeOffset, Instance.fruitSpawnerCollider.size.y);
-            Instance.SetFruitTriggerSize(Instance.fruitBehaviour);
+            instance.fruitBehaviour = NextFruit.Instance.GetFruit(instance.transform, _Fruit);
+            instance.fruitBehaviour.IncreaseSortingOrder();
+            instance.fruitSpawnerAim.ResetAimRotation();
+            instance.fruitSpawnerCollider.size = new Vector2(instance.fruitBehaviour.GetSize() + instance.colliderSizeOffset, instance.fruitSpawnerCollider.size.y);
+            instance.SetFruitTriggerSize(instance.fruitBehaviour);
         }
 #endif
         

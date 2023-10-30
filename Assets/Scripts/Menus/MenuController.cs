@@ -57,8 +57,8 @@ namespace Watermelon_Game.Menus
         {
             GameController.OnGameStart += this.GameStarted;
             GameController.OnResetGameStarted += this.ResetGameStarted;
+            GameController.OnResetGameFinished += this.EnableInput;
             GameController.OnRestartGame += this.GameOver;
-            GameController.OnResetGameFinished += this.FlipAllowInput;
             FruitController.OnEvolve += this.AddFruit;
             FruitBehaviour.OnGoldenFruitSpawn += AddGoldenFruit;
             FruitBehaviour.OnSkillUsed += AddSkill;
@@ -69,8 +69,8 @@ namespace Watermelon_Game.Menus
         {
             GameController.OnGameStart -= this.GameStarted;
             GameController.OnResetGameStarted -= this.ResetGameStarted;
+            GameController.OnResetGameFinished -= this.EnableInput;
             GameController.OnRestartGame -= this.GameOver;
-            GameController.OnResetGameFinished -= this.FlipAllowInput;
             FruitController.OnEvolve -= this.AddFruit;
             FruitBehaviour.OnGoldenFruitSpawn -= AddGoldenFruit;
             FruitBehaviour.OnSkillUsed -= AddSkill;
@@ -141,14 +141,6 @@ namespace Watermelon_Game.Menus
         {
             this.currentActiveMenu = _Menu.Open_Close(this.currentActiveMenu, _ForceClose);
         }
-
-        /// <summary>
-        /// Flips the value of <see cref="allowInput"/>
-        /// </summary>
-        private void FlipAllowInput() // TODO: Remove the flip
-        {
-            this.allowInput = !this.allowInput;
-        }
         
         /// <summary>
         /// <see cref="GameController.OnGameStart"/>
@@ -168,9 +160,25 @@ namespace Watermelon_Game.Menus
             this.gameOverMenu.Points = _points;
             this.CheckForNewBestScore(_points);
             this.CloseCurrentlyActiveMenu();
-            this.FlipAllowInput();
+            this.DisableInput();
         }
 
+        /// <summary>
+        /// Enables <see cref="allowInput"/> and sets it to true
+        /// </summary>
+        private void EnableInput()
+        {
+            this.allowInput = true;   
+        }
+        
+        /// <summary>
+        /// Disables <see cref="allowInput"/> and sets it to false
+        /// </summary>
+        private void DisableInput()
+        {
+            this.allowInput = false;
+        }
+        
         /// <summary>
         /// Checks if a new best score was reached
         /// </summary>
