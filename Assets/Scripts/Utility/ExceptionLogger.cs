@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace Watermelon_Game.Utility
@@ -33,6 +36,39 @@ namespace Watermelon_Game.Utility
         /// <see cref="StreamWriter"/>
         /// </summary>
         private static readonly StreamWriter streamWriter;
+
+#if (!DEBUG && !DEVELOPMENT_BUILD) || UNITY_EDITOR
+        /// <summary>
+        /// Message from "OdinSerializer.ArchitectureInfo"
+        /// </summary>
+        private const string ODIN_DEFAULT_ARCHITECTURE_INITIALIZATION = "Odin Serializer ArchitectureInfo initialization with defaults (all unaligned read/writes disabled).";
+        /// <summary>
+        /// Message from "OdinSerializer.ArchitectureInfo"
+        /// </summary>
+        private const string ODIN_UNALIGNED_FLOAT32_READS = "Odin Serializer detected whitelisted runtime platform";
+        /// <summary>
+        /// Message from "OdinSerializer.ArchitectureInfo"
+        /// </summary>
+        private const string ODIN_NON_WHITELISTED_PLATFORM = "Odin Serializer detected non-white-listed runtime platform";
+        /// <summary>
+        /// Message from <see cref="Watermelon_Game.Steamworks.NET.SteamManager"/>
+        /// </summary>
+        private const string STEAM_MANAGER_INITIALIZATION_FAILED = "[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.";
+        
+        /// <summary>
+        /// Messages that should be ignored
+        /// </summary>
+        private static readonly ReadOnlyCollection<string> ignore = new
+        (
+            new List<string>
+            {
+                ODIN_DEFAULT_ARCHITECTURE_INITIALIZATION,
+                ODIN_UNALIGNED_FLOAT32_READS,
+                ODIN_NON_WHITELISTED_PLATFORM,
+                STEAM_MANAGER_INITIALIZATION_FAILED
+            }
+        );
+#endif
         #endregion
 
         #region Constructor
@@ -82,6 +118,13 @@ namespace Watermelon_Game.Utility
         {
 #if UNITY_EDITOR
             if (Application.isEditor)
+            {
+                return;
+            }
+#endif
+
+#if (!DEBUG && !DEVELOPMENT_BUILD) || UNITY_EDITOR
+            if (ignore.Any(_Condition.Contains))
             {
                 return;
             }

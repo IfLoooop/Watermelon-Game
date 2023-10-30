@@ -81,7 +81,7 @@ namespace Watermelon_Game.Web
         /// Checks if a newer version than <see cref="Application.version"/> is available and enables <see cref="updatesAvailable"/> <br/>
         /// <i>Only enables <see cref="updatesAvailable"/> if not disabled on that platform</i>
         /// </summary>
-        public static async void CheckIfNewVersionIsAvailable()
+        private static async void CheckIfNewVersionIsAvailable()
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (instance.skipVersionCheck)

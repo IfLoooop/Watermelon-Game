@@ -20,6 +20,7 @@ namespace Watermelon_Game.Steamworks.NET
 	[DisallowMultipleComponent]
 	public class SteamManager : MonoBehaviour {
 	#if !DISABLESTEAMWORKS
+		
 		protected static bool s_EverInitialized = false;
 
 		protected static SteamManager s_instance;
