@@ -800,7 +800,7 @@ PlayerSettings:
   il2cppCompilerConfiguration:
     Android: 2
     Server: 2
-    Standalone: 2
+    Standalone: 0
   il2cppCodeGeneration:
     Standalone: 0
   managedStrippingLevel:
@@ -814,7 +814,7 @@ PlayerSettings:
     QNX: 1
     Server: 3
     Stadia: 1
-    Standalone: 3
+    Standalone: 4
     VisionOS: 1
     WebGL: 1
     Windows Store Apps: 3
