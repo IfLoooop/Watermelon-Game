@@ -1,5 +1,8 @@
 namespace Watermelon_Game.Utility
 {
+    /// <summary>
+    /// Contains helper methods to calculate things
+    /// </summary>
     internal static class Mathfx
     {
         #region Methods

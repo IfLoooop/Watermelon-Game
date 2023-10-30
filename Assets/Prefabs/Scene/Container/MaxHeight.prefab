@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 175468141863230198}
   - component: {fileID: 7059083535607599448}
   - component: {fileID: 4357577236897919825}
-  - component: {fileID: 4154795829553770949}
   - component: {fileID: 4779914436562518312}
   - component: {fileID: 1029240382313648689}
   m_Layer: 8
@@ -31,7 +30,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5173812211250801757}
   - {fileID: 3272296755152494658}
@@ -104,102 +103,6 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
---- !u!82 &4154795829553770949
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 13490527435397806}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6eaf482540063ea47a872b02bb267296, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 0.1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 0
-  MinDistance: 1
-  MaxDistance: 1.01
-  Pan2D: 0
-  rolloffMode: 2
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &4779914436562518312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -213,8 +116,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableCountDown: 0
+  countdownAudioClip: {fileID: 8300000, guid: 6eaf482540063ea47a872b02bb267296, type: 3}
   countdownTime: 8
   godRayDuration: 1.5
+  countdownVolume: 0.1
 --- !u!114 &1029240382313648689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,11 +133,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   godRay: {fileID: 968846302545462528}
-  floodLight: {fileID: 8300000, guid: 79e6baad2fd414b82a6d49ce1568d2e5, type: 3}
-  flickerSound: {fileID: 8300000, guid: d1a25cf202625944996ce54a686ad573, type: 3}
+  godrayAudioClip: {fileID: 8300000, guid: 79e6baad2fd414b82a6d49ce1568d2e5, type: 3}
+  godrayFlickerAudioClip: {fileID: 8300000, guid: d1a25cf202625944996ce54a686ad573, type: 3}
   maxFlickerDuration: 0.25
   flickerStep: {x: 0.04, y: 0.06}
-  floodLightVolume: 0.0375
+  godrayVolume: 0.0375
   flickerVolume: 0.25
 --- !u!1 &2712240304751606356
 GameObject:
@@ -565,6 +470,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 175468141863230198}
     m_Modifications:
+    - target: {fileID: 857054709661493777, guid: bddc6f68126a55644826f0ba47285bb8, type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2268215376130461098, guid: bddc6f68126a55644826f0ba47285bb8, type: 3}
       propertyPath: playOnAwake
       value: 1

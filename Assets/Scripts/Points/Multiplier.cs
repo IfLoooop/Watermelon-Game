@@ -1,36 +1,66 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using Watermelon_Game.Menu;
 
 namespace Watermelon_Game.Points
 {
+    /// <summary>
+    /// Contains logic for the current multiplier
+    /// </summary>
     internal sealed class Multiplier : MonoBehaviour
     {
         #region Inspector Fields
 
         [Header("References")]
+        [Tooltip("Reference to the animation component that plays the popup clip")]
         [SerializeField] private Animation popup;
+        [Tooltip("Reference to the background image component")]
         [SerializeField] private Image background;
+        [Tooltip("Reference to the TMP component that displays the multiplier amount")]
         [SerializeField] private TextMeshProUGUI multiplier;
+        
         [Header("Settings")]
+        [Tooltip("Maximum Duration in seconds, the multiplier stays visible")]
         [SerializeField] private float multiplierDuration = 1f;
+        [Tooltip("")] //TODO: Needs description
         [SerializeField] private float multiplierWaitTime = .1f;
+        [Tooltip("Colors for the background image")]
         [SerializeField] private List<Color> multiplierColors;
         #endregion
 
         #region Fields
+        /// <summary>
+        /// Duration in seconds, the multiplier will be visible
+        /// </summary>
         private float currentMultiplierDuration;
 
+        /// <summary>
+        /// Disables the multiplier after <see cref="multiplierDuration"/>
+        /// </summary>
         [CanBeNull] private IEnumerator multiplierCoroutine;
+        /// <summary>
+        /// TODO: Needs description
+        /// </summary>
         private WaitForSeconds multiplierWaitForSeconds;
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Current multiplier value
+        /// </summary>
         public uint CurrentMultiplier { get; private set; }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Is called when the multiplier is activated <br/>
+        /// <b>Parameter:</b> <see cref="CurrentMultiplier"/>
+        /// </summary>
+        public static event Action<uint> OnMultiplierActivated; 
         #endregion
         
         #region Methods
@@ -44,12 +74,15 @@ namespace Watermelon_Game.Points
             this.CurrentMultiplier = 0;
         }
         
+        /// <summary>
+        /// Activates the multiplier
+        /// </summary>
         public void StartMultiplier()
         {
             this.currentMultiplierDuration = this.multiplierDuration;
             
-            var _multiplier = ++this.CurrentMultiplier;
-            this.SetMultiplier(_multiplier);
+            var _newMultiplier = ++this.CurrentMultiplier;
+            this.SetMultiplier(_newMultiplier);
 
             this.gameObject.SetActive(true);
             this.popup.Play();
@@ -61,6 +94,24 @@ namespace Watermelon_Game.Points
             }
         }
         
+        /// <summary>
+        /// Adjusts the values for the multiplier
+        /// </summary>
+        /// <param name="_NewMultiplier">The new multiplier value</param>
+        private void SetMultiplier(uint _NewMultiplier)
+        {
+            this.CurrentMultiplier = _NewMultiplier;
+            this.multiplier.text = string.Concat("x", this.CurrentMultiplier);
+            this.background.color = this.GetMultiplierColor();
+            this.gameObject.SetActive(true);
+
+            OnMultiplierActivated?.Invoke(this.CurrentMultiplier);
+        }
+        
+        /// <summary>
+        /// <see cref="multiplierCoroutine"/>
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator MultiplierDuration()
         {
             while (this.currentMultiplierDuration > 0)
@@ -76,35 +127,22 @@ namespace Watermelon_Game.Points
             this.gameObject.SetActive(false);
         }
         
-        private void SetMultiplier(uint _CurrentMultiplier)
+        /// <summary>
+        /// Returns the <see cref="Color"/> from <see cref="multiplierColors"/> which index corresponds with the <see cref="CurrentMultiplier"/>
+        /// </summary>
+        /// <returns>The <see cref="Color"/> from <see cref="multiplierColors"/> which index corresponds with the <see cref="CurrentMultiplier"/></returns>
+        private Color GetMultiplierColor()
         {
-            this.CurrentMultiplier = _CurrentMultiplier;
-            this.multiplier.text = string.Concat("x", this.CurrentMultiplier);
-            this.background.color = this.GetMultiplierColor(_CurrentMultiplier);
-            this.gameObject.SetActive(true);
-
-            if (_CurrentMultiplier > GameOverMenu.Instance.Stats.HighestMultiplier)
-            {
-                GameOverMenu.Instance.Stats.HighestMultiplier = _CurrentMultiplier;
-            }
-            if (_CurrentMultiplier > StatsMenu.Instance.Stats.HighestMultiplier)
-            {
-                StatsMenu.Instance.Stats.HighestMultiplier = _CurrentMultiplier;
-            }
-        }
-
-        private Color GetMultiplierColor(uint _CurrentMultiplier)
-        {
-            if (_CurrentMultiplier == 0)
+            if (this.CurrentMultiplier == 0)
             {
                 return Color.white;
             }
-            if (_CurrentMultiplier > this.multiplierColors.Count)
+            if (this.CurrentMultiplier > this.multiplierColors.Count)
             {
                 return this.multiplierColors[^1];
             }
-
-            return this.multiplierColors[(int)_CurrentMultiplier - 1];
+            
+            return this.multiplierColors[(int)this.CurrentMultiplier - 1];
         }
         #endregion
     }

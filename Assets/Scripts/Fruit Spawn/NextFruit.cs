@@ -3,8 +3,8 @@ using System.Collections;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
-using Watermelon_Game.ExtensionMethods;
-using Watermelon_Game.Fruit;
+using Watermelon_Game.Audio;
+using Watermelon_Game.Fruits;
 
 namespace Watermelon_Game.Fruit_Spawn
 {
@@ -21,15 +21,12 @@ namespace Watermelon_Game.Fruit_Spawn
         [SerializeField] private uint nextNextFruitTime = 300;
         [SerializeField] private AnimationClip nextNextFruitEnabledAnimation;
         [SerializeField] private AnimationClip nextNextFruitDisabledAnimation;
-        [SerializeField] private AudioClip nextNextFruitEnabledAudio;
-        [SerializeField] private AudioClip nextNextFruitDisabledAudio;
         #endregion
         
         #region Fields
         private FruitBehaviour nextFruitBehaviour;
         private FruitBehaviour nextNextFruitBehaviour;
         private TextMeshProUGUI timerText;
-        private AudioSource audioSource;
         private uint currentNextNextFruitTimer;
         #endregion
 
@@ -42,7 +39,18 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             Instance = this;
             this.timerText = this.timer.GetComponent<TextMeshProUGUI>();
-            this.audioSource = base.GetComponent<AudioSource>();
+        }
+
+        private void OnEnable()
+        {
+            GameController.OnResetGameStarted += this.ResetGame;
+            FruitController.OnEvolve += ShowNextNextFruit;
+        }
+
+        private void OnDisable()
+        {
+            GameController.OnResetGameStarted -= this.ResetGame;
+            FruitController.OnEvolve -= ShowNextNextFruit;
         }
 
         private void Start()
@@ -73,9 +81,9 @@ namespace Watermelon_Game.Fruit_Spawn
         }
 
 #if DEBUG || DEVELOPMENT_BUILD
-        public FruitBehaviour GetFruit(Transform _NewParent, Fruit.Fruit _Fruit)
+        public FruitBehaviour GetFruit(Transform _NewParent, Fruit _Fruit)
         {
-            var _fruitBehaviour = FruitBehaviour.SpawnFruit(_NewParent.transform.position, _Fruit, false);
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(_NewParent.transform.position, _Fruit);
             _fruitBehaviour.transform.SetParent(_NewParent, true);
             _fruitBehaviour.gameObject.SetActive(true);
             _fruitBehaviour.SetAnimation(false);
@@ -84,8 +92,17 @@ namespace Watermelon_Game.Fruit_Spawn
         }
 #endif
         
-        public void ShowNextNextFruit()
+        /// <summary>
+        /// Displays the NextNextFruit, when the given <see cref="Fruit"/> is a <see cref="Fruit.Watermelon"/> -> <see cref="FruitController.OnEvolve"/>
+        /// </summary>
+        /// <param name="_Fruit">The evolved <see cref="Fruit"/></param>
+        private void ShowNextNextFruit(Fruit _Fruit)
         {
+            if (_Fruit != Fruit.Watermelon)
+            {
+                return;
+            }
+            
             var _waitTime = new WaitForSeconds(1);
             
             if (this.currentNextNextFruitTimer <= 0)
@@ -119,7 +136,7 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             if (_Value)
             {
-                this.audioSource.Play(.1f, this.nextNextFruitEnabledAudio);
+                AudioPool.PlayClip(AudioClipName.NextNextFruitEnabled);
                 this.nextNextFruitBehaviour.SetAnimation(true);
                 this.nextNextFruit.clip = this.nextNextFruitEnabledAnimation;
                 this.nextNextFruit.Play();
@@ -128,7 +145,7 @@ namespace Watermelon_Game.Fruit_Spawn
             }
             else
             {
-                this.audioSource.Play(0, this.nextNextFruitDisabledAudio, .0375f);
+                AudioPool.PlayClip(AudioClipName.NextNextFruitDisabled);
                 this.nextNextFruit.clip = this.nextNextFruitDisabledAnimation;
                 this.nextNextFruit.Play();
                 this.timer.clip = this.nextNextFruitDisabledAnimation;
@@ -142,7 +159,10 @@ namespace Watermelon_Game.Fruit_Spawn
             this.timerText.text = _time.ToString("m\\:ss");
         }
 
-        public void GameOVer()
+        /// <summary>
+        /// <see cref="GameController.OnResetGameStarted"/>
+        /// </summary>
+        private void ResetGame()
         {
             this.currentNextNextFruitTimer = 0;
             this.SpawnFruits();

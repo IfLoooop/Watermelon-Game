@@ -14,30 +14,72 @@ using CompressionLevel = System.IO.Compression.CompressionLevel;
 
 namespace Watermelon_Game.Editor
 {
+    /// <summary>
+    /// Contains settings for builds that are started through the <see cref="Shortcuts"/> class
+    /// </summary>
     internal sealed class BuildSettings : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
         #region Constants
+        /// <summary>
+        /// Validity duration in seconds for entries in the <see cref="BUILD_INFO"/> file
+        /// </summary>
         private const uint BUILD_INFO_THRESHOLD_IN_SECONDS = 120;
-        private const string BUILD_INFO = "BUILDINFO";
+        /// <summary>
+        /// Name + extension for the BUILDINFO file
+        /// </summary>
+        private const string BUILD_INFO = "BUILDINFO.txt";
+        /// <summary>
+        /// Indicates a development build
+        /// </summary>
         private const string DEVELOPMENT_BUILD = "DEVELOPMENT_BUILD";
+        /// <summary>
+        /// Indicates a release build
+        /// </summary>
         private const string RELEASE_BUILD = "RELEASE_BUILD";
 
+        /// <summary>
+        /// For debug builds
+        /// </summary>
         private const string DEBUG = "Debug";
+        /// <summary>
+        /// For windows builds
+        /// </summary>
         private const string WINDOWS = "Windows";
+        /// <summary>
+        /// For linux builds
+        /// </summary>
         private const string LINUX = "Linux";
+        /// <summary>
+        /// For mac builds
+        /// </summary>
         private const string MAC = "Mac";
+        /// <summary>
+        /// For universal windows platform builds
+        /// </summary>
         private const string UWP = "UWP";
 
+        /// <summary>
+        /// After the build is done, folder names that contains this string will be deleted
+        /// </summary>
         private const string BURST_DEBUG_INFORMATION = "_BurstDebugInformation_DoNotShip";
+        /// <summary>
+        /// After the build is done, folder names that contains this string will be deleted
+        /// </summary>
         private const string BACKUP_THIS_FOLDER = "_BackUpThisFolder_ButDontShipItWithYourGame";
 
+        /// <summary>
+        /// 1 second delay
+        /// </summary>
         private const int TASK_DELAY = 1000;
         #endregion
         
         #region Properties
         public int callbackOrder { get; }
         
-        private static string BuildInfoPath { get; } = Path.Combine(Application.dataPath, $"{BUILD_INFO}.txt");
+        /// <summary>
+        /// Path to the <see cref="BUILD_INFO"/>
+        /// </summary>
+        private static string BuildInfoPath { get; } = Path.Combine(Application.dataPath, BUILD_INFO);
         #endregion
 
         #region Methods
@@ -75,6 +117,12 @@ namespace Watermelon_Game.Editor
 #endif
         }
         
+        /// <summary>
+        /// Gets the latest WSA version from "C:\Program Files (x86)\Windows Kits\10\SDKManifest.xml"
+        /// </summary>
+        /// <returns>The latest installed WSA version number</returns>
+        /// <exception cref="FormatException">When the SDKManifest.xml doesn't have the expected format</exception>
+        /// <exception cref="FileNotFoundException">When the SDKManifest.xml couldn't be found</exception>
         private static string GetLatestInstalledWSAVersion()
         {
             const string FOLDER_PATH = @"Windows Kits\10";
@@ -128,6 +176,14 @@ namespace Watermelon_Game.Editor
 #pragma warning restore CS0162
         }
 
+        /// <summary>
+        /// Starts a build
+        /// </summary>
+        /// <param name="_Report">The last <see cref="BuildReport"/></param>
+        /// <param name="_CurrentBuildTarget">The <see cref="BuildTarget"/> to start the build for</param>
+        /// <param name="_CurrentOS">The OS to start the build for</param>
+        /// <param name="_NextBuildTarget">The next <see cref="BuildTarget"/> (Otherwise null)</param>
+        /// <param name="_NextOS">The next OS (Otherwise empty)</param>
         private void Build(BuildReport _Report, BuildTarget _CurrentBuildTarget, string _CurrentOS, BuildTarget? _NextBuildTarget, string _NextOS)
         {
             if (_Report.summary.platform == _CurrentBuildTarget)
@@ -152,6 +208,11 @@ namespace Watermelon_Game.Editor
             }
         }
         
+        /// <summary>
+        /// Creates the necessary folders for the debug build
+        /// </summary>
+        /// <param name="_Directory">Root folder to create all necessary folders in</param>
+        /// <returns>File path where the .exe file will be at</returns>
         public static string CreateDebugFolder(string _Directory)
         {
             var _debug = Path.Combine(_Directory, DEBUG);
@@ -163,6 +224,13 @@ namespace Watermelon_Game.Editor
             return Path.Combine(_debug, GetApplicationName(true));
         }
         
+        /// <summary>
+        /// Creates all necessary folders (empties them if they already exist) to build the release build for the given <see cref="BuildTarget"/>
+        /// </summary>
+        /// <param name="_Directory">Root folder to create all necessary folders in</param>
+        /// <param name="_BuildTarget">The <see cref="BuildTarget"/> to create the folders for</param>
+        /// <returns>File path where the .exe file will be at</returns>
+        /// <exception cref="ArgumentException">When a <see cref="BuildTarget"/> is used that is not supported yet</exception>
         public static string CreatePlatformFolder(string _Directory, BuildTarget _BuildTarget)
         {
             var _baseDirectoryName = GetApplicationName(false);
@@ -184,6 +252,10 @@ namespace Watermelon_Game.Editor
             return Path.Combine(_path, _applicationName);
         }
         
+        /// <summary>
+        /// Deletes all files and folders under the given directory path (Includes sub files and folders)
+        /// </summary>
+        /// <param name="_Directory">The directory path to delete everything in</param>
         private static void DeleteAllFilesInDirectory(string _Directory)
         {
             foreach (var _path in Directory.GetFileSystemEntries(_Directory))
@@ -200,11 +272,23 @@ namespace Watermelon_Game.Editor
             }
         }
         
+        /// <summary>
+        /// Returns the <see cref="Application"/>.<see cref="Application.productName"/>
+        /// </summary>
+        /// <param name="_WithExtension">Includes the file extension if true</param>
+        /// <returns>The application name + optional file extension</returns>
         private static string GetApplicationName(bool _WithExtension)
         {
             return string.Concat(Application.productName, _WithExtension ? ".exe" : "");
         }
         
+        /// <summary>
+        /// Creates the path, the executable will be stored at
+        /// </summary>
+        /// <param name="_BuildsFolder">Root folder</param>
+        /// <param name="_AddDirectory">Folder after root</param>
+        /// <param name="_OnlyFolder">If false, adds <see cref="GetApplicationName"/></param>
+        /// <returns>The path, the executable will be stored at</returns>
         private static string CreateInstallPath(string _BuildsFolder, string _AddDirectory, bool _OnlyFolder)
         {
             var _baseDirectory = GetApplicationName(false);
@@ -213,6 +297,10 @@ namespace Watermelon_Game.Editor
             return Path.Combine(_BuildsFolder, _AddDirectory, _baseDirectory, _fileExtension);
         }
         
+        /// <summary>
+        /// Starts a <see cref="DEVELOPMENT_BUILD"/>
+        /// </summary>
+        /// <param name="_Path">Path to the executable</param>
         public static void BuildPlayer(string _Path)
         {
             SwitchPlatform(BuildTarget.StandaloneWindows64);
@@ -220,6 +308,11 @@ namespace Watermelon_Game.Editor
             SetScriptingDefineSymbols(DEVELOPMENT_BUILD);
         }
         
+        /// <summary>
+        /// Starts a <see cref="RELEASE_BUILD"/>
+        /// </summary>
+        /// <param name="_Path">Path to the executable</param>
+        /// <param name="_BuildTarget"><see cref="BuildTarget"/> to start the build for</param>
         public static void BuildPlayer(string _Path, BuildTarget _BuildTarget)
         {
             SwitchPlatform(_BuildTarget);
@@ -227,6 +320,10 @@ namespace Watermelon_Game.Editor
             SetScriptingDefineSymbols(RELEASE_BUILD);
         }
 
+        /// <summary>
+        /// Switches the active platform to the given <see cref="BuildTarget"/> 
+        /// </summary>
+        /// <param name="_BuildTarget">The <see cref="BuildTarget"/> to switch the platfrom to</param>
         private static void SwitchPlatform(BuildTarget _BuildTarget)
         {
             var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(_BuildTarget);
@@ -250,6 +347,13 @@ namespace Watermelon_Game.Editor
             }
         }
         
+        /// <summary>
+        /// Sets the contents of <see cref="BUILD_INFO"/> at <see cref="BuildInfoPath"/>
+        /// </summary>
+        /// <param name="_BuildInfo">Should be <see cref="DEVELOPMENT_BUILD"/> or <see cref="RELEASE_BUILD"/></param>
+        /// <param name="_BuildTarget"><see cref="BuildTarget"/></param>
+        /// <param name="_Path">Path to the executable</param>
+        /// <param name="_Reset">Empties the <see cref="BUILD_INFO"/> if true</param>
         private static void SetBuildInfo(string _BuildInfo, BuildTarget _BuildTarget, string _Path, bool _Reset = false)
         {
             var _text = string.Empty;
@@ -339,6 +443,9 @@ namespace Watermelon_Game.Editor
             PlayerSettings.SetScriptingDefineSymbols(_namedBuildTarget, _splitScriptingDefineSymbols.ToArray());
         }
         
+        /// <summary>
+        /// Starts a <see cref="DEVELOPMENT_BUILD"/>/<see cref="RELEASE_BUILD"/> after a recompile, if the <see cref="BUILD_INFO"/> is not empty and contains valid information
+        /// </summary>
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void OnScriptsRecompiled()
         {
@@ -357,6 +464,11 @@ namespace Watermelon_Game.Editor
             }
         }
         
+        /// <summary>
+        /// Deletes unnecessary folders and creates a .zip folder for every release build
+        /// </summary>
+        /// <param name="_InstallDirectory">The path, the executable is stored at</param>
+        /// <param name="_Platform">The platform of the build</param>
         private static void CleanUp(string _InstallDirectory, string _Platform)
         {
             foreach (var _path in Directory.GetFileSystemEntries(_InstallDirectory))

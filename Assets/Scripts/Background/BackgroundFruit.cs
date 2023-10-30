@@ -3,15 +3,27 @@ using Watermelon_Game.ExtensionMethods;
 
 namespace Watermelon_Game.Background
 {
+    /// <summary>
+    /// Logic for all fruits in the background
+    /// </summary>
+    [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D), typeof(CircleCollider2D))]
     internal sealed class BackgroundFruit : MonoBehaviour
     {
         #region Fields
+        /// <summary>
+        /// The initial size of this <see cref="Transform"/>
+        /// </summary>
         private Vector3 baseSize;
+        /// <summary>
+        /// The <see cref="SpriteRenderer"/> component of ths <see cref="GameObject"/>
+        /// </summary>
         private SpriteRenderer spriteRenderer;
 #pragma warning disable CS0109
+        /// <summary>
+        /// The <see cref="Rigidbody2D"/> component of this <see cref="GameObject"/>
+        /// </summary>
         private new Rigidbody2D rigidbody2D;
 #pragma warning restore CS0109
-        private CircleCollider2D circleCollider2D;
         #endregion
         
         #region Methods
@@ -20,23 +32,29 @@ namespace Watermelon_Game.Background
             this.baseSize = base.transform.localScale;
             this.spriteRenderer = base.GetComponent<SpriteRenderer>();
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
-            this.circleCollider2D = base.GetComponent<CircleCollider2D>();
             
-            this.spriteRenderer.color = this.spriteRenderer.color.WithAlpha(BackgroundController.Instance.SpriteAlphaValue);
+            this.spriteRenderer.color = this.spriteRenderer.color.WithAlpha(BackgroundFruitController.SpriteAlphaValue);
         }
 
         private void OnBecameInvisible()
         {
-            BackgroundController.Instance.ReturnToPool(this);
             base.transform.localScale = this.baseSize;
+            BackgroundFruitController.ReturnToPool(this);
         }
         
-        public void SetSprite((Sprite sprite, float sizeMultiplier) _Sprite)
+        /// <summary>
+        /// Sets the <see cref="Sprite"/> and <see cref="Transform.localScale"/> of this <see cref="GameObject"/>
+        /// </summary>
+        /// <param name="_FruitData"><see cref="Sprite"/> and size multiplier</param>
+        public void Set((Sprite sprite, float fruitPrefabSize) _FruitData)
         {
-            this.spriteRenderer.sprite = _Sprite.sprite;
-            base.transform.localScale *= _Sprite.sizeMultiplier * BackgroundController.Instance.SizeMultiplier;
+            this.spriteRenderer.sprite = _FruitData.sprite;
+            base.transform.localScale *= _FruitData.fruitPrefabSize * BackgroundFruitController.SizeMultiplier;
         }
 
+        /// <summary>
+        /// Shoots the fruit in a random direction, depending on <see cref="GetRandomPosition"/>
+        /// </summary>
         public void SetForce()
         {
             var _position = (Vector2)base.transform.position;
@@ -70,20 +88,25 @@ namespace Watermelon_Game.Background
             }
 
             var _direction = _targetPosition - _position;
-            var _bounds = this.circleCollider2D.bounds;
-            var _min = _bounds.min;
-            var _max = _bounds.max;
-            var _randomPosition = GetRandomPosition(_min.x, _max.x, _min.y, _max.y);
+            var _forcePosition = _targetPosition + BackgroundFruitController.RotationForce;
             
-            this.rigidbody2D.AddForceAtPosition(_direction * BackgroundController.Instance.ForceMultiplier, _randomPosition, BackgroundController.Instance.ForceMode);
+            this.rigidbody2D.AddForceAtPosition(_direction * BackgroundFruitController.ForceMultiplier, _forcePosition, BackgroundFruitController.ForceMode);
         }
-
+        
+        /// <summary>
+        /// Returns a random <see cref="Vector2"/> clamped to the given values
+        /// </summary>
+        /// <param name="_MinX">Minimum x value</param>
+        /// <param name="_MaxX">Maximum x value</param>
+        /// <param name="_MinY">Minimum y value</param>
+        /// <param name="_MaxY">Maximum y value</param>
+        /// <returns>A random <see cref="Vector2"/> clamped to the given values</returns>
         private static Vector2 GetRandomPosition(float _MinX, float _MaxX, float _MinY, float _MaxY)
         {
             var _x = Random.Range(_MinX, _MaxX);
             var _y = Random.Range(_MinY, _MaxY);
             var _randomPosition = new Vector2(_x, _y);
-
+            
             return _randomPosition;
         }
         #endregion

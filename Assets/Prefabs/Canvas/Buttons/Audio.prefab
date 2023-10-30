@@ -410,7 +410,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4207540615453670750}
         m_TargetAssemblyTypeName: Watermelon_Game.AudioController, WatermelonGame
-        m_MethodName: Mute
+        m_MethodName: FlipMuteState
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

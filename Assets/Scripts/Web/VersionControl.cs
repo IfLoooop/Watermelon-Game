@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using TMPro;
@@ -9,52 +10,88 @@ using Watermelon_Game.Steamworks.NET;
 
 namespace Watermelon_Game.Web
 {
-    public sealed class VersionControl : WebBase
+    /// <summary>
+    /// Contains methods to get the latest released version of the game
+    /// </summary>
+    [RequireComponent(typeof(Canvas), typeof(CanvasScaler), typeof(CanvasRenderer))]
+    [RequireComponent(typeof(TextMeshProUGUI))]
+    public sealed class VersionControl : MonoBehaviour
     {
 #if DEBUG || DEVELOPMENT_BUILD
         #region Inspector Fields
+        [Tooltip("Won't check for a new version if true (Development only)")]
         [SerializeField] private bool skipVersionCheck;
         #endregion
 #endif
         
         #region Constants
+        /// <summary>
+        /// Website where the latest version is stored
+        /// </summary>
         private const string REQUEST_URI = "https://raw.githubusercontent.com/MarkHerdt/Watermelon-Game/main/CurrentVersion";
+        /// <summary>
+        /// Key identifier for the version e.g. "CURRENT_VERSION = v1.0.0.0"
+        /// </summary>
         private const string VERSION_KEY = "CURRENT_VERSION";
+        /// <summary>
+        /// Prefix before the version number
+        /// </summary>
+        private const char VERSION_PREFIX = 'v';
         #endregion
 
         #region Fields
-        public static VersionControl Instance;
-        
+        /// <summary>
+        /// Singleton of <see cref="VersionControl"/>
+        /// </summary>
+        private static VersionControl instance;
+        /// <summary>
+        /// Displays the version number in game
+        /// </summary>
         private TextMeshProUGUI version;
+        /// <summary>
+        /// Is shown in game, when a new version is available <br/>
+        /// <i>Only if enabled on that platform</i>
+        /// </summary>
         private Image updatesAvailable;
         #endregion
         
         #region Methods
         private void Awake()
         {
-            Instance = this;
+            instance = this;
+            
             this.version = base.GetComponent<TextMeshProUGUI>();
             this.updatesAvailable = base.GetComponentInChildren<Image>();
-            this.CheckLatestVersion();
-        }
-        
-        private void Start()
-        {
-            this.version.text = string.Concat('v', Application.version);
-            this.updatesAvailable.gameObject.SetActive(false);
+            this.version.text = string.Concat(VERSION_PREFIX, Application.version);
+            
+            CheckIfNewVersionIsAvailable();
         }
 
-        public async void CheckLatestVersion()
+        private void OnEnable()
         {
-#if  WINDOWS_UWP && !UNITY_EDITOR
-            return;
-#endif
-            
+            GameController.OnGameStart += CheckIfNewVersionIsAvailable;
+        }
+
+        private void OnDisable()
+        {
+            GameController.OnGameStart -= CheckIfNewVersionIsAvailable;
+        }
+
+        /// <summary>
+        /// Checks if a newer version than <see cref="Application.version"/> is available and enables <see cref="updatesAvailable"/> <br/>
+        /// <i>Only enables <see cref="updatesAvailable"/> if not disabled on that platform</i>
+        /// </summary>
+        public static async void CheckIfNewVersionIsAvailable()
+        {
 #if DEBUG || DEVELOPMENT_BUILD
-            if (this.skipVersionCheck)
+            if (instance.skipVersionCheck)
             {
                 return;
             }
+#endif
+            
+#if  WINDOWS_UWP && !UNITY_EDITOR
+            return;
 #endif
             
 #if UNITY_EDITOR
@@ -73,36 +110,48 @@ namespace Watermelon_Game.Web
 #if UNITY_EDITOR
             skipSteamManager:
 #endif
+
+            await GetLatestVersion(_ =>
+            {
+                instance.updatesAvailable.enabled = true;
+            });
+        }
+        
+        /// <summary>
+        /// Tries to fet the latest released version from <see cref="REQUEST_URI"/>
+        /// </summary>
+        /// <returns>The version number or null, when the version couldn't be retrieved</returns>
+        [CanBeNull]
+        public static async Task<string> TryGetLatestVersion()
+        {
+            string _version = null;
+
+            await GetLatestVersion(_Line =>
+            {
+                _version = Download.GetValue(_Line);
+            });
             
-            await DownloadAsStreamAsync(REQUEST_URI, _Line =>
+            return _version;
+        }
+        
+        /// <summary>
+        /// Gets the latest released version from &lt;see cref="REQUEST_URI"/&gt;
+        /// </summary>
+        /// <param name="_Action"><see cref="Action"/> to perform on the line that contains the version number</param>
+        private static async Task GetLatestVersion(Action<string> _Action)
+        {
+            await Download.DownloadAsStreamAsync(REQUEST_URI, _Line =>
             {
                 if (_Line.Contains(VERSION_KEY))
                 {
-                    var _latestVersion = GetValue(_Line);
+                    var _latestVersion = Download.GetValue(_Line);
 
                     if (Application.version != _latestVersion)
                     {
-                        updatesAvailable.enabled = true;
-                        updatesAvailable.gameObject.SetActive(true);
+                        _Action(_Line);
                     }
                 } 
             });
-        }
-
-        [CanBeNull]
-        public static async Task<string> GetLatestVersion()
-        {
-            string _version = null;
-            
-            await DownloadAsStreamAsync(REQUEST_URI, _Line =>
-            {
-                if (_Line.Contains(VERSION_KEY))
-                {
-                    _version = GetValue(_Line);
-                }
-            });
-
-            return _version;
         }
         #endregion
     }

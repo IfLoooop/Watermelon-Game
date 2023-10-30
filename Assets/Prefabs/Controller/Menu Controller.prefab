@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8888942529342501445}
-  - component: {fileID: 7721585137889532341}
   - component: {fileID: 4686618415527089397}
   m_Layer: 0
   m_Name: Menu Controller
@@ -34,102 +33,6 @@ Transform:
   - {fileID: 3509230842424199033}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!82 &7721585137889532341
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5359634708388064671}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 0994c12e202f342459a4212e7287f7e8, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 0.05
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 0
-  MinDistance: 1
-  MaxDistance: 1.01
-  Pan2D: 0
-  rolloffMode: 2
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &4686618415527089397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,7 +48,6 @@ MonoBehaviour:
   statsMenu: {fileID: 7405376033566191119}
   gameOverMenu: {fileID: 2849147349170412905}
   exitMenu: {fileID: 2083327744664432451}
-  audioClipStartTime: 0
 --- !u!1001 &812366815462215761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1010,6 +912,14 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8059456538153881697, guid: cd2654b86924c9a48b07965af9d5e5ee, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7405376033566191119}
+    - target: {fileID: 8059456538153881697, guid: cd2654b86924c9a48b07965af9d5e5ee, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetScrollPosition
+      objectReference: {fileID: 0}
     - target: {fileID: 8381231593701664199, guid: cd2654b86924c9a48b07965af9d5e5ee, type: 3}
       propertyPath: m_text
       value: 'Play Time: '
@@ -1172,7 +1082,7 @@ MonoBehaviour:
     appleText: {fileID: 4176366209387048046}
     pearText: {fileID: 6224336130278251633}
     pineappleText: {fileID: 5312527722017731128}
-    honeMelonText: {fileID: 8233806203750694302}
+    honeymelonText: {fileID: 8233806203750694302}
     watermelonText: {fileID: 8728748035781724308}
     goldenFruitsText: {fileID: 117350598685873134}
     powerText: {fileID: 4866515460652771854}
@@ -1716,6 +1626,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Over Scroll View
       objectReference: {fileID: 0}
+    - target: {fileID: 8059456538153881697, guid: cd2654b86924c9a48b07965af9d5e5ee, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 2849147349170412905}
+    - target: {fileID: 8059456538153881697, guid: cd2654b86924c9a48b07965af9d5e5ee, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SetScrollPosition
+      objectReference: {fileID: 0}
     - target: {fileID: 8594092884866088655, guid: cd2654b86924c9a48b07965af9d5e5ee, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -1852,7 +1770,7 @@ MonoBehaviour:
     appleText: {fileID: 3680707996416837289}
     pearText: {fileID: 6665510108198696630}
     pineappleText: {fileID: 4852643217224505599}
-    honeMelonText: {fileID: 8693554240185931609}
+    honeymelonText: {fileID: 8693554240185931609}
     watermelonText: {fileID: 8341599497926779475}
     goldenFruitsText: {fileID: 810937259891226921}
     powerText: {fileID: 5289680743777140937}

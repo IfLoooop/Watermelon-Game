@@ -261,8 +261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ba321d5493ab554a892de8160b4f74c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fruitSprite: {fileID: 4946083969665849143}
-  faceSprite: {fileID: 1437083243244978668}
+  fruitSpriteRenderer: {fileID: 4946083969665849143}
+  faceSpriteRenderer: {fileID: 1437083243244978668}
   fruit: 0
   canBecomeGoldenFruit: 1
 --- !u!114 &5436252325451069782

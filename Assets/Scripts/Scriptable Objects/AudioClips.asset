@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa69a2a126715ed4494f347cfdd36a8f, type: 3}
+  m_Name: AudioClips
+  m_EditorClassIdentifier: 
+  bgm:
+    key: 0
+    audioClip: {fileID: 8300000, guid: 90eae78e8ce85a849b5b0ca11b2de641, type: 3}
+    volume: 0.01
+    startTime: 0
+  fruitDestroy:
+    key: 1
+    audioClip: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
+    volume: 0.05
+    startTime: 0
+  blockedRelease:
+    key: 2
+    audioClip: {fileID: 8300000, guid: 724131bc8a7f34041bb9f1701f0cb58d, type: 3}
+    volume: 0.0175
+    startTime: 0
+  releaseFruit:
+    key: 3
+    audioClip: {fileID: 8300000, guid: 19f89c6e740e7447f9e12a8310d3e973, type: 3}
+    volume: 0.01
+    startTime: 0
+  shoot:
+    key: 4
+    audioClip: {fileID: 8300000, guid: 7e26c9daf4c32483b9c2790e662d3f1b, type: 3}
+    volume: 0.05
+    startTime: 0.1
+  countdown:
+    key: 5
+    audioClip: {fileID: 8300000, guid: 6eaf482540063ea47a872b02bb267296, type: 3}
+    volume: 0.1
+    startTime: 0
+  godrayFlicker:
+    key: 6
+    audioClip: {fileID: 8300000, guid: d1a25cf202625944996ce54a686ad573, type: 3}
+    volume: 0.125
+    startTime: 0
+  godray:
+    key: 7
+    audioClip: {fileID: 8300000, guid: 79e6baad2fd414b82a6d49ce1568d2e5, type: 3}
+    volume: 0.0375
+    startTime: 0
+  menuPopup:
+    key: 8
+    audioClip: {fileID: 8300000, guid: 0994c12e202f342459a4212e7287f7e8, type: 3}
+    volume: 0.05
+    startTime: 0
+  nextNextFruitEnabled:
+    key: 9
+    audioClip: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
+    volume: 0.05
+    startTime: 0.1
+  nextNextFruitDisabled:
+    key: 10
+    audioClip: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
+    volume: 0.0375
+    startTime: 0
+  skillSelect:
+    key: 11
+    audioClip: {fileID: 8300000, guid: 32d4b1811dda14a6cb9e059ee8ad17d2, type: 3}
+    volume: 0.075
+    startTime: 0

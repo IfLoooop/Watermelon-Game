@@ -1,10 +1,11 @@
 using UnityEngine;
-using Watermelon_Game.Fruit;
-using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.ExtensionMethods;
 
 namespace Watermelon_Game.Skills
 {
+    /// <summary>
+    /// Contains data for a <see cref="Skills.Skill"/>
+    /// </summary>
     internal sealed class SkillData
     {
         #region Fields
@@ -12,11 +13,24 @@ namespace Watermelon_Game.Skills
         #endregion
 
         #region Fields
-        private readonly Skill skill;
+        /// <summary>
+        /// The currently needed points to activate this <see cref="Skill"/>
+        /// </summary>
         private uint currentPointsRequirement;
         #endregion
         
         #region Properties
+        /// <summary>
+        /// <see cref="Skill"/>
+        /// </summary>
+        public Skill Skill { get; }
+        /// <summary>
+        /// The <see cref="KeyCode"/> that needs to be pressed, to activate this <see cref="Skill"/>
+        /// </summary>
+        public KeyCode KeyToActivate { get; }
+        /// <summary>
+        /// <see cref="currentPointsRequirement"/>
+        /// </summary>
         public uint CurrentPointsRequirement
         {
             get => this.currentPointsRequirement;
@@ -26,18 +40,27 @@ namespace Watermelon_Game.Skills
                 this.SetSkillPointRequirementText();
             }
         }
+        /// <summary>
+        /// Whether this <see cref="Skill"/> can be activated or not
+        /// </summary>
         public bool CanBeActivated { get; private set; }
+        /// <summary>
+        /// Indicates if this <see cref="Skill"/> is currently active or not
+        /// </summary>
         public bool IsActive { get; private set; }
-        public KeyCode KeyToActivate { get; }
         #endregion
-
-        #region Constrcutor
-        public SkillData(SkillReferences _SkillReferences, KeyCode _KeyToActivate, Skill _Skill, uint _PointRequirement)
+        
+        #region Constrcutor>
+        /// <param name="_SkillReferences"><see cref="SkillReferences"/></param>
+        /// <param name="_KeyToActivate"><see cref="KeyToActivate"/></param>
+        /// <param name="_Skill"><see cref="Skill"/></param>
+        /// <param name="_PointsRequirement"><see cref="currentPointsRequirement"/></param>
+        public SkillData(SkillReferences _SkillReferences, KeyCode _KeyToActivate, Skill _Skill, uint _PointsRequirement)
         {
             this.skillReferences = _SkillReferences;
             this.KeyToActivate = _KeyToActivate;
-            this.skill = _Skill;
-            this.CurrentPointsRequirement = _PointRequirement;
+            this.Skill = _Skill;
+            this.CurrentPointsRequirement = _PointsRequirement;
         }
         #endregion
 
@@ -66,7 +89,7 @@ namespace Watermelon_Game.Skills
         {
             this.CanBeActivated = false;
             this.skillReferences.ButtonImage.gameObject.SetActive(false);
-            this.DeactivateSkill(true);
+            this.DeactivateSkill();
         }
 
         /// <summary>
@@ -76,24 +99,15 @@ namespace Watermelon_Game.Skills
         {
             this.IsActive = true;
             this.skillReferences.SkillIconImage.color = this.skillReferences.SkillIconImage.color.WithAlpha(1);
-            FruitSpawnerAim.Instance.AllowAimRotation(true);
-            FruitSpawner.SetActiveSkill(this.skill);
         }
 
         /// <summary>
         /// Deactivates the currently active skills
         /// </summary>
-        /// <param name="_OnlyVisuals">If false, also deactivates the skill on the <see cref="FruitBehaviour"/></param>
-        public void DeactivateSkill(bool _OnlyVisuals)
+        public void DeactivateSkill()
         {
             this.IsActive = false;
             this.skillReferences.SkillIconImage.color = this.skillReferences.SkillIconImage.color.WithAlpha(0.5f);
-            FruitSpawnerAim.Instance.AllowAimRotation(false);
-            
-            if (!_OnlyVisuals)
-            {
-                FruitSpawner.DeactivateSkill();   
-            }
         }
         #endregion
     }

@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Watermelon_Game.ExtensionMethods
 {
+    /// <summary>
+    /// Contains extension methods for <see cref="Color"/>
+    /// </summary>
     internal static class ColorExtensions
     {
         #region Methods
