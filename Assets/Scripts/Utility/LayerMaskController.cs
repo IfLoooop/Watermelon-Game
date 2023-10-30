@@ -36,13 +36,18 @@ namespace Watermelon_Game.Utility
         // ReSharper disable once InconsistentNaming
         public static LayerMask Container_Fruit_Mask { get; } = LayerMask.GetMask(CONTAINER_LAYER, FRUIT_LAYER);
         /// <summary>
-        /// Returns the layer <see cref="EVOLVING_FRUIT"/>
+        /// Returns the <see cref="LayerMask"/> of the <see cref="FruitBehaviour"/> and <see cref="EvolvingFruits"/>
         /// </summary>
-        public static int EvolvingFruitLayer { get; } = LayerMask.NameToLayer(EVOLVING_FRUIT);
+        // ReSharper disable once InconsistentNaming
+        public static LayerMask Fruit_EvolvingFruit_Mask { get; } = LayerMask.GetMask(FRUIT_LAYER, EVOLVING_FRUIT);
         /// <summary>
         /// Returns the <see cref="LayerMask"/> <see cref="FRUIT_LAYER"/>
         /// </summary>
         public static LayerMask FruitMask { get; } = LayerMask.GetMask(FRUIT_LAYER);
+        /// <summary>
+        /// Returns the layer <see cref="EVOLVING_FRUIT"/>
+        /// </summary>
+        public static int EvolvingFruitLayer { get; } = LayerMask.NameToLayer(EVOLVING_FRUIT);
         /// <summary>
         /// Returns the layer <see cref="FRUIT_LAYER"/>
         /// </summary>

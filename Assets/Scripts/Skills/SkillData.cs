@@ -109,6 +109,14 @@ namespace Watermelon_Game.Skills
             this.IsActive = false;
             this.skillReferences.SkillIconImage.color = this.skillReferences.SkillIconImage.color.WithAlpha(0.5f);
         }
+
+        /// <summary>
+        /// Plays the <see cref="SkillReferences.SkillPointsIncrease"/> <see cref="Animation"/>
+        /// </summary>
+        public void PlayAnimation()
+        {
+            this.skillReferences.SkillPointsIncrease.Play();
+        }
         #endregion
     }
 }

@@ -129,6 +129,7 @@ MonoBehaviour:
   skillIconImage: {fileID: 639621136860684187}
   pointCost: {fileID: 1880534764725785551}
   buttonImage: {fileID: 8109048698546906034}
+  skillPointsIncrease: {fileID: 1844798240751796592}
 --- !u!1 &4560952905050447276
 GameObject:
   m_ObjectHideFlags: 0
@@ -140,6 +141,7 @@ GameObject:
   - component: {fileID: 7688592200564829433}
   - component: {fileID: 7221436945392219335}
   - component: {fileID: 1880534764725785551}
+  - component: {fileID: 1844798240751796592}
   m_Layer: 0
   m_Name: Point Cost
   m_TagString: Untagged
@@ -263,6 +265,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!111 &1844798240751796592
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4560952905050447276}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 52e49e722b0504a4890915c7a2012d36, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 52e49e722b0504a4890915c7a2012d36, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1001 &65561837145828130
 PrefabInstance:
   m_ObjectHideFlags: 0

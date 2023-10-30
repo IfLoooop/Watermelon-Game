@@ -106,8 +106,6 @@ MonoBehaviour:
   nextNextFruitTime: 300
   nextNextFruitEnabledAnimation: {fileID: 7400000, guid: 9dfe23ec39312c24a90bc753830cec64, type: 2}
   nextNextFruitDisabledAnimation: {fileID: 7400000, guid: 591ad58157a06cf419807fc33eadfea0, type: 2}
-  nextNextFruitEnabledAudio: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
-  nextNextFruitDisabledAudio: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
 --- !u!1 &5196309593838423898
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,6 +374,10 @@ PrefabInstance:
       propertyPath: m_text
       value: NEXT FRUIT
       objectReference: {fileID: 0}
+    - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
+      propertyPath: m_fontSize
+      value: 1.75
+      objectReference: {fileID: 0}
     - target: {fileID: 8491876195868727799, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -477,6 +479,10 @@ PrefabInstance:
     - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_text
       value: 5:00
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
+      propertyPath: m_fontSize
+      value: 1.75
       objectReference: {fileID: 0}
     - target: {fileID: 8491876195868727799, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_Pivot.x

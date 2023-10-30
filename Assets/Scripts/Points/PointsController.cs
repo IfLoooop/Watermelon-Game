@@ -103,11 +103,12 @@ namespace Watermelon_Game.Points
         /// <b>Only for Development!</b>
         /// </summary>
         /// <param name="_Fruit">The <see cref="Fruit"/> to get the points for</param>
-        public static void AddPoints_DEVELOPMENT(Fruit _Fruit)
+        /// <param name="_Multiplier">Multiplier for the added points</param>
+        public static void AddPoints_DEVELOPMENT(Fruit _Fruit, float _Multiplier)
         {
             instance.multiplier.StartMultiplier();
 
-            var _points = (int)((int)_Fruit + instance.multiplier.CurrentMultiplier);
+            var _points = (int)(((int)_Fruit + instance.multiplier.CurrentMultiplier) * _Multiplier);
             instance.SetPoints(_points);
         }
         
@@ -116,9 +117,10 @@ namespace Watermelon_Game.Points
         /// <b>Only for Development!</b>
         /// </summary>
         /// <param name="_PointsToSubtract">The points to subtract from <see cref="currentPoints"/></param>
-        public static void SubtractPoints_DEVELOPMENT(uint _PointsToSubtract) 
+        /// <param name="_Multiplier">Multiplier for the subtracted points</param>
+        public static void SubtractPoints_DEVELOPMENT(uint _PointsToSubtract, float _Multiplier)
         {
-            instance.SetPoints(-(int)_PointsToSubtract);
+            instance.SetPoints(-(int)(_PointsToSubtract * _Multiplier));
         }
 #endif
         /// <summary>

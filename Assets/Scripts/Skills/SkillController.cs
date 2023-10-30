@@ -337,8 +337,12 @@ namespace Watermelon_Game.Skills
         private void SkillUsed(Skill? _Skill)
         {
             var _skill = skillMap[_Skill!.Value];
+            
             OnSkillUsed?.Invoke(_skill.CurrentPointsRequirement);
+            
+            _skill.PlayAnimation();
             _skill.CurrentPointsRequirement += (uint)(_skill.CurrentPointsRequirement * skillPointIncrease);
+            
             this.DeactivateActiveSkills();
         }
         

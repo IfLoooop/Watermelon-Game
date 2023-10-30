@@ -227,11 +227,12 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private void ReleaseFruit()
         {
-            var _releaseCooldown = Time.time - this.releaseCooldown < this.lastRelease;
-            var _fruitInTrigger = this.fruitTrigger.IsTouchingLayers(LayerMaskController.FruitMask);
+            var _time = Time.time - this.releaseCooldown;
+            var _releaseCooldown = _time < this.lastRelease;
+            var _fruitInTrigger = this.fruitTrigger.IsTouchingLayers(LayerMaskController.Fruit_EvolvingFruit_Mask);
             if (_releaseCooldown || _fruitInTrigger)
             {
-                if (!AudioPool.IsAssignedClipPlaying(this.blockedReleaseIndex))
+                if (!AudioPool.IsAssignedClipPlaying(this.blockedReleaseIndex) && _time > this.lastRelease)
                 {
                     AudioPool.PlayAssignedClip(this.blockedReleaseIndex);
                 }
@@ -241,6 +242,7 @@ namespace Watermelon_Game.Fruit_Spawn
 #if UNITY_EDITOR
             if (this.noReleaseBlock) goto skipCooldown;
 #endif
+            
             this.BlockRelease(true);
             
 #if UNITY_EDITOR

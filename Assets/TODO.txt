@@ -1,2 +1,1 @@
--BuildSettings.cs needs descriptions
 -Multiplier.cs "multiplierWaitTime" and "multiplierWaitForSeconds" need descriptions

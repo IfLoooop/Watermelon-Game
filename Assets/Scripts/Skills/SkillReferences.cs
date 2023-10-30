@@ -16,6 +16,8 @@ namespace Watermelon_Game.Skills
         [SerializeField] private TextMeshProUGUI pointCost;
         [Tooltip("Reference to an Image component, that displays the button that needs to be pressed, to activate the skill")]
         [SerializeField] private Image buttonImage;
+        [Tooltip("Reference to the animation that plays when the skill points requirements increase")]
+        [SerializeField] private Animation skillPointsIncrease;
         #endregion
 
         #region Properties
@@ -31,6 +33,11 @@ namespace Watermelon_Game.Skills
         /// <see cref="buttonImage"/>
         /// </summary>
         public Image ButtonImage => this.buttonImage;
+        /// <summary>
+        /// <see cref="skillPointsIncrease"/>
+        /// </summary>
+        public Animation SkillPointsIncrease => this.skillPointsIncrease;
+
         #endregion
     }
 }

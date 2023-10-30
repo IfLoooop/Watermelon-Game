@@ -319,13 +319,13 @@ namespace Watermelon_Game.Development
                 var _maxFruit = Enum.GetValues(typeof(Fruit)).Length - 1;
                 var _randomFruit = (Fruit)Random.Range(0, _maxFruit);
                 
-                PointsController.AddPoints_DEVELOPMENT(_randomFruit);
+                PointsController.AddPoints_DEVELOPMENT(_randomFruit, 10);
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
                 var _randomNumber = (uint)Random.Range(1, 10);
                 
-                PointsController.SubtractPoints_DEVELOPMENT(_randomNumber);
+                PointsController.SubtractPoints_DEVELOPMENT(_randomNumber, 1);
             }
         }
         
