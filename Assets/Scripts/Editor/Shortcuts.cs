@@ -52,7 +52,7 @@ namespace Watermelon_Game.Editor
             
                 if (!string.IsNullOrWhiteSpace(_path))
                 {
-                    const BuildTarget BUILD_TARGET = BuildTarget.WSAPlayer;
+                    const BuildTarget BUILD_TARGET = BuildTarget.StandaloneWindows64;
                     
                     _path = BuildSettings.CreatePlatformFolder(_path, BUILD_TARGET);
                     
