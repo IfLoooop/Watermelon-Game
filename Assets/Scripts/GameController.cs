@@ -115,7 +115,10 @@ namespace Watermelon_Game
             // ReSharper disable once InconsistentNaming
             for (var i = _fruits.Count - 1; i >= 0; i--)
             {
-                _fruits[i].DestroyFruit();
+                if (_fruits[i] != null) // TODO: Null check shouldn't be necessary, but fruit is sometimes null for some reason
+                {
+                    _fruits[i].DestroyFruit();   
+                }
                 
                 yield return _waitTime;
             }

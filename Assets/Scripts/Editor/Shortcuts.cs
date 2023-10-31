@@ -28,7 +28,7 @@ namespace Watermelon_Game.Editor
             if (!string.IsNullOrWhiteSpace(_path))
             {
                 _path = BuildSettings.CreateDebugFolder(_path);
-
+                Debug.Log("Starting <color=magenta>Debug</color> Build");
                 BuildSettings.BuildPlayer(_path);
             }
         }
@@ -42,22 +42,29 @@ namespace Watermelon_Game.Editor
         {
             var _version = await VersionControl.TryGetLatestVersion()!;
             
-            if (_version == Application.version)
+            if (!string.IsNullOrWhiteSpace(_version))
             {
-                Debug.LogWarning("<color=orange>Version number has not changed</color>");
+                if (_version == Application.version)
+                {
+                    Debug.LogWarning("<color=orange>Version number has not changed</color>");
+                }
+                else
+                {
+                    var _path = EditorUtility.SaveFolderPanel("Release Build", DEFAULT_BUILD_FOLDER, "");
+                
+                    if (!string.IsNullOrWhiteSpace(_path))
+                    {
+                        const BuildTarget BUILD_TARGET = BuildTarget.StandaloneWindows64;
+                        
+                        _path = BuildSettings.CreatePlatformFolder(_path, BUILD_TARGET);
+                        Debug.Log("Starting <color=yellow>Release</color> Build");
+                        BuildSettings.BuildPlayer(_path, BUILD_TARGET); 
+                    }
+                }
             }
             else
             {
-                var _path = EditorUtility.SaveFolderPanel("Release Build", DEFAULT_BUILD_FOLDER, "");
-            
-                if (!string.IsNullOrWhiteSpace(_path))
-                {
-                    const BuildTarget BUILD_TARGET = BuildTarget.StandaloneWindows64;
-                    
-                    _path = BuildSettings.CreatePlatformFolder(_path, BUILD_TARGET);
-                    
-                    BuildSettings.BuildPlayer(_path, BUILD_TARGET); 
-                }
+                Debug.LogError("Downloaded version is null");
             }
         }
         #endregion

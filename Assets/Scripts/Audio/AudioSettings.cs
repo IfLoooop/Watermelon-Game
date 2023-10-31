@@ -28,7 +28,11 @@ namespace Watermelon_Game.Audio
         #endregion
         
         #region Fields
-
+        /// <summary>
+        /// Singleton of <see cref="AudioSettings"/>
+        /// </summary>
+        private static AudioSettings instance;
+        
         /// <summary>
         /// Index of the <see cref="AudioWrapper"/> in <see cref="AudioPool.assignedAudioWrappers"/>, for the <see cref="AudioClipName.Bgm"/> <see cref="AudioClip"/>
         /// </summary>
@@ -40,6 +44,12 @@ namespace Watermelon_Game.Audio
         #endregion
         
         #region Methods
+
+        private void Awake()
+        {
+            instance = this;
+        }
+
         private void Start()
         {
             bgmIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.Bgm, base.transform, true);
@@ -55,15 +65,18 @@ namespace Watermelon_Game.Audio
         /// <summary>
         /// Flips the current state of <see cref="isMuted"/>
         /// </summary>
-        /// <param name="_IsSetFromButton">Must be true, when the method is called by clicking on the button</param>
-        public void FlipMuteState(bool _IsSetFromButton)
+        public static void FlipMuteState() // bool _IsSetFromButton = true
         {
-            if (_IsSetFromButton)
-            {
-                this.isMuted = !this.isMuted;
-            }
+            instance.isMuted = !instance.isMuted;
+            instance.SetBGM();
+        }
 
-            this.bgmDisabledIcon.SetActive(this.isMuted);  
+        /// <summary>
+        /// Enables/disables the BGM, depending on the value of <see cref="isMuted"/>
+        /// </summary>
+        private void SetBGM()
+        {
+            this.bgmDisabledIcon.SetActive(this.isMuted);
             
             if (this.isMuted)
             {
@@ -75,6 +88,26 @@ namespace Watermelon_Game.Audio
             }
         }
 
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// FLips the BGM on and off, without enabling <see cref="bgmDisabledIcon"/> <br/>
+        /// <b>Development only!</b>
+        /// </summary>
+        public static void FlipBGM_DEVELOPMENT()
+        {
+            instance.isMuted = !instance.isMuted;
+            
+            if (instance.isMuted)
+            {
+                AudioPool.PauseAssignedClip(instance.bgmIndex);
+            }
+            else
+            {
+                AudioPool.PlayAssignedClip(instance.bgmIndex);
+            }
+        }
+#endif
+        
         /// <summary>
         /// Sets the volume of the global <see cref="AudioListener"/> to the <see cref="Slider.value"/> of the <see cref="slider"/>
         /// </summary>
@@ -99,9 +132,9 @@ namespace Watermelon_Game.Audio
         {
             var _bgm = PlayerPrefs.GetString(BGM);
             var _volume = PlayerPrefs.GetFloat(VOLUME);
-
+            
             this.isMuted = bool.Parse(_bgm);
-            this.FlipMuteState(false);
+            this.SetBGM();
             this.slider.value = _volume;
         }
         #endregion

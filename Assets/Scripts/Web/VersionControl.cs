@@ -110,10 +110,12 @@ namespace Watermelon_Game.Web
 #if UNITY_EDITOR
             skipSteamManager:
 #endif
-
-            await GetLatestVersion(_ =>
+            await GetLatestVersion(_LatestVersion =>
             {
-                instance.updatesAvailable.enabled = true;
+                if (Application.version != _LatestVersion)
+                {
+                    instance.updatesAvailable.enabled = true;       
+                }
             });
         }
         
@@ -126,9 +128,9 @@ namespace Watermelon_Game.Web
         {
             string _version = null;
 
-            await GetLatestVersion(_Line =>
+            await GetLatestVersion(_LatestVersion =>
             {
-                _version = Download.GetValue(_Line);
+                _version = _LatestVersion;
             });
             
             return _version;
@@ -145,11 +147,8 @@ namespace Watermelon_Game.Web
                 if (_Line.Contains(VERSION_KEY))
                 {
                     var _latestVersion = Download.GetValue(_Line);
-
-                    if (Application.version != _latestVersion)
-                    {
-                        _Action(_Line);
-                    }
+                    
+                    _Action(_latestVersion);
                 } 
             });
         }

@@ -1,1 +1,19 @@
+-Check "BuildSettings.cs", sometimes things like "Application.version"  are not updated immediately (in build), is resolved after a build through the normal "Build Settings"-Menu 
+-Infobox which buttons are used in "DevelopmentTools.cs"
+-Tags for multiple languages, and add "Fruit/s tag"
+-Maybe add localized Tags to youtube
+-Test game with Application.TargetFramerate
 -Multiplier.cs "multiplierWaitTime" and "multiplierWaitForSeconds" need descriptions
+
+
+https://keymailer.co/de/creators/
+
+https://www.rockpapershotgun.com/
+
+https://www.greenmangaming.com/
+https://de.humblebundle.com/store
+https://www.gog.com/de
+https://www.fanatical.com/de/
+https://www.nuuvem.com/de-en/
+https://www.gamersgate.com/de-de/
+https://www.indiegala.com/

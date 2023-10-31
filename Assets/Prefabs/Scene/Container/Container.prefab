@@ -414,7 +414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1770544845149395946, guid: 5ae307a3336d6564eaec2f626610c451, type: 3}
       propertyPath: m_TagString
-      value: Wall Bottom
+      value: Untagged
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1418820104949885129, guid: 5ae307a3336d6564eaec2f626610c451, type: 3}

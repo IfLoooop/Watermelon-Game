@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -16,10 +17,10 @@ namespace Watermelon_Game.Container
     internal sealed class MaxHeight : MonoBehaviour
     {
         #region Inspector Fields
-#if UNITY_EDITOR
+#if DEBUG || DEVELOPMENT_BUILD
         [Header("Development")]
         [Tooltip("Disables the loosing condition (Editor only)")]
-        [SerializeField] private bool disableCountDown;
+        [ShowInInspector] public static bool DisableCountDown;
 #endif
         [Header("References")]
         [Tooltip("Plays every time the countdown changes")]
@@ -135,8 +136,8 @@ namespace Watermelon_Game.Container
         /// </summary>
         public void CountDown()
         {
-#if UNITY_EDITOR
-            if (this.disableCountDown)
+#if DEBUG || DEVELOPMENT_BUILD
+            if (DisableCountDown)
             {
                 return;
             }

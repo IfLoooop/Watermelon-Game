@@ -22,9 +22,16 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private FruitSettings fruitSettings;
         [Tooltip("Reference to a Fruits asset")]
         [SerializeField] private FruitPrefabSettings fruitPrefabSettings;
+        [Tooltip("Contains all released fruits in the scene")]
+        [SerializeField] private GameObject fruitContainer;
         #endregion
         
         #region Fields
+        /// <summary>
+        /// Singleton of <see cref="FruitController"/>
+        /// </summary>
+        private static FruitController instance;
+        
         /// <summary>
         /// Contains all instantiated <see cref="Fruit"/>s in the scene <br/>
         /// <b>Key:</b> Hashcode of the <see cref="Fruit"/> <see cref="GameObject"/> <br/>
@@ -43,9 +50,13 @@ namespace Watermelon_Game.Fruits
 
         #region Properties
         /// <summary>
+        /// <see cref="Transform"/> component of the <see cref="fruitContainer"/>
+        /// </summary>
+        public static Transform FruitContainerTransform => instance.fruitContainer.transform;
+        /// <summary>
         /// <see cref="fruits"/> <br/>
         /// <i>Only contains the <see cref="FruitBehaviour"/></i>
-        /// </summary>
+        /// </summary> // TODO: Maybe change "ReadOnlyCollection" see -> "GameController.ResetGame()"
         public static ReadOnlyCollection<FruitBehaviour> Fruits => new(fruits.Values.ToList());
         /// <summary>
         /// <see cref="Dictionary{TKey,TValue}.Count"/> of <see cref="fruits"/>
@@ -83,6 +94,7 @@ namespace Watermelon_Game.Fruits
         
         private void Awake()
         {
+            instance = this;
             this.fruitPrefabSettings.Init();
             this.fruitSettings.Init();
             this.InitializeSpawnWeights();
@@ -108,6 +120,7 @@ namespace Watermelon_Game.Fruits
             FruitBehaviour.OnGoldenFruitCollision += this.GoldenFruitCollision;
             EvolvingFruitTrigger.OnCanEvolve += this.CanEvolve;
             GameController.OnResetGameStarted += this.DisableFruitEvolving;
+            GameController.OnResetGameFinished += this.ClearFruits;
         }
         
         private void OnDisable()
@@ -118,6 +131,7 @@ namespace Watermelon_Game.Fruits
             FruitBehaviour.OnGoldenFruitCollision -= this.GoldenFruitCollision;
             EvolvingFruitTrigger.OnCanEvolve -= this.CanEvolve;
             GameController.OnResetGameStarted -= this.DisableFruitEvolving;
+            GameController.OnResetGameFinished += this.ClearFruits;
         }
 
         /// <summary>
@@ -302,6 +316,33 @@ namespace Watermelon_Game.Fruits
             }
         }
 
+        /// <summary>
+        /// Clears <see cref="fruits"/> -> <see cref="GameController.OnResetGameFinished"/> <br/>
+        /// <i>
+        /// Also destroys all remaining child objects (fruits) of <see cref="fruitContainer"/> <br/>
+        /// Shouldn't be needed, just a failsafe
+        /// </i>
+        /// </summary>
+        private void ClearFruits()
+        {
+            fruits.Clear();
+
+            var _fruitContainerTransform = this.fruitContainer.transform;
+            var _childCount = _fruitContainerTransform.childCount;
+
+            if (_childCount > 0)
+            {
+                Debug.LogError($"{fruitContainer.name} has still {_childCount} children, destroying now.");
+            }
+            
+            // ReSharper disable once InconsistentNaming
+            for (var i = _childCount - 1; i >= 0; i--)
+            {
+                var _fruit = _fruitContainerTransform.GetChild(i);
+                Destroy(_fruit.gameObject);
+            }
+        }
+        
 #if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
         /// <see cref="AddFruit"/> <br/>

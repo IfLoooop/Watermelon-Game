@@ -209,11 +209,13 @@ namespace Watermelon_Game.Fruits
         
 #if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
-        /// Force upgrades this <see cref="FruitBehaviour"/> to a upgraded golden fruit
+        /// Force upgrades this <see cref="FruitBehaviour"/> to a upgraded golden fruit <br/>
+        /// <b>Development only!</b>
         /// </summary>
-        public void GoldenFruit_Debug()
+        /// <param name="_ForceGolden">Forces this <see cref="FruitBehaviour"/> to become a golden fruit instead of an upgraded golden fruit</param>
+        public void ForceGoldenFruit_DEVELOPMENT(bool _ForceGolden = false)
         {
-            this.GoldenFruit(true);
+            this.GoldenFruit(true, _ForceGolden);
             OnUpgradeToGoldenFruit?.Invoke();
         }
 #endif
@@ -222,7 +224,11 @@ namespace Watermelon_Game.Fruits
         /// Decides whether a fruit can become a golden fruit or upgraded golden fruit
         /// </summary>
         /// <param name="_ForceEnable">Force upgrade if true</param>
-        private void GoldenFruit(bool _ForceEnable = false)
+        /// <param name="_ForceGolden">
+        /// Forces this <see cref="FruitBehaviour"/> to become a golden fruit instead of an upgraded golden fruit <br/>
+        /// <b>Works only in Development!</b>
+        /// </param>
+        private void GoldenFruit(bool _ForceEnable = false, bool _ForceGolden = false)
         {
             if (!_ForceEnable)
             {
@@ -250,7 +256,14 @@ namespace Watermelon_Game.Fruits
             }
             
             this.IsGoldenFruit = true;
+#if DEBUG || DEVELOPMENT_BUILD
+            if (_ForceGolden) 
+                goto skipUpgraded;
+#endif
             this.isUpgradedGoldenFruit = _ForceEnable;
+#if DEBUG || DEVELOPMENT_BUILD
+            skipUpgraded:;
+#endif
             Instantiate(FruitPrefabSettings.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
             OnGoldenFruitSpawn?.Invoke();
         }
@@ -394,7 +407,7 @@ namespace Watermelon_Game.Fruits
         /// </param>
         public void Release(Vector2? _AimRotation = null)
         {
-            base.transform.SetParent(null, true);
+            base.transform.SetParent(FruitController.FruitContainerTransform, true);
             this.HasBeenReleased = true;
             this.DecreaseSortingOrder();
             this.InitializeRigidBody();
@@ -698,12 +711,25 @@ namespace Watermelon_Game.Fruits
         public static FruitBehaviour SpawnFruit(Vector2 _Position, Fruit _Fruit, Quaternion? _Rotation = null)
         {
             var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == _Fruit);
-            var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, _Rotation ?? Quaternion.identity).GetComponent<FruitBehaviour>();
+            var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, _Rotation ?? Quaternion.identity, FruitController.FruitContainerTransform).GetComponent<FruitBehaviour>();
             
             _fruitBehavior.HasBeenEvolved = true;
 
             return _fruitBehavior;
         }
+
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// If true, sets <see cref="rigidbody2D"/>.<see cref="Rigidbody2D.constraints"/> to <see cref="RigidbodyConstraints2D.FreezeAll"/> <br/>
+        /// if false, sets <see cref="rigidbody2D"/>.<see cref="Rigidbody2D.constraints"/> to <see cref="RigidbodyConstraints2D.None"/> <br/>
+        /// <b>Only for Development!</b>
+        /// </summary>
+        /// <param name="_Freeze">Whether this <see cref="FruitBehaviour"/> should be frozen or not</param>
+        public void Freeze_DEVELOPMENT(bool _Freeze)
+        {
+            this.rigidbody2D.constraints = _Freeze ? RigidbodyConstraints2D.FreezeAll : RigidbodyConstraints2D.None;
+        }
+#endif
         #endregion
     }
 }

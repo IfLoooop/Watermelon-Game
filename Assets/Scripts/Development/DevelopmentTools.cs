@@ -4,11 +4,13 @@ using System.Linq;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using Watermelon_Game.Container;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Points;
 using Watermelon_Game.Utility;
+using AudioSettings = Watermelon_Game.Audio.AudioSettings;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Development
@@ -34,13 +36,9 @@ namespace Watermelon_Game.Development
         private new Camera camera;
 #pragma warning restore CS0109
         /// <summary>
-        /// <see cref="AudioSource"/> <see cref="Component"/> on <see cref="camera"/>
+        /// Used to display information for certain actions
         /// </summary>
-        private AudioSource audioSource;
-        /// <summary>
-        /// <see cref="TextMeshProUGUI"/>
-        /// </summary>
-        private TextMeshProUGUI savedText;
+        private TextMeshProUGUI infoText;
         
         /// <summary>
         /// The currently selected <see cref="FruitBehaviour"/>
@@ -52,6 +50,10 @@ namespace Watermelon_Game.Development
         /// The key that was last pressed
         /// </summary>
         private KeyCode? lastPressedKey;
+        /// <summary>
+        /// Indicates whether the fruits on the map are currently frozen or not
+        /// </summary>
+        private bool fruitsAreFrozen;
         #endregion
 #endif
         
@@ -68,8 +70,7 @@ namespace Watermelon_Game.Development
 
 #if DEBUG || DEVELOPMENT_BUILD
             this.camera = Camera.main;
-            this.audioSource = this.camera!.gameObject.GetComponent<AudioSource>();
-            this.savedText = base.GetComponentInChildren<TextMeshProUGUI>();
+            this.infoText = base.GetComponentInChildren<TextMeshProUGUI>();
 #endif
         }
 
@@ -77,6 +78,7 @@ namespace Watermelon_Game.Development
         private void Update()
         {
             this.ReplaceWithGrape();
+            this.ForceGoldenFruit();
             this.SpawnFruit(KeyCode.F1, Fruit.Grape);
             this.SpawnFruit(KeyCode.F2, Fruit.Cherry);
             this.SpawnFruit(KeyCode.F3, Fruit.Strawberry);
@@ -89,8 +91,11 @@ namespace Watermelon_Game.Development
             this.SpawnFruit(KeyCode.F10, Fruit.Watermelon);
             this.FollowMouse();
             this.ReleaseFruit();
+            this.SetReleaseBlock();
+            this.DisableCountdown();
             this.SetCurrentFruit();
             this.DeleteFruit();
+            this.FreezeFruitPositions();
             this.SaveFruitsOnMap();
             this.LoadFruit();
             this.SpawnUpgradedFruit();
@@ -105,7 +110,18 @@ namespace Watermelon_Game.Development
         {
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                FruitSpawner.ResetFruitSpawner_DEVELOPMENT(Fruit.Grape);
+                FruitSpawner.ForceFruit_DEVELOPMENT(Fruit.Grape);
+            }
+        }
+
+        /// <summary>
+        /// Forces the <see cref="FruitSpawner.fruitBehaviour"/> that is currently held by the <see cref="FruitSpawner"/> to become a golden fruit
+        /// </summary>
+        private void ForceGoldenFruit()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+            {
+                FruitSpawner.ForceGoldenFruit_DEVELOPMENT();
             }
         }
         
@@ -167,6 +183,32 @@ namespace Watermelon_Game.Development
                     this.currentFruit.Release();
                     this.currentFruit = null;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Enables/disables <see cref="FruitSpawner.NoReleaseBlock"/>
+        /// </summary>
+        private void SetReleaseBlock()
+        {
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                FruitSpawner.NoReleaseBlock = !FruitSpawner.NoReleaseBlock;
+
+                ShowInfoText(FruitSpawner.NoReleaseBlock ? "Release Unblocked" : "Release Blocked");
+            }
+        }
+
+        /// <summary>
+        /// Disables/enables <see cref="MaxHeight.DisableCountDown"/>
+        /// </summary>
+        private void DisableCountdown()
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                MaxHeight.DisableCountDown = !MaxHeight.DisableCountDown;
+                
+                ShowInfoText(MaxHeight.DisableCountDown ? "Countdown Disabled" : "Countdown Enabled");
             }
         }
         
@@ -234,6 +276,23 @@ namespace Watermelon_Game.Development
 
             return _raycastHit2D;
         }
+
+        /// <summary>
+        /// Freezes/unfreezes the position of all fruits on the map
+        /// </summary>
+        private void FreezeFruitPositions()
+        {
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                this.fruitsAreFrozen = !this.fruitsAreFrozen;
+                this.ShowInfoText(this.fruitsAreFrozen ? "FROZEN" : "UNFROZEN");
+
+                foreach (var _fruitBehaviour in FruitController.Fruits)
+                {
+                    _fruitBehaviour.Freeze_DEVELOPMENT(this.fruitsAreFrozen);
+                }
+            }
+        }
         
         /// <summary>
         /// Saves the position and rotation of all <see cref="Fruit"/>s on the map
@@ -250,19 +309,8 @@ namespace Watermelon_Game.Development
                     this.savedFruits.Add(_savedFruit);
                 }
                 
-                this.savedText.enabled = true;
-                Invoke(nameof(DisableSavedText), 1);
-                
-                Debug.Log($"{this.savedFruits.Count} Fruits saved.");
+                this.ShowInfoText("SAVED");
             }
-        }
-
-        /// <summary>
-        /// Disables <see cref="savedText"/>
-        /// </summary>
-        private void DisableSavedText()
-        {
-            this.savedText.enabled = false;
         }
         
         /// <summary>
@@ -286,12 +334,15 @@ namespace Watermelon_Game.Development
                     {
                         this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation, false).Release();
                     }
-                    
+#if UNITY_EDITOR
                     Debug.Log($"{this.savedFruits.Count} Fruits spawned.");
+#endif
                 }
                 else
                 {
+#if UNITY_EDITOR
                     Debug.LogWarning("No fruits are currently saved.");
+#endif
                 }
             }
         }
@@ -303,10 +354,27 @@ namespace Watermelon_Game.Development
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition), Fruit.Grape, Quaternion.identity, false);
-                _fruitBehaviour.GoldenFruit_Debug();
+                var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Grape, Quaternion.identity, false);
+                _fruitBehaviour.ForceGoldenFruit_DEVELOPMENT();
                 _fruitBehaviour.Release();
             }
+        }
+        
+        /// <summary>
+        /// Spawns a <see cref="Fruit"/>
+        /// </summary>
+        /// <param name="_Position">Position to spawn the <see cref="Fruit"/> at</param>
+        /// <param name="_Fruit">The <see cref="Fruit"/> to spawn</param>
+        /// <param name="_Rotation">The rotation to spawn the <see cref="Fruit"/> with</param>
+        /// <param name="_SetAnimation">Enable/disable the rotation animation of the <see cref="Fruit"/></param>
+        /// <returns></returns>
+        private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation, bool _SetAnimation)
+        {
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(_Position, _Fruit, _Rotation);
+            _fruitBehaviour!.gameObject.SetActive(true);
+            _fruitBehaviour!.SetAnimation(_SetAnimation);
+
+            return _fruitBehaviour;
         }
         
         /// <summary>
@@ -336,26 +404,28 @@ namespace Watermelon_Game.Development
         {
             if (Input.GetKeyDown(KeyCode.M))
             {
-                var _enabled = this.audioSource.enabled;
-                this.audioSource.enabled = !_enabled;   
+                AudioSettings.FlipBGM_DEVELOPMENT();
             }
         }
         
         /// <summary>
-        /// Spawns a <see cref="Fruit"/>
+        /// Sets enables the <see cref="TextMeshProUGUI.text"/> of <see cref="infoText"/> to the given <br/>
+        /// <i>The <see cref="TextMeshProUGUI.text"/> will be disabled after 1 seconds</i>
         /// </summary>
-        /// <param name="_Position">Position to spawn the <see cref="Fruit"/> at</param>
-        /// <param name="_Fruit">The <see cref="Fruit"/> to spawn</param>
-        /// <param name="_Rotation">The rotation to spawn the <see cref="Fruit"/> with</param>
-        /// <param name="_SetAnimation">Enable/disable the rotation animation of the <see cref="Fruit"/></param>
-        /// <returns></returns>
-        private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation, bool _SetAnimation)
+        /// <param name="_Text">The value to set the <see cref="TextMeshProUGUI.text"/> to</param>
+        private void ShowInfoText(string _Text)
         {
-            var _fruitBehaviour = FruitBehaviour.SpawnFruit(_Position, _Fruit, _Rotation);
-            _fruitBehaviour!.gameObject.SetActive(true);
-            _fruitBehaviour!.SetAnimation(_SetAnimation);
-
-            return _fruitBehaviour;
+            this.infoText.text = _Text;
+            this.infoText.enabled = true;
+            Invoke(nameof(HideInfoText), 1);
+        }
+        
+        /// <summary>
+        /// Disables <see cref="infoText"/>
+        /// </summary>
+        private void HideInfoText()
+        {
+            this.infoText.enabled = false;
         }
 #endif
 

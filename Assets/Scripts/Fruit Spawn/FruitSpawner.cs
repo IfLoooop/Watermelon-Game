@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
@@ -9,10 +10,10 @@ namespace Watermelon_Game.Fruit_Spawn
     internal sealed class FruitSpawner : MonoBehaviour
     {
         #region Inspector Fields
-#if UNITY_EDITOR
+#if DEBUG || DEVELOPMENT_BUILD
         [Header("Development")]
         [Tooltip("Deactivates the release block cool down if true (Development only!)")]
-        [SerializeField] private bool noReleaseBlock;
+        [ShowInInspector] public static bool NoReleaseBlock;
 #endif
         
         [Header("References")] 
@@ -230,13 +231,13 @@ namespace Watermelon_Game.Fruit_Spawn
                 return;
             }
             
-#if UNITY_EDITOR
-            if (this.noReleaseBlock) goto skipCooldown;
+#if DEBUG || DEVELOPMENT_BUILD
+            if (NoReleaseBlock) goto skipCooldown;
 #endif
             
             this.BlockRelease(true);
             
-#if UNITY_EDITOR
+#if DEBUG || DEVELOPMENT_BUILD
             skipCooldown:;
 #endif
             this.lastRelease = Time.time;
@@ -264,11 +265,20 @@ namespace Watermelon_Game.Fruit_Spawn
         
 #if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
-        /// <see cref="ResetFruitSpawner"/> <br/>
+        /// Forces the <see cref="fruitBehaviour"/> that is currently held by the <see cref="FruitSpawner"/> to become a golden fruit <br/>
+        /// <b>Only for Development!</b>
+        /// </summary>
+        public static void ForceGoldenFruit_DEVELOPMENT()
+        {
+            instance.fruitBehaviour.ForceGoldenFruit_DEVELOPMENT(true);
+        }
+        
+        /// <summary>
+        /// Forces the <see cref="FruitSpawner"/> tp spawn the given <see cref="Fruit"/> <br/>
         /// <b>Only for Development!</b>
         /// </summary>
         /// <param name="_Fruit">The <see cref="Fruit"/> to give to the <see cref="FruitSpawner"/></param>
-        public static void ResetFruitSpawner_DEVELOPMENT(Fruit _Fruit)
+        public static void ForceFruit_DEVELOPMENT(Fruit _Fruit)
         {
             if (instance.fruitBehaviour != null)
             {
