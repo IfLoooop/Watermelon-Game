@@ -144,14 +144,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9094429118897252651}
     m_Modifications:
-    - target: {fileID: 1880534764725785551, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 894fa14a3fca1b242959e400bd6e6ce5, type: 2}
-    - target: {fileID: 1880534764725785551, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: 837912109431040665, guid: 894fa14a3fca1b242959e400bd6e6ce5, type: 2}
     - target: {fileID: 2336712309500240038, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
       propertyPath: m_Name
       value: Destroy
