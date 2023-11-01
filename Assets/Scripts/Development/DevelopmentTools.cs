@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Watermelon_Game.Container;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruits;
@@ -20,14 +22,28 @@ namespace Watermelon_Game.Development
     /// </summary>
     public class DevelopmentTools : MonoBehaviour
     {
+#if DEBUG || DEVELOPMENT_BUILD
+        [Header("References")]
+        [Tooltip("Displays the build number of a Debug-build (For development only)")]
+        [SerializeField] private TextMeshProUGUI developmentVersion;
+#endif
+        
 #if UNITY_EDITOR
         #region Inspector Fields
+        [Header("Settings")]
         [Tooltip("Displays which key was last pressed in a Debug.Log")]
         [SerializeField] private bool logKey;
         #endregion
 #endif
         
 #if DEBUG || DEVELOPMENT_BUILD
+        #region Constants
+        /// <summary>
+        /// Name + extension for the DEVELOPMENT_VERSION .txt file
+        /// </summary>
+        public const string DEVELOPMENT_VERSION = "DEVELOPMENT_VERSION.txt";
+        #endregion
+        
         #region Fields
 #pragma warning disable CS0109
         /// <summary>
@@ -71,6 +87,10 @@ namespace Watermelon_Game.Development
 #if DEBUG || DEVELOPMENT_BUILD
             this.camera = Camera.main;
             this.infoText = base.GetComponentInChildren<TextMeshProUGUI>();
+            
+            var _developmentVersionPath = Path.Combine(Application.dataPath, DEVELOPMENT_VERSION);
+            var _buildNumber = ulong.Parse(File.ReadAllText(_developmentVersionPath));
+            this.developmentVersion.text = _buildNumber.ToString();
 #endif
         }
 

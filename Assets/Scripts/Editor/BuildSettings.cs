@@ -10,6 +10,7 @@ using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Watermelon_Game.Development;
 using CompressionLevel = System.IO.Compression.CompressionLevel;
 
 namespace Watermelon_Game.Editor
@@ -25,9 +26,9 @@ namespace Watermelon_Game.Editor
         /// </summary>
         private const uint BUILD_INFO_THRESHOLD_IN_SECONDS = 120;
         /// <summary>
-        /// Name + extension for the BUILDINFO file
+        /// Name + extension for the BUILD_INFO .txt file
         /// </summary>
-        private const string BUILD_INFO = "BUILDINFO.txt";
+        private const string BUILD_INFO = "BUILD_INFO.txt";
         /// <summary>
         /// Indicates a development build
         /// </summary>
@@ -77,9 +78,13 @@ namespace Watermelon_Game.Editor
         public int callbackOrder { get; }
         
         /// <summary>
-        /// Path to the <see cref="BUILD_INFO"/>
+        /// Path to <see cref="BUILD_INFO"/>
         /// </summary>
         private static string BuildInfoPath { get; } = Path.Combine(Application.dataPath, BUILD_INFO);
+        /// <summary>
+        /// Path to <see cref="DevelopmentTools.DEVELOPMENT_VERSION"/>
+        /// </summary>
+        private static string DevelopmentVersionPath { get; } = Path.Combine(Application.dataPath, DevelopmentTools.DEVELOPMENT_VERSION);
         #endregion
 
         #region Methods
@@ -161,35 +166,35 @@ namespace Watermelon_Game.Editor
                 return;
             }
             
-#if DEVELOPMENT_BUILD
-            Debug.Log($"<color=green>{DEBUG} Build finished</color> {_Report.summary.outputPath}");
-            return;
-#endif
-#pragma warning disable CS0162
             // Method is called somewhere at the end of the build, not exactly when the build has finished, so need to wait for the previous build to completely finish
             await Task.Delay(TASK_DELAY);
             
-            Build(_Report, BuildTarget.StandaloneWindows64, WINDOWS, BuildTarget.StandaloneLinux64, LINUX);
-            Build(_Report, BuildTarget.StandaloneLinux64, LINUX, BuildTarget.StandaloneOSX, MAC);
-            Build(_Report, BuildTarget.StandaloneOSX, MAC, BuildTarget.WSAPlayer, UWP);
-            Build(_Report, BuildTarget.WSAPlayer, UWP, null, string.Empty);
+#if DEVELOPMENT_BUILD
+            Finalize(_Report, BuildTarget.StandaloneWindows64, DEBUG, null, string.Empty);
+            return;
+#endif
+#pragma warning disable CS0162
+            Finalize(_Report, BuildTarget.StandaloneWindows64, WINDOWS, BuildTarget.StandaloneLinux64, LINUX);
+            Finalize(_Report, BuildTarget.StandaloneLinux64, LINUX, BuildTarget.StandaloneOSX, MAC);
+            Finalize(_Report, BuildTarget.StandaloneOSX, MAC, BuildTarget.WSAPlayer, UWP);
+            Finalize(_Report, BuildTarget.WSAPlayer, UWP, null, string.Empty);
 #pragma warning restore CS0162
         }
 
         /// <summary>
-        /// Starts a build
+        /// Finalizes the last build and optionally starts the next
         /// </summary>
         /// <param name="_Report">The last <see cref="BuildReport"/></param>
         /// <param name="_CurrentBuildTarget">The <see cref="BuildTarget"/> to start the build for</param>
         /// <param name="_CurrentOS">The OS to start the build for</param>
         /// <param name="_NextBuildTarget">The next <see cref="BuildTarget"/> (Otherwise null)</param>
         /// <param name="_NextOS">The next OS (Otherwise empty)</param>
-        private void Build(BuildReport _Report, BuildTarget _CurrentBuildTarget, string _CurrentOS, BuildTarget? _NextBuildTarget, string _NextOS)
+        private static void Finalize(BuildReport _Report, BuildTarget _CurrentBuildTarget, string _CurrentOS, BuildTarget? _NextBuildTarget, string _NextOS)
         {
             if (_Report.summary.platform == _CurrentBuildTarget)
             {
                 var _outputPath = _Report.summary.outputPath;
-                Debug.Log($"<color=green>{_CurrentOS} Build finished</color> {_outputPath}");
+                Debug.Log($@"<b><color=green>{_CurrentOS} Build finished</color></b> [<b>{_Report.summary.totalTime:hh\:mm\:ss}</b>] -> <i>{_outputPath}</i>");
                 var _buildsFolder = Directory.GetParent(_outputPath)!.Parent!.Parent!.FullName;
                 var _installPath = CreateInstallPath(_buildsFolder, _CurrentOS, true);
                 CleanUp(_installPath, _CurrentOS);
@@ -202,8 +207,19 @@ namespace Watermelon_Game.Editor
                 }
                 else
                 {
-                    var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(BuildTarget.StandaloneWindows64);
-                    EditorUserBuildSettings.SwitchActiveBuildTarget(_buildTargetGroup, BuildTarget.StandaloneWindows64);
+                    if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.StandaloneWindows64)
+                    {
+                        var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(BuildTarget.StandaloneWindows64);
+                        EditorUserBuildSettings.SwitchActiveBuildTarget(_buildTargetGroup, BuildTarget.StandaloneWindows64);   
+                    }
+                }
+
+                if (_CurrentOS == DEBUG)
+                {
+                    var _gameDataFolder = string.Concat(GetApplicationName(false), "_Data");
+                    var _gameDataPath = Path.Combine(Directory.GetParent(_outputPath)!.FullName, _gameDataFolder, DevelopmentTools.DEVELOPMENT_VERSION);
+                    
+                    File.Copy(DevelopmentVersionPath, _gameDataPath);
                 }
             }
         }
@@ -215,10 +231,10 @@ namespace Watermelon_Game.Editor
         /// <returns>File path where the .exe file will be at</returns>
         public static string CreateDebugFolder(string _Directory)
         {
-            var _debug = Path.Combine(_Directory, DEBUG);
+            var _baseDirectoryName = GetApplicationName(false);
+            var _debug = Path.Combine(_Directory, DEBUG, _baseDirectoryName);
 
             Directory.CreateDirectory(_debug);
-            
             DeleteAllFilesInDirectory(_debug);
             
             return Path.Combine(_debug, GetApplicationName(true));
@@ -305,6 +321,7 @@ namespace Watermelon_Game.Editor
         {
             SwitchPlatform(BuildTarget.StandaloneWindows64);
             SetBuildInfo(DEVELOPMENT_BUILD, BuildTarget.StandaloneWindows64, _Path);
+            SetDevelopmentVersion();
             SetScriptingDefineSymbols(DEVELOPMENT_BUILD);
         }
         
@@ -323,7 +340,7 @@ namespace Watermelon_Game.Editor
         /// <summary>
         /// Switches the active platform to the given <see cref="BuildTarget"/> 
         /// </summary>
-        /// <param name="_BuildTarget">The <see cref="BuildTarget"/> to switch the platfrom to</param>
+        /// <param name="_BuildTarget">The <see cref="BuildTarget"/> to switch the platform to</param>
         private static void SwitchPlatform(BuildTarget _BuildTarget)
         {
             var _buildTargetGroup = BuildPipeline.GetBuildTargetGroup(_BuildTarget);
@@ -362,10 +379,19 @@ namespace Watermelon_Game.Editor
             {
                 _text = string.Concat(_BuildInfo, Environment.NewLine, _BuildTarget, Environment.NewLine, _Path, Environment.NewLine, DateTime.Now);
             }
-            
+
             File.WriteAllText(BuildInfoPath, _text);
         }
 
+        /// <summary>
+        /// Increments the build number in <see cref="DevelopmentTools.DEVELOPMENT_VERSION"/> by 1
+        /// </summary>
+        private static void SetDevelopmentVersion()
+        {
+            var _currentDevelopmentVersion = ulong.Parse(File.ReadAllText(DevelopmentVersionPath));
+            File.WriteAllText(DevelopmentVersionPath, (++_currentDevelopmentVersion).ToString());
+        }
+        
         /// <summary>
         /// Gets the contents of BUILDINFO.txt
         /// </summary>
