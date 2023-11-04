@@ -5,7 +5,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Watermelon_Game.Container;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruits;
@@ -26,6 +25,8 @@ namespace Watermelon_Game.Development
         [Header("References")]
         [Tooltip("Displays the build number of a Debug-build (For development only)")]
         [SerializeField] private TextMeshProUGUI developmentVersion;
+        [Tooltip("Used to display information for certain actions")]
+        [SerializeField] private TextMeshProUGUI infoText;
 #endif
         
 #if UNITY_EDITOR
@@ -39,7 +40,7 @@ namespace Watermelon_Game.Development
 #if DEBUG || DEVELOPMENT_BUILD
         #region Constants
         /// <summary>
-        /// Name + extension for the DEVELOPMENT_VERSION .txt file
+        /// Name + extension for the DEVELOPMENT_VERSION.txt file
         /// </summary>
         public const string DEVELOPMENT_VERSION = "DEVELOPMENT_VERSION.txt";
         #endregion
@@ -51,10 +52,6 @@ namespace Watermelon_Game.Development
         /// </summary>
         private new Camera camera;
 #pragma warning restore CS0109
-        /// <summary>
-        /// Used to display information for certain actions
-        /// </summary>
-        private TextMeshProUGUI infoText;
         
         /// <summary>
         /// The currently selected <see cref="FruitBehaviour"/>
@@ -86,7 +83,6 @@ namespace Watermelon_Game.Development
 
 #if DEBUG || DEVELOPMENT_BUILD
             this.camera = Camera.main;
-            this.infoText = base.GetComponentInChildren<TextMeshProUGUI>();
             
             var _developmentVersionPath = Path.Combine(Application.dataPath, DEVELOPMENT_VERSION);
             var _buildNumber = ulong.Parse(File.ReadAllText(_developmentVersionPath));
@@ -200,7 +196,7 @@ namespace Watermelon_Game.Development
                 if (this.currentFruit != null)
                 {
                     this.currentFruit.SetAnimation(false);
-                    this.currentFruit.Release();
+                    this.currentFruit.Release(null);
                     this.currentFruit = null;
                 }
             }
@@ -352,7 +348,7 @@ namespace Watermelon_Game.Development
 
                     foreach (var _savedFruit in this.savedFruits)
                     {
-                        this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation, false).Release();
+                        this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation, false).Release(null);
                     }
 #if UNITY_EDITOR
                     Debug.Log($"{this.savedFruits.Count} Fruits spawned.");
@@ -376,7 +372,7 @@ namespace Watermelon_Game.Development
             {
                 var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Grape, Quaternion.identity, false);
                 _fruitBehaviour.ForceGoldenFruit_DEVELOPMENT();
-                _fruitBehaviour.Release();
+                _fruitBehaviour.Release(null);
             }
         }
         
@@ -422,7 +418,7 @@ namespace Watermelon_Game.Development
         /// </summary>
         private void SetBackgroundMusic()
         {
-            if (Input.GetKeyDown(KeyCode.M))
+            if (Input.GetKeyDown(KeyCode.Slash)) // Minus on german layout
             {
                 AudioSettings.FlipBGM_DEVELOPMENT();
             }

@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Translations_pt
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: pt
+  m_SharedData: {fileID: 11400000, guid: 563ebb2a7d431c647a9481dd54566af6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1207057018880
+    m_Localized: Esquerda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39212354400256
+    m_Localized: Direita
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39217219792896
+    m_Localized: Deixar cair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39226824749056
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39229081284608
+    m_Localized: Sair
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39230339575808
+    m_Localized: Pontos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39231505592320
+    m_Localized: "Pontua\xE7\xE3o m\xE1xima"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39232629665792
+    m_Localized: "Pr\xF3xima Fruta"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39233896345600
+    m_Localized: Melhor Multiplicador
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39235225939968
+    m_Localized: Frutas Combinadas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39236203212800
+    m_Localized: Frutas Douradas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39237398589440
+    m_Localized: Habilidades Usadas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39238539440128
+    m_Localized: Jogos Jogados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39239848062976
+    m_Localized: Tempo de jogo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39242414977024
+    m_Localized: "Dura\xE7\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 98635638665216
+    m_Localized: Reiniciar
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

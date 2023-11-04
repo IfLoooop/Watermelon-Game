@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Translations Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Translations
+  m_TableCollectionNameGuidString: 563ebb2a7d431c647a9481dd54566af6
+  m_Entries:
+  - m_Id: 1207057018880
+    m_Key: left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39212354400256
+    m_Key: right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39217219792896
+    m_Key: drop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39226824749056
+    m_Key: menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39229081284608
+    m_Key: exit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39230339575808
+    m_Key: points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39231505592320
+    m_Key: highscore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39232629665792
+    m_Key: next_fruit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39233896345600
+    m_Key: best_multiplier
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39235225939968
+    m_Key: combined_fruits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39236203212800
+    m_Key: golden_fruits
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39237398589440
+    m_Key: skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39238539440128
+    m_Key: games_played
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39239848062976
+    m_Key: play_time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39242414977024
+    m_Key: duration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 98635638665216
+    m_Key: restart
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 366177036842827800
+  references:
+    version: 2
+    RefIds:
+    - rid: 366177036842827800
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1699025143172

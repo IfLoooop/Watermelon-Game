@@ -282,7 +282,7 @@ namespace Watermelon_Game.Menus
         /// <param name="_Value">The value to set into the <see cref="TextMeshProUGUI.text"/></param>
         public void SetForText(TextMeshProUGUI _Text, string _Value)
         {
-            _Text.text = string.Concat(_Text.gameObject.name, $": {_Value}");
+            _Text.text = string.Concat(": ", _Value);
         }
         
         /// <summary>
@@ -292,7 +292,7 @@ namespace Watermelon_Game.Menus
         /// <param name="_Value">The value to set into the <see cref="TextMeshProUGUI.text"/></param>
         public void SetForImage(TextMeshProUGUI _Text, int _Value)
         {
-            _Text.text = string.Concat($": {_Value}");
+            _Text.text = string.Concat($": ", _Value);
         }
         
         /// <summary>

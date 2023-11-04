@@ -1,0 +1,4 @@
+RELEASE_BUILD
+StandaloneWindows64
+C:/Users/herdt/OneDrive/Desktop/Builds\Windows\Watermelon Game\Watermelon Game.exe
+11/4/2023 9:35:18 PM

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using JetBrains.Annotations;
 using UnityEngine;
 using Watermelon_Game.Fruits;
@@ -13,12 +14,17 @@ namespace Watermelon_Game.Menus
     internal sealed class MenuController : MonoBehaviour
     {
         #region Inspector Fields
+        [Header("References")]
         [Tooltip("Reference to the StatsMenu component")]
         [SerializeField] private StatsMenu statsMenu;
         [Tooltip("Reference to the GameOverMenu component")]
         [SerializeField] private GameOverMenu gameOverMenu;
         [Tooltip("Reference to the ExitMenu component")]
         [SerializeField] private ExitMenu exitMenu;
+
+        [Header("Settings")]
+        [Tooltip("Delay in seconds, between opening and closing the menu, on language change")]
+        [SerializeField] private float menuReopenDelay = .25f;
         #endregion
 
         #region Fields
@@ -52,7 +58,17 @@ namespace Watermelon_Game.Menus
             this.InitializeMenu(this.gameOverMenu);
             this.InitializeMenu(this.exitMenu);
         }
-
+        
+        /// <summary>
+        /// Needed to set the "Instance" properties in the Menu class
+        /// </summary>
+        /// <param name="_Menu">The menu to initialize</param>
+        private void InitializeMenu(MenuBase _Menu)
+        {
+            _Menu.gameObject.SetActive(true);
+            _Menu.gameObject.SetActive(false);
+        }
+        
         private void OnEnable()
         {
             GameController.OnGameStart += this.GameStarted;
@@ -63,6 +79,7 @@ namespace Watermelon_Game.Menus
             FruitBehaviour.OnGoldenFruitSpawn += AddGoldenFruit;
             FruitBehaviour.OnSkillUsed += AddSkill;
             Multiplier.OnMultiplierActivated += MultiplierActivated;
+            LanguageController.OnLanguageChanged += this.ReopenMenu;
         }
 
         private void OnDisable()
@@ -75,6 +92,7 @@ namespace Watermelon_Game.Menus
             FruitBehaviour.OnGoldenFruitSpawn -= AddGoldenFruit;
             FruitBehaviour.OnSkillUsed -= AddSkill;
             Multiplier.OnMultiplierActivated -= MultiplierActivated;
+            LanguageController.OnLanguageChanged -= this.ReopenMenu;
         }
         
         private void OnApplicationQuit()
@@ -101,11 +119,11 @@ namespace Watermelon_Game.Menus
                     this.Open_CloseMenu(this.currentActiveMenu, true);
                 }
             }
-            else if (Input.GetKeyDown(KeyCode.P))
+            else if (Input.GetKeyDown(KeyCode.M))
             {
                 this.Open_CloseMenu(this.statsMenu);
             }
-            else if (Input.GetKeyDown(KeyCode.Return))
+            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 if (this.currentActiveMenu is { Menu: Menu.Exit })
                 {
@@ -120,16 +138,6 @@ namespace Watermelon_Game.Menus
                     OnManualRestart?.Invoke();
                 }
             }
-        }
-        
-        /// <summary>
-        /// Needed to set the "Instance" properties in the Menu class
-        /// </summary>
-        /// <param name="_Menu">The menu to initialize</param>
-        private void InitializeMenu(MenuBase _Menu)
-        {
-            _Menu.gameObject.SetActive(true);
-            _Menu.gameObject.SetActive(false);
         }
         
         /// <summary>
@@ -255,6 +263,34 @@ namespace Watermelon_Game.Menus
         {
             this.gameOverMenu.AddSkillCount(_Skill);
             this.statsMenu.AddSkillCount(_Skill);
+        }
+        
+        /// <summary>
+        /// Reopens the <see cref="currentActiveMenu"/> if any was open
+        /// </summary>
+        private void ReopenMenu()
+        {
+            if (this.currentActiveMenu != null)
+            {
+                base.StartCoroutine(this.ReOpen());   
+            }
+        }
+
+        /// <summary>
+        /// Closes the <see cref="currentActiveMenu"/> and reopens it after a certain time
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator ReOpen()
+        {
+            this.allowInput = false;
+            var _menu = this.currentActiveMenu;
+            this.Open_CloseMenu(this.currentActiveMenu, true);
+            if (_menu!.Menu != Menu.GameOver) // TODO: Not the best solution
+            {
+                yield return new WaitForSeconds(menuReopenDelay);
+                this.Open_CloseMenu(_menu);
+            }
+            this.allowInput = true;
         }
         #endregion
     }

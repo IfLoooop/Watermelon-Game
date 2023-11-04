@@ -335,6 +335,7 @@ namespace Watermelon_Game.Fruit_Spawn
             }
             else
             {
+                this.fruitBehaviour.SetActiveSkill(null);
                 this.DeactivateRotation(null);
             }
         }

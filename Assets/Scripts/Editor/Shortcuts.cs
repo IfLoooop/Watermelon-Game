@@ -20,15 +20,15 @@ namespace Watermelon_Game.Editor
         /// <summary>
         /// Starts a development build
         /// </summary>
-        [MenuItem("Build/Debug Build")]
+        [MenuItem("Build/Development Build")]
         private static void DebugBuild()
         {
-            var _path = EditorUtility.SaveFolderPanel("Debug Build", DEFAULT_BUILD_FOLDER, "");
+            var _path = EditorUtility.SaveFolderPanel("Development Build", DEFAULT_BUILD_FOLDER, "");
             
             if (!string.IsNullOrWhiteSpace(_path))
             {
-                _path = BuildSettings.CreateDebugFolder(_path);
-                Debug.Log("Starting <color=magenta>Debug</color> Build");
+                _path = BuildSettings.CreateDevelopmentFolder(_path);
+                Debug.Log("Starting <color=magenta>Development</color> Build");
                 BuildSettings.BuildPlayer(_path);
             }
         }

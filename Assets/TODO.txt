@@ -1,9 +1,7 @@
--Check "BuildSettings.cs", sometimes things like "Application.version"  are not updated immediately (in build), is resolved after a build through the normal "Build Settings"-Menu 
 -Infobox which buttons are used in "DevelopmentTools.cs"
--Tags for multiple languages, and add "Fruit/s tag"
--Maybe add localized Tags to youtube
 -Test game with Application.TargetFramerate
 -Multiplier.cs "multiplierWaitTime" and "multiplierWaitForSeconds" need descriptions
+-Check "BuildSettings.cs", sometimes things like "Application.version" are not updated immediately (in build), is resolved after a build through the normal "Build Settings"-Menu 
 
 
 https://keymailer.co/de/creators/

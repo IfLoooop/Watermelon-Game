@@ -26,9 +26,13 @@ namespace Watermelon_Game.Editor
         /// </summary>
         private const uint BUILD_INFO_THRESHOLD_IN_SECONDS = 120;
         /// <summary>
-        /// Name + extension for the BUILD_INFO .txt file
+        /// Name + extension for the BUILD_INFO.txt file
         /// </summary>
         private const string BUILD_INFO = "BUILD_INFO.txt";
+        /// <summary>
+        /// Name + extension fir the steam_appid.txt
+        /// </summary>
+        private const string STEAM_APP_ID = "steam_appid.txt";
         /// <summary>
         /// Indicates a development build
         /// </summary>
@@ -39,9 +43,9 @@ namespace Watermelon_Game.Editor
         private const string RELEASE_BUILD = "RELEASE_BUILD";
 
         /// <summary>
-        /// For debug builds
+        /// For development builds
         /// </summary>
-        private const string DEBUG = "Debug";
+        private const string DEVELOPMENT = "Development";
         /// <summary>
         /// For windows builds
         /// </summary>
@@ -85,6 +89,10 @@ namespace Watermelon_Game.Editor
         /// Path to <see cref="DevelopmentTools.DEVELOPMENT_VERSION"/>
         /// </summary>
         private static string DevelopmentVersionPath { get; } = Path.Combine(Application.dataPath, DevelopmentTools.DEVELOPMENT_VERSION);
+        /// <summary>
+        /// Path to <see cref="STEAM_APP_ID"/>
+        /// </summary>
+        private static string SteamAppIdPath { get; } = Path.Combine(Application.dataPath, STEAM_APP_ID);
         #endregion
 
         #region Methods
@@ -170,7 +178,7 @@ namespace Watermelon_Game.Editor
             await Task.Delay(TASK_DELAY);
             
 #if DEVELOPMENT_BUILD
-            Finalize(_Report, BuildTarget.StandaloneWindows64, DEBUG, null, string.Empty);
+            Finalize(_Report, BuildTarget.StandaloneWindows64, DEVELOPMENT, null, string.Empty);
             return;
 #endif
 #pragma warning disable CS0162
@@ -194,10 +202,27 @@ namespace Watermelon_Game.Editor
             if (_Report.summary.platform == _CurrentBuildTarget)
             {
                 var _outputPath = _Report.summary.outputPath;
-                Debug.Log($@"<b><color=green>{_CurrentOS} Build finished</color></b> [<b>{_Report.summary.totalTime:hh\:mm\:ss}</b>] -> <i>{_outputPath}</i>");
                 var _buildsFolder = Directory.GetParent(_outputPath)!.Parent!.Parent!.FullName;
                 var _installPath = CreateInstallPath(_buildsFolder, _CurrentOS, true);
+                Debug.Log($@"<b><color=green>{_CurrentOS} Build finished</color></b> [<b>{_Report.summary.totalTime:hh\:mm\:ss}</b>] -> <i>{_outputPath}</i>");
+                
+                // "DEVELOPMENT_VERSION.txt"-file will also be in the .zip
+                if (_CurrentOS == DEVELOPMENT)
+                {
+                    var _gameDataFolder = string.Concat(GetApplicationName(false), "_Data");
+                    var _developmentVersionPath = Path.Combine(_installPath, _gameDataFolder, DevelopmentTools.DEVELOPMENT_VERSION);
+                    
+                    File.Copy(DevelopmentVersionPath, _developmentVersionPath);
+                }
+                
                 CleanUp(_installPath, _CurrentOS);
+
+                // "steam_appid.txt"-file will not be in the .zip
+                if (_CurrentOS == DEVELOPMENT)
+                {
+                    var _steamAppIdPath = Path.Combine(_installPath, STEAM_APP_ID);
+                    File.Copy(SteamAppIdPath, _steamAppIdPath); 
+                }
                 
                 if (_NextBuildTarget != null)
                 {
@@ -213,31 +238,23 @@ namespace Watermelon_Game.Editor
                         EditorUserBuildSettings.SwitchActiveBuildTarget(_buildTargetGroup, BuildTarget.StandaloneWindows64);   
                     }
                 }
-
-                if (_CurrentOS == DEBUG)
-                {
-                    var _gameDataFolder = string.Concat(GetApplicationName(false), "_Data");
-                    var _gameDataPath = Path.Combine(Directory.GetParent(_outputPath)!.FullName, _gameDataFolder, DevelopmentTools.DEVELOPMENT_VERSION);
-                    
-                    File.Copy(DevelopmentVersionPath, _gameDataPath);
-                }
             }
         }
         
         /// <summary>
-        /// Creates the necessary folders for the debug build
+        /// Creates the necessary folders for the development build
         /// </summary>
         /// <param name="_Directory">Root folder to create all necessary folders in</param>
         /// <returns>File path where the .exe file will be at</returns>
-        public static string CreateDebugFolder(string _Directory)
+        public static string CreateDevelopmentFolder(string _Directory)
         {
             var _baseDirectoryName = GetApplicationName(false);
-            var _debug = Path.Combine(_Directory, DEBUG, _baseDirectoryName);
+            var _development = Path.Combine(_Directory, DEVELOPMENT, _baseDirectoryName);
 
-            Directory.CreateDirectory(_debug);
-            DeleteAllFilesInDirectory(_debug);
+            Directory.CreateDirectory(_development);
+            DeleteAllFilesInDirectory(_development);
             
-            return Path.Combine(_debug, GetApplicationName(true));
+            return Path.Combine(_development, GetApplicationName(true));
         }
         
         /// <summary>
@@ -481,7 +498,7 @@ namespace Watermelon_Game.Editor
             
                 if (_buildInfo == DEVELOPMENT_BUILD)
                 {
-                    BuildPipeline.BuildPlayer(_levels, _path, _buildTarget, BuildOptions.CompressWithLz4);
+                    BuildPipeline.BuildPlayer(_levels, _path, _buildTarget, BuildOptions.UncompressedAssetBundle); // | BuildOptions.Development TODO: Remove "BuildOptions.Development" if not needed
                 }
                 else if (_buildInfo == RELEASE_BUILD)
                 {

@@ -21,8 +21,28 @@ namespace Watermelon_Game.Menus
         [SerializeField] private TextMeshProUGUI timeSpendInGameText;
         #endregion
 
-        #region Playerprefs keys
         // TODO: Use safe-controller
+        #region Playerprefs keys
+#if DEBUG || DEVELOPMENT_BUILD
+        private const string BEST_SCORE_KEY = "Highscore_";
+        private const string HIGHEST_MULTIPLIER_KEY = "Multiplier_";
+        private const string GRAPE_KEY = "Grape_";
+        private const string CHERRY_KEY = "Cherry_";
+        private const string STRAWBERRY_KEY = "Strawberry_";
+        private const string LEMON_KEY = "Lemon_";
+        private const string ORANGE_KEY = "Orange_";
+        private const string APPLE_KEY = "Apple_";
+        private const string PEAR_KEY = "Pear_";
+        private const string PINEAPPLE_KEY = "Pineapple_";
+        private const string HONEY_MELON_KEY = "Honemelon_";
+        private const string MELON_KEY = "Melon_";
+        private const string GOLDEN_FRUIT_KEY = "GoldenFruit_";
+        private const string POWER_KEY = "Power_";
+        private const string EVOLVE_KEY = "Evolve_";
+        private const string DESTROY_KEY = "Destroy_";
+        private const string GAMES_PLAYED_KEY = "GamesPlayed_";
+        private const string TIME_SPEND_KEY = "TimeSpend_";
+#else
         private const string BEST_SCORE_KEY = "Highscore";
         private const string HIGHEST_MULTIPLIER_KEY = "Multiplier";
         private const string GRAPE_KEY = "Grape";
@@ -41,6 +61,7 @@ namespace Watermelon_Game.Menus
         private const string DESTROY_KEY = "Destroy";
         private const string GAMES_PLAYED_KEY = "GamesPlayed";
         private const string TIME_SPEND_KEY = "TimeSpend";
+#endif
         #endregion
         
         #region Properties

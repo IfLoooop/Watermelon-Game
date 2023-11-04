@@ -9,4 +9,5 @@ EditorBuildSettings:
     path: Assets/Scenes/Watermelon Game.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects:
-    com.unity.addressableassets: {fileID: 11400000, guid: ed895e51895862c458e21760ca623c9e, type: 2}
+    com.unity.addressableassets: {fileID: 11400000, guid: 0262b0252a4576b4b9df3d3efdeaa04c, type: 2}
+    com.unity.localization.settings: {fileID: 11400000, guid: a024a1ed6ace9454cb5e96aba044f7cd, type: 2}

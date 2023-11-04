@@ -372,11 +372,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_text
-      value: NEXT FRUIT
+      value: Next Fruit
       objectReference: {fileID: 0}
     - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_fontSize
+      value: 1.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
+      propertyPath: m_fontStyle
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
+      propertyPath: m_fontSizeBase
       value: 1.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188101553572261800, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
+      propertyPath: m_StringReference.m_TableEntryReference.m_KeyId
+      value: 39232629665792
       objectReference: {fileID: 0}
     - target: {fileID: 8491876195868727799, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_Pivot.x
@@ -404,11 +424,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8491876195868727799, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 8491876195868727799, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8491876195868727799, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_LocalPosition.x

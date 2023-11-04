@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Translations_fr
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: fr
+  m_SharedData: {fileID: 11400000, guid: 563ebb2a7d431c647a9481dd54566af6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1207057018880
+    m_Localized: Gauche
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39212354400256
+    m_Localized: Droite
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39217219792896
+    m_Localized: "L\xE2cher"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39226824749056
+    m_Localized: Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39229081284608
+    m_Localized: Quitter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39230339575808
+    m_Localized: Points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39231505592320
+    m_Localized: Meilleur score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39232629665792
+    m_Localized: Fruit suivant
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39233896345600
+    m_Localized: Meilleur Multiplicateur
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39235225939968
+    m_Localized: "Fruits Combin\xE9s"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39236203212800
+    m_Localized: Fruits d'Or
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39237398589440
+    m_Localized: "Comp\xE9tences Utilis\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39238539440128
+    m_Localized: "Parties Jou\xE9es"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39239848062976
+    m_Localized: Temps de Jeu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39242414977024
+    m_Localized: "Dur\xE9e"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 98635638665216
+    m_Localized: "Red\xE9marrer"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

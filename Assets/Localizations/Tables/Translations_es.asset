@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Translations_es
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: es
+  m_SharedData: {fileID: 11400000, guid: 563ebb2a7d431c647a9481dd54566af6, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 1207057018880
+    m_Localized: Izquierda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39212354400256
+    m_Localized: Derecha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39217219792896
+    m_Localized: Soltar or Caer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39226824749056
+    m_Localized: "Men\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39229081284608
+    m_Localized: Salir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39230339575808
+    m_Localized: Puntos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39231505592320
+    m_Localized: "M\xE1xima puntuaci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39232629665792
+    m_Localized: Siguiente Fruta
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39233896345600
+    m_Localized: Mejor Multiplicador
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39235225939968
+    m_Localized: Frutas Combinadas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39236203212800
+    m_Localized: Frutas Doradas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39237398589440
+    m_Localized: Habilidades Utilizadas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39238539440128
+    m_Localized: Juegos Jugados
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39239848062976
+    m_Localized: Tiempo de juego
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39242414977024
+    m_Localized: "Duraci\xF3n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 98635638665216
+    m_Localized: Reiniciar
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
