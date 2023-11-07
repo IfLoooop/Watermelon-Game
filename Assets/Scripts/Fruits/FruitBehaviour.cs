@@ -156,9 +156,10 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         public static event Action OnUpgradeToGoldenFruit;
         /// <summary>
-        /// Is called when any kind of golden fruits spawns
+        /// Is called when any kind of golden fruits spawns <br/>
+        /// <b>Parameter:</b> Indicates whether the golden fruit is an upgraded golden fruit or not
         /// </summary>
-        public static event Action OnGoldenFruitSpawn;
+        public static event Action<bool> OnGoldenFruitSpawn;
         /// <summary>
         /// Is called when a <see cref="Skill"/> is used <br/>
         /// <b>Parameter:</b> The <see cref="Skill"/> that was used <br/>
@@ -256,16 +257,17 @@ namespace Watermelon_Game.Fruits
             }
             
             this.IsGoldenFruit = true;
+            
 #if DEBUG || DEVELOPMENT_BUILD
-            if (_ForceGolden) 
-                goto skipUpgraded;
+            if (_ForceGolden) goto skipUpgraded;
 #endif
             this.isUpgradedGoldenFruit = _ForceEnable;
+            
 #if DEBUG || DEVELOPMENT_BUILD
             skipUpgraded:;
 #endif
             Instantiate(FruitPrefabSettings.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
-            OnGoldenFruitSpawn?.Invoke();
+            OnGoldenFruitSpawn?.Invoke(this.isUpgradedGoldenFruit);
         }
         
         private void OnCollisionEnter2D(Collision2D _Other)

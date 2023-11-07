@@ -498,7 +498,7 @@ namespace Watermelon_Game.Editor
             
                 if (_buildInfo == DEVELOPMENT_BUILD)
                 {
-                    BuildPipeline.BuildPlayer(_levels, _path, _buildTarget, BuildOptions.UncompressedAssetBundle); // | BuildOptions.Development TODO: Remove "BuildOptions.Development" if not needed
+                    BuildPipeline.BuildPlayer(_levels, _path, _buildTarget, BuildOptions.UncompressedAssetBundle | BuildOptions.Development); // TODO: Remove "BuildOptions.Development" if not needed
                 }
                 else if (_buildInfo == RELEASE_BUILD)
                 {

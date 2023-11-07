@@ -130,8 +130,8 @@ namespace Watermelon_Game.Audio
         /// </summary>
         private void LoadSettings()
         {
-            var _bgm = PlayerPrefs.GetString(BGM);
-            var _volume = PlayerPrefs.GetFloat(VOLUME);
+            var _bgm = PlayerPrefs.GetString(BGM, false.ToString());
+            var _volume = PlayerPrefs.GetFloat(VOLUME, .5f);
             
             this.isMuted = bool.Parse(_bgm);
             this.SetBGM();

@@ -249,7 +249,8 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Increments <see cref="Stats.GoldenFruitCount"/> in <see cref="GameOverMenu"/> and <see cref="StatsMenu"/>
         /// </summary>
-        private void AddGoldenFruit()
+        /// <param name="_IsUpgradedGoldenFruit">Indicates whether the golden fruit is an upgraded golden fruit or not</param>
+        private void AddGoldenFruit(bool _IsUpgradedGoldenFruit)
         {
             this.gameOverMenu.AddGoldenFruit();
             this.statsMenu.AddGoldenFruit();

@@ -110,7 +110,7 @@ namespace Watermelon_Game.Skills
         public static event Action<Skill?> OnSkillActivated;
         /// <summary>
         /// Is called after a <see cref="Skill"/> was used <br/>
-        /// <b>Parameter:</b> The points that were required to activate the <see cref="Skill"/>
+        /// <b>Parameter2:</b> The points that were required to activate the <see cref="Skill"/>
         /// </summary>
         public static event Action<uint> OnSkillUsed;  
         #endregion

@@ -164,23 +164,23 @@ namespace Watermelon_Game.Menus
         /// <returns><see cref="StatsValues"/></returns>
         private StatsValues Load(bool _Set)
         {
-            var _bestScore = PlayerPrefs.GetInt(BEST_SCORE_KEY);
-            var _bestMultiplier = PlayerPrefs.GetInt(HIGHEST_MULTIPLIER_KEY);
-            var _grapeEvolvedCount = PlayerPrefs.GetInt(GRAPE_KEY);
-            var _cherryEvolvedCount = PlayerPrefs.GetInt(CHERRY_KEY);
-            var _strawberryEvolvedCount = PlayerPrefs.GetInt(STRAWBERRY_KEY);
-            var _lemonEvolvedCount = PlayerPrefs.GetInt(LEMON_KEY);
-            var _orangeEvolvedCount = PlayerPrefs.GetInt(ORANGE_KEY);
-            var _appleEvolvedCount = PlayerPrefs.GetInt(APPLE_KEY); 
-            var _pearEvolvedCount = PlayerPrefs.GetInt(PEAR_KEY);
-            var _pineappleEvolvedCount = PlayerPrefs.GetInt(PINEAPPLE_KEY);
-            var _honeymelonEvolvedCount = PlayerPrefs.GetInt(HONEY_MELON_KEY);
-            var _watermelonEvolvedCount = PlayerPrefs.GetInt(MELON_KEY);
-            var _goldenFruitCount = PlayerPrefs.GetInt(GOLDEN_FRUIT_KEY);
-            var _powerSkillUsedCount = PlayerPrefs.GetInt(POWER_KEY);
-            var _evolveSkillUsedCount = PlayerPrefs.GetInt(EVOLVE_KEY);
-            var _destroySkillUsedCount = PlayerPrefs.GetInt(DESTROY_KEY);
-            var _gamesPlayed = PlayerPrefs.GetInt(GAMES_PLAYED_KEY);
+            var _bestScore = PlayerPrefs.GetInt(BEST_SCORE_KEY, 0);
+            var _bestMultiplier = PlayerPrefs.GetInt(HIGHEST_MULTIPLIER_KEY, 0);
+            var _grapeEvolvedCount = PlayerPrefs.GetInt(GRAPE_KEY, 0);
+            var _cherryEvolvedCount = PlayerPrefs.GetInt(CHERRY_KEY, 0);
+            var _strawberryEvolvedCount = PlayerPrefs.GetInt(STRAWBERRY_KEY, 0);
+            var _lemonEvolvedCount = PlayerPrefs.GetInt(LEMON_KEY, 0);
+            var _orangeEvolvedCount = PlayerPrefs.GetInt(ORANGE_KEY, 0);
+            var _appleEvolvedCount = PlayerPrefs.GetInt(APPLE_KEY, 0); 
+            var _pearEvolvedCount = PlayerPrefs.GetInt(PEAR_KEY, 0);
+            var _pineappleEvolvedCount = PlayerPrefs.GetInt(PINEAPPLE_KEY, 0);
+            var _honeymelonEvolvedCount = PlayerPrefs.GetInt(HONEY_MELON_KEY, 0);
+            var _watermelonEvolvedCount = PlayerPrefs.GetInt(MELON_KEY, 0);
+            var _goldenFruitCount = PlayerPrefs.GetInt(GOLDEN_FRUIT_KEY, 0);
+            var _powerSkillUsedCount = PlayerPrefs.GetInt(POWER_KEY, 0);
+            var _evolveSkillUsedCount = PlayerPrefs.GetInt(EVOLVE_KEY, 0);
+            var _destroySkillUsedCount = PlayerPrefs.GetInt(DESTROY_KEY, 0);
+            var _gamesPlayed = PlayerPrefs.GetInt(GAMES_PLAYED_KEY, 0);
             TimeSpan.TryParse(PlayerPrefs.GetString(TIME_SPEND_KEY), out var _timeSPendInGame);
 
             var _statsValues = new StatsValues

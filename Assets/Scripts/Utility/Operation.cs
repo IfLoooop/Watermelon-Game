@@ -14,6 +14,10 @@ namespace Watermelon_Game.Utility
         /// </summary>
         Add,
         /// <summary>
+        /// Subtracts the value
+        /// </summary>
+        Subtract,
+        /// <summary>
         /// Multiplies the value
         /// </summary>
         Multiply,
