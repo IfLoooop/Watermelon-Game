@@ -182,9 +182,9 @@ namespace Watermelon_Game.Editor
             return;
 #endif
 #pragma warning disable CS0162
-            Finalize(_Report, BuildTarget.StandaloneWindows64, WINDOWS, BuildTarget.StandaloneLinux64, LINUX);
-            Finalize(_Report, BuildTarget.StandaloneLinux64, LINUX, BuildTarget.StandaloneOSX, MAC);
-            Finalize(_Report, BuildTarget.StandaloneOSX, MAC, BuildTarget.WSAPlayer, UWP);
+            Finalize(_Report, BuildTarget.StandaloneWindows64, WINDOWS, BuildTarget.StandaloneOSX, MAC);
+            Finalize(_Report, BuildTarget.StandaloneOSX, MAC, BuildTarget.StandaloneLinux64, LINUX);
+            Finalize(_Report, BuildTarget.StandaloneLinux64, LINUX, BuildTarget.WSAPlayer, UWP);
             Finalize(_Report, BuildTarget.WSAPlayer, UWP, null, string.Empty);
 #pragma warning restore CS0162
         }

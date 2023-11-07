@@ -81,6 +81,10 @@ namespace Watermelon_Game.Editor.Steam
         /// </summary>
         private static bool showResetButton;
         /// <summary>
+        /// Indicates that the contents of a line should be skipped (for multiline)
+        /// </summary>
+        private const string REMOVE = "[REMOVE]";
+        /// <summary>
         /// Regex pattern to check for multilines
         /// </summary>
         private static readonly string multiLinePattern = $"({nameof(title)}|{nameof(subtitle)}|{nameof(summary)}|{nameof(body)}),[a-z]+," + "{1}";
@@ -121,6 +125,7 @@ namespace Watermelon_Game.Editor.Steam
         private void SetLanguage()
         {
             this.language = this.chatGPTTranslationLanguage;
+            this.GenerateChatGPTPrompt();
         }
         
         /// <summary>
@@ -171,7 +176,7 @@ namespace Watermelon_Game.Editor.Steam
 
             foreach (var _line in _lines)
             {
-                if (string.IsNullOrWhiteSpace(_line))
+                if (_line == REMOVE)
                 {
                     continue;
                 }
@@ -188,6 +193,8 @@ namespace Watermelon_Game.Editor.Steam
 
             var _contents = string.Join('\n', _updatedLines);
             File.WriteAllText(this.filePath, _contents);
+            
+            this.Load();
             
             Debug.ClearDeveloperConsole();
             Debug.Log($"<color=green>Added <b>{this.language}</b> localization</color>");
@@ -233,7 +240,7 @@ namespace Watermelon_Game.Editor.Steam
                             var _isMultiline = !_multilinePattern.IsMatch(_Lines[j]);
                             if (_isMultiline)
                             {
-                                _Lines[j] = string.Empty;
+                                _Lines[j] = REMOVE;
                             }
                             else
                             {
@@ -328,7 +335,6 @@ namespace Watermelon_Game.Editor.Steam
         {
             showResetButton = false;
             
-            var _currentLanguage = this.language;
             var _languages = Enum.GetValues(typeof(Language)).Cast<Language>();
             var _lines = File.ReadAllLines(this.filePath);
             var _updatedContent = new List<string>();
@@ -345,14 +351,24 @@ namespace Watermelon_Game.Editor.Steam
 
             foreach (var _line in _lines)
             {
-                if (!string.IsNullOrWhiteSpace(_line))
+                if (_line == REMOVE)
                 {
-                    _updatedContent.Add(_line);
+                    continue;
                 }
+                
+                _updatedContent.Add(_line);
             }
             
             File.WriteAllLines(this.filePath, _updatedContent);
-            this.language = _currentLanguage;
+            
+            this.language = Language.english;
+            this.languageToLoad = Language.english;
+
+            this.title = string.Empty;
+            this.subtitle = string.Empty;
+            this.summary = string.Empty;
+            this.body = string.Empty;
+            this.chatGPTTranslationPromt = string.Empty;
             
             Debug.Log("<color=yellow>User entries have been removed</color>");
         }
@@ -427,7 +443,7 @@ namespace Watermelon_Game.Editor.Steam
         /// </summary>
         [PropertyOrder(13)][Button("Generate")]
         // ReSharper disable once InconsistentNaming
-        private void GenerateChatGPTPrompt()
+        private void GenerateChatGPTPrompt() // TODO: Change "textAreaType" to include/exclude the textareas
         {
             const string PROMPT_TEMPLATE = "Translate the following into {0}{1}:\n{2}";
             var _languageMap = new ReadOnlyDictionary<Language, string>(new Dictionary<Language, string>
@@ -461,6 +477,10 @@ namespace Watermelon_Game.Editor.Steam
                 case TextAreaType.Body:
                     this.chatGPTTranslationPromt = string.Format(PROMPT_TEMPLATE, _languageMap[this.chatGPTTranslationLanguage], AddMarkupNotifier(this.body), this.body);
                     break;
+                case TextAreaType.All:
+                    var _combinedTextAreas = string.Concat(this.title, "\n------------------------------------\n", this.summary, "\n------------------------------------\n", this.body);
+                    this.chatGPTTranslationPromt = string.Format(PROMPT_TEMPLATE, _languageMap[this.chatGPTTranslationLanguage], AddMarkupNotifier(_combinedTextAreas), _combinedTextAreas);
+                    break;
             }
         }
 
@@ -471,7 +491,7 @@ namespace Watermelon_Game.Editor.Steam
         /// <returns>A markup notifier if the given string contains any markup code, otherwise <see cref="string"/>.<see cref="string.Empty"/></returns>
         private static string AddMarkupNotifier(string _String)
         {
-            var _markupCode = new List<string> { "[b]", "[/b]", "[u]", "[/u]", "[i]", "[/i]", "[strike]", "[/strike]", "[url=", "[/url]", "[list]", "[/list]", "[olist]", "[/olist]", "[*]", "[h1]", "[/h1]", "[h2]", "[/h2]", "[h3]", "[/h3]", "[previewyoutube=", "[/previewyoutube]" };
+            var _markupCode = new List<string> { "[b]", "[/b]", "[u]", "[/u]", "[i]", "[/i]", "[strike]", "[/strike]", "[url=", "[/url]", "[list]", "[/list]", "[olist]", "[/olist]", "[*]", "[h1]", "[/h1]", "[h2]", "[/h2]", "[h3]", "[/h3]", "[previewyoutube=", "[/previewyoutube]", "[img]", "[/img]" };
             const string MARKUP_NOTIFIER = " (Leave the markup code exactly as it is)";
             return _markupCode.Any(_String.Contains) ? MARKUP_NOTIFIER : string.Empty;
         }

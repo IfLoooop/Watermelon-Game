@@ -8,6 +8,7 @@ namespace Watermelon_Game.Editor.Steam
         Title,
         Subtitle,
         Summary,
-        Body
+        Body,
+        All
     }
 }

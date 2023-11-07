@@ -20,6 +20,6 @@ MonoBehaviour:
   body: 
   insertListAsterisks: 1
   languageToLoad: 0
-  chatGPTTranslationLanguage: 0
-  textAreaType: 3
+  chatGPTTranslationLanguage: 12
+  textAreaType: 4
   chatGPTTranslationPromt: 

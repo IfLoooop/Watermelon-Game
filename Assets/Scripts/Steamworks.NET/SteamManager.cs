@@ -209,6 +209,10 @@ namespace Watermelon_Game.Steamworks.NET
 
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
+
+#if DEBUG || DEVELOPMENT_BUILD
+			this.Update_DEVELOPMENT();
+#endif
 		}
 		#endregion
 #else

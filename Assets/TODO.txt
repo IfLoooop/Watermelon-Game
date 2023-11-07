@@ -1,5 +1,4 @@
 TODO: Achievements localizations
-TODO: Steam update
 -On UWP build, reqired always asks to install the same missing package
 -Infobox which buttons are used in "DevelopmentTools.cs"
 -Test game with Application.TargetFramerate

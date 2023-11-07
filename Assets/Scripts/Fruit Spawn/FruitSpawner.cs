@@ -138,6 +138,9 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             this.ResetFruitSpawner(true);
             this.fruitSpawnerAim.EnableAim(true);
+            
+            this.BlockInput(false);
+            this.UnblockRelease();
         }
 
         /// <summary>
@@ -145,7 +148,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private void ResetGameStarted()
         {
-            this.BlockInput();
+            this.BlockInput(true);
             this.fruitSpawnerAim.EnableAim(false);
         }
         
@@ -156,23 +159,34 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             Destroy(this.fruitBehaviour.gameObject);
             this.fruitBehaviour = null;
-            this.UnblockInput();
-        }
-        
-        /// <summary>
-        /// Sets <see cref="blockInput"/> to false
-        /// </summary>
-        private void UnblockInput()
-        {
-            this.blockInput = false;
+            this.BlockInput(false);
         }
         
         /// <summary>
         /// Sets <see cref="blockInput"/> to true
         /// </summary>
-        private void BlockInput()
+        /// <param name="_Value">The value to set <see cref="blockInput"/> to</param>
+        private void BlockInput(bool _Value)
         {
-            this.blockInput = true;
+            this.blockInput = _Value;
+        }
+        
+        /// <summary>
+        /// Sets <see cref="blockRelease"/> to false
+        /// </summary>
+        private void UnblockRelease()
+        {
+            this.BlockRelease(false);
+        }
+        
+        /// <summary>
+        /// Sets <see cref="blockRelease"/> to the given value
+        /// </summary>
+        /// <param name="_Value">The value <see cref="blockRelease"/> should be set to</param>
+        private void BlockRelease(bool _Value)
+        {
+            this.blockRelease = _Value;
+            this.fruitSpawnerAim.EnableAim(!this.blockRelease);
         }
         
         private void Update()
@@ -219,6 +233,11 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private void ReleaseFruit()
         {
+            if (this.fruitBehaviour == null)
+            {
+                return;
+            }
+            
             var _time = Time.time - this.releaseCooldown;
             var _releaseCooldown = _time < this.lastRelease;
             var _fruitInTrigger = this.fruitTrigger.IsTouchingLayers(LayerMaskController.Fruit_EvolvingFruit_Mask);
@@ -243,24 +262,6 @@ namespace Watermelon_Game.Fruit_Spawn
             this.lastRelease = Time.time;
             this.fruitBehaviour.Release(-this.fruitSpawnerAim.transform.up);
             this.ResetFruitSpawner(false);
-        }
-
-        /// <summary>
-        /// Sets <see cref="blockRelease"/> to the given value
-        /// </summary>
-        /// <param name="_Value">The value <see cref="blockRelease"/> should be set to</param>
-        private void BlockRelease(bool _Value)
-        {
-            this.blockRelease = _Value;
-            this.fruitSpawnerAim.EnableAim(!this.blockRelease);
-        }
-        
-        /// <summary>
-        /// Sets <see cref="blockRelease"/> to false
-        /// </summary>
-        private void UnblockRelease()
-        {
-            this.BlockRelease(false);
         }
         
 #if DEBUG || DEVELOPMENT_BUILD

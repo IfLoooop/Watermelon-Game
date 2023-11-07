@@ -24,9 +24,9 @@ namespace Watermelon_Game.Steamworks.NET
         private const string EVOLVE_SKILL = "EVOLVE_SKILL";
         private const string DESTROY_SKILL = "DESTROY_SKILL";
         private const string MATCH_1_H = "MATCH_1_H";
-        private const string PLAYTIME_10_H = "PLAYTIME_10_H";
-        private const string PLAYTIME_100_H = "PLAYTIME_100_H";
-        private const string PLAYTIME_1000_H = "PLAYTIME_1000_H";
+        public const string PLAYTIME_10_H = "PLAYTIME_10_H";
+        public const string PLAYTIME_100_H = "PLAYTIME_100_H";
+        public const string PLAYTIME_1000_H = "PLAYTIME_1000_H";
         #endregion
         
         #region Fields
@@ -60,11 +60,20 @@ namespace Watermelon_Game.Steamworks.NET
             FruitController.OnEvolve += FruitEvolved;
             FruitBehaviour.OnGoldenFruitSpawn += GoldenFruitSpawned;
             FruitBehaviour.OnSkillUsed += SkillUsed;
+            
+            Application.quitting += this.ApplicationIsQuitting;
+        }
+
+        /// <summary>
+        /// <see cref="Application.quitting"/>
+        /// </summary>
+        private void ApplicationIsQuitting()
+        {
+            this.AddPlaytime();
         }
         
         private void OnDisable()
         {
-            this.AddPlaytime();
             SteamUserStats.StoreStats();
             
             MaxHeight.OnGameOver -= this.GameFinished;
@@ -94,6 +103,7 @@ namespace Watermelon_Game.Steamworks.NET
             
             var _currentGameDuration = Time.time - GameController.CurrentGameTimeStamp;
             var _isAtLeastAnHour = TimeSpan.FromSeconds(_currentGameDuration).Hours >= 1;
+            
             if (_isAtLeastAnHour)
             {
                 SteamUserStats.SetAchievement(MATCH_1_H);
@@ -239,7 +249,7 @@ namespace Watermelon_Game.Steamworks.NET
         }
 
         /// <summary>
-        /// Checks the current playtime of the player and set the achievements, if the threshold is reached
+        /// Checks the current playtime of the player and sets the achievements, if the threshold is reached
         /// </summary>
         private void CheckCurrentPlaytime()
         {
@@ -247,7 +257,7 @@ namespace Watermelon_Game.Steamworks.NET
             var _is10H = _currentPlaytime >= 10;
             var _is100H = _currentPlaytime >= 100;
             var _is1000H = _currentPlaytime >= 1000;
-
+            
             if (_is1000H)
             {
                 SteamUserStats.SetAchievement(PLAYTIME_1000_H);
@@ -266,6 +276,17 @@ namespace Watermelon_Game.Steamworks.NET
                 SteamUserStats.StoreStats();
             }
         }
+
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// Is called at the end of <see cref="SteamManager.Update"/> <br/>
+        /// <b>Only works in Development builds!</b>
+        /// </summary>
+        private void Update_DEVELOPMENT()
+        {
+            
+        }
+#endif
         #endregion
     }
 }

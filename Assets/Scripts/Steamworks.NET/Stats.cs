@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Steamworks;
+using UnityEngine;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Steamworks.NET
@@ -27,7 +28,8 @@ namespace Watermelon_Game.Steamworks.NET
         private const string GOLDEN_FRUIT = "GOLDEN_FRUIT";
         private const string UPGRADED_GOLDEN_FRUIT = "UPGRADED_GOLDEN_FRUIT";
         private const string SKILL_COUNT = "SKILL_COUNT";
-        private const string PLAYTIME = "PLAYTIME";
+        private const string PLAYTIME_OLD = "PLAYTIME";
+        private const string PLAYTIME_NEW = "PLAYTIME_NEW";
         #endregion
         
         #region Fields
@@ -51,7 +53,7 @@ namespace Watermelon_Game.Steamworks.NET
             { GOLDEN_FRUIT, 0 },
             { UPGRADED_GOLDEN_FRUIT, 0 },
             { SKILL_COUNT, 0 },
-            { PLAYTIME, 0 }
+            { PLAYTIME_NEW, 0 }
         };
         #endregion
         
@@ -120,7 +122,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <summary>
         /// Total playtime in hours
         /// </summary>
-        public string Playtime => PLAYTIME;
+        public string Playtime => PLAYTIME_NEW;
         #endregion
 
         #region Constructor
@@ -160,7 +162,7 @@ namespace Watermelon_Game.Steamworks.NET
             this.statsMap[GOLDEN_FRUIT] = _GoldenFruits;
             this.statsMap[UPGRADED_GOLDEN_FRUIT] = _UpgradedGoldenFruits;
             this.statsMap[SKILL_COUNT] = _SkillCount;
-            this.statsMap[PLAYTIME] = _Playtime;
+            this.statsMap[PLAYTIME_NEW] = _Playtime;
         }
         #endregion
         
@@ -171,6 +173,8 @@ namespace Watermelon_Game.Steamworks.NET
         /// <returns>A new <see cref="Stats"/> object, that contains all loaded stats from Steam for this user</returns>
         public static Stats LoadAllStats()
         {
+            ResetOldPlaytimeStats();
+            
             SteamUserStats.GetStat(GAMES_FINISHED, out int _gamesFinished);
             SteamUserStats.GetStat(HIGHSCORE, out int _highscore);
             SteamUserStats.GetStat(GRAPE, out int _grapes);
@@ -186,10 +190,70 @@ namespace Watermelon_Game.Steamworks.NET
             SteamUserStats.GetStat(GOLDEN_FRUIT, out int _goldenFruits);
             SteamUserStats.GetStat(UPGRADED_GOLDEN_FRUIT, out int _upgradedGoldenFruits);
             SteamUserStats.GetStat(SKILL_COUNT, out int _skillCount);
-            SteamUserStats.GetStat(PLAYTIME, out float _playtime);
+            SteamUserStats.GetStat(PLAYTIME_NEW, out float _playtime);
             
             return new Stats(_gamesFinished, _highscore, _grapes, _cherries, _strawberries, _lemons, _oranges, _apples, _pears, _pineapples, _honeymelons, _watermelons, _goldenFruits, _upgradedGoldenFruits, _skillCount, _playtime);
         }
+
+        /// <summary>
+        /// Clears the achievements for <see cref="SteamManager.PLAYTIME_10_H"/>, <see cref="SteamManager.PLAYTIME_100_H"/> and <see cref="SteamManager.PLAYTIME_1000_H"/>, <br/>
+        /// if the player has a value greater than 1 in <see cref="PLAYTIME_OLD"/>
+        /// </summary>
+        private static void ResetOldPlaytimeStats()
+        {
+            SteamUserStats.GetStat(PLAYTIME_OLD, out float _playtimeOld);
+            
+            if (_playtimeOld >= .01f) // Not 0 to factor in floating point error
+            {
+                SteamUserStats.SetStat(PLAYTIME_OLD, 0f);
+                SteamUserStats.ClearAchievement(SteamManager.PLAYTIME_10_H);
+                SteamUserStats.ClearAchievement(SteamManager.PLAYTIME_100_H);
+                SteamUserStats.ClearAchievement(SteamManager.PLAYTIME_1000_H);
+                SteamUserStats.StoreStats();
+            }
+        }
+        
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
+        /// <i><see cref="SteamUserStats"/>.<see cref="SteamUserStats.GetStat(string, out int)"/> is an API call, don't use to often</i>
+        /// <b>Only works in Development builds!</b>
+        /// </summary>
+        /// <param name="_APIName">The API Name to get the value for</param>
+        public void LogInt_DEVELOPMENT(Func<Stats, string> _APIName)
+        {
+            var _apiName = _APIName(this);
+            SteamUserStats.GetStat(_apiName, out int _steamUserStatsValue);
+            this.LogStat_DEVELOPMENT(_apiName, _steamUserStatsValue);
+        }
+
+        /// <summary>
+        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
+        /// <i><see cref="SteamUserStats"/>.<see cref="SteamUserStats.GetStat(string, out int)"/> is an API call, don't use to often</i>
+        /// <b>Only works in Development builds!</b>
+        /// </summary>
+        /// <param name="_APIName">The API Name to get the value for</param>
+        public void LogFloat_DEVELOPMENT(Func<Stats, string> _APIName)
+        {
+            var _apiName = _APIName(this);
+            SteamUserStats.GetStat(_apiName, out float _steamUserStatsValue);
+            this.LogStat_DEVELOPMENT(_apiName, _steamUserStatsValue);
+        }
+        
+        /// <summary>
+        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
+        /// <b>Only works in Development builds!</b>
+        /// </summary>
+        /// <param name="_APIName">The API Name to get the value for</param>
+        /// <param name="_SteamUserStatsValue">The value from <see cref="SteamUserStats"/> to log</param>
+        private void LogStat_DEVELOPMENT(string _APIName, float _SteamUserStatsValue)
+        {
+            var _statsMapValue = this.statsMap[_APIName];
+            var _message = string.Concat($"{_APIName}\n", $"StatsMap: {_statsMapValue}\n", $"SteamUserStats: {_SteamUserStatsValue}");
+            
+            Debug.Log(_message);
+        }
+#endif
         
         /// <summary>
         /// Returns the value from <see cref="statsMap"/> for the given API Name
