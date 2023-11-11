@@ -14,7 +14,7 @@ namespace Watermelon_Game.Steamworks.NET
     /// <summary>
     /// Contains logic for Steam Stats and Achievements
     /// </summary>
-    internal sealed partial class SteamManager
+    internal sealed class StatsAndAchievementsManager : MonoBehaviour
     {
         #region Achievement API Names
         private const string MULTIPLIER_10 = "MULTIPLIER_10";
@@ -41,6 +41,11 @@ namespace Watermelon_Game.Steamworks.NET
         #endregion
         
         #region Methods
+        private void Awake()
+        {
+            this.Init();
+        }
+        
         /// <summary>
         /// Is called at the end of <see cref="SteamManager"/>.<see cref="Awake"/>
         /// </summary>
@@ -50,10 +55,7 @@ namespace Watermelon_Game.Steamworks.NET
             this.stats = Stats.LoadAllStats();
         }
 
-        /// <summary>
-        /// Is called at the end of <see cref="SteamManager"/>.<see cref="OnEnable"/>
-        /// </summary>
-        private void CustomOnEnable()
+        private void OnEnable()
         {
             MaxHeight.OnGameOver += this.GameFinished;
             Multiplier.OnMultiplierActivated += MultiplierActivated;
@@ -63,7 +65,7 @@ namespace Watermelon_Game.Steamworks.NET
             
             Application.quitting += this.ApplicationIsQuitting;
         }
-
+        
         /// <summary>
         /// <see cref="Application.quitting"/>
         /// </summary>
@@ -276,17 +278,6 @@ namespace Watermelon_Game.Steamworks.NET
                 SteamUserStats.StoreStats();
             }
         }
-
-#if DEBUG || DEVELOPMENT_BUILD
-        /// <summary>
-        /// Is called at the end of <see cref="SteamManager.Update"/> <br/>
-        /// <b>Only works in Development builds!</b>
-        /// </summary>
-        private void Update_DEVELOPMENT()
-        {
-            
-        }
-#endif
         #endregion
     }
 }

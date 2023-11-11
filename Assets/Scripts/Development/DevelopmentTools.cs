@@ -85,11 +85,10 @@ namespace Watermelon_Game.Development
             this.camera = Camera.main;
             
             var _developmentVersionPath = Path.Combine(Application.dataPath, DEVELOPMENT_VERSION);
-            var _buildNumber = ulong.Parse(File.ReadAllText(_developmentVersionPath));
-            this.developmentVersion.text = _buildNumber.ToString();
+            this.developmentVersion.text = File.ReadAllText(_developmentVersionPath);
 #endif
         }
-
+        
 #if DEBUG || DEVELOPMENT_BUILD
         private void Update()
         {
@@ -458,6 +457,6 @@ namespace Watermelon_Game.Development
             }
         }
 #endif
-        #endregion  
+        #endregion
     }
 }

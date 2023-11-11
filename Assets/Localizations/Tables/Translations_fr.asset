@@ -82,6 +82,26 @@ MonoBehaviour:
     m_Localized: "Red\xE9marrer"
     m_Metadata:
       m_Items: []
+  - m_Id: 2005118945095680
+    m_Localized: Pos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005125202997248
+    m_Localized: Nom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005128243867648
+    m_Localized: Score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2273445466632192
+    m_Localized: Tableau des scores
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2290309332758528
+    m_Localized: Amis
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -79,6 +79,26 @@ MonoBehaviour:
     m_Key: restart
     m_Metadata:
       m_Items: []
+  - m_Id: 2005118945095680
+    m_Key: placement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005125202997248
+    m_Key: username
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005128243867648
+    m_Key: score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2273445466632192
+    m_Key: leaderboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2290309332758528
+    m_Key: friends
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

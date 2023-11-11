@@ -68,6 +68,16 @@ namespace Watermelon_Game.Menus
         protected override void Awake()
         {
             base.Awake();
+
+#if UNITY_EDITOR
+            // Sometimes the Awake is called outside of the playmode 
+            // Doesn't break anything, just to remove the error message
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+#endif
+            
             this.LoadLanguage();
         }
         

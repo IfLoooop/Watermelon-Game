@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Fruits;
+using Watermelon_Game.Menus.Leaderboards;
 using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
 
@@ -19,20 +21,21 @@ namespace Watermelon_Game.Menus
         [SerializeField] private StatsMenu statsMenu;
         [Tooltip("Reference to the GameOverMenu component")]
         [SerializeField] private GameOverMenu gameOverMenu;
+        [Tooltip("Reference to the Leaderboard component")]
+        [SerializeField] private Leaderboard leaderboard;
         [Tooltip("Reference to the ExitMenu component")]
         [SerializeField] private ExitMenu exitMenu;
 
         [Header("Settings")]
         [Tooltip("Delay in seconds, between opening and closing the menu, on language change")]
         [SerializeField] private float menuReopenDelay = .25f;
+        
+        [Header("Debug")]
+        [Tooltip("The currently active menu")]
+        [SerializeField][ReadOnly][CanBeNull] private MenuBase currentActiveMenu;
         #endregion
 
         #region Fields
-        /// <summary>
-        /// The currently active menu
-        /// </summary>
-        [CanBeNull] private MenuBase currentActiveMenu;
-        
         /// <summary>
         /// Whether the <see cref="MenuController"/> currently takes input or not
         /// </summary>
@@ -54,16 +57,18 @@ namespace Watermelon_Game.Menus
         #region Methods
         private void Awake()
         {
-            this.InitializeMenu(this.statsMenu);
-            this.InitializeMenu(this.gameOverMenu);
-            this.InitializeMenu(this.exitMenu);
+            InitializeMenu(this.statsMenu);
+            InitializeMenu(this.gameOverMenu);
+            InitializeMenu(this.leaderboard);
+            InitializeMenu(this.exitMenu);
         }
         
         /// <summary>
-        /// Needed to set the "Instance" properties in the Menu class
+        /// Activates and deactivates the given menu, to initialize all needed values <br/>
+        /// <i>Because all menu GameObjects start inactive</i>
         /// </summary>
         /// <param name="_Menu">The menu to initialize</param>
-        private void InitializeMenu(MenuBase _Menu)
+        private static void InitializeMenu(MenuBase _Menu)
         {
             _Menu.gameObject.SetActive(true);
             _Menu.gameObject.SetActive(false);
@@ -76,9 +81,9 @@ namespace Watermelon_Game.Menus
             GameController.OnResetGameFinished += this.EnableInput;
             GameController.OnRestartGame += this.GameOver;
             FruitController.OnEvolve += this.AddFruit;
-            FruitBehaviour.OnGoldenFruitSpawn += AddGoldenFruit;
-            FruitBehaviour.OnSkillUsed += AddSkill;
-            Multiplier.OnMultiplierActivated += MultiplierActivated;
+            FruitBehaviour.OnGoldenFruitSpawn += this.AddGoldenFruit;
+            FruitBehaviour.OnSkillUsed += this.AddSkill;
+            Multiplier.OnMultiplierActivated += this.MultiplierActivated;
             LanguageController.OnLanguageChanged += this.ReopenMenu;
         }
 
@@ -89,9 +94,9 @@ namespace Watermelon_Game.Menus
             GameController.OnResetGameFinished -= this.EnableInput;
             GameController.OnRestartGame -= this.GameOver;
             FruitController.OnEvolve -= this.AddFruit;
-            FruitBehaviour.OnGoldenFruitSpawn -= AddGoldenFruit;
-            FruitBehaviour.OnSkillUsed -= AddSkill;
-            Multiplier.OnMultiplierActivated -= MultiplierActivated;
+            FruitBehaviour.OnGoldenFruitSpawn -= this.AddGoldenFruit;
+            FruitBehaviour.OnSkillUsed -= this.AddSkill;
+            Multiplier.OnMultiplierActivated -= this.MultiplierActivated;
             LanguageController.OnLanguageChanged -= this.ReopenMenu;
         }
         
@@ -122,6 +127,10 @@ namespace Watermelon_Game.Menus
             else if (Input.GetKeyDown(KeyCode.M))
             {
                 this.Open_CloseMenu(this.statsMenu);
+            }
+            else if (Input.GetKeyDown(KeyCode.L))
+            {
+                this.Open_CloseMenu(this.leaderboard);
             }
             else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
@@ -273,7 +282,7 @@ namespace Watermelon_Game.Menus
         {
             if (this.currentActiveMenu != null)
             {
-                base.StartCoroutine(this.ReOpen());   
+                this.StartCoroutine(this.ReOpen());   
             }
         }
 

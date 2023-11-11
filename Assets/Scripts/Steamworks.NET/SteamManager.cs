@@ -23,7 +23,7 @@ namespace Watermelon_Game.Steamworks.NET
 	// It handles the basics of starting up and shutting down the SteamAPI for use.
 	// </summary>
 	[DisallowMultipleComponent]
-	internal sealed partial class SteamManager : MonoBehaviour 
+	internal sealed class SteamManager : MonoBehaviour 
 	{
 #if !DISABLESTEAMWORKS
 		#region Fields
@@ -58,12 +58,19 @@ namespace Watermelon_Game.Steamworks.NET
 		/// <see cref="initialized"/>
 		/// </summary>
 		public static bool Initialized => Instance.initialized;
+		
+		/// <summary>
+		/// Steam ID of the account currently logged into the Steam client (Current user/Local user)
+		/// </summary>
+		public static CSteamID SteamID { get; private set; }
 		#endregion
 		
 		#region Methods
 		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
 		private static void SteamAPIDebugTextHook(int _Severity, StringBuilder _PchDebugText)
 		{
+
+			
 			Debug.LogWarning(_PchDebugText);
 		}
 
@@ -151,8 +158,7 @@ namespace Watermelon_Game.Steamworks.NET
 			}
 
 			everInitialized = true;
-			
-			this.Init();
+			SteamID = SteamUser.GetSteamID();
 		}
 
 		// This should only ever get called on first load and after an Assembly reload, You should never Disable the Steamworks Manager yourself.
@@ -176,8 +182,6 @@ namespace Watermelon_Game.Steamworks.NET
 				this.steamAPIWarningMessageHook = new SteamAPIWarningMessageHook_t(SteamAPIDebugTextHook);
 				SteamClient.SetWarningMessageHook(this.steamAPIWarningMessageHook);
 			}
-			
-			this.CustomOnEnable();
 		}
 
 		// OnApplicationQuit gets called too early to shutdown the SteamAPI.
@@ -209,10 +213,6 @@ namespace Watermelon_Game.Steamworks.NET
 
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
-
-#if DEBUG || DEVELOPMENT_BUILD
-			this.Update_DEVELOPMENT();
-#endif
 		}
 		#endregion
 #else

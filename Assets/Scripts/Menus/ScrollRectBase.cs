@@ -11,7 +11,7 @@ namespace Watermelon_Game.Menus
         #region Inspector Fields
         [Header("References")]
         [Tooltip("The ScrollRect component of the menu")]
-        [SerializeField] protected ScrollRect scrollRect;
+        [SerializeField] protected Scrollbar scrollBar;
         #endregion
 
         #region Fields
@@ -26,9 +26,9 @@ namespace Watermelon_Game.Menus
         #endregion
         
         #region Methods
-        protected void OnDisable()
+        protected virtual void OnDisable()
         {
-            this.lastScrollPosition = this.scrollRect.verticalScrollbar.value;
+            this.lastScrollPosition = this.scrollBar != null ? this.scrollBar.value : 1;
             setLastScrollPosition = true;
         }
         
@@ -41,19 +41,20 @@ namespace Watermelon_Game.Menus
         }
         
         /// <summary>
-        /// Is called by <see cref="ScrollRect.onValueChanged"/> of the <see cref="scrollRect"/>
+        /// Is called by <see cref="ScrollRect.onValueChanged"/> of the <see cref="scrollBar"/>
         /// </summary>
-        public void SetScrollPosition()
+        /// <param name="_Scrollbar">The <see cref="Scrollbar"/> whose <see cref="Scrollbar.value"/> was changed</param>
+        public virtual void OnScrollPositionChanged(Scrollbar _Scrollbar)
         {
             if (setLastScrollPosition)
             {
                 if (base.Menu == Menu.GameOver)
                 {
-                    this.scrollRect.verticalScrollbar.value = 1;   
+                    this.scrollBar.value = 1;   
                 }
                 else
                 {
-                    this.scrollRect.verticalScrollbar.value = this.lastScrollPosition; 
+                    this.scrollBar.value = this.lastScrollPosition; 
                 }
             }
         }

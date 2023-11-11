@@ -7,6 +7,7 @@ namespace Watermelon_Game.Menus
     {
         Stats,
         GameOver,
+        Leaderboard,
         Exit
     }
 }

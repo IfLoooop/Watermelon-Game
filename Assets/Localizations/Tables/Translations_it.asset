@@ -82,6 +82,26 @@ MonoBehaviour:
     m_Localized: Riavvia
     m_Metadata:
       m_Items: []
+  - m_Id: 2005118945095680
+    m_Localized: Pos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005125202997248
+    m_Localized: Nome
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005128243867648
+    m_Localized: Punteggio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2273445466632192
+    m_Localized: Classifica
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2290309332758528
+    m_Localized: Amici
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

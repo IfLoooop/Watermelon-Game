@@ -215,14 +215,15 @@ namespace Watermelon_Game.Editor
                     File.Copy(DevelopmentVersionPath, _developmentVersionPath);
                 }
                 
-                CleanUp(_installPath, _CurrentOS);
-
-                // "steam_appid.txt"-file will not be in the .zip
+                // "steam_appid.txt"-file will be in the .zip
+                // Move below "CleanUp()" to not have it in the .zip file
                 if (_CurrentOS == DEVELOPMENT)
                 {
                     var _steamAppIdPath = Path.Combine(_installPath, STEAM_APP_ID);
                     File.Copy(SteamAppIdPath, _steamAppIdPath); 
                 }
+                
+                CleanUp(_installPath, _CurrentOS);
                 
                 if (_NextBuildTarget != null)
                 {

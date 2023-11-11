@@ -50,6 +50,11 @@ namespace Watermelon_Game
         #endregion
         
         #region Methods
+        private void Awake()
+        {
+            Application.targetFrameRate = 60;
+        }
+
         private void OnEnable()
         {
             MaxHeight.OnGameOver += this.GameOver;

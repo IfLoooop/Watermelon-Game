@@ -82,6 +82,26 @@ MonoBehaviour:
     m_Localized: Restart
     m_Metadata:
       m_Items: []
+  - m_Id: 2005118945095680
+    m_Localized: Pos.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005125202997248
+    m_Localized: Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2005128243867648
+    m_Localized: Score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2273445466632192
+    m_Localized: Leaderboard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2290309332758528
+    m_Localized: Friends
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -1,8 +1,9 @@
 // Must be this Namespace
-namespace Watermelon_Game
+// ReSharper disable once CheckNamespace
+namespace System.Runtime.CompilerServices
 {
     /// <summary>
     /// Needed to use "init"-keyword
     /// </summary>
-    internal static class IsExternalInit {}
+    public static class IsExternalInit {}
 }

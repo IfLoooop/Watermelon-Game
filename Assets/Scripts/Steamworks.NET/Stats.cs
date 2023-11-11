@@ -173,7 +173,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <returns>A new <see cref="Stats"/> object, that contains all loaded stats from Steam for this user</returns>
         public static Stats LoadAllStats()
         {
-            ResetOldPlaytimeStats();
+            //ResetOldPlaytimeStats();
             
             SteamUserStats.GetStat(GAMES_FINISHED, out int _gamesFinished);
             SteamUserStats.GetStat(HIGHSCORE, out int _highscore);
@@ -194,10 +194,10 @@ namespace Watermelon_Game.Steamworks.NET
             
             return new Stats(_gamesFinished, _highscore, _grapes, _cherries, _strawberries, _lemons, _oranges, _apples, _pears, _pineapples, _honeymelons, _watermelons, _goldenFruits, _upgradedGoldenFruits, _skillCount, _playtime);
         }
-
-        /// <summary>
-        /// Clears the achievements for <see cref="SteamManager.PLAYTIME_10_H"/>, <see cref="SteamManager.PLAYTIME_100_H"/> and <see cref="SteamManager.PLAYTIME_1000_H"/>, <br/>
-        /// if the player has a value greater than 1 in <see cref="PLAYTIME_OLD"/>
+        
+        /// <summary> // TODO: Not sure if i want to reset the data at this point
+        /// Clears the achievements for <see cref="StatsAndAchievementsManager.PLAYTIME_10_H"/>, <see cref="StatsAndAchievementsManager.PLAYTIME_100_H"/> and <see cref="StatsAndAchievementsManager.PLAYTIME_1000_H"/>, <br/>
+        /// if the player has a value greater than 1 in <see cref="PLAYTIME_OLD"/> <br/>
         /// </summary>
         private static void ResetOldPlaytimeStats()
         {
@@ -206,9 +206,9 @@ namespace Watermelon_Game.Steamworks.NET
             if (_playtimeOld >= .01f) // Not 0 to factor in floating point error
             {
                 SteamUserStats.SetStat(PLAYTIME_OLD, 0f);
-                SteamUserStats.ClearAchievement(SteamManager.PLAYTIME_10_H);
-                SteamUserStats.ClearAchievement(SteamManager.PLAYTIME_100_H);
-                SteamUserStats.ClearAchievement(SteamManager.PLAYTIME_1000_H);
+                SteamUserStats.ClearAchievement(StatsAndAchievementsManager.PLAYTIME_10_H);
+                SteamUserStats.ClearAchievement(StatsAndAchievementsManager.PLAYTIME_100_H);
+                SteamUserStats.ClearAchievement(StatsAndAchievementsManager.PLAYTIME_1000_H);
                 SteamUserStats.StoreStats();
             }
         }
