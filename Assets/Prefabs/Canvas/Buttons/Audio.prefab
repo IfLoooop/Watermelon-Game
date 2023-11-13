@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4996350361663842426}
   - component: {fileID: 4207540615453670750}
+  - component: {fileID: 5163293105411520186}
   m_Layer: 0
   m_Name: Audio
   m_TagString: Untagged
@@ -52,6 +53,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgmDisabledIcon: {fileID: 6061560505900171895}
   slider: {fileID: 5177275796897426200}
+--- !u!114 &5163293105411520186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479793037174862746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -673981751, guid: b36e968bd6b82894f90524c81ea87b78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CheatDetectionActive: 1
 --- !u!1 &1401350856760581089
 GameObject:
   m_ObjectHideFlags: 0

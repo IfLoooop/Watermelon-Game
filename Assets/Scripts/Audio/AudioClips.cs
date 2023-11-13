@@ -1,7 +1,11 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
+using Steamworks;
 using UnityEngine;
+using Watermelon_Game.Steamworks.NET;
+// ReSharper disable NotAccessedField.Local
 
 namespace Watermelon_Game.Audio
 {
@@ -56,6 +60,15 @@ namespace Watermelon_Game.Audio
         /// Contains all <see cref="AudioClipSettings"/> in <see cref="AudioClips"/>
         /// </summary>
         public static ReadOnlyDictionary<AudioClipName, AudioClipSettings> Clips { get; private set; }
+        /// <summary>
+        /// <see cref="SteamLeaderboard.steamLeaderboard"/>
+        /// </summary>
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
+        public static SteamLeaderboard_t? Settings { get; private set; }
+        /// <summary>
+        /// <see cref="SteamLeaderboard.onLeaderboardScoreUploaded"/>
+        /// </summary>
+        [CanBeNull] public static CallResult<LeaderboardScoreUploaded_t> OnSet { get; private set; } = new();
         #endregion
         
         #region Methods
@@ -68,7 +81,16 @@ namespace Watermelon_Game.Audio
             var _dictionary = _fields.Select(_Field => (_Field.GetValue(this) as AudioClipSettings)!).ToDictionary(_AudioClipSettings => _AudioClipSettings.key);
 
             Clips = new ReadOnlyDictionary<AudioClipName, AudioClipSettings>(_dictionary);
-        } 
+        }
+
+        /// <summary>
+        /// Sets <see cref="Settings"/> and <see cref="OnSet"/> to null
+        /// </summary>
+        public static void Disable()
+        {
+            Settings = null;
+            OnSet = null;
+        }
         #endregion
     }
 }
