@@ -1,6 +1,7 @@
 #if !DISABLESTEAMWORKS
 using System;
 using System.Collections.Generic;
+using OPS.AntiCheat.Field;
 using Steamworks;
 using UnityEngine;
 using Watermelon_Game.Utility;
@@ -28,15 +29,14 @@ namespace Watermelon_Game.Steamworks.NET
         private const string GOLDEN_FRUIT = "GOLDEN_FRUIT";
         private const string UPGRADED_GOLDEN_FRUIT = "UPGRADED_GOLDEN_FRUIT";
         private const string SKILL_COUNT = "SKILL_COUNT";
-        private const string PLAYTIME_OLD = "PLAYTIME";
-        private const string PLAYTIME_NEW = "PLAYTIME_NEW";
+        private const string PLAYTIME = "PLAYTIME";
         #endregion
         
         #region Fields
         /// <summary>
         /// Maps the Steam API Names to their respective value
         /// </summary>
-        private readonly Dictionary<string, float> statsMap = new()
+        private readonly Dictionary<string, ProtectedFloat> statsMap = new()
         {
             { GAMES_FINISHED, 0 },
             { HIGHSCORE, 0 },
@@ -53,7 +53,7 @@ namespace Watermelon_Game.Steamworks.NET
             { GOLDEN_FRUIT, 0 },
             { UPGRADED_GOLDEN_FRUIT, 0 },
             { SKILL_COUNT, 0 },
-            { PLAYTIME_NEW, 0 }
+            { PLAYTIME, 0 }
         };
         #endregion
         
@@ -122,7 +122,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <summary>
         /// Total playtime in hours
         /// </summary>
-        public string Playtime => PLAYTIME_NEW;
+        public string Playtime => PLAYTIME;
         #endregion
 
         #region Constructor
@@ -162,7 +162,7 @@ namespace Watermelon_Game.Steamworks.NET
             this.statsMap[GOLDEN_FRUIT] = _GoldenFruits;
             this.statsMap[UPGRADED_GOLDEN_FRUIT] = _UpgradedGoldenFruits;
             this.statsMap[SKILL_COUNT] = _SkillCount;
-            this.statsMap[PLAYTIME_NEW] = _Playtime;
+            this.statsMap[PLAYTIME] = _Playtime;
         }
         #endregion
         
@@ -190,27 +190,9 @@ namespace Watermelon_Game.Steamworks.NET
             SteamUserStats.GetStat(GOLDEN_FRUIT, out int _goldenFruits);
             SteamUserStats.GetStat(UPGRADED_GOLDEN_FRUIT, out int _upgradedGoldenFruits);
             SteamUserStats.GetStat(SKILL_COUNT, out int _skillCount);
-            SteamUserStats.GetStat(PLAYTIME_NEW, out float _playtime);
+            SteamUserStats.GetStat(PLAYTIME, out float _playtime);
             
             return new Stats(_gamesFinished, _highscore, _grapes, _cherries, _strawberries, _lemons, _oranges, _apples, _pears, _pineapples, _honeymelons, _watermelons, _goldenFruits, _upgradedGoldenFruits, _skillCount, _playtime);
-        }
-        
-        /// <summary> // TODO: Not sure if i want to reset the data at this point
-        /// Clears the achievements for <see cref="StatsAndAchievementsManager.PLAYTIME_10_H"/>, <see cref="StatsAndAchievementsManager.PLAYTIME_100_H"/> and <see cref="StatsAndAchievementsManager.PLAYTIME_1000_H"/>, <br/>
-        /// if the player has a value greater than 1 in <see cref="PLAYTIME_OLD"/> <br/>
-        /// </summary>
-        private static void ResetOldPlaytimeStats()
-        {
-            SteamUserStats.GetStat(PLAYTIME_OLD, out float _playtimeOld);
-            
-            if (_playtimeOld >= .01f) // Not 0 to factor in floating point error
-            {
-                SteamUserStats.SetStat(PLAYTIME_OLD, 0f);
-                SteamUserStats.ClearAchievement(StatsAndAchievementsManager.PLAYTIME_10_H);
-                SteamUserStats.ClearAchievement(StatsAndAchievementsManager.PLAYTIME_100_H);
-                SteamUserStats.ClearAchievement(StatsAndAchievementsManager.PLAYTIME_1000_H);
-                SteamUserStats.StoreStats();
-            }
         }
         
 #if DEBUG || DEVELOPMENT_BUILD

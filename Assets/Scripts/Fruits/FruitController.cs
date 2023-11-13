@@ -62,6 +62,10 @@ namespace Watermelon_Game.Fruits
         /// <see cref="Dictionary{TKey,TValue}.Count"/> of <see cref="fruits"/>
         /// </summary>
         public static int FruitCount => fruits.Count;
+        /// <summary>
+        /// <see cref="fruitContainer"/>
+        /// </summary>
+        public static GameObject FruitContainer => instance.fruitContainer;
         #endregion
 
         #region Events
@@ -142,7 +146,7 @@ namespace Watermelon_Game.Fruits
         {
             FruitPrefabSettings.FruitPrefabs.ForEach(_Fruit => _Fruit.SetSpawnWeightMultiplier(false));
             
-            var _index = FruitPrefabSettings.FruitPrefabs.FindIndex(_Fruit => _Fruit.Fruit == _PreviousFruit);
+            var _index = FruitPrefabSettings.FruitPrefabs.FindIndex(_Fruit => (Fruit)_Fruit.Fruit.Value == _PreviousFruit);
 
             if (FruitSettings.LowerIndexWeight && _index - 1 >= 0)
             {
@@ -225,7 +229,7 @@ namespace Watermelon_Game.Fruits
                     return _otherIsNotGoldenFruit = false;
                 }
                 
-                var _enumFruit = enumFruits.FirstOrDefault(_Fruit => _Fruit == _fruitToDestroy.Fruit);
+                var _enumFruit = enumFruits.FirstOrDefault(_Fruit => _Fruit == (Fruit)_fruitToDestroy.Fruit.Value);
 
                 if (!_ForceDestroy)
                 {
@@ -284,7 +288,7 @@ namespace Watermelon_Game.Fruits
         /// <returns>The <see cref="Fruit"/> type of the evolved fruit</returns>
         public static void Evolve(Vector2 _NextFruitPosition, params FruitBehaviour[] _FruitsToEvolve)
         {
-            var _enumFruit = enumFruits.FirstOrDefault(_Fruit => _Fruit == _FruitsToEvolve[0].Fruit);
+            var _enumFruit = enumFruits.FirstOrDefault(_Fruit => _Fruit == (Fruit)_FruitsToEvolve[0].Fruit.Value);
             
             OnEvolve?.Invoke(_enumFruit);
 
@@ -298,7 +302,7 @@ namespace Watermelon_Game.Fruits
             
             if (_enumFruit != Fruit.Watermelon)
             {
-                var _fruit = FruitPrefabSettings.FruitPrefabs[(int)_enumFruit + 1].Fruit;
+                var _fruit = (Fruit)FruitPrefabSettings.FruitPrefabs[(int)_enumFruit + 1].Fruit.Value;
                 var _fruitBehaviour = FruitBehaviour.SpawnFruit(_NextFruitPosition, _fruit);
                 _fruitBehaviour.Evolve();
                 AddFruit(_fruitBehaviour);

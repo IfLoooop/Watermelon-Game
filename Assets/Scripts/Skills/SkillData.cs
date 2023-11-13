@@ -1,3 +1,4 @@
+using OPS.AntiCheat.Field;
 using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
 
@@ -16,7 +17,7 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// The currently needed points to activate this <see cref="Skill"/>
         /// </summary>
-        private uint currentPointsRequirement;
+        private ProtectedUInt32 currentPointsRequirement;
         #endregion
         
         #region Properties
@@ -31,7 +32,7 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// <see cref="currentPointsRequirement"/>
         /// </summary>
-        public uint CurrentPointsRequirement
+        public ProtectedUInt32 CurrentPointsRequirement
         {
             get => this.currentPointsRequirement;
             set
@@ -43,11 +44,11 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// Whether this <see cref="Skill"/> can be activated or not
         /// </summary>
-        public bool CanBeActivated { get; private set; }
+        public ProtectedBool CanBeActivated { get; private set; }
         /// <summary>
         /// Indicates if this <see cref="Skill"/> is currently active or not
         /// </summary>
-        public bool IsActive { get; private set; }
+        public ProtectedBool IsActive { get; private set; }
         #endregion
         
         #region Constrcutor>

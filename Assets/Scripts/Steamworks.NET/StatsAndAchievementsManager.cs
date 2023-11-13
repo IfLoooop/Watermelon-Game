@@ -24,16 +24,20 @@ namespace Watermelon_Game.Steamworks.NET
         private const string EVOLVE_SKILL = "EVOLVE_SKILL";
         private const string DESTROY_SKILL = "DESTROY_SKILL";
         private const string MATCH_1_H = "MATCH_1_H";
-        public const string PLAYTIME_10_H = "PLAYTIME_10_H";
-        public const string PLAYTIME_100_H = "PLAYTIME_100_H";
-        public const string PLAYTIME_1000_H = "PLAYTIME_1000_H";
+        private const string PLAYTIME_10_H = "PLAYTIME_10_H";
+        private const string PLAYTIME_100_H = "PLAYTIME_100_H";
+        private const string PLAYTIME_1000_H = "PLAYTIME_1000_H";
         #endregion
         
         #region Fields
         /// <summary>
+        /// Singleton of <see cref="StatsAndAchievementsManager"/>
+        /// </summary>
+        private static StatsAndAchievementsManager instance;
+        /// <summary>
         /// Indicates whether the <see cref="SteamUserStats.RequestCurrentStats"/> was successful or not
         /// </summary>
-        private bool successfulStatsRequest;
+        private bool successfulStatsRequest; // TODO: Check if this is needed
         /// <summary>
         /// <see cref="Watermelon_Game.Steamworks.NET.Stats"/>
         /// </summary>
@@ -43,16 +47,20 @@ namespace Watermelon_Game.Steamworks.NET
         #region Methods
         private void Awake()
         {
+            instance = this;
             this.Init();
         }
         
         /// <summary>
-        /// Is called at the end of <see cref="SteamManager"/>.<see cref="Awake"/>
+        /// Loads all stats from Steam
         /// </summary>
         private void Init()
         {
-            this.successfulStatsRequest = SteamUserStats.RequestCurrentStats();
-            this.stats = Stats.LoadAllStats();
+            if (SteamManager.Initialized)
+            {
+                this.successfulStatsRequest = SteamUserStats.RequestCurrentStats();
+                this.stats = Stats.LoadAllStats();
+            }
         }
 
         private void OnEnable()
@@ -62,7 +70,6 @@ namespace Watermelon_Game.Steamworks.NET
             FruitController.OnEvolve += FruitEvolved;
             FruitBehaviour.OnGoldenFruitSpawn += GoldenFruitSpawned;
             FruitBehaviour.OnSkillUsed += SkillUsed;
-            
             Application.quitting += this.ApplicationIsQuitting;
         }
         
@@ -74,16 +81,25 @@ namespace Watermelon_Game.Steamworks.NET
             this.AddPlaytime();
         }
         
+#pragma warning disable CS0162 // Unreachable code detected
         private void OnDisable()
         {
-            SteamUserStats.StoreStats();
-            
             MaxHeight.OnGameOver -= this.GameFinished;
             Multiplier.OnMultiplierActivated -= MultiplierActivated;
             FruitController.OnEvolve -= FruitEvolved;
             FruitBehaviour.OnGoldenFruitSpawn -= GoldenFruitSpawned;
             FruitBehaviour.OnSkillUsed -= SkillUsed;
+            Application.quitting -= this.ApplicationIsQuitting;
+            
+#if UNITY_EDITOR
+            return;
+#endif
+            if (SteamManager.Initialized)
+            {
+                SteamUserStats.StoreStats(); // ReSharper disable once HeuristicUnreachableCode
+            }      
         }
+#pragma warning restore CS0162 // Unreachable code detected
 
         private void Start()
         {
@@ -95,12 +111,17 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private void GameFinished()
         {
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            
             this.stats.SetStat(_Stats => _Stats.GamesFinished, 1, Operation.Add);
 
             var _newHighscore = PointsController.CurrentPoints > this.stats.GetStat(_Stats => _Stats.Highscore);
             if (_newHighscore)
             {
-                this.stats.SetStat(_Stats => _Stats.Highscore, (int)PointsController.CurrentPoints, Operation.Set);
+                this.stats.SetStat(_Stats => _Stats.Highscore, (int)PointsController.CurrentPoints.Value, Operation.Set);
             }
             
             var _currentGameDuration = Time.time - GameController.CurrentGameTimeStamp;
@@ -120,6 +141,11 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_CurrentMultiplier"><see cref="Multiplier.CurrentMultiplier"/></param>
         private void MultiplierActivated(uint _CurrentMultiplier)
         {
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            
             var _newBestMultiplier = _CurrentMultiplier > StatsMenu.Instance.Stats.BestMultiplier;
             if (!_newBestMultiplier)
             {
@@ -145,6 +171,11 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_Fruit">The <see cref="Fruit"/> that has been combined</param>
         private void FruitEvolved(Fruit _Fruit)
         {
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            
             var _evolveCount = 0;
             
             switch (_Fruit)
@@ -180,7 +211,7 @@ namespace Watermelon_Game.Steamworks.NET
                     _evolveCount = this.stats.SetStat(_Stats => _Stats.Watermelons, 1, Operation.Add);
                     break;
             }
-
+            
             var _evolvedFruitIsWatermelon = (int)_Fruit + 1 == (int)Fruit.Watermelon;
             var _isFirstWatermelon = StatsMenu.Instance.Stats.WatermelonEvolvedCount == 0;
 
@@ -201,6 +232,11 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_IsUpgradedGoldenFruit">Indicates whether the golden fruit is anj upgraded golden fruit or not</param>
         private void GoldenFruitSpawned(bool _IsUpgradedGoldenFruit)
         {
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            
             var _goldenFruitCount = _IsUpgradedGoldenFruit 
                 ? this.stats.SetStat(_Stats => _Stats.UpgradedGoldenFruits, 1, Operation.Add) 
                 : this.stats.SetStat(_Stats => _Stats.GoldenFruits, 1, Operation.Add);
@@ -217,9 +253,14 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_Skill">The <see cref="Skill"/> that was used</param>
         private void SkillUsed(Skill? _Skill)
         {
-            var _firstPowerSkillUsed = _Skill is Skill.Power && StatsMenu.Instance.Stats.PowerSkillUsedCount is 0;
-            var _firstEvolveSkillUsed = _Skill is Skill.Evolve && StatsMenu.Instance.Stats.EvolveSkillUsedCount is 0;
-            var _firstDestroySkillUsed = _Skill is Skill.Destroy && StatsMenu.Instance.Stats.DestroySkillUsedCount is 0;
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            
+            var _firstPowerSkillUsed = _Skill is Skill.Power && StatsMenu.Instance.Stats.PowerSkillUsedCount == 0;
+            var _firstEvolveSkillUsed = _Skill is Skill.Evolve && StatsMenu.Instance.Stats.EvolveSkillUsedCount == 0;
+            var _firstDestroySkillUsed = _Skill is Skill.Destroy && StatsMenu.Instance.Stats.DestroySkillUsedCount == 0;
 
             if (_firstPowerSkillUsed)
             {
@@ -247,7 +288,10 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private void AddPlaytime()
         {
-            this.stats.SetStat(_Stats => _Stats.Playtime, Time.time / 3600, Operation.Add);
+            if (SteamManager.Initialized)
+            {
+                this.stats.SetStat(_Stats => _Stats.Playtime, Time.time / 3600, Operation.Add);
+            }
         }
 
         /// <summary>
@@ -255,6 +299,11 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private void CheckCurrentPlaytime()
         {
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            
             var _currentPlaytime = this.stats.GetStat(_Stats => _Stats.Playtime);
             var _is10H = _currentPlaytime >= 10;
             var _is100H = _currentPlaytime >= 100;
@@ -277,6 +326,14 @@ namespace Watermelon_Game.Steamworks.NET
             {
                 SteamUserStats.StoreStats();
             }
+        }
+
+        /// <summary>
+        /// Destroys the <see cref="StatsAndAchievementsManager"/> component of the <see cref="instance"/> GameObject
+        /// </summary>
+        public static void Destroy()
+        {
+            GameObject.Destroy(instance);
         }
         #endregion
     }

@@ -1,15 +1,5 @@
-TODO: Figure out if the playtime stat and corresponding achievements should be resetted before the next release
-
-Leaderboard:
--Jump to self
--Name search
--Refresh
--Only friends toggle (off == global)
--Make header titles to buttons (onClick = flip ascending/descending sorting)
-
-TODO: Add Obfuscator Free package to the project
 TODO: Achievements localizations
--On UWP build, reqired always asks to install the same missing package
+-On UWP build, rewired always asks to install the same missing package
 -Infobox which buttons are used in "DevelopmentTools.cs"
 -Test game with Application.TargetFramerate
 -Multiplier.cs "multiplierWaitTime" and "multiplierWaitForSeconds" need descriptions
@@ -27,42 +17,3 @@ https://www.fanatical.com/de/
 https://www.nuuvem.com/de-en/
 https://www.gamersgate.com/de-de/
 https://www.indiegala.com/
-
-
-[Steam Achievements]
--Finish you first game (Restart doesn't count) [After game finished]
--Finish 100 games (Restart doesn't count) [After game finished]
--Finish 1000 games (Restart doesn't count) [After game finished]
-
--Get 1000 points (Up to 10k in 1000P steps) [After game finished]
--Get 15k Points [After game finished]
--Get 20k Points [After game finished]
-
--Get a 10 multiplier [Immediately]
--Get a 20 multiplier [Immediately]
-
-[[Immediately] (Cache steam value at start)]
--Get 1000 combined fruit (For each fruit) 
--Get 10000 combined fruit (For each fruit)
--First Watermelon
--10 Watermelon
--100 Watermelon
-
--First Golden Fruit
--10 Golden Fruit
--100 Golden Fruit
-
--First upgraded golden fruit
--10 upgraded golden fruit
--100 upgraded golden fruit
--1000 upgraded golden fruit
-
--1st skill usage (For each skill)
--100 skills used (For each skill)
--1000 skills used (For each skill)
-
-
-[Hidden achievements]
--Play a single round for an hour [Immediately]
--10h total play time
--100h total play time

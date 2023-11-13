@@ -44,6 +44,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69432abe431b66544ac9223603a924bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fruitCollection: {fileID: 11400000, guid: 620dc5b71f1f2fe40b688670ef0ddd07, type: 2}
-  audioClips: {fileID: 11400000, guid: 55149b077431a9d4f881816add03a5c4, type: 2}
-  currentGameTimeStamp: 0

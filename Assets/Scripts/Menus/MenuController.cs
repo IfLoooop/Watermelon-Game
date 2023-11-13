@@ -173,7 +173,7 @@ namespace Watermelon_Game.Menus
         /// </summary>
         private void ResetGameStarted()
         {
-            var _points = PointsController.CurrentPoints;
+            var _points = PointsController.CurrentPoints.Value;
             this.gameOverMenu.Points = (int)_points;
             this.CheckForNewBestScore(_points);
             this.CloseCurrentlyActiveMenu();

@@ -1,4 +1,5 @@
 using System;
+using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
@@ -90,7 +91,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="StatsValues.GamesPlayed"/>
         /// </summary>
-        private int GamesPlayed
+        private ProtectedInt32 GamesPlayed
         {
             get => this.stats.StatsValues.GamesPlayed;
             set

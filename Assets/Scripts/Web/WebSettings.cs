@@ -148,7 +148,7 @@ namespace Watermelon_Game.Web
         }
         
         /// <summary>
-        /// Prints a <see cref="Debug.LogError(object)"/> when a field name didn't match any key in <see cref="SettingsMap"/>
+        /// Prints a <see cref="Watermelon_Game.Utility.Debug.LogError(object)"/> when a field name didn't match any key in <see cref="SettingsMap"/>
         /// </summary>
         /// <param name="_PropertyName">The name of the property</param>
         /// <param name="_CallerType">Type of the class, where the field is declared</param>

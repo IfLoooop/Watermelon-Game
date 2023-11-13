@@ -2,16 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
+using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using Steamworks;
 using UnityEngine;
 using Watermelon_Game.Menus.Leaderboards;
+using Watermelon_Game.Points;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Steamworks.NET
 {
     /// <summary>
-    /// Steam leaderboards <br/>
+    /// Contains logic for down/uploading to the Steam Leaderboard <br/>
     /// https://partner.steamgames.com/doc/features/leaderboards/guide
     /// </summary>
     internal sealed class SteamLeaderboard : MonoBehaviour
@@ -21,7 +25,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// The name of the leaderboard at: <br/>
         /// https://partner.steamgames.com/apps/leaderboards/2658820
         /// </summary>
-        private const string LEADERBOARD_NAME = "Test"; // TODO: Change to correct name
+        private const string LEADERBOARD_NAME = "Highscores";
         #endregion
 
         #region Fields
@@ -46,7 +50,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <summary>
         /// The current score in <see cref="steamLeaderboard"/> of <see cref="SteamManager.SteamID"/>
         /// </summary>
-        private static int currentLeaderboardScore;
+        private static ProtectedInt32 currentLeaderboardScore;
         #endregion
 
         #region Properties
@@ -95,25 +99,28 @@ namespace Watermelon_Game.Steamworks.NET
         #region Methods
         private void Awake()
         {
-#if UNITY_EDITOR
+#if DEBUG || DEVELOPMENT_BUILD
             instance_DEVELOPMENT = this;
 #endif
             Init();
         }
+
+        private void OnEnable()
+        {
+            PointsController.OnPointsChanged += UploadScore;
+        }
+
+        private void OnDisable()
+        {
+            PointsController.OnPointsChanged -= UploadScore;
+        }
         
-#pragma warning disable CS0162 // Unreachable code detected
         /// <summary>
         /// Initializes the steam leaderboard <br/>
         /// <i>https://partner.steamgames.com/doc/api/ISteamUserStats#FindLeaderboard</i>
         /// </summary>
-        [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
         private static void Init()
         {
-#if UNITY_EDITOR
-            DownloadLeaderboardScores_DEVELOPMENT(1000, false);
-            return;
-#endif
-            
             if (!SteamManager.Initialized)
             {
                 return;
@@ -123,7 +130,6 @@ namespace Watermelon_Game.Steamworks.NET
             onLeaderboardFound.Set(_steamAPICall, OnLeaderboardFound);
             onPersonaStateChanged = Callback<PersonaStateChange_t>.Create(OnPersonaStateChanged);
         }
-#pragma warning restore CS0162 // Unreachable code detected
 
         /// <summary>
         /// <see cref="onLeaderboardFound"/>
@@ -139,11 +145,12 @@ namespace Watermelon_Game.Steamworks.NET
             else
             {
                 steamLeaderboard = _Callback.m_hSteamLeaderboard;
-
+                
                 DownloadLeaderboardScores();
             }
         }
 
+#pragma warning disable CS0162 // Unreachable code detected
         /// <summary>
         /// Downloads all scores from <see cref="steamLeaderboard"/> <br/>
         /// <i>
@@ -151,8 +158,18 @@ namespace Watermelon_Game.Steamworks.NET
         /// https://partner.steamgames.com/doc/api/ISteamUserStats#ELeaderboardDataRequest
         /// </i>
         /// </summary>
-        private static void DownloadLeaderboardScores()
+        [SuppressMessage("ReSharper", "HeuristicUnreachableCode")]
+        public static void DownloadLeaderboardScores()
         {
+#if UNITY_EDITOR
+            DownloadLeaderboardScores_DEVELOPMENT(SCORE_AMOUNT, false);
+            return;
+#endif
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            
             if (steamLeaderboard is null)
             {
                 Debug.LogError($"The leaderboard is not initialized [{nameof(DownloadLeaderboardScores)}]");
@@ -163,6 +180,7 @@ namespace Watermelon_Game.Steamworks.NET
                 onLeaderboardScoresDownloaded.Set(_steamAPICall, GetDownloadedLeaderboardScores);
             }
         }
+#pragma warning restore CS0162 // Unreachable code detected
 
         /// <summary>
         /// <see cref="onLeaderboardScoresDownloaded"/> <br/>
@@ -175,18 +193,17 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_Failure">Indicates whether the download was successful</param>
         private static void GetDownloadedLeaderboardScores(LeaderboardScoresDownloaded_t _Callback, bool _Failure)
         {
-            if (_Failure)
+            if (!SteamManager.Initialized)
             {
-                // TODO: 
+                return;
             }
             
             steamUsers.Clear();
-            var _steamLeaderboardEntries = _Callback.m_hSteamLeaderboardEntries;
             
             // ReSharper disable once InconsistentNaming
-            for (var i = 0; i < (int)_steamLeaderboardEntries.m_SteamLeaderboardEntries; i++)
+            for (var i = 0; i < _Callback.m_cEntryCount; i++)
             {
-                var _successfullyDownloadedLeaderboardEntries = SteamUserStats.GetDownloadedLeaderboardEntry(_steamLeaderboardEntries, i, out var _leaderboardEntry, null, 0);
+                var _successfullyDownloadedLeaderboardEntries = SteamUserStats.GetDownloadedLeaderboardEntry(_Callback.m_hSteamLeaderboardEntries, i, out var _leaderboardEntry, null, 0);
                 if (_successfullyDownloadedLeaderboardEntries)
                 {
                     var _steamUser = _leaderboardEntry.m_steamIDUser;
@@ -213,7 +230,7 @@ namespace Watermelon_Game.Steamworks.NET
                     }
                 }
             }
-
+            
             steamUsers = steamUsers.OrderBy(_SteamUser => _SteamUser.GlobalRank).ToList();
             OnLeaderboardScoresDownloaded?.Invoke();
         }
@@ -234,7 +251,7 @@ namespace Watermelon_Game.Steamworks.NET
                     Score = _LeaderboardEntry.m_nScore
                 };
             }
-            else
+            else // TODO: Checking for existing value is probably not needed anymore, because the List is cleared everytime a new leaderboard is downloaded (Needs testing if removed!)
             {
                 steamUsers.Add(new LeaderboardUserData
                 {
@@ -287,8 +304,17 @@ namespace Watermelon_Game.Steamworks.NET
         /// <b>Max 10 request per 10 minutes</b> <br/>
         /// <i>https://partner.steamgames.com/doc/api/ISteamUserStats#UploadLeaderboardScore</i>
         /// </summary>
-        public static void UploadScore(int _Score) // TODO: Make sure to not exceed the rate limit
+        private static void UploadScore(uint _Score) // TODO: Make sure to not exceed the rate limit
         {
+            if (!SteamManager.Initialized)
+            {
+                return;
+            }
+            if (GameController.IsGameRunning)
+            {
+                return;
+            }
+            
             if (steamLeaderboard is null)
             {
                 Debug.LogError($"The leaderboard is not initialized [{nameof(UploadScore)}]");
@@ -300,17 +326,17 @@ namespace Watermelon_Game.Steamworks.NET
                     return;
                 }
                 
-                // TODO:
-                // Keep track on how often this was called (for rate limit)
-                // If the rate limit is reached, save the score to a .txt for (in case of game close) and try again after some time (also at game start, if the .txt file has an entry)
-                var _steamAPICall = SteamUserStats.UploadLeaderboardScore(steamLeaderboard.Value, ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest, _Score, null, 0);
+                var _steamAPICall = SteamUserStat.UploadLeaderboardScore(steamLeaderboard.Value, ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest, (int)_Score, null, 0);
                 onLeaderboardScoreUploaded.Set(_steamAPICall, OnScoreUploaded);
             }
         }
         
         /// <summary>
         /// <see cref="onLeaderboardScoreUploaded"/> <br/>
-        /// <i>Calls <see cref="DownloadLeaderboardScores"/> after a successful upload</i>
+        /// <i>
+        /// Calls <see cref="DownloadLeaderboardScores"/> after a successful upload <br/>
+        /// https://partner.steamgames.com/doc/api/ISteamUserStats#LeaderboardScoreUploaded_t
+        /// </i>
         /// </summary>
         /// <param name="_Callback">The received callback</param>
         /// <param name="_Failure">Indicates whether the upload was successful</param>
@@ -326,29 +352,37 @@ namespace Watermelon_Game.Steamworks.NET
             }
         }
         
-        private static int score = 75;
-        
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                //DownloadLeaderboardScores_DEVELOPMENT(1200, false);
-                UploadScore(score);
-
-                score += 5;
-            }
-        }
-        
-#if UNITY_EDITOR
+#if DEBUG || DEVELOPMENT_BUILD
+        [FilePath(AbsolutePath = true, RequireExistingPath = true, ParentFolder = "Assets/Test", Extensions = ".txt")]
+        [Tooltip("Filepath to the file that holds all names")]
+        [LabelWidth(75)]
+        [SerializeField]private string filepath;
         /// <summary>
         /// Singleton of <see cref="SteamLeaderboard"/> <br/>
         /// <b>Only for Development!</b>
         /// </summary>
         // ReSharper disable once InconsistentNaming
         private static SteamLeaderboard instance_DEVELOPMENT;
+        /// <summary>
+        /// Amount of scores to download with <see cref="DownloadLeaderboardScores_DEVELOPMENT"/>
+        /// </summary>
+        private const uint SCORE_AMOUNT = 950;
 
+        /// <summary>
+        /// Returns a random entry from the given list and removes it from the list
+        /// </summary>
+        /// <param name="_Names">The list to get the name from</param>
+        /// <returns>A random entry from the given list</returns>
+        private static string GetRandomName(IList<string> _Names)
+        {
+            var _index = Random.Range(0, _Names.Count - 1);
+            var _name = _Names[_index];
+            
+            _Names.RemoveAt(_index);
 
-
+            return _name;
+        }
+        
         /// <summary>
         /// Fills <see cref="steamUsers"/> with random values <br/>
         /// <b>Only for testing</b>
@@ -358,17 +392,15 @@ namespace Watermelon_Game.Steamworks.NET
         private static void DownloadLeaderboardScores_DEVELOPMENT(ulong _Amount, bool _AddNew)
         {
             ulong _id = 1000000000000000;
-            
-            var _names = new[]
-            {
-                "Hans", "Detlef", "Peter", "Jan", "Utz", "Adolf", "Klaus", "Günter"
-            };
+            var _names = File.ReadAllLines(instance_DEVELOPMENT.filepath).ToList();
 
+            steamUsers.Clear();
+            
             // ReSharper disable once InconsistentNaming
             for (ulong i = 0; i < _Amount; i++)
             {
                 var _steamID = new CSteamID(_AddNew ? (ulong)Random.Range(1000000000000000, 9999999999999999) : _id++);
-                var _username = $"{_names[Random.Range(0, _names.Length - 1)]}{i + 1}";
+                var _username = GetRandomName(_names);
                 
                 AddUser_DEVELOPMENT(_steamID, _username, true);
             }
@@ -390,6 +422,8 @@ namespace Watermelon_Game.Steamworks.NET
             {
                 steamUsers[i] = new LeaderboardUserData(steamUsers[i], i + 1);
             }
+            
+            OnLeaderboardScoresDownloaded?.Invoke();
         }
 
         /// <summary>

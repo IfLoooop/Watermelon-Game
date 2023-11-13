@@ -103,7 +103,8 @@ MonoBehaviour:
   nextFruit: {fileID: 5196309593838423898}
   nextNextFruit: {fileID: 4836563671854626019}
   timer: {fileID: 7645869644194463606}
-  nextNextFruitTime: 300
+  nextNextFruitTime:
+    fakeValue: 300
   nextNextFruitEnabledAnimation: {fileID: 7400000, guid: 9dfe23ec39312c24a90bc753830cec64, type: 2}
   nextNextFruitDisabledAnimation: {fileID: 7400000, guid: 591ad58157a06cf419807fc33eadfea0, type: 2}
 --- !u!1 &5196309593838423898

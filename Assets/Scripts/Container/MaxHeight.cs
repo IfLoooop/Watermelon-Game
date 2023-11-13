@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -22,13 +23,9 @@ namespace Watermelon_Game.Container
         [Tooltip("Disables the loosing condition (Editor only)")]
         [ShowInInspector] public static bool DisableCountDown;
 #endif
-        [Header("References")]
-        [Tooltip("Plays every time the countdown changes")]
-        [SerializeField] private AudioClip countdownAudioClip;
-        
         [Header("Settings")]
         [Tooltip("Total duration in seconds of the countdown")]
-        [SerializeField] private uint countdownTime = 8;
+        [SerializeField] private ProtectedUInt32 countdownTime = 8;
         [Tooltip("Duration in seconds the god ray stays visible before deactivating itself again")]
         [SerializeField] private float godRayDuration = 1.5f;
         #endregion
@@ -60,7 +57,7 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// The current value of the countdown
         /// </summary>
-        private uint currentCountdownTime;
+        private ProtectedUInt32 currentCountdownTime;
         
         /// <summary>
         /// Disables the <see cref="GodRayFlicker.godRay"/> when enabled

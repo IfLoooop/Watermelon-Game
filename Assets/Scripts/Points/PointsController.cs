@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Fruits;
@@ -35,11 +36,11 @@ namespace Watermelon_Game.Points
         /// The current points amount <br/>
         /// <i>Is reset every game</i>
         /// </summary>
-        private uint currentPoints;
+        private ProtectedUInt32 currentPoints;
         /// <summary>
         /// Points that need to be added/subtracted from <see cref="currentPoints"/> (If != 0)
         /// </summary>
-        private uint pointsDelta;
+        private ProtectedUInt32 pointsDelta;
         
         /// <summary>
         /// Adds/subtract the amount in <see cref="pointsDelta"/> from <see cref="currentPoints"/>
@@ -55,7 +56,7 @@ namespace Watermelon_Game.Points
         /// <summary>
         /// <see cref="currentPoints"/>
         /// </summary>
-        public static uint CurrentPoints => instance.currentPoints;
+        public static ProtectedUInt32 CurrentPoints => instance.currentPoints;
         #endregion
 
         #region Events

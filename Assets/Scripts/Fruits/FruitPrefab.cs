@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using UnityEngine;
 
 namespace Watermelon_Game.Fruits
@@ -13,7 +16,22 @@ namespace Watermelon_Game.Fruits
         [Tooltip("The Prefab of this Fruit")]
         [SerializeField] private GameObject prefab;
         [Tooltip("The type of this Fruit")]
-        [SerializeField] private Fruit fruit;
+        [ValueDropdown("fruits")]
+        [SerializeField] private ProtectedInt32 fruit;
+        // ReSharper disable once UnusedMember.Local
+        private static IEnumerable fruits = new ValueDropdownList<ProtectedInt32>
+        {
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Grape)}", (int)Watermelon_Game.Fruits.Fruit.Grape },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Cherry)}", (int)Watermelon_Game.Fruits.Fruit.Cherry },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Strawberry)}", (int)Watermelon_Game.Fruits.Fruit.Strawberry },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Lemon)}", (int)Watermelon_Game.Fruits.Fruit.Lemon },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Orange)}", (int)Watermelon_Game.Fruits.Fruit.Orange },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Apple)}", (int)Watermelon_Game.Fruits.Fruit.Apple },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Pear)}", (int)Watermelon_Game.Fruits.Fruit.Pear },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Pineapple)}", (int)Watermelon_Game.Fruits.Fruit.Pineapple },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Honeymelon)}", (int)Watermelon_Game.Fruits.Fruit.Honeymelon },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Watermelon)}", (int)Watermelon_Game.Fruits.Fruit.Watermelon },
+        };
         #endregion
 
         #region Fields
@@ -21,11 +39,11 @@ namespace Watermelon_Game.Fruits
         /// Determines the chance, this <see cref="Fruits.Fruit"/> has to be spawned <br/>
         /// <i>Higher number = bigger chance</i>
         /// </summary>
-        private int spawnWeight;
+        private ProtectedInt32 spawnWeight;
         /// <summary>
-        /// Determines whether the 
+        /// Determines whether the spawn weight multiplier is currently active for this <see cref="Watermelon_Game.Fruits.Fruit"/> type
         /// </summary>
-        private bool activeSpawnWeightMultiplier;
+        private ProtectedBool activeSpawnWeightMultiplier;
         #endregion
         
         #region Properties
@@ -36,7 +54,7 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// <see cref="fruit"/>
         /// </summary>
-        public Fruit Fruit => this.fruit;
+        public ProtectedInt32 Fruit => this.fruit;
         #endregion
 
         #region Methods

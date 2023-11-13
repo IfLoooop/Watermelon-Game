@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -17,13 +18,13 @@ namespace Watermelon_Game.Skills
         #region WebSettings
         [Header("WebSettings")]
         [Tooltip("Points required to use he power skill")]
-        [ShowInInspector] private static uint powerPointsRequirement = 20;
+        [ShowInInspector] private static ProtectedUInt32 powerPointsRequirement = 20;
         [Tooltip("Points required to use he evolve skill")]
-        [ShowInInspector] private static uint evolvePointsRequirement = 50;
+        [ShowInInspector] private static ProtectedUInt32 evolvePointsRequirement = 50;
         [Tooltip("Points required to use he destroy skill")]
-        [ShowInInspector] private static uint destroyPointsRequirement = 50;
+        [ShowInInspector] private static ProtectedUInt32 destroyPointsRequirement = 50;
         [Tooltip("Point requirement increase in % after every skill use (Individual for each skill)")]
-        [ShowInInspector] private static float skillPointIncrease = .1f;
+        [ShowInInspector] private static ProtectedFloat skillPointIncrease = .1f;
         #endregion
         
         #region Inspector Fields
@@ -42,11 +43,11 @@ namespace Watermelon_Game.Skills
         
         [Header("Settings")]
         [Tooltip("Fruit drop/shoot force multiplier when a skill is used")]
-        [SerializeField] private float shootForceMultiplier = 100;
+        [SerializeField] private ProtectedFloat shootForceMultiplier = 100;
         [Tooltip("Fruit drop/shoot force when the power skill is used")]
-        [SerializeField] private float powerSkillForce = 30000f;
+        [SerializeField] private ProtectedFloat powerSkillForce = 30000f;
         [Tooltip("Mass of the fruit when the power skill is used")]
-        [SerializeField] private float powerSkillMass = 200f;
+        [SerializeField] private ProtectedFloat powerSkillMass = 200f;
         #endregion
 
         #region Fields
@@ -82,23 +83,23 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// <see cref="powerPointsRequirement"/>
         /// </summary>
-        public static uint PowerPointsRequirement => powerPointsRequirement;
+        public static ProtectedUInt32 PowerPointsRequirement => powerPointsRequirement;
         /// <summary>
         /// <see cref="evolvePointsRequirement"/>
         /// </summary>
-        public static uint EvolvePointsRequirement => evolvePointsRequirement;
+        public static ProtectedUInt32 EvolvePointsRequirement => evolvePointsRequirement;
         /// <summary>
         /// <see cref="destroyPointsRequirement"/>
         /// </summary>
-        public static uint DestroyPointsRequirement => destroyPointsRequirement;
+        public static ProtectedUInt32 DestroyPointsRequirement => destroyPointsRequirement;
         /// <summary>
         /// <see cref="skillPointIncrease"/>
         /// </summary>
-        public static float SkillPointIncrease => skillPointIncrease;
+        public static ProtectedFloat SkillPointIncrease => skillPointIncrease;
         /// <summary>
         /// <see cref="shootForceMultiplier"/>
         /// </summary>
-        public static float ShootForceMultiplier => instance.shootForceMultiplier;
+        public static ProtectedFloat ShootForceMultiplier => instance.shootForceMultiplier;
         #endregion
 
         #region Events

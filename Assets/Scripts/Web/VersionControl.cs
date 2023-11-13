@@ -63,18 +63,11 @@ namespace Watermelon_Game.Web
             this.version = base.GetComponent<TextMeshProUGUI>();
             this.updatesAvailable = base.GetComponentInChildren<Image>();
             this.version.text = string.Concat(VERSION_PREFIX, Application.version);
-            
+        }
+
+        private void Start()
+        {
             CheckIfNewVersionIsAvailable();
-        }
-
-        private void OnEnable()
-        {
-            GameController.OnGameStart += CheckIfNewVersionIsAvailable;
-        }
-
-        private void OnDisable()
-        {
-            GameController.OnGameStart -= CheckIfNewVersionIsAvailable;
         }
 
         /// <summary>

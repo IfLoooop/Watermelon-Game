@@ -38,7 +38,7 @@ namespace Watermelon_Game.Menus.Leaderboards
             this.Score = _LeaderboardUserData.Score;
         }
         
-#if UNITY_EDITOR
+#if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
         /// Copies the values of the given <see cref="LeaderboardUserData"/> into a new one
         /// </summary>

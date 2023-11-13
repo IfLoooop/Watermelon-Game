@@ -31,7 +31,7 @@ namespace Watermelon_Game.Development
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to get the needed values of</param>
         public SavedFruit(FruitBehaviour _FruitBehaviour)
         {
-            this.Fruit = _FruitBehaviour.Fruit;
+            this.Fruit = (Fruit)_FruitBehaviour.Fruit.Value;
             var _transform = _FruitBehaviour.transform;
             this.Position = _transform.position;
             this.Rotation = _transform.rotation;

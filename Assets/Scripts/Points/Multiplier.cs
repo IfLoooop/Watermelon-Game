@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,9 +26,9 @@ namespace Watermelon_Game.Points
         
         [Header("Settings")]
         [Tooltip("Maximum Duration in seconds, the multiplier stays visible")]
-        [SerializeField] private float multiplierDuration = 1f;
-        [Tooltip("")] //TODO: Needs description
-        [SerializeField] private float multiplierWaitTime = .1f;
+        [SerializeField] private ProtectedFloat multiplierDuration = 1f;
+        [Tooltip("Wait time in seconds for the MultiplierDuration coroutine")]
+        [SerializeField] private ProtectedFloat multiplierWaitTime = .1f;
         [Tooltip("Colors for the background image")]
         [SerializeField] private List<Color> multiplierColors;
         #endregion
@@ -36,7 +37,7 @@ namespace Watermelon_Game.Points
         /// <summary>
         /// Duration in seconds, the multiplier will be visible
         /// </summary>
-        private float currentMultiplierDuration;
+        private ProtectedFloat currentMultiplierDuration;
 
         /// <summary>
         /// Disables the multiplier after <see cref="multiplierDuration"/>
@@ -52,7 +53,7 @@ namespace Watermelon_Game.Points
         /// <summary>
         /// Current multiplier value
         /// </summary>
-        public uint CurrentMultiplier { get; private set; }
+        public ProtectedUInt32 CurrentMultiplier { get; private set; }
         #endregion
 
         #region Events
@@ -60,7 +61,7 @@ namespace Watermelon_Game.Points
         /// Is called when the multiplier is activated <br/>
         /// <b>Parameter:</b> <see cref="CurrentMultiplier"/>
         /// </summary>
-        public static event Action<uint> OnMultiplierActivated; 
+        public static event Action<uint> OnMultiplierActivated;
         #endregion
         
         #region Methods
@@ -105,7 +106,10 @@ namespace Watermelon_Game.Points
             this.background.color = this.GetMultiplierColor();
             this.gameObject.SetActive(true);
 
-            OnMultiplierActivated?.Invoke(this.CurrentMultiplier);
+            if (_NewMultiplier > 0)
+            {
+                OnMultiplierActivated?.Invoke(this.CurrentMultiplier);   
+            }
         }
         
         /// <summary>
@@ -142,7 +146,7 @@ namespace Watermelon_Game.Points
                 return this.multiplierColors[^1];
             }
             
-            return this.multiplierColors[(int)this.CurrentMultiplier - 1];
+            return this.multiplierColors[(int)this.CurrentMultiplier.Value - 1];
         }
         #endregion
     }

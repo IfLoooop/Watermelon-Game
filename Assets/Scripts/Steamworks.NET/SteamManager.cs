@@ -11,6 +11,7 @@
 
 using System;
 using System.Text;
+using JetBrains.Annotations;
 #if !DISABLESTEAMWORKS
 using Steamworks;
 #endif
@@ -28,18 +29,17 @@ namespace Watermelon_Game.Steamworks.NET
 #if !DISABLESTEAMWORKS
 		#region Fields
 		/// <summary>
-		/// Singleton of <see cref="SteamManager"/>
+		/// <see cref="instance"/>
 		/// </summary>
-		private static SteamManager instance;
-		
-		/// <summary>
-		/// Indicates whether this <see cref="SteamManager"/> has successfully initialized a connection with the Steam API
-		/// </summary>
-		private bool initialized;
+		[CanBeNull] private static SteamManager instance;
 		/// <summary>
 		/// Indicates whether any <see cref="SteamManager"/> has ever tried initializing a connection with the Steam API
 		/// </summary>
 		private static bool everInitialized;
+		/// <summary>
+		/// Indicates whether this <see cref="SteamManager"/> has successfully initialized a connection with the Steam API
+		/// </summary>
+		private bool initialized;
 		
 		/// <summary>
 		/// Used to receive warning messages from Steam <br/>
@@ -50,14 +50,9 @@ namespace Watermelon_Game.Steamworks.NET
 
 		#region Properties
 		/// <summary>
-		/// <see cref="instance"/>
-		/// </summary>
-		private static SteamManager Instance => instance == null ? new GameObject("SteamManager").AddComponent<SteamManager>() : instance;
-
-		/// <summary>
 		/// <see cref="initialized"/>
 		/// </summary>
-		public static bool Initialized => Instance.initialized;
+		public static bool Initialized => instance != null && instance.initialized;
 		
 		/// <summary>
 		/// Steam ID of the account currently logged into the Steam client (Current user/Local user)
@@ -69,8 +64,6 @@ namespace Watermelon_Game.Steamworks.NET
 		[AOT.MonoPInvokeCallback(typeof(SteamAPIWarningMessageHook_t))]
 		private static void SteamAPIDebugTextHook(int _Severity, StringBuilder _PchDebugText)
 		{
-
-			
 			Debug.LogWarning(_PchDebugText);
 		}
 
@@ -213,6 +206,24 @@ namespace Watermelon_Game.Steamworks.NET
 
 			// Run Steam client callbacks
 			SteamAPI.RunCallbacks();
+		}
+
+		/// <summary>
+		/// Destroys the <see cref="SteamManager"/> <see cref="instance"/> and prevents it from being initialized again
+		/// </summary>
+		public static void Destroy()
+		{
+			everInitialized = true;
+
+			if (instance == null)
+			{
+				return;
+			}
+			
+			GameObject.Destroy(instance.gameObject);
+			instance.initialized = false;
+			instance = null;
+			SteamAPI.Shutdown();
 		}
 		#endregion
 #else

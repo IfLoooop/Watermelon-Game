@@ -1,4 +1,5 @@
 using System;
+using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
@@ -60,7 +61,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="StatsValues.BestScore"/>
         /// </summary>
-        public int BestScore
+        public ProtectedInt32 BestScore
         {
             get => this.statsValues.BestScore;
             set => this.statsValues.BestScore = value;
@@ -68,7 +69,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="StatsValues.GamesPlayed"/>
         /// </summary>
-        public int GamesPlayed
+        public ProtectedInt32 GamesPlayed
         {
             get => this.statsValues.GamesPlayed;
             set => this.statsValues.GamesPlayed = value;
@@ -85,7 +86,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="StatsValues.BestMultiplier"/>
         /// </summary>
-        public int BestMultiplier
+        public ProtectedInt32 BestMultiplier
         {
             get => this.statsValues.BestMultiplier;
             set
@@ -97,7 +98,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.GrapeEvolvedCount"/>
         /// </summary>
-        public int GrapeEvolvedCount
+        public ProtectedInt32 GrapeEvolvedCount
         {
             get => this.statsValues.GrapeEvolvedCount;
             set
@@ -109,7 +110,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.CherryEvolvedCount"/>
         /// </summary>
-        public int CherryEvolvedCount
+        public ProtectedInt32 CherryEvolvedCount
         {
             get => this.statsValues.CherryEvolvedCount;
             set
@@ -121,7 +122,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.StrawberryEvolvedCount"/>
         /// </summary>
-        public int StrawberryEvolvedCount
+        public ProtectedInt32 StrawberryEvolvedCount
         {
             get => this.statsValues.StrawberryEvolvedCount;
             set
@@ -133,7 +134,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.LemonEvolvedCount"/>
         /// </summary>
-        public int LemonEvolvedCount
+        public ProtectedInt32 LemonEvolvedCount
         {
             get => this.statsValues.LemonEvolvedCount;
             set
@@ -145,7 +146,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.OrangeEvolvedCount"/>
         /// </summary>
-        public int OrangeEvolvedCount
+        public ProtectedInt32 OrangeEvolvedCount
         {
             get => this.statsValues.OrangeEvolvedCount;
             set
@@ -157,7 +158,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.AppleEvolvedCount"/>
         /// </summary>
-        public int AppleEvolvedCount
+        public ProtectedInt32 AppleEvolvedCount
         {
             get => this.statsValues.AppleEvolvedCount;
             set
@@ -169,7 +170,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.PearEvolvedCount"/>
         /// </summary>
-        public int PearEvolvedCount
+        public ProtectedInt32 PearEvolvedCount
         {
             get => this.statsValues.PearEvolvedCount;
             set
@@ -181,7 +182,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.PineappleEvolvedCount"/>
         /// </summary>
-        public int PineappleEvolvedCount
+        public ProtectedInt32 PineappleEvolvedCount
         {
             get => this.statsValues.PineappleEvolvedCount;
             set
@@ -193,7 +194,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.HoneymelonEvolvedCount"/>
         /// </summary>
-        public int HoneymelonEvolvedCount
+        public ProtectedInt32 HoneymelonEvolvedCount
         {
             get => this.statsValues.HoneymelonEvolvedCount;
             set
@@ -205,7 +206,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.WatermelonEvolvedCount"/>
         /// </summary>
-        public int WatermelonEvolvedCount
+        public ProtectedInt32 WatermelonEvolvedCount
         {
             get => this.statsValues.WatermelonEvolvedCount;
             set
@@ -217,7 +218,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="Menus.StatsValues.GoldenFruitCount"/>
         /// </summary>
-        public int GoldenFruitCount
+        public ProtectedInt32 GoldenFruitCount
         {
             get => this.statsValues.GoldenFruitCount;
             set
@@ -229,7 +230,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="StatsValues.PowerSkillUsedCount"/>
         /// </summary>
-        public int PowerSkillUsedCount
+        public ProtectedInt32 PowerSkillUsedCount
         {
             get => this.statsValues.PowerSkillUsedCount;
             set
@@ -241,7 +242,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="StatsValues.EvolveSkillUsedCount"/>
         /// </summary>
-        public int EvolveSkillUsedCount
+        public ProtectedInt32 EvolveSkillUsedCount
         {
             get => this.statsValues.EvolveSkillUsedCount;
             set
@@ -253,7 +254,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="StatsValues.DestroySkillUsedCount"/>
         /// </summary>
-        public int DestroySkillUsedCount
+        public ProtectedInt32 DestroySkillUsedCount
         {
             get => this.statsValues.DestroySkillUsedCount;
             set

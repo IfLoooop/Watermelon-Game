@@ -1,4 +1,5 @@
 using System.Linq;
+using OPS.AntiCheat.Field;
 
 namespace Watermelon_Game.Fruits
 {
@@ -12,12 +13,12 @@ namespace Watermelon_Game.Fruits
         /// <b><see cref="FruitBehaviour"/>:</b> The <see cref="Fruit"/> <br/>
         /// <b>HasReachedTarget:</b> Indicates whether the <see cref="Fruit"/> has reached the position to evolve
         /// </summary>
-        public (FruitBehaviour FruitBehaviour, bool HasReachedTarget) Fruit1 { get; private set; }
+        public (FruitBehaviour FruitBehaviour, ProtectedBool HasReachedTarget) Fruit1 { get; private set; }
         /// <summary>
         /// <b><see cref="FruitBehaviour"/>:</b> The <see cref="Fruit"/> <br/>
         /// <b>HasReachedTarget:</b> Indicates whether the <see cref="Fruit"/> has reached the position to evolve
         /// </summary>
-        public (FruitBehaviour FruitBehaviour, bool HasReachedTarget) Fruit2 { get; private set; }
+        public (FruitBehaviour FruitBehaviour, ProtectedBool HasReachedTarget) Fruit2 { get; private set; }
         #endregion
 
         #region Constructor

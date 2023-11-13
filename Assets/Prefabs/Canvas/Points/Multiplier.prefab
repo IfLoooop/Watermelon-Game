@@ -144,8 +144,10 @@ MonoBehaviour:
   popup: {fileID: 7690277633038345936}
   background: {fileID: 0}
   multiplier: {fileID: 0}
-  multiplierDuration: 1
-  multiplierWaitTime: 0.1
+  multiplierDuration:
+    fakeValue: 1
+  multiplierWaitTime:
+    fakeValue: 0.1
   multiplierColors:
   - {r: 0.5019608, g: 0, b: 1, a: 1}
   - {r: 0.5019608, g: 0, b: 0, a: 1}

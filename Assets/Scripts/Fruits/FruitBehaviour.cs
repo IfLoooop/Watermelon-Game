@@ -2,6 +2,9 @@ using System;
 using System.Collections;
 using System.Linq;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Container;
@@ -31,7 +34,22 @@ namespace Watermelon_Game.Fruits
         
         [Header("Settings")]
         [Tooltip("The type of this fruit")]
-        [SerializeField] private Fruit fruit;
+        [ValueDropdown("fruits")]
+        [SerializeField] private ProtectedInt32 fruit;
+        // ReSharper disable once UnusedMember.Local
+        private static IEnumerable fruits = new ValueDropdownList<ProtectedInt32>
+        {
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Grape)}", (int)Watermelon_Game.Fruits.Fruit.Grape },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Cherry)}", (int)Watermelon_Game.Fruits.Fruit.Cherry },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Strawberry)}", (int)Watermelon_Game.Fruits.Fruit.Strawberry },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Lemon)}", (int)Watermelon_Game.Fruits.Fruit.Lemon },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Orange)}", (int)Watermelon_Game.Fruits.Fruit.Orange },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Apple)}", (int)Watermelon_Game.Fruits.Fruit.Apple },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Pear)}", (int)Watermelon_Game.Fruits.Fruit.Pear },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Pineapple)}", (int)Watermelon_Game.Fruits.Fruit.Pineapple },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Honeymelon)}", (int)Watermelon_Game.Fruits.Fruit.Honeymelon },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Watermelon)}", (int)Watermelon_Game.Fruits.Fruit.Watermelon },
+        };
         #endregion
         
         #region Fields
@@ -70,11 +88,11 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Is true when teh fruit is inside the <see cref="MaxHeight"/> trigger
         /// </summary>
-        private bool collisionWithMaxHeight;
+        private ProtectedBool collisionWithMaxHeight;
         /// <summary>
         /// Indicates whether this fruit is an upgraded golden fruit
         /// </summary>
-        private bool isUpgradedGoldenFruit;
+        private ProtectedBool isUpgradedGoldenFruit;
         /// <summary>
         /// Disables most of the collision logic if true
         /// </summary>
@@ -103,27 +121,27 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// <see cref="fruit"/>
         /// </summary>
-        public Fruit Fruit => this.fruit;
+        public ProtectedInt32 Fruit => this.fruit;
         /// <summary>
         /// Indicates whether a fruit has been released from the <see cref="FruitSpawner"/> or not
         /// </summary>
-        public bool HasBeenReleased { get; private set; }
+        public ProtectedBool HasBeenReleased { get; private set; }
         /// <summary>
         /// Indicates if a fruit has been spawned through evolving or not
         /// </summary>
-        public bool HasBeenEvolved { get; private set; }
+        public ProtectedBool HasBeenEvolved { get; private set; }
         /// <summary>
         /// Indicates whether this fruit is a golden fruit
         /// </summary>
-        public bool IsGoldenFruit { get; private set; }
+        public ProtectedBool IsGoldenFruit { get; private set; }
         /// <summary>
         /// Indicates whether this fruit is currently evolving with another fruit 
         /// </summary>
-        public bool IsEvolving { get; private set; }
+        public ProtectedBool IsEvolving { get; private set; }
         /// <summary>
         /// <see cref="CircleCollider2D.radius"/> of the <see cref="circleCollider2D"/>
         /// </summary>
-        public float ColliderRadius => this.circleCollider2D.radius;
+        public ProtectedFloat ColliderRadius => this.circleCollider2D.radius;
         #endregion
         
         #region Events
@@ -595,11 +613,10 @@ namespace Watermelon_Game.Fruits
         /// <returns></returns>
         private IEnumerator Evolve(Vector3 _TargetScale)
         {
-            var _scaleStep = FruitSettings.EvolveStep;
-            
             while (base.transform.localScale.x < _TargetScale.x)
             {
-                base.transform.localScale += _scaleStep;
+                var _localScale = base.transform.localScale + (_TargetScale + FruitSettings.EvolveStep.Value) * Time.deltaTime;
+                base.transform.localScale = _localScale.Clamp(Vector3.zero, _TargetScale);
                 yield return FruitSettings.EvolveWaitForSeconds;
             }
         }
@@ -676,7 +693,7 @@ namespace Watermelon_Game.Fruits
         {
             if (_PreviousFruit == null)
             {
-                return FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == Fruit.Grape);
+                return FruitPrefabSettings.FruitPrefabs.First(_FruitData => (Fruit)_FruitData.Fruit.Value == Watermelon_Game.Fruits.Fruit.Grape);
             }
          
             FruitController.SetWeightMultiplier(_PreviousFruit.Value);
@@ -712,7 +729,7 @@ namespace Watermelon_Game.Fruits
         /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
         public static FruitBehaviour SpawnFruit(Vector2 _Position, Fruit _Fruit, Quaternion? _Rotation = null)
         {
-            var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == _Fruit);
+            var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => (Fruit)_FruitData.Fruit.Value == _Fruit);
             var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, _Rotation ?? Quaternion.identity, FruitController.FruitContainerTransform).GetComponent<FruitBehaviour>();
             
             _fruitBehavior.HasBeenEvolved = true;

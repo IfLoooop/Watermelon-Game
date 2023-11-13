@@ -1,4 +1,5 @@
 using System;
+using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
@@ -19,14 +20,9 @@ namespace Watermelon_Game.Menus
 
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="GameOverMenu"/>
-        /// </summary>
-        private static GameOverMenu instance;
-        
-        /// <summary>
         /// Current points amount
         /// </summary>
-        private int points;
+        private ProtectedInt32 points;
         /// <summary>
         /// Duration of the current game
         /// </summary>
@@ -37,7 +33,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="points"/>
         /// </summary>
-        public int Points
+        public ProtectedInt32 Points
         {
             set
             {
@@ -71,11 +67,6 @@ namespace Watermelon_Game.Menus
         #endregion
 
         #region Methods
-        private void Awake()
-        {
-            instance = this;
-        }
-        
         /// <summary>
         /// <see cref="MenuBase.Open_Close"/>
         /// </summary>

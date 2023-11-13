@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -18,7 +19,7 @@ namespace Watermelon_Game.Fruit_Spawn
         [SerializeField] private Animation nextNextFruit;
         [SerializeField] private Animation timer;
         [Tooltip("Time in seconds, the NextNextFruit will be visible")]
-        [SerializeField] private uint nextNextFruitTime = 300;
+        [SerializeField] private ProtectedUInt32 nextNextFruitTime = 300;
         [SerializeField] private AnimationClip nextNextFruitEnabledAnimation;
         [SerializeField] private AnimationClip nextNextFruitDisabledAnimation;
         #endregion
@@ -27,7 +28,7 @@ namespace Watermelon_Game.Fruit_Spawn
         private FruitBehaviour nextFruitBehaviour;
         private FruitBehaviour nextNextFruitBehaviour;
         private TextMeshProUGUI timerText;
-        private uint currentNextNextFruitTimer;
+        private ProtectedUInt32 currentNextNextFruitTimer;
         #endregion
 
         #region Properties
@@ -75,7 +76,7 @@ namespace Watermelon_Game.Fruit_Spawn
             this.nextNextFruitBehaviour.transform.SetParent(this.nextFruit.transform, false);
             
             // Spawn new fruit
-            this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, this.nextFruitBehaviour.Fruit);
+            this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, (Fruit)this.nextFruitBehaviour.Fruit.Value);
 
             return _fruitBehaviour;
         }
@@ -174,7 +175,7 @@ namespace Watermelon_Game.Fruit_Spawn
             DestroyFruit(this.nextNextFruitBehaviour);
             
             this.nextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextFruit.transform.position, this.nextFruit.transform, null);
-            this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, this.nextFruitBehaviour.Fruit);
+            this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, (Fruit)this.nextFruitBehaviour.Fruit.Value);
         }
 
         private void DestroyFruit([CanBeNull] FruitBehaviour _FruitBehaviour)

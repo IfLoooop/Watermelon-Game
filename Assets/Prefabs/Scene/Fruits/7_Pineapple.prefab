@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: fruit
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 1968048327966716910, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+      propertyPath: fruit.fakeValue
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 4946083969665849143, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Size.x
       value: 20

@@ -182,10 +182,11 @@ namespace Watermelon_Game.Editor
             return;
 #endif
 #pragma warning disable CS0162
+            // ReSharper disable once HeuristicUnreachableCode
             Finalize(_Report, BuildTarget.StandaloneWindows64, WINDOWS, BuildTarget.StandaloneOSX, MAC);
             Finalize(_Report, BuildTarget.StandaloneOSX, MAC, BuildTarget.StandaloneLinux64, LINUX);
-            Finalize(_Report, BuildTarget.StandaloneLinux64, LINUX, BuildTarget.WSAPlayer, UWP);
-            Finalize(_Report, BuildTarget.WSAPlayer, UWP, null, string.Empty);
+            Finalize(_Report, BuildTarget.StandaloneLinux64, LINUX, null, string.Empty); // TODO: BuildTarget.WSAPlayer, UWP
+            //Finalize(_Report, BuildTarget.WSAPlayer, UWP, null, string.Empty); // TODO: Enable
 #pragma warning restore CS0162
         }
 
@@ -509,7 +510,7 @@ namespace Watermelon_Game.Editor
         }
         
         /// <summary>
-        /// Deletes unnecessary folders and creates a .zip folder for every release build
+        /// Deletes unnecessary folders and creates a .zip file
         /// </summary>
         /// <param name="_InstallDirectory">The path, the executable is stored at</param>
         /// <param name="_Platform">The platform of the build</param>
@@ -517,7 +518,7 @@ namespace Watermelon_Game.Editor
         {
             foreach (var _path in Directory.GetFileSystemEntries(_InstallDirectory))
             {
-                if (_path.Contains(BURST_DEBUG_INFORMATION) ||_path.Contains(BACKUP_THIS_FOLDER))
+                if (_path.Contains(BURST_DEBUG_INFORMATION) || _path.Contains(BACKUP_THIS_FOLDER))
                 {
                     Directory.Delete(_path, true);
                 }

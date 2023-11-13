@@ -30,8 +30,11 @@ MonoBehaviour:
   m_defaultTextMeshProUITextContainerSize: {x: 200, y: 50}
   m_autoSizeTextContainer: 0
   m_IsTextObjectScaleStatic: 0
-  m_fallbackFontAssets: []
-  m_matchMaterialPreset: 1
+  m_fallbackFontAssets:
+  - {fileID: 11400000, guid: 70cebf767f81b224090f9305f2f4e1a3, type: 2}
+  - {fileID: 11400000, guid: 8740302daab4911469149be2f97d3925, type: 2}
+  - {fileID: 11400000, guid: d84a7a72b9f2d4341a46107aceabb60f, type: 2}
+  m_matchMaterialPreset: 0
   m_defaultSpriteAsset: {fileID: 11400000, guid: c41005c129ba4d66911b75229fd70b45, type: 2}
   m_defaultSpriteAssetPath: Sprite Assets/
   m_enableEmojiSupport: 1
@@ -41,4 +44,4 @@ MonoBehaviour:
   m_StyleSheetsResourcePath: 
   m_leadingCharacters: {fileID: 4900000, guid: d82c1b31c7e74239bff1220585707d2b, type: 3}
   m_followingCharacters: {fileID: 4900000, guid: fade42e8bc714b018fac513c043d323b, type: 3}
-  m_UseModernHangulLineBreakingRules: 0
+  m_UseModernHangulLineBreakingRules: 1

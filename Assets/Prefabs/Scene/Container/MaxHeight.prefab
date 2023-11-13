@@ -115,9 +115,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8397b925480cd7a43aaeb623b4d90ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  disableCountDown: 0
-  countdownAudioClip: {fileID: 8300000, guid: 6eaf482540063ea47a872b02bb267296, type: 3}
-  countdownTime: 8
+  countdownTime:
+    fakeValue: 8
   godRayDuration: 1.5
 --- !u!114 &1029240382313648689
 MonoBehaviour:

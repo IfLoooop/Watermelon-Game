@@ -1,3 +1,4 @@
+using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -22,15 +23,15 @@ namespace Watermelon_Game.Fruit_Spawn
         
         [Header("Settings")]
         [Tooltip("Speed the FruitSpawner moves with")]
-        [SerializeField] private float movementSpeed = 30f;
+        [SerializeField] private ProtectedFloat movementSpeed = 2f;
         [Tooltip("Speed the aim rotates with")]
-        [SerializeField] private float rotationSpeed = 50f;
+        [SerializeField] private ProtectedFloat rotationSpeed = 50f;
         [Tooltip("The maximum angle of FruitSpawnerAim (Relative to the FruitSpawners y-axis)")]
-        [SerializeField] private float maxRotationAngle = 60f;
+        [SerializeField] private ProtectedFloat maxRotationAngle = 80f;
         [Tooltip("Minimum cooldown between fruit releases (In Seconds)")]
-        [SerializeField] private float releaseCooldown = .375f;
+        [SerializeField] private ProtectedFloat releaseCooldown = .375f;
         [Tooltip("Is added to the size of the FruitSpawners BoxCollider2D")]
-        [SerializeField] private float colliderSizeOffset = 3.85f; 
+        [SerializeField] private ProtectedFloat colliderSizeOffset = 3.85f; 
         #endregion
         
         #region Fields
@@ -62,17 +63,17 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// <see cref="Time.time"/> in seconds, of the last fruit release -> <see cref="ReleaseFruit"/>
         /// </summary>
-        private float lastRelease;
+        private ProtectedFloat lastRelease;
         
         // TODO: Use InputController
         /// <summary>
         /// Blocks movement input while this field is set to true
         /// </summary>
-        private bool blockInput;
+        private ProtectedBool blockInput;
         /// <summary>
         /// Blocks fruit release while true
         /// </summary>
-        private bool blockRelease;
+        private ProtectedBool blockRelease;
         /// <summary>
         /// Index of the <see cref="AudioWrapper"/> in <see cref="AudioPool.assignedAudioWrappers"/>, for the <see cref="AudioClipName.BlockedRelease"/> <see cref="AudioClip"/>
         /// </summary>
@@ -88,11 +89,11 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// <see cref="rotationSpeed"/>
         /// </summary>
-        public static float RotationSpeed => instance.rotationSpeed;
+        public static ProtectedFloat RotationSpeed => instance.rotationSpeed;
         /// <summary>
         /// <see cref="maxRotationAngle"/>
         /// </summary>
-        public static float MaxRotationAngle => instance.maxRotationAngle;
+        public static ProtectedFloat MaxRotationAngle => instance.maxRotationAngle;
         #endregion
         
         #region Methods

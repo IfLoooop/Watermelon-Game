@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
+using OPS.AntiCheat.Field;
 
 namespace Watermelon_Game.Menus
 {
@@ -13,11 +14,11 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// All time best score
         /// </summary>
-        public int BestScore { get; set; }
+        public ProtectedInt32 BestScore { get; set; }
         /// <summary>
         /// Total amount of games played
         /// </summary>
-        public int GamesPlayed { get; set; }
+        public ProtectedInt32 GamesPlayed { get; set; }
         /// <summary>
         /// Total amount of time spend in game
         /// </summary>
@@ -28,63 +29,63 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Best multiplier
         /// </summary>
-        public int BestMultiplier { get; set; }
+        public ProtectedInt32 BestMultiplier { get; set; }
         /// <summary>
         /// Total evolved grape count
         /// </summary>
-        public int GrapeEvolvedCount { get; set; }
+        public ProtectedInt32 GrapeEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved cherry count
         /// </summary>
-        public int CherryEvolvedCount { get; set; }
+        public ProtectedInt32 CherryEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved strawberry count
         /// </summary>
-        public int StrawberryEvolvedCount { get; set; }
+        public ProtectedInt32 StrawberryEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved lemon count
         /// </summary>
-        public int LemonEvolvedCount { get; set; }
+        public ProtectedInt32 LemonEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved orange count
         /// </summary>
-        public int OrangeEvolvedCount { get; set; }
+        public ProtectedInt32 OrangeEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved apple count
         /// </summary>
-        public int AppleEvolvedCount { get; set; }
+        public ProtectedInt32 AppleEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved pear count
         /// </summary>
-        public int PearEvolvedCount { get; set; }
+        public ProtectedInt32 PearEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved pineapple count
         /// </summary>
-        public int PineappleEvolvedCount { get; set; }
+        public ProtectedInt32 PineappleEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved honeymelon count
         /// </summary>
-        public int HoneymelonEvolvedCount { get; set; }
+        public ProtectedInt32 HoneymelonEvolvedCount { get; set; }
         /// <summary>
         /// Total evolved watermelon count
         /// </summary>
-        public int WatermelonEvolvedCount { get; set; }
+        public ProtectedInt32 WatermelonEvolvedCount { get; set; }
         /// <summary>
         /// Total golden fruit count
         /// </summary>
-        public int GoldenFruitCount { get; set; }
+        public ProtectedInt32 GoldenFruitCount { get; set; }
         /// <summary>
         /// Total amount of power skills used
         /// </summary>
-        public int PowerSkillUsedCount { get; set; }
+        public ProtectedInt32 PowerSkillUsedCount { get; set; }
         /// <summary>
         /// Total amount of evolve skills used
         /// </summary>
-        public int EvolveSkillUsedCount { get; set; }
+        public ProtectedInt32 EvolveSkillUsedCount { get; set; }
         /// <summary>
         /// Total amount of destroy skills used
         /// </summary>
-        public int DestroySkillUsedCount { get; set; }
+        public ProtectedInt32 DestroySkillUsedCount { get; set; }
         #endregion
 
         #region Constructors
@@ -152,7 +153,7 @@ namespace Watermelon_Game.Menus
                 
                 var _loadedPropertyValue = _loadedPropertyInfo.GetValue(_LoadedStatsValues);
                 var _currentPropertyValue = _currentPropertyInfo.GetValue(this);
-
+                
                 var _biggerValue = GetBiggerValue(_loadedPropertyValue, _currentPropertyValue);
                 var _property = _statsValues.GetType().GetProperty(_loadedPropertyInfo.Name, BindingFlags.Instance | BindingFlags.Public)!;
                 object _updatedStatsValues = _statsValues;
@@ -173,12 +174,12 @@ namespace Watermelon_Game.Menus
         /// <exception cref="ArgumentException">When one of the given objects has a <see cref="Type"/> other than <see cref="int"/> or <see cref="TimeSpan"/></exception>
         private static object GetBiggerValue(object _Value1, object _Value2)
         {
-            var _isInt = _Value1 is int && _Value2 is int;
+            var _isInt = _Value1 is ProtectedInt32 && _Value2 is ProtectedInt32;
             var _isTimeSpan = _Value1 is TimeSpan && _Value2 is TimeSpan;
             
             if (_isInt)
             {
-                return (int)_Value1 > (int)_Value2 ? _Value1 : _Value2;
+                return (ProtectedInt32)_Value1 > (ProtectedInt32)_Value2 ? _Value1 : _Value2;
             }
             if (_isTimeSpan)
             {

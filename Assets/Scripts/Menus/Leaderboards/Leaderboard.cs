@@ -20,11 +20,15 @@ namespace Watermelon_Game.Menus.Leaderboards
         #region Inspector Fields
         [Tooltip("Displays the current/max page")]
         [SerializeField] private TextMeshProUGUI paging;
+        [Tooltip("Button to refresh all leaderboard entries")]
+        [SerializeField] private Button refreshButton;
+        [Tooltip("Image component of the refresh button")]
+        [SerializeField] private Image refreshButtonImage;
         [Tooltip("EnhancedScroller component")]
         [SerializeField] private EnhancedScroller scroller;
         [Tooltip("Displays one row in the leaderboard")]
         [SerializeField] private LeaderboardEntry leaderboardEntryPrefab;
-
+        
         [Header("Settings")]
         [Tooltip("The maximum number of entries per page")]
         [SerializeField] private uint maxEntriesPerPage = 100;
@@ -43,6 +47,14 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// Indicates whether this <see cref="Leaderboard"/> has already been initialized by the <see cref="MenuController"/>
         /// </summary>
         private bool hasBeenInitialized;
+        /// <summary>
+        /// Timestamp in seconds when the refresh button was last pressed
+        /// </summary>
+        private float refreshTimestamp;
+        /// <summary>
+        /// Cooldown in seconds, how long the refresh button stays deactivated after having been pressed
+        /// </summary>
+        private const uint REFRESH_COOLDOWN = 60;
         /// <summary>
         /// The currently active page in the leaderboard menu <br/>
         /// <i>First page starts at 0</i>
@@ -110,6 +122,29 @@ namespace Watermelon_Game.Menus.Leaderboards
             this.GetLeaderboardEntries();
         }
 
+        private void Update()
+        {
+            this.SetRefreshFill();
+        }
+        
+        /// <summary>
+        /// Sets the <see cref="Image.fillAmount"/> of the <see cref="refreshButtonImage"/>
+        /// </summary>
+        private void SetRefreshFill()
+        {
+            if (this.refreshButton.interactable)
+            {
+                return;
+            }
+            
+            this.refreshButtonImage.fillAmount = Mathf.Clamp01((Time.time - this.refreshTimestamp) / REFRESH_COOLDOWN);
+
+            if (this.refreshButtonImage.fillAmount >= 1)
+            {
+                this.refreshButton.interactable = true;
+            }
+        }
+        
         /// <summary>
         /// Sets the <see cref="TextMeshProUGUI.text"/> of <see cref="paging"/> to <see cref="activePage"/> and <see cref="LastPage"/>
         /// </summary>
@@ -167,6 +202,18 @@ namespace Watermelon_Game.Menus.Leaderboards
                 var _scrollPosition = this.scroller.GetScrollPositionForDataIndex(_dataIndex, EnhancedScroller.CellViewPositionEnum.Before);
                 this.scroller.SetScrollPositionImmediately(_scrollPosition);   
             }
+        }
+
+        /// <summary>
+        /// Force downloads the leaderboard and refreshes all entries
+        /// </summary>
+        public void RefreshLeaderboard()
+        {
+            this.refreshButton.interactable = false;
+            this.refreshTimestamp = Time.time;
+            this.refreshButtonImage.fillAmount = 0;
+            
+            SteamLeaderboard.DownloadLeaderboardScores();
         }
         
         /// <summary>
