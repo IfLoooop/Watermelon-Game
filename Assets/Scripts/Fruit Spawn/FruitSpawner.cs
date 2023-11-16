@@ -108,37 +108,16 @@ namespace Watermelon_Game.Fruit_Spawn
             this.startingPosition = base.transform.position;
         }
 
+        // ReSharper disable once Unity.RedundantEventFunction
         private void OnEnable()
         {
-            // if (!base.isLocalPlayer)
-            // {
-            //     return;
-            // }
-            
-            Debug.Log($"[OnEnable] base: {base.netId}");
-            
-            GameController.OnGameStart += this.GameStarted;
-            GameController.OnResetGameStarted += this.ResetGameStarted;
-            GameController.OnResetGameFinished += this.ResetGameFinished;
-            FruitsFirstCollision.OnCollision += this.UnblockRelease;
-            SkillController.OnSkillActivated += this.SetActiveSkill;
-            FruitBehaviour.OnSkillUsed += DeactivateRotation;
+            // TODO: Needs to subscribe to everything in "OnStartClient()" when not a network game
         }
 
+        // ReSharper disable once Unity.RedundantEventFunction
         private void OnDisable()
         {
-            // if (!base.isLocalPlayer)
-            // {
-            //     return;
-            // }
-            
-            Debug.Log($"[OnDisable] base: {base.netId}");
-            
-            GameController.OnGameStart -= this.GameStarted;
-            GameController.OnResetGameStarted -= this.ResetGameStarted;
-            GameController.OnResetGameFinished -= this.ResetGameFinished;
-            FruitsFirstCollision.OnCollision -= this.UnblockRelease;
-            SkillController.OnSkillActivated -= this.SetActiveSkill;
+            // TODO: Needs to unsubscribe from everything in "OnStopClient()" when not a network game
         }
 
         public override void OnStartClient()
@@ -147,7 +126,28 @@ namespace Watermelon_Game.Fruit_Spawn
             
             if (base.isLocalPlayer)
             {
+                GameController.OnGameStart += this.GameStarted;
+                GameController.OnResetGameStarted += this.ResetGameStarted;
+                GameController.OnResetGameFinished += this.ResetGameFinished;
+                FruitsFirstCollision.OnCollision += this.UnblockRelease;
+                SkillController.OnSkillActivated += this.SetActiveSkill;
+                FruitBehaviour.OnSkillUsed += DeactivateRotation;
+                
                 GameController.StartGame(); // TODO: Only for testing
+            }
+        }
+
+        public override void OnStopClient()
+        {
+            base.OnStopClient();
+            
+            if (base.isLocalPlayer)
+            {
+                GameController.OnGameStart -= this.GameStarted;
+                GameController.OnResetGameStarted -= this.ResetGameStarted;
+                GameController.OnResetGameFinished -= this.ResetGameFinished;
+                FruitsFirstCollision.OnCollision -= this.UnblockRelease;
+                SkillController.OnSkillActivated -= this.SetActiveSkill;
             }
         }
 
