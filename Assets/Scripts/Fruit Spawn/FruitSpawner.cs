@@ -110,6 +110,13 @@ namespace Watermelon_Game.Fruit_Spawn
 
         private void OnEnable()
         {
+            // if (!base.isLocalPlayer)
+            // {
+            //     return;
+            // }
+            
+            Debug.Log($"[OnEnable] base: {base.netId}");
+            
             GameController.OnGameStart += this.GameStarted;
             GameController.OnResetGameStarted += this.ResetGameStarted;
             GameController.OnResetGameFinished += this.ResetGameFinished;
@@ -120,6 +127,13 @@ namespace Watermelon_Game.Fruit_Spawn
 
         private void OnDisable()
         {
+            // if (!base.isLocalPlayer)
+            // {
+            //     return;
+            // }
+            
+            Debug.Log($"[OnDisable] base: {base.netId}");
+            
             GameController.OnGameStart -= this.GameStarted;
             GameController.OnResetGameStarted -= this.ResetGameStarted;
             GameController.OnResetGameFinished -= this.ResetGameFinished;
@@ -244,7 +258,7 @@ namespace Watermelon_Game.Fruit_Spawn
             this.rigidbody2D.AddForce(_direction);
         }
         
-                /// <summary>
+        /// <summary>
         /// Resets the Fruit Spawner to its original position
         /// </summary>
         /// <param name="_ResetPosition">If true, resets the <see cref="FruitSpawner"/> position to <see cref="startingPosition"/></param>
@@ -301,9 +315,6 @@ namespace Watermelon_Game.Fruit_Spawn
             this.fruitSpawnerAim.ResetAimRotation();
             this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.GetSize() + colliderSizeOffset, this.fruitSpawnerCollider.size.y);
             this.SetFruitTriggerSize(this.fruitBehaviour);
-            
-            Debug.Log($"base: {base.netId}");
-            Debug.Log(this.fruitBehaviour);
         }
         
         /// <summary>
@@ -389,11 +400,6 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </param>
         private void SetActiveSkill(Skill? _ActiveSkill)
         {
-            if (!base.isLocalPlayer)
-            {
-                return;
-            }
-            
             if (_ActiveSkill != null)
             {
                 this.fruitBehaviour.SetActiveSkill(_ActiveSkill); // TODO
