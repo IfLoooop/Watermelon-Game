@@ -30,18 +30,10 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private readonly List<RaycastHit2D> raycastHits2D = new();
         #endregion
-
-        #region Properties
-        /// <summary>
-        /// Singleton of <see cref="FruitSpawnerAim"/>
-        /// </summary>
-        public static FruitSpawnerAim Instance { get; private set; }
-        #endregion
-
+        
         #region Methods
         private void Awake()
         {
-            Instance = this;
             this.lineRenderer = this.GetComponent<LineRenderer>();
             this.contactFilter2D.SetLayerMask(LayerMaskController.Container_Fruit_Mask);
         }

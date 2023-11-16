@@ -523,7 +523,15 @@ namespace Watermelon_Game.Editor
                     Directory.Delete(_path, true);
                 }
             }
-
+    
+            Debug.Log(_InstallDirectory);
+            
+#if UNITY_STANDALONE_OSX // TODO: After a mac build has finished, apparently nothing inside the .app is allowed to be changed, otherwise it need to be signed again.
+            // Takes forever to build with this
+            // var _appPath = Path.Combine(_InstallDirectory, $"{GetApplicationName(false)}.app");
+            // UnityEditor.OSXStandalone.MacOSCodeSigning.CodeSignAppBundle(_appPath);
+#endif
+            
             // Unity is still not completely done at this point, so need to wait a little before creating the .zip file 
             Task.Delay(TASK_DELAY);
             

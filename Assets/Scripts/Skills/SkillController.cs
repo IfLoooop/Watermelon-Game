@@ -328,7 +328,7 @@ namespace Watermelon_Game.Skills
         /// <param name="_FruitHashcode">The <see cref="HashCode"/> of the <see cref="FruitBehaviour"/> to destroy</param>
         public static void Skill_Destroy(int _FruitHashcode)
         {
-            FruitController.GetFruit(_FruitHashcode)!.DestroyFruit();
+            FruitController.GetFruit(_FruitHashcode)?.DestroyFruit();
         }
 
         /// <summary>
