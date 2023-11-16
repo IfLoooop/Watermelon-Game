@@ -52,7 +52,7 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         public GameObject Prefab => this.prefab;
         public Sprite Sprite { get; private set; }
-        public Vector3 Scale { get; private set; }
+        public ProtectedVector3 Scale { get; private set; }
         /// <summary>
         /// <see cref="fruit"/>
         /// </summary>
@@ -66,7 +66,7 @@ namespace Watermelon_Game.Fruits
         public void Init()
         {
             this.Sprite = this.prefab.GetComponent<SpriteRenderer>().sprite;
-            this.Scale = this.prefab.transform.localScale;
+            this.Scale = this.prefab.GetComponent<FruitBehaviour>().Scale;
         }
         
         /// <summary>

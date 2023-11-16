@@ -51,6 +51,8 @@ namespace Watermelon_Game.Fruits
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Honeymelon)}", (int)Watermelon_Game.Fruits.Fruit.Honeymelon },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Watermelon)}", (int)Watermelon_Game.Fruits.Fruit.Watermelon },
         };
+        [Tooltip("The size/scale of this fruit type")]
+        [SerializeField] private ProtectedVector3 scale;
         #endregion
         
         #region Fields
@@ -119,6 +121,10 @@ namespace Watermelon_Game.Fruits
         /// <see cref="fruit"/>
         /// </summary>
         public ProtectedInt32 Fruit => this.fruit;
+        /// <summary>
+        /// <see cref="scale"/>
+        /// </summary>
+        public ProtectedVector3 Scale => this.scale;
         /// <summary>
         /// Indicates whether a fruit has been released from the <see cref="FruitSpawner"/> or not
         /// </summary>
@@ -614,9 +620,8 @@ namespace Watermelon_Game.Fruits
             base.transform.SetParent(FruitController.FruitContainerTransform);
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
-            var _targetScale = base.transform.localScale;
-            this.transform.localScale = Vector3.zero;
-            this.growFruit = this.GrowFruit(_targetScale);
+            
+            this.growFruit = this.GrowFruit(this.scale);
             base.StartCoroutine(this.growFruit);
         }
         
@@ -691,7 +696,8 @@ namespace Watermelon_Game.Fruits
         }
         
         /// <summary>
-        /// Instantiates the given <see cref="Fruits.Fruit"/>
+        /// Instantiates the given <see cref="Fruits.Fruit"/> <br/>
+        /// <i>Fruits will be spawned with a scale of 0</i>
         /// </summary>
         /// <param name="_Parent">The parent <see cref="Transform"/> of the instantiated <see cref="FruitBehaviour"/></param>
         /// <param name="_Position">Where to spawn the fruit</param>
@@ -707,16 +713,27 @@ namespace Watermelon_Game.Fruits
             
             NetworkServer.Spawn(_fruitBehaviour.gameObject);
             
-            //_fruitBehaviour.HasBeenEvolved = _HasBeenEvolved; // TODO
             _fruitBehaviour.RpcSetEvolvedState(_HasBeenEvolved);
 
             return _fruitBehaviour;
         }
 
-        [ClientRpc] // TODO
+        /// <summary>
+        /// Sets <see cref="HasBeenEvolved"/> to the given value
+        /// </summary>
+        /// <param name="_Value">The value to set <see cref="HasBeenEvolved"/> to</param>
+        [ClientRpc]
         private void RpcSetEvolvedState(bool _Value)
         {
             this.HasBeenEvolved = _Value;
+        }
+
+        /// <summary>
+        /// Sets the <see cref="Transform.localScale"/> of this <see cref="FruitBehaviour"/> <see cref="GameObject"/> to <see cref="scale"/>
+        /// </summary>
+        public void SetScale()
+        {
+            base.transform.localScale = this.scale;
         }
         
 #if DEBUG || DEVELOPMENT_BUILD

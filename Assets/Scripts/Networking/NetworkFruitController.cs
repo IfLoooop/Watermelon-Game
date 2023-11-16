@@ -38,8 +38,8 @@ namespace Watermelon_Game.Networking
         private void CmdEvolve(Vector2 _NextFruitPosition, int _Fruit, NetworkConnectionToClient _Sender = null)
         {
             var _fruitBehaviour = FruitBehaviour.SpawnFruit(null, _NextFruitPosition, Quaternion.identity, _Fruit, true);
-            //NetworkServer.Spawn(_fruitBehaviour.gameObject); // TODO
             _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
+            
             this.TargetEvolve(_Sender, _fruitBehaviour);
         }
 

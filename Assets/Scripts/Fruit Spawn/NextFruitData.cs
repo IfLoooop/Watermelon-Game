@@ -25,18 +25,11 @@ namespace Watermelon_Game.Fruit_Spawn
         private const float FRUIT_SCALE_OFFSET = 40;
         #endregion
         
-        #region Fields
-        /// <summary>
-        /// The <see cref="Fruits.Fruit"/> type
-        /// </summary>
-        private ProtectedInt32 fruit;
-        #endregion
-
         #region Properties
         /// <summary>
-        /// <see cref="fruit"/>
+        /// <see cref="Fruit"/>
         /// </summary>
-        public ProtectedInt32 Fruit => this.fruit;
+        public ProtectedInt32 Fruit { get; private set; }
         #endregion
         
         #region Methods
@@ -46,7 +39,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_NextFruitData">The <see cref="NextFruitData"/> to copy the values from</param>
         public void CopyFruit(NextFruitData _NextFruitData)
         {
-            this.Set(_NextFruitData.fruitImage.sprite, _NextFruitData.fruit, _NextFruitData.fruitImage.transform.localScale);
+            this.Set(_NextFruitData.fruitImage.sprite, _NextFruitData.Fruit, _NextFruitData.fruitImage.transform.localScale);
         }
 
         /// <summary>
@@ -55,7 +48,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_FruitPrefab">The <see cref="FruitPrefab"/> to copy the values from</param>
         public void CopyFruit(FruitPrefab _FruitPrefab)
         {
-            this.Set(_FruitPrefab.Sprite, _FruitPrefab.Fruit, _FruitPrefab.Prefab.transform.localScale  / FRUIT_SCALE_OFFSET);
+            this.Set(_FruitPrefab.Sprite, _FruitPrefab.Fruit, _FruitPrefab.Scale.Value  / FRUIT_SCALE_OFFSET);
         }
 
         /// <summary>
@@ -72,7 +65,7 @@ namespace Watermelon_Game.Fruit_Spawn
             var _fruitTransform = (this.fruitImage.transform as RectTransform)!;
             var _faceTransform = (this.faceImage.transform as RectTransform)!;
 
-            this.fruit = _Fruit;
+            this.Fruit = _Fruit;
             this.fruitImage.sprite = _Sprite;
             
             _fruitTransform.localScale = _Scale;
