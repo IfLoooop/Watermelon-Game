@@ -301,6 +301,9 @@ namespace Watermelon_Game.Fruit_Spawn
             this.fruitSpawnerAim.ResetAimRotation();
             this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.GetSize() + colliderSizeOffset, this.fruitSpawnerCollider.size.y);
             this.SetFruitTriggerSize(this.fruitBehaviour);
+            
+            Debug.Log($"base: {base.netId}");
+            Debug.Log(this.fruitBehaviour);
         }
         
         /// <summary>
@@ -386,9 +389,14 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </param>
         private void SetActiveSkill(Skill? _ActiveSkill)
         {
+            if (!base.isLocalPlayer)
+            {
+                return;
+            }
+            
             if (_ActiveSkill != null)
             {
-                this.fruitBehaviour.SetActiveSkill(_ActiveSkill);
+                this.fruitBehaviour.SetActiveSkill(_ActiveSkill); // TODO
                 this.fruitSpawnerAim.ActivateRotationButtons(true);   
             }
             else
