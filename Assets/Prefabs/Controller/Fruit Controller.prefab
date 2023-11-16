@@ -48,6 +48,7 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
+  fruitController: {fileID: 2186609481881215347}
 --- !u!114 &2643998776862620501
 MonoBehaviour:
   m_ObjectHideFlags: 0

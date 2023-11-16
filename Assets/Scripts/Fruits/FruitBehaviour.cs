@@ -421,7 +421,7 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// <see cref="CmdRelease"/>
         /// </summary>
-        [ClientRpc] // TODO
+        [ClientRpc]
         private void RpcRelease()
         {
             base.transform.SetParent(FruitController.FruitContainerTransform, true);
@@ -611,7 +611,7 @@ namespace Watermelon_Game.Fruits
         [ClientRpc]
         private void RpcEvolve()
         {
-            base.transform.SetParent(FruitController.FruitContainerTransform); // TODO
+            base.transform.SetParent(FruitController.FruitContainerTransform);
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
             var _targetScale = base.transform.localScale;

@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using JetBrains.Annotations;
 using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -41,7 +42,7 @@ namespace Watermelon_Game.Fruits
         /// <b>Key:</b> Hashcode of the <see cref="Fruit"/> <see cref="GameObject"/> <br/>
         /// <b>Value:</b> The <see cref="FruitBehaviour"/>
         /// </summary>
-        private static readonly Dictionary<int, FruitBehaviour> fruits = new();
+        [ShowInInspector] private static readonly Dictionary<int, FruitBehaviour> fruits = new(); // TODO: Remove "[ShowInInspector]"
         /// <summary>
         /// Fruits that are currently evolving
         /// </summary>
@@ -118,7 +119,7 @@ namespace Watermelon_Game.Fruits
 
         private void OnEnable()
         {
-            FruitBehaviour.OnFruitRelease += AddFruit;
+            FruitBehaviour.OnFruitRelease += this.AddFruit;
             FruitBehaviour.OnFruitCollision += this.FruitCollision;
             FruitBehaviour.OnUpgradedGoldenFruitCollision += this.UpgradedGoldenFruitCollision;
             FruitBehaviour.OnGoldenFruitCollision += this.GoldenFruitCollision;
@@ -129,7 +130,7 @@ namespace Watermelon_Game.Fruits
         
         private void OnDisable()
         {
-            FruitBehaviour.OnFruitRelease -= AddFruit;
+            FruitBehaviour.OnFruitRelease -= this.AddFruit;
             FruitBehaviour.OnFruitCollision -= this.FruitCollision;
             FruitBehaviour.OnUpgradedGoldenFruitCollision -= this.UpgradedGoldenFruitCollision;
             FruitBehaviour.OnGoldenFruitCollision -= this.GoldenFruitCollision;
@@ -353,7 +354,7 @@ namespace Watermelon_Game.Fruits
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
         public static void AddFruit_DEVELOPMENT(FruitBehaviour _FruitBehaviour)
         {
-            AddFruit(_FruitBehaviour);
+            instance.AddFruit(_FruitBehaviour);
         }
 #endif
         
@@ -361,8 +362,10 @@ namespace Watermelon_Game.Fruits
         /// Adds the given <see cref="FruitBehaviour"/> to <see cref="fruits"/>
         /// </summary>
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
-        public static void AddFruit(FruitBehaviour _FruitBehaviour) // TODO: Remove public
+        public void AddFruit(FruitBehaviour _FruitBehaviour)
         {
+            Debug.Log($"HasBeenReleased: {_FruitBehaviour.HasBeenReleased} | HasBeenEvolved: {_FruitBehaviour.HasBeenEvolved}");
+            
             if (_FruitBehaviour.HasBeenReleased || _FruitBehaviour.HasBeenEvolved)
             {
                 var _hashCode = _FruitBehaviour.gameObject.GetHashCode();

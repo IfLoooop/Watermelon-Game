@@ -272,8 +272,19 @@ namespace Watermelon_Game.Fruit_Spawn
                 var _fruitBehaviour = FruitBehaviour.SpawnFruit(base.transform, base.transform.position, _Rotation, _Fruit, false);
                 NetworkServer.Spawn(_fruitBehaviour.gameObject);
                 _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
+                this.RpcResetFruitSpawner();
                 this.TargetResetFruitSpawner(_Sender, _fruitBehaviour);
             }
+        }
+
+        /// <summary>
+        /// <see cref="ResetFruitSpawner"/>
+        /// </summary>
+        [ClientRpc]
+        private void RpcResetFruitSpawner()
+        {
+            this.fruitBehaviour.transform.SetParent(base.transform, false);
+            this.fruitBehaviour.IncreaseSortingOrder();
         }
         
         /// <summary>
@@ -285,8 +296,6 @@ namespace Watermelon_Game.Fruit_Spawn
         private void TargetResetFruitSpawner(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour)
         {
             this.fruitBehaviour = _FruitBehaviour;
-            this.fruitBehaviour.transform.SetParent(base.transform, false);
-            this.fruitBehaviour.IncreaseSortingOrder();
             this.fruitSpawnerAim.ResetAimRotation();
             this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.GetSize() + colliderSizeOffset, this.fruitSpawnerCollider.size.y);
             this.SetFruitTriggerSize(this.fruitBehaviour);

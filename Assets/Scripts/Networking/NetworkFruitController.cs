@@ -10,24 +10,13 @@ namespace Watermelon_Game.Networking
     /// </summary>
     internal sealed class NetworkFruitController : NetworkBehaviour
     {
-        #region Methods
-        // public override void OnStartClient()
-        // {
-        //     base.OnStartClient();
-        //
-        //     if (!base.isServer)
-        //     {
-        //         Debug.Log(base.netIdentity.netId);
-        //         this.CmdAssignAuthority(this);
-        //     }
-        // }
-        //
-        // [Command(requiresAuthority = false)]
-        // private void CmdAssignAuthority(NetworkFruitController _NetworkFruitController, NetworkConnectionToClient _Sender = null) // TODO: Probably not needed
-        // {
-        //     _NetworkFruitController.netIdentity.AssignClientAuthority(_Sender);
-        // }
+        #region Inspector Fields
+        [Header("References")]
+        [Tooltip("Reference to the FruitController")]
+        [SerializeField] private FruitController fruitController;
+        #endregion
         
+        #region Methods
         /// <summary>
         /// Spawns the given <see cref="Fruit"/> at the given position
         /// </summary>
@@ -63,7 +52,7 @@ namespace Watermelon_Game.Networking
         private void TargetEvolve(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour)
         {
             _FruitBehaviour.CmdEvolve();
-            FruitController.AddFruit(_FruitBehaviour); // TODO: Not added to the dict on client
+            this.fruitController.AddFruit(_FruitBehaviour); // TODO: Not added to the dict on client
         }
         #endregion
     }
