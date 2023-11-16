@@ -270,7 +270,7 @@ namespace Watermelon_Game.Fruit_Spawn
             if (_Sender == base.netIdentity.connectionToClient)
             {
                 var _fruitBehaviour = FruitBehaviour.SpawnFruit(base.transform, base.transform.position, _Rotation, _Fruit, false);
-                NetworkServer.Spawn(_fruitBehaviour.gameObject);
+                //NetworkServer.Spawn(_fruitBehaviour.gameObject); // TODO
                 _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
                 this.RpcResetFruitSpawner(_fruitBehaviour);
                 this.TargetResetFruitSpawner(_Sender, _fruitBehaviour);

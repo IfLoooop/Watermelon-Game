@@ -699,16 +699,26 @@ namespace Watermelon_Game.Fruits
         /// <param name="_Fruit">The <see cref="Fruits.Fruit"/> to spawn</param>
         /// <param name="_HasBeenEvolved">Is this fruit spawned because of an evolution?</param>
         /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
+        [Server]
         public static FruitBehaviour SpawnFruit([CanBeNull] Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved)
         {
             var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, _Rotation, _Parent).GetComponent<FruitBehaviour>();
             
-            _fruitBehaviour.HasBeenEvolved = _HasBeenEvolved;
+            NetworkServer.Spawn(_fruitBehaviour.gameObject);
+            
+            //_fruitBehaviour.HasBeenEvolved = _HasBeenEvolved; // TODO
+            _fruitBehaviour.RpcSetEvolvedState(_HasBeenEvolved);
 
             return _fruitBehaviour;
         }
 
+        [ClientRpc] // TODO
+        private void RpcSetEvolvedState(bool _Value)
+        {
+            this.HasBeenEvolved = _Value;
+        }
+        
 #if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
         /// If true, sets <see cref="rigidbody2D"/>.<see cref="Rigidbody2D.constraints"/> to <see cref="RigidbodyConstraints2D.FreezeAll"/> <br/>

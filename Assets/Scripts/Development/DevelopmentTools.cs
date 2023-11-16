@@ -384,7 +384,6 @@ namespace Watermelon_Game.Development
         private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation)
         {
             var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitController.FruitContainerTransform, _Position, _Rotation, (int)_Fruit, true);
-            _fruitBehaviour!.gameObject.SetActive(true);
 
             return _fruitBehaviour;
         }
