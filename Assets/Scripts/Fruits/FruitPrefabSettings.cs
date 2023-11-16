@@ -55,6 +55,7 @@ namespace Watermelon_Game.Fruits
         public void Init()
         {
             instance = this;
+            fruitPrefabs.ForEach(_FruitPrefab => _FruitPrefab.Init());
             FruitPrefabs = this.fruitPrefabs.AsReadOnly();   
         }
         #endregion

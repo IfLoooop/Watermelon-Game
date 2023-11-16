@@ -1,11 +1,12 @@
 using System;
 using System.Collections;
-using JetBrains.Annotations;
+using System.Linq;
 using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
+using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Fruit_Spawn
 {
@@ -15,83 +16,118 @@ namespace Watermelon_Game.Fruit_Spawn
     internal sealed class NextFruit : MonoBehaviour
     {
         #region Inspector Fields
-        [SerializeField] private GameObject nextFruit;
-        [SerializeField] private Animation nextNextFruit;
+        [Header("References")]
+        [Tooltip("Fruit of the NextFruit")]
+        [SerializeField] private NextFruitData nextFruit;
+        [Tooltip("Fruit of the NextNextFruit")]
+        [SerializeField] private NextFruitData nextNextFruit;
+        [Tooltip("Animation component of the NextNextFruit")]
+        [SerializeField] private Animation nextNextFruitAnimation;
+        [Tooltip("Animation component of the Timer")]
         [SerializeField] private Animation timer;
+        [Tooltip("Is played when the NextNextFruit is enabled")]
+        [SerializeField] private AnimationClip nextNextFruitEnabledAnimation;
+        [Tooltip("Is played when the NextNextFruit is disabled")]
+        [SerializeField] private AnimationClip nextNextFruitDisabledAnimation;
+        
+        [Header("Settings")]
         [Tooltip("Time in seconds, the NextNextFruit will be visible")]
         [SerializeField] private ProtectedUInt32 nextNextFruitTime = 300;
-        [SerializeField] private AnimationClip nextNextFruitEnabledAnimation;
-        [SerializeField] private AnimationClip nextNextFruitDisabledAnimation;
         #endregion
         
         #region Fields
-        private FruitBehaviour nextFruitBehaviour;
-        private FruitBehaviour nextNextFruitBehaviour;
+        /// <summary>
+        /// Singleton of <see cref="NextFruit"/>
+        /// </summary>
+        private static NextFruit instance;
+        /// <summary>
+        /// <see cref="TextMeshProUGUI"/> component that displays the time
+        /// </summary>
         private TextMeshProUGUI timerText;
+        /// <summary>
+        /// The remaining time to display the next next fruit
+        /// </summary>
         private ProtectedUInt32 currentNextNextFruitTimer;
-        #endregion
-
-        #region Properties
-        public static NextFruit Instance { get; private set; }
         #endregion
         
         #region Methods
         private void Awake()
         {
-            Instance = this;
+            instance = this;
             this.timerText = this.timer.GetComponent<TextMeshProUGUI>();
         }
 
         private void OnEnable()
         {
+            GameController.OnGameStart += this.SpawnFruits;
             GameController.OnResetGameStarted += this.ResetGame;
             FruitController.OnEvolve += ShowNextNextFruit;
         }
 
         private void OnDisable()
         {
+            GameController.OnGameStart -= this.SpawnFruits;
             GameController.OnResetGameStarted -= this.ResetGame;
             FruitController.OnEvolve -= ShowNextNextFruit;
         }
-
-        private void Start()
-        {
-            this.SpawnFruits();
-        }
-
+        
         /// <summary>
-        /// Returns the <see cref="nextFruitBehaviour"/> currently held by <see cref="NextFruit"/>
+        /// Returns the <see cref="nextFruit"/> currently held by <see cref="NextFruit"/> <br/>
+        /// <b>For <see cref="FruitSpawner"/></b>
         /// </summary>
-        /// <param name="_NewParent">The new parent of the fruit</param>
-        /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
-        public FruitBehaviour GetFruit(Transform _NewParent)
+        /// <param name="_Rotation">The current rotation of the fruit in <see cref="nextFruit"/></param>
+        /// <returns>The type of the <see cref="Fruit"/> for the <see cref="FruitSpawner"/></returns>
+        public static ProtectedInt32 GetFruit(out Quaternion _Rotation)
         {
+            instance.nextFruit.gameObject.SetActive(true);
+            instance.nextNextFruit.gameObject.SetActive(true);
+            
             // Give fruit to FruitSpawner
-            var _fruitBehaviour = this.nextFruitBehaviour;
-            _fruitBehaviour.SetAnimation(false);
-            _fruitBehaviour.transform.SetParent(_NewParent, false);
+            var _fruit = instance.nextFruit.Fruit.Value;
+            _Rotation = instance.nextFruit.transform.rotation;
             
             // Take from from NextNextFruit
-            this.nextFruitBehaviour = this.nextNextFruitBehaviour;
-            this.nextNextFruitBehaviour.transform.SetParent(this.nextFruit.transform, false);
+            instance.nextFruit.CopyFruit(instance.nextNextFruit);
             
             // Spawn new fruit
-            this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, (Fruit)this.nextFruitBehaviour.Fruit.Value);
-
-            return _fruitBehaviour;
-        }
-
-#if DEBUG || DEVELOPMENT_BUILD
-        public FruitBehaviour GetFruit(Transform _NewParent, Fruit _Fruit)
-        {
-            var _fruitBehaviour = FruitBehaviour.SpawnFruit(_NewParent.transform.position, _Fruit);
-            _fruitBehaviour.transform.SetParent(_NewParent, true);
-            _fruitBehaviour.gameObject.SetActive(true);
-            _fruitBehaviour.SetAnimation(false);
+            instance.nextNextFruit.CopyFruit(GetRandomFruit(_fruit));
             
-            return _fruitBehaviour;
+            return _fruit;
         }
-#endif
+        
+        /// <summary>
+        /// Returns a random <see cref="Fruits.Fruit"/> which spawn weight depend on the given <see cref="_PreviousFruit"/>
+        /// </summary>
+        /// <param name="_PreviousFruit">The previously spawned <see cref="Fruits.Fruit"/></param>
+        /// <returns>A random <see cref="Fruits.Fruit"/> which spawn weight depend on the given <see cref="_PreviousFruit"/></returns>
+        private static FruitPrefab GetRandomFruit(ProtectedInt32? _PreviousFruit)
+        {
+            if (_PreviousFruit == null)
+            {
+                return FruitPrefabSettings.FruitPrefabs.First(_FruitData => (Fruit)_FruitData.Fruit.Value == Fruit.Grape);
+            }
+         
+            FruitController.SetWeightMultiplier(_PreviousFruit.Value);
+
+            var _highestFruitSpawn = FruitPrefabSettings.FruitPrefabs.First(_Fruit => _Fruit.GetSpawnWeight() == 0).Fruit;
+            var _spawnableFruits = FruitPrefabSettings.FruitPrefabs.TakeWhile(_Fruit => (int)_Fruit.Fruit < (int)_highestFruitSpawn).ToArray();
+            
+            var _combinedSpawnWeights = _spawnableFruits.Sum(_Fruit => _Fruit.GetSpawnWeight());
+            var _randomNumber = Random.Range(0, _combinedSpawnWeights);
+            var _spawnWeight = 0;
+
+            foreach (var _fruitData in _spawnableFruits)
+            {
+                if (_randomNumber <= _fruitData.GetSpawnWeight() + _spawnWeight)
+                {
+                    return _fruitData;
+                }
+
+                _spawnWeight += _fruitData.GetSpawnWeight();
+            }
+            
+            return null;
+        }
         
         /// <summary>
         /// Displays the NextNextFruit, when the given <see cref="Fruit"/> is a <see cref="Fruit.Watermelon"/> -> <see cref="FruitController.OnEvolve"/>
@@ -116,6 +152,11 @@ namespace Watermelon_Game.Fruit_Spawn
             }
         }
         
+        /// <summary>
+        /// Displays the next next for for a duration of <see cref="nextNextFruitTime"/>
+        /// </summary>
+        /// <param name="_WaitTime">Wait time between each decrement of <see cref="currentNextNextFruitTimer"/></param>
+        /// <returns></returns>
         private IEnumerator ShowNextNextFruit(WaitForSeconds _WaitTime)
         {
             this.currentNextNextFruitTimer = this.nextNextFruitTime;
@@ -133,27 +174,33 @@ namespace Watermelon_Game.Fruit_Spawn
             this.EnableNextNextFruit(false);
         }
         
+        /// <summary>
+        /// Enables/disables the next next fruit, based on the given value
+        /// </summary>
+        /// <param name="_Value">True to enabled, false to disable</param>
         private void EnableNextNextFruit(bool _Value)
         {
             if (_Value)
             {
                 AudioPool.PlayClip(AudioClipName.NextNextFruitEnabled);
-                this.nextNextFruitBehaviour.SetAnimation(true);
-                this.nextNextFruit.clip = this.nextNextFruitEnabledAnimation;
-                this.nextNextFruit.Play();
+                this.nextNextFruitAnimation.clip = this.nextNextFruitEnabledAnimation;
+                this.nextNextFruitAnimation.Play();
                 this.timer.clip = this.nextNextFruitEnabledAnimation;
                 this.timer.Play();
             }
             else
             {
                 AudioPool.PlayClip(AudioClipName.NextNextFruitDisabled);
-                this.nextNextFruit.clip = this.nextNextFruitDisabledAnimation;
-                this.nextNextFruit.Play();
+                this.nextNextFruitAnimation.clip = this.nextNextFruitDisabledAnimation;
+                this.nextNextFruitAnimation.Play();
                 this.timer.clip = this.nextNextFruitDisabledAnimation;
                 this.timer.Play();
             }
         }
         
+        /// <summary>
+        /// Sets the <see cref="TextMeshProUGUI.text"/> of <see cref="timerText"/> to <see cref="currentNextNextFruitTimer"/>
+        /// </summary>
         private void SetTimer()
         {
             var _time = TimeSpan.FromSeconds(this.currentNextNextFruitTimer);
@@ -166,24 +213,17 @@ namespace Watermelon_Game.Fruit_Spawn
         private void ResetGame()
         {
             this.currentNextNextFruitTimer = 0;
-            this.SpawnFruits();
         }
 
+        /// <summary>
+        /// Spawns a new fruit for <see cref="nextFruit"/> and <see cref="nextNextFruit"/> <br/>
+        /// <i>Old values are overwritten</i> <br/>
+        /// <b>Subscribed to <see cref="GameController.OnGameStart"/></b>
+        /// </summary>
         private void SpawnFruits()
         {
-            DestroyFruit(this.nextFruitBehaviour);
-            DestroyFruit(this.nextNextFruitBehaviour);
-            
-            this.nextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextFruit.transform.position, this.nextFruit.transform, null);
-            this.nextNextFruitBehaviour = FruitBehaviour.SpawnFruit(this.nextNextFruit.gameObject.transform.position, this.nextNextFruit.transform, (Fruit)this.nextFruitBehaviour.Fruit.Value);
-        }
-
-        private void DestroyFruit([CanBeNull] FruitBehaviour _FruitBehaviour)
-        {
-            if (_FruitBehaviour != null)
-            {
-                Destroy(_FruitBehaviour.gameObject);
-            }
+            this.nextFruit.CopyFruit(GetRandomFruit(null));
+            this.nextNextFruit.CopyFruit(GetRandomFruit(this.nextFruit.Fruit));
         }
         #endregion
     }

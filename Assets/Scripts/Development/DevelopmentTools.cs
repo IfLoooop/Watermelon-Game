@@ -162,7 +162,7 @@ namespace Watermelon_Game.Development
                 
                 this.lastPressedKey = _KeyCode;
                 var _mouseWorldPosition = this.camera.ScreenToWorldPoint(Input.mousePosition);
-                this.currentFruit = this.SpawnFruit(_mouseWorldPosition.WithZ(0), _Fruit, Quaternion.identity, true);
+                this.currentFruit = this.SpawnFruit(_mouseWorldPosition.WithZ(0), _Fruit, Quaternion.identity);
             }
         }
 
@@ -194,8 +194,7 @@ namespace Watermelon_Game.Development
             {
                 if (this.currentFruit != null)
                 {
-                    this.currentFruit.SetAnimation(false);
-                    this.currentFruit.Release(null);
+                    this.currentFruit.CmdRelease(new Vector2(0, -1));
                     this.currentFruit = null;
                 }
             }
@@ -347,7 +346,7 @@ namespace Watermelon_Game.Development
 
                     foreach (var _savedFruit in this.savedFruits)
                     {
-                        this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation, false).Release(null);
+                        this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation).CmdRelease(new Vector2(0, -1));
                     }
 #if UNITY_EDITOR
                     Debug.Log($"{this.savedFruits.Count} Fruits spawned.");
@@ -369,9 +368,9 @@ namespace Watermelon_Game.Development
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Grape, Quaternion.identity, false);
+                var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Grape, Quaternion.identity);
                 _fruitBehaviour.ForceGoldenFruit_DEVELOPMENT();
-                _fruitBehaviour.Release(null);
+                _fruitBehaviour.CmdRelease(new Vector2(0, -1));
             }
         }
         
@@ -381,13 +380,11 @@ namespace Watermelon_Game.Development
         /// <param name="_Position">Position to spawn the <see cref="Fruit"/> at</param>
         /// <param name="_Fruit">The <see cref="Fruit"/> to spawn</param>
         /// <param name="_Rotation">The rotation to spawn the <see cref="Fruit"/> with</param>
-        /// <param name="_SetAnimation">Enable/disable the rotation animation of the <see cref="Fruit"/></param>
         /// <returns></returns>
-        private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation, bool _SetAnimation)
+        private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation)
         {
-            var _fruitBehaviour = FruitBehaviour.SpawnFruit(_Position, _Fruit, _Rotation);
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitController.FruitContainerTransform, _Position, _Rotation, (int)_Fruit, true);
             _fruitBehaviour!.gameObject.SetActive(true);
-            _fruitBehaviour!.SetAnimation(_SetAnimation);
 
             return _fruitBehaviour;
         }

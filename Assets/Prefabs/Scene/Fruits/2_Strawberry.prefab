@@ -8,14 +8,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1557478676262607677, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.025
-      objectReference: {fileID: 0}
-    - target: {fileID: 1557478676262607677, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1968048327966716910, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: fruit
       value: 2
@@ -554,19 +546,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8630753985610350245, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Mass
-      value: 7.037622
+      value: 7.1054873
+      objectReference: {fileID: 0}
+    - target: {fileID: 8711355630766412479, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+      propertyPath: _assetId
+      value: 367010621
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Radius
-      value: 0.49890375
+      value: 0.5013035
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Offset.x
-      value: -0.036517423
+      value: -0.012519638
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Offset.y
-      value: 0.00866441
+      value: 0.006264647
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -41,6 +41,8 @@ namespace Watermelon_Game.Editor
         private static async void StartBuild()
         {
             var _version = await VersionControl.TryGetLatestVersion()!;
+
+            _version = "1.6.1.0"; // TODO: Temporary while the Github version lacks behind (Itch.io build needs to be updated)
             
             if (!string.IsNullOrWhiteSpace(_version))
             {

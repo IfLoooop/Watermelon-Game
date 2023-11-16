@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using JetBrains.Annotations;
+using Mirror;
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using Sirenix.Utilities;
@@ -18,7 +19,7 @@ namespace Watermelon_Game.Fruits
     /// <summary>
     /// Main logic for all fruits
     /// </summary>
-    internal sealed class FruitBehaviour : MonoBehaviour
+    internal sealed class FruitBehaviour : NetworkBehaviour
     {
         #region Inspector Fields
 #if DEBUG || DEVELOPMENT_BUILD
@@ -62,10 +63,6 @@ namespace Watermelon_Game.Fruits
         /// <see cref="UnityEngine.Rigidbody2D"/>
         /// </summary>
         private new Rigidbody2D rigidbody2D;
-        /// <summary>
-        /// Rotation animation while the fruit is in <see cref="NextFruit"/>
-        /// </summary>
-        private new Animation animation;
 #pragma warning restore CS0109
         /// <summary>
         /// <see cref="FruitsFirstCollision"/>
@@ -75,6 +72,12 @@ namespace Watermelon_Game.Fruits
         /// <see cref="EvolvingFruitTrigger"/>
         /// </summary>
         private EvolvingFruitTrigger evolvingFruitTrigger;
+        
+        /// <summary>
+        /// Network synced <see cref="Transform.localScale"/>
+        /// </summary>
+        [SyncVar(hook = nameof(SyncScale))] // ReSharper disable once NotAccessedField.Local
+        private Vector3 syncedScale;
         
         /// <summary>
         /// The currently active <see cref="Skill"/> on this fruit <br/>
@@ -191,7 +194,6 @@ namespace Watermelon_Game.Fruits
         {
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
             this.circleCollider2D = base.GetComponent<CircleCollider2D>();
-            this.animation = base.GetComponent<Animation>();
             this.fruitsFirstCollision = base.GetComponent<FruitsFirstCollision>();
             this.evolvingFruitTrigger = base.GetComponentInChildren<EvolvingFruitTrigger>();
         }
@@ -239,6 +241,7 @@ namespace Watermelon_Game.Fruits
         }
 #endif
         
+        // TODO: Calculate this in "NextFruit.cs" and already display the golden fruit there
         /// <summary>
         /// Decides whether a fruit can become a golden fruit or upgraded golden fruit
         /// </summary>
@@ -410,24 +413,25 @@ namespace Watermelon_Game.Fruits
         }
         
         /// <summary>
-        /// Enables/disables the <see cref="animation"/>
-        /// </summary>
-        /// <param name="_Value">The value, to set <see cref="animation"/>.<see cref="Animation.enabled"/> to</param>
-        public void SetAnimation(bool _Value)
-        {
-            this.animation.enabled = _Value;
-        }
-        
-        /// <summary>
         /// Releases the <see cref="Fruit"/> from the <see cref="FruitSpawner"/>
         /// </summary>
-        /// <param name="_AimRotation">
-        /// The rotation of <see cref="FruitSpawnerAim"/> <br/>
-        /// <i>Only needed when a <see cref="Skill"/> is used</i>
-        /// </param>
-        public void Release(Vector2? _AimRotation = null)
+        /// <param name="_AimRotation">The rotation of <see cref="FruitSpawnerAim"/></param>
+        /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
+        [Command(requiresAuthority = false)]
+        public void CmdRelease(Vector2 _AimRotation, NetworkConnectionToClient _Sender = null)
         {
-            base.transform.SetParent(FruitController.FruitContainerTransform, true);
+            this.TargetRelease(_Sender, _AimRotation);
+        }
+
+        /// <summary>
+        /// <see cref="CmdRelease"/>
+        /// </summary>
+        /// <param name="_Target"><see cref="NetworkBehaviour.connectionToClient"/></param>
+        /// <param name="_AimRotation">The rotation of <see cref="FruitSpawnerAim"/></param>
+        [TargetRpc] // ReSharper disable once UnusedParameter.Local
+        private void TargetRelease(NetworkConnectionToClient _Target, Vector2 _AimRotation)
+        { 
+            base.transform.SetParent(FruitController.FruitContainerTransform, true); // TODO: Fruit is still in FruitSpawner on the client (doesn't affect position, maybe a bug os supposed to be like that)
             this.HasBeenReleased = true;
             this.DecreaseSortingOrder();
             this.InitializeRigidBody();
@@ -480,21 +484,19 @@ namespace Watermelon_Game.Fruits
         /// Uses the <see cref="Skill"/> set in <see cref="activeSkill"/>, if not null
         /// </summary>
         /// <param name="_AimRotation">The rotation of <see cref="FruitSpawnerAim"/></param>
-        private void UseSkill(Vector2? _AimRotation = null)
+        private void UseSkill(Vector2 _AimRotation)
         {
             if (this.activeSkill != null)
             {
                 AudioPool.PlayClip(AudioClipName.Shoot);
-
-                var _direction = _AimRotation ?? new Vector2(0, -1);
                 
                 switch (this.activeSkill)
                 {
                     case Skill.Evolve or Skill.Destroy:
-                        this.Shoot(_direction);
+                        this.Shoot(_AimRotation);
                         break;
                     case Skill.Power:
-                        SkillController.Skill_Power(this, _direction);
+                        SkillController.Skill_Power(this, _AimRotation);
                         break;
                 }
                 
@@ -591,6 +593,8 @@ namespace Watermelon_Game.Fruits
             return (_localScale.x + _localScale.y + _localScale.z) / 3;
         }
         
+        
+        // TODO: Make "_targetScale" a class field and activate all fruit prefabs from th start
         /// <summary>
         /// Finalizes the evolve process
         /// </summary>
@@ -598,7 +602,6 @@ namespace Watermelon_Game.Fruits
         {
             var _targetScale = base.transform.localScale;
             base.transform.localScale = Vector3.zero;
-            base.gameObject.SetActive(true);
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
             
@@ -616,9 +619,20 @@ namespace Watermelon_Game.Fruits
             while (base.transform.localScale.x < _TargetScale.x)
             {
                 var _localScale = base.transform.localScale + (_TargetScale + FruitSettings.EvolveStep.Value) * Time.deltaTime;
-                base.transform.localScale = _localScale.Clamp(Vector3.zero, _TargetScale);
+                this.syncedScale = _localScale.Clamp(Vector3.zero, _TargetScale);
                 yield return FruitSettings.EvolveWaitForSeconds;
             }
+        }
+        
+        /// <summary>
+        /// Hook for <see cref="syncedScale"/>
+        /// </summary>
+        /// <param name="_OldScale">Previous value</param>
+        /// <param name="_NewScale">New value</param>
+        // ReSharper disable once UnusedParameter.Local
+        private void SyncScale(Vector3 _OldScale, Vector3 _NewScale)
+        {
+            this.transform.localScale = _NewScale;
         }
         
         /// <summary>
@@ -662,79 +676,37 @@ namespace Watermelon_Game.Fruits
         {
             // TODO: Add a visual animation
             FruitController.RemoveFruit(base.gameObject.GetHashCode());
-            Destroy(base.gameObject);
+            //Destroy(base.gameObject); // TODO
+            this.CmdDestroyFruit(base.gameObject);
+        }
+
+        /// <summary>
+        /// <see cref="DestroyFruit"/>
+        /// </summary>
+        /// <param name="_Fruit">The fruit <see cref="GameObject"/> to destroy</param>
+        [Command(requiresAuthority = false)]
+        private void CmdDestroyFruit(GameObject _Fruit)
+        {
+            NetworkServer.Destroy(_Fruit);
         }
         
         /// <summary>
-        /// Instantiates a random fruit <br/>
-        /// <i>For <see cref="FruitSpawner"/> and <see cref="NextFruit"/></i>
+        /// Instantiates the given <see cref="Fruits.Fruit"/>
         /// </summary>
+        /// <param name="_Parent">The parent <see cref="Transform"/> of the instantiated <see cref="FruitBehaviour"/></param>
         /// <param name="_Position">Where to spawn the fruit</param>
-        /// <param name="_Parent">The parent object of the spawned fruit</param>
-        /// <param name="_PreviousFruit">The previously spawned <see cref="Fruits.Fruit"/></param>
+        /// <param name="_Rotation">The rotation of the spawned fruit</param>
+        /// <param name="_Fruit">The <see cref="Fruits.Fruit"/> to spawn</param>
+        /// <param name="_HasBeenEvolved">Is this fruit spawned because of an evolution?</param>
         /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
-        public static FruitBehaviour SpawnFruit(Vector2 _Position, Transform _Parent, Fruit? _PreviousFruit)
+        public static FruitBehaviour SpawnFruit(Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved)
         {
-            var _fruitData = GetRandomFruit(_PreviousFruit);
-            var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, Quaternion.identity, _Parent).GetComponent<FruitBehaviour>();
+            var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == _Fruit);
+            var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, _Rotation, _Parent).GetComponent<FruitBehaviour>();
             
-            _fruitBehaviour.gameObject.SetActive(true);
-            _fruitBehaviour.SetAnimation(true);
+            _fruitBehaviour.HasBeenEvolved = _HasBeenEvolved;
 
             return _fruitBehaviour;
-        }
-
-        /// <summary>
-        /// Returns a random <see cref="Fruits.Fruit"/> which spawn weight depend on the given <see cref="_PreviousFruit"/>
-        /// </summary>
-        /// <param name="_PreviousFruit">The previously spawned <see cref="Fruits.Fruit"/></param>
-        /// <returns>A random <see cref="Fruits.Fruit"/> which spawn weight depend on the given <see cref="_PreviousFruit"/></returns>
-        private static FruitPrefab GetRandomFruit(Fruit? _PreviousFruit)
-        {
-            if (_PreviousFruit == null)
-            {
-                return FruitPrefabSettings.FruitPrefabs.First(_FruitData => (Fruit)_FruitData.Fruit.Value == Watermelon_Game.Fruits.Fruit.Grape);
-            }
-         
-            FruitController.SetWeightMultiplier(_PreviousFruit.Value);
-
-            var _highestFruitSpawn = FruitPrefabSettings.FruitPrefabs.First(_Fruit => _Fruit.GetSpawnWeight() == 0).Fruit;
-            var _spawnableFruits = FruitPrefabSettings.FruitPrefabs.TakeWhile(_Fruit => (int)_Fruit.Fruit < (int)_highestFruitSpawn).ToArray();
-            
-            var _combinedSpawnWeights = _spawnableFruits.Sum(_Fruit => _Fruit.GetSpawnWeight());
-            var _randomNumber = Random.Range(0, _combinedSpawnWeights);
-            var _spawnWeight = 0;
-
-            foreach (var _fruitData in _spawnableFruits)
-            {
-                if (_randomNumber <= _fruitData.GetSpawnWeight() + _spawnWeight)
-                {
-                    return _fruitData;
-                }
-
-                _spawnWeight += _fruitData.GetSpawnWeight();
-            }
-            
-            return null;
-        }
-        
-        /// <summary>
-        /// Instantiates a specific fruit <br/>
-        /// <i>For evolved fruits</i> <br/>
-        /// <b>The fruit GameObject will not be active</b>
-        /// </summary>
-        /// <param name="_Position">Where to spawn the fruit</param>
-        /// <param name="_Fruit">The <see cref="Fruits.Fruit"/> to spawn</param>
-        /// <param name="_Rotation">The rotation of the spawned fruit</param>
-        /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
-        public static FruitBehaviour SpawnFruit(Vector2 _Position, Fruit _Fruit, Quaternion? _Rotation = null)
-        {
-            var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => (Fruit)_FruitData.Fruit.Value == _Fruit);
-            var _fruitBehavior = Instantiate(_fruitData.Prefab, _Position, _Rotation ?? Quaternion.identity, FruitController.FruitContainerTransform).GetComponent<FruitBehaviour>();
-            
-            _fruitBehavior.HasBeenEvolved = true;
-
-            return _fruitBehavior;
         }
 
 #if DEBUG || DEVELOPMENT_BUILD

@@ -7,7 +7,6 @@ namespace Watermelon_Game.Development
 {
     internal sealed class Test : MonoBehaviour
     {
-#if UNITY_EDITOR
         #region Fields
         /// <summary>
         /// Filepath to the "Test1.txt"-file
@@ -48,6 +47,5 @@ namespace Watermelon_Game.Development
             Debug.Log("TestButton Finished");
         }
         #endregion
-#endif
     }
 }

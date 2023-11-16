@@ -2,7 +2,8 @@
     "name": "WatermelonGameEditor",
     "rootNamespace": "Watermelon_Game",
     "references": [
-        "GUID:696aa360e6b6b714697cd8486d90b537"
+        "GUID:696aa360e6b6b714697cd8486d90b537",
+        "GUID:30817c1a0e6d646d99c048fc403f5979"
     ],
     "includePlatforms": [
         "Editor"

@@ -51,6 +51,8 @@ namespace Watermelon_Game.Fruits
         /// <see cref="prefab"/>
         /// </summary>
         public GameObject Prefab => this.prefab;
+        public Sprite Sprite { get; private set; }
+        public Vector3 Scale { get; private set; }
         /// <summary>
         /// <see cref="fruit"/>
         /// </summary>
@@ -58,6 +60,15 @@ namespace Watermelon_Game.Fruits
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Initializes needed values
+        /// </summary>
+        public void Init()
+        {
+            this.Sprite = this.prefab.GetComponent<SpriteRenderer>().sprite;
+            this.Scale = this.prefab.transform.localScale;
+        }
+        
         /// <summary>
         /// Sets <see cref="spawnWeight"/> to the given value
         /// </summary>

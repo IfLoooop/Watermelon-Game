@@ -1,4 +1,5 @@
 using System;
+using Mirror;
 using UnityEngine;
 
 namespace Watermelon_Game.Fruits
@@ -7,7 +8,7 @@ namespace Watermelon_Game.Fruits
     /// Contains logic for the first collision of a <see cref="FruitBehaviour"/> <br/>
     /// <i>This component is destroyed afterwards</i>
     /// </summary>
-    internal sealed class FruitsFirstCollision : MonoBehaviour
+    internal sealed class FruitsFirstCollision : NetworkBehaviour
     {
         #region Fields
         /// <summary>
@@ -26,7 +27,7 @@ namespace Watermelon_Game.Fruits
         #region Methods
         private void OnCollisionEnter2D(Collision2D _)
         {
-            if (isActive)
+            if (this.isActive)
             {
                 OnCollision?.Invoke();
 

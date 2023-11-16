@@ -39,18 +39,6 @@ namespace Watermelon_Game.Utility
 
 #if (!DEBUG && !DEVELOPMENT_BUILD) || UNITY_EDITOR
         /// <summary>
-        /// Message from "OdinSerializer.ArchitectureInfo"
-        /// </summary>
-        private const string ODIN_DEFAULT_ARCHITECTURE_INITIALIZATION = "Odin Serializer ArchitectureInfo initialization with defaults (all unaligned read/writes disabled).";
-        /// <summary>
-        /// Message from "OdinSerializer.ArchitectureInfo"
-        /// </summary>
-        private const string ODIN_UNALIGNED_FLOAT32_READS = "Odin Serializer detected whitelisted runtime platform";
-        /// <summary>
-        /// Message from "OdinSerializer.ArchitectureInfo"
-        /// </summary>
-        private const string ODIN_NON_WHITELISTED_PLATFORM = "Odin Serializer detected non-white-listed runtime platform";
-        /// <summary>
         /// Message from <see cref="Watermelon_Game.Steamworks.NET.SteamManager"/>
         /// </summary>
         private const string STEAM_MANAGER_INITIALIZATION_FAILED = "[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.";
@@ -62,10 +50,7 @@ namespace Watermelon_Game.Utility
         (
             new List<string>
             {
-                ODIN_DEFAULT_ARCHITECTURE_INITIALIZATION,
-                ODIN_UNALIGNED_FLOAT32_READS,
-                ODIN_NON_WHITELISTED_PLATFORM,
-                STEAM_MANAGER_INITIALIZATION_FAILED
+                //STEAM_MANAGER_INITIALIZATION_FAILED // TODO: Check if this should be logged in build
             }
         );
 #endif
@@ -113,8 +98,8 @@ namespace Watermelon_Game.Utility
         /// </summary>
         /// <param name="_Condition">The message</param>
         /// <param name="_Stacktrace">The stacktrace</param>
-        /// <param name="_Type"><see cref="LogType"/></param>
-        private static async void OnLogMessageReceived(string _Condition, string _Stacktrace, LogType _Type)
+        /// <param name="_LogType"><see cref="LogType"/></param>
+        private static async void OnLogMessageReceived(string _Condition, string _Stacktrace, LogType _LogType)
         {
 #if UNITY_EDITOR
             if (Application.isEditor)
@@ -124,14 +109,14 @@ namespace Watermelon_Game.Utility
 #endif
 
 #if (!DEBUG && !DEVELOPMENT_BUILD) || UNITY_EDITOR
-            if (ignore.Any(_Condition.Contains))
+            if (_LogType == LogType.Log || ignore.Any(_Condition.Contains))
             {
                 return;
             }
 #endif
             try
             {
-                var _message = string.Concat(_Type, Environment.NewLine, _Condition, Environment.NewLine, _Stacktrace, SEPARATOR, Environment.NewLine);
+                var _message = string.Concat(_LogType, Environment.NewLine, _Condition, Environment.NewLine, _Stacktrace, SEPARATOR, Environment.NewLine);
 
                 // TODO: When Debug.Logs are called right after another, sometimes not all of them are written to the .txt file
                 await streamWriter.WriteAsync(_message);

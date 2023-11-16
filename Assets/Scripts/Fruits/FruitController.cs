@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
 using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.ExtensionMethods;
+using Watermelon_Game.Networking;
 using Watermelon_Game.Web;
 
 namespace Watermelon_Game.Fruits
@@ -22,6 +24,8 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private FruitSettings fruitSettings;
         [Tooltip("Reference to a Fruits asset")]
         [SerializeField] private FruitPrefabSettings fruitPrefabSettings;
+        [Tooltip("Reference to the NetworkFruitController child")]
+        [SerializeField] private NetworkFruitController networkFruitController;
         [Tooltip("Contains all released fruits in the scene")]
         [SerializeField] private GameObject fruitContainer;
         #endregion
@@ -62,10 +66,6 @@ namespace Watermelon_Game.Fruits
         /// <see cref="Dictionary{TKey,TValue}.Count"/> of <see cref="fruits"/>
         /// </summary>
         public static int FruitCount => fruits.Count;
-        /// <summary>
-        /// <see cref="fruitContainer"/>
-        /// </summary>
-        public static GameObject FruitContainer => instance.fruitContainer;
         #endregion
 
         #region Events
@@ -142,11 +142,11 @@ namespace Watermelon_Game.Fruits
         /// Enables the spawn weight multiplier based on the given previous fruit
         /// </summary>
         /// <param name="_PreviousFruit">Previous fruit spawn</param>
-        public static void SetWeightMultiplier(Fruit _PreviousFruit)
+        public static void SetWeightMultiplier(ProtectedInt32 _PreviousFruit)
         {
             FruitPrefabSettings.FruitPrefabs.ForEach(_Fruit => _Fruit.SetSpawnWeightMultiplier(false));
             
-            var _index = FruitPrefabSettings.FruitPrefabs.FindIndex(_Fruit => (Fruit)_Fruit.Fruit.Value == _PreviousFruit);
+            var _index = FruitPrefabSettings.FruitPrefabs.FindIndex(_Fruit => _Fruit.Fruit == _PreviousFruit);
 
             if (FruitSettings.LowerIndexWeight && _index - 1 >= 0)
             {
@@ -302,10 +302,8 @@ namespace Watermelon_Game.Fruits
             
             if (_enumFruit != Fruit.Watermelon)
             {
-                var _fruit = (Fruit)FruitPrefabSettings.FruitPrefabs[(int)_enumFruit + 1].Fruit.Value;
-                var _fruitBehaviour = FruitBehaviour.SpawnFruit(_NextFruitPosition, _fruit);
-                _fruitBehaviour.Evolve();
-                AddFruit(_fruitBehaviour);
+                var _fruit = FruitPrefabSettings.FruitPrefabs[(int)_enumFruit + 1].Fruit;
+                instance.networkFruitController.Evolve(_NextFruitPosition, _fruit);
             }
         }
         
@@ -363,7 +361,7 @@ namespace Watermelon_Game.Fruits
         /// Adds the given <see cref="FruitBehaviour"/> to <see cref="fruits"/>
         /// </summary>
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
-        private static void AddFruit(FruitBehaviour _FruitBehaviour)
+        public static void AddFruit(FruitBehaviour _FruitBehaviour) // TODO: Remove public
         {
             if (_FruitBehaviour.HasBeenReleased || _FruitBehaviour.HasBeenEvolved)
             {

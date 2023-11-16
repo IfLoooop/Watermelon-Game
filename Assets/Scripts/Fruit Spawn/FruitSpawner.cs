@@ -1,5 +1,5 @@
+using Mirror;
 using OPS.AntiCheat.Field;
-using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
@@ -8,13 +8,13 @@ using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Fruit_Spawn
 {
-    internal sealed class FruitSpawner : MonoBehaviour
+    internal sealed class FruitSpawner : NetworkBehaviour
     {
         #region Inspector Fields
 #if DEBUG || DEVELOPMENT_BUILD
         [Header("Development")]
         [Tooltip("Deactivates the release block cool down if true (Development only!)")]
-        [ShowInInspector] public static bool NoReleaseBlock;
+        [Sirenix.OdinInspector.ShowInInspector] public static bool NoReleaseBlock;
 #endif
         
         [Header("References")] 
@@ -127,6 +127,16 @@ namespace Watermelon_Game.Fruit_Spawn
             SkillController.OnSkillActivated -= this.SetActiveSkill;
         }
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            
+            if (base.isLocalPlayer)
+            {
+                GameController.StartGame(); // TODO: Only for testing
+            }
+        }
+
         private void Start()
         {
             this.blockedReleaseIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.BlockedRelease, base.transform);
@@ -200,6 +210,11 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private void GetInput()
         {
+            if (!base.isLocalPlayer)
+            {
+                return;
+            }
+            
             if (!this.blockInput)
             {
                 if (Input.GetKey(KeyCode.A))
@@ -229,9 +244,68 @@ namespace Watermelon_Game.Fruit_Spawn
             this.rigidbody2D.AddForce(_direction);
         }
         
+                /// <summary>
+        /// Resets the Fruit Spawner to its original position
+        /// </summary>
+        /// <param name="_ResetPosition">If true, resets the <see cref="FruitSpawner"/> position to <see cref="startingPosition"/></param>
+        [Client]
+        private void ResetFruitSpawner(bool _ResetPosition)
+        {
+            if (_ResetPosition)
+                this.rigidbody2D.MovePosition(this.startingPosition);
+            
+            var _fruit = NextFruit.GetFruit(out var _rotation);
+            this.CmdResetFruitSpawner(_fruit, _rotation);
+        }
+        
+        /// <summary>
+        /// <see cref="ResetFruitSpawner"/>
+        /// </summary>
+        /// <param name="_Fruit">The type of <see cref="Fruit"/> to spawn</param>
+        /// <param name="_Rotation">The rotation for the spawned fruit</param>
+        /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
+        [Command(requiresAuthority = false)]
+        private void CmdResetFruitSpawner(int _Fruit, Quaternion _Rotation, NetworkConnectionToClient _Sender = null)
+        {
+            if (_Sender == base.netIdentity.connectionToClient)
+            {
+                var _fruitBehaviour = FruitBehaviour.SpawnFruit(base.transform, base.transform.position, _Rotation, _Fruit, false);
+                NetworkServer.Spawn(_fruitBehaviour.gameObject);
+                _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
+                this.TargetResetFruitSpawner(_Sender, _fruitBehaviour);
+            }
+        }
+        
+        /// <summary>
+        /// <see cref="ResetFruitSpawner"/>
+        /// </summary>
+        /// <param name="_Target"><see cref="NetworkBehaviour.connectionToClient"/></param>
+        /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/>, the <see cref="FruitSpawner"/> got from <see cref="NextFruit"/></param>
+        [TargetRpc] // ReSharper disable once UnusedParameter.Local
+        private void TargetResetFruitSpawner(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour)
+        {
+            this.fruitBehaviour = _FruitBehaviour;
+            this.fruitBehaviour.transform.SetParent(base.transform, false);
+            this.fruitBehaviour.IncreaseSortingOrder();
+            this.fruitSpawnerAim.ResetAimRotation();
+            this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.GetSize() + colliderSizeOffset, this.fruitSpawnerCollider.size.y);
+            this.SetFruitTriggerSize(this.fruitBehaviour);
+        }
+        
+        /// <summary>
+        /// Sets the size of <see cref="fruitTrigger"/> to the size of the currently held <see cref="fruitBehaviour"/>
+        /// </summary>
+        /// <param name="_Fruit">The <see cref="FruitBehaviour"/> to get the size of</param>
+        private void SetFruitTriggerSize(FruitBehaviour _Fruit)
+        {
+            this.fruitTrigger.transform.localScale = _Fruit.transform.localScale;
+            this.fruitTrigger.radius = _Fruit.ColliderRadius;
+        }
+        
         /// <summary>
         /// Releases <see cref="fruitBehaviour"/> from this <see cref="FruitSpawner"/>
         /// </summary>
+        [Client]
         private void ReleaseFruit()
         {
             if (this.fruitBehaviour == null)
@@ -261,64 +335,35 @@ namespace Watermelon_Game.Fruit_Spawn
             skipCooldown:;
 #endif
             this.lastRelease = Time.time;
-            this.fruitBehaviour.Release(-this.fruitSpawnerAim.transform.up);
+            this.CmdReleaseFruit(this.fruitBehaviour, -this.fruitSpawnerAim.transform.up);
             this.ResetFruitSpawner(false);
         }
         
-#if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
-        /// Forces the <see cref="fruitBehaviour"/> that is currently held by the <see cref="FruitSpawner"/> to become a golden fruit <br/>
-        /// <b>Only for Development!</b>
+        /// <see cref="ReleaseFruit"/>
         /// </summary>
-        public static void ForceGoldenFruit_DEVELOPMENT()
+        /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to release</param>
+        /// <param name="_AimRotation">The direction, the <see cref="fruitSpawnerAim"/> is pointing at</param>
+        /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
+        [Command(requiresAuthority = false)] // ReSharper disable once UnusedParameter.Local
+        private void CmdReleaseFruit(FruitBehaviour _FruitBehaviour, Vector2 _AimRotation, NetworkConnectionToClient _Sender = null)
         {
-            instance.fruitBehaviour.ForceGoldenFruit_DEVELOPMENT(true);
-        }
-        
-        /// <summary>
-        /// Forces the <see cref="FruitSpawner"/> tp spawn the given <see cref="Fruit"/> <br/>
-        /// <b>Only for Development!</b>
-        /// </summary>
-        /// <param name="_Fruit">The <see cref="Fruit"/> to give to the <see cref="FruitSpawner"/></param>
-        public static void ForceFruit_DEVELOPMENT(Fruit _Fruit)
-        {
-            if (instance.fruitBehaviour != null)
+            if (_Sender == base.netIdentity.connectionToClient)
             {
-                Destroy(instance.fruitBehaviour.gameObject);
+                this.TargetRelease(_Sender, _FruitBehaviour, _AimRotation);
             }
-            
-            instance.fruitBehaviour = NextFruit.Instance.GetFruit(instance.transform, _Fruit);
-            instance.fruitBehaviour.IncreaseSortingOrder();
-            instance.fruitSpawnerAim.ResetAimRotation();
-            instance.fruitSpawnerCollider.size = new Vector2(instance.fruitBehaviour.GetSize() + instance.colliderSizeOffset, instance.fruitSpawnerCollider.size.y);
-            instance.SetFruitTriggerSize(instance.fruitBehaviour);
         }
-#endif
         
         /// <summary>
-        /// Resets the Fruit Spawner to its original position
+        /// <see cref="ReleaseFruit"/>
         /// </summary>
-        /// <param name="_ResetPosition">If true, resets the <see cref="FruitSpawner"/> position to <see cref="startingPosition"/></param>
-        private void ResetFruitSpawner(bool _ResetPosition)
+        /// <param name="_Target"><see cref="NetworkBehaviour.connectionToClient"/></param>
+        /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to release</param>
+        /// <param name="_AimRotation">The direction, the <see cref="fruitSpawnerAim"/> is pointing at</param>
+        [TargetRpc] // ReSharper disable once UnusedParameter.Local
+        private void TargetRelease(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour, Vector2 _AimRotation)
         {
-            if (_ResetPosition)
-                this.rigidbody2D.MovePosition(this.startingPosition);
-            
-            this.fruitBehaviour = NextFruit.Instance.GetFruit(this.transform);
-            this.fruitBehaviour.IncreaseSortingOrder();
-            this.fruitSpawnerAim.ResetAimRotation();
-            this.fruitSpawnerCollider.size = new Vector2(this.fruitBehaviour.GetSize() + colliderSizeOffset, this.fruitSpawnerCollider.size.y);
-            this.SetFruitTriggerSize(this.fruitBehaviour);
-        }
-
-        /// <summary>
-        /// Sets the size of <see cref="fruitTrigger"/> to the size of the currently held <see cref="fruitBehaviour"/>
-        /// </summary>
-        /// <param name="_Fruit">The <see cref="FruitBehaviour"/> to get the size of</param>
-        private void SetFruitTriggerSize(FruitBehaviour _Fruit)
-        {
-            this.fruitTrigger.transform.localScale = _Fruit.transform.localScale;
-            this.fruitTrigger.radius = _Fruit.ColliderRadius;
+            _FruitBehaviour.CmdRelease(_AimRotation);
         }
         
         /// <summary>
@@ -351,6 +396,37 @@ namespace Watermelon_Game.Fruit_Spawn
             this.fruitSpawnerAim.ActivateRotationButtons(false);  
             this.fruitSpawnerAim.ResetAimRotation();
         }
+        
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// Forces the <see cref="fruitBehaviour"/> that is currently held by the <see cref="FruitSpawner"/> to become a golden fruit <br/>
+        /// <b>Only for Development!</b>
+        /// </summary>
+        public static void ForceGoldenFruit_DEVELOPMENT()
+        {
+            instance.fruitBehaviour.ForceGoldenFruit_DEVELOPMENT(true);
+        }
+        
+        /// <summary>
+        /// Forces the <see cref="FruitSpawner"/> tp spawn the given <see cref="Fruit"/> <br/>
+        /// <b>Only for Development!</b>
+        /// </summary>
+        /// <param name="_Fruit">The <see cref="Fruit"/> to give to the <see cref="FruitSpawner"/></param>
+        public static void ForceFruit_DEVELOPMENT(Fruit _Fruit)
+        {
+            if (instance.fruitBehaviour != null)
+            {
+                Destroy(instance.fruitBehaviour.gameObject);
+            }
+
+            var _transform = instance.transform;
+            instance.fruitBehaviour = FruitBehaviour.SpawnFruit(_transform, _transform.position, Quaternion.identity, (int)_Fruit, true);
+            instance.fruitBehaviour.IncreaseSortingOrder();
+            instance.fruitSpawnerAim.ResetAimRotation();
+            instance.fruitSpawnerCollider.size = new Vector2(instance.fruitBehaviour.GetSize() + instance.colliderSizeOffset, instance.fruitSpawnerCollider.size.y);
+            instance.SetFruitTriggerSize(instance.fruitBehaviour);
+        }
+#endif
         #endregion
     }   
 }

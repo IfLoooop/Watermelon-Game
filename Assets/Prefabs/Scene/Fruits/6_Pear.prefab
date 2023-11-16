@@ -53,34 +53,6 @@ PrefabInstance:
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6705278006809960091, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
@@ -482,7 +454,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8630753985610350245, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Mass
-      value: 1
+      value: 27.418371
+      objectReference: {fileID: 0}
+    - target: {fileID: 8711355630766412479, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+      propertyPath: _assetId
+      value: 95019439
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Radius

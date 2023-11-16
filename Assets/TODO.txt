@@ -1,3 +1,5 @@
+TODO: Change NextFruit's instantiation to images
+
 TODO: Achievements localizations
 -On UWP build, rewired always asks to install the same missing package
 -Infobox which buttons are used in "DevelopmentTools.cs"
