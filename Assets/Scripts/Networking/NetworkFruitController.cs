@@ -36,7 +36,7 @@ namespace Watermelon_Game.Networking
         private void CmdEvolve(Vector2 _NextFruitPosition, int _Fruit, NetworkConnectionToClient _Sender = null)
         {
             Debug.Log($"[NetworkFruitController] CmdEvolve | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
-            var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitController.FruitContainerTransform, _NextFruitPosition, Quaternion.identity, _Fruit, true);
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(null, _NextFruitPosition, Quaternion.identity, _Fruit, true);
             NetworkServer.Spawn(_fruitBehaviour.gameObject);
             _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
             this.TargetEvolve(_Sender, _fruitBehaviour);
@@ -46,6 +46,7 @@ namespace Watermelon_Game.Networking
         private void TargetEvolve(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour)
         {
             Debug.Log($"[NetworkFruitController] TargetEvolve | base: {base.netId}");
+            _FruitBehaviour.transform.SetParent(FruitController.FruitContainerTransform);
             _FruitBehaviour.CmdEvolve();
             FruitController.AddFruit(_FruitBehaviour);
         }

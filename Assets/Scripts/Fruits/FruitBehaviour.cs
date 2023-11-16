@@ -708,7 +708,7 @@ namespace Watermelon_Game.Fruits
         /// <param name="_Fruit">The <see cref="Fruits.Fruit"/> to spawn</param>
         /// <param name="_HasBeenEvolved">Is this fruit spawned because of an evolution?</param>
         /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
-        public static FruitBehaviour SpawnFruit(Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved)
+        public static FruitBehaviour SpawnFruit([CanBeNull] Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved)
         {
             var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, _Rotation, _Parent).GetComponent<FruitBehaviour>();
