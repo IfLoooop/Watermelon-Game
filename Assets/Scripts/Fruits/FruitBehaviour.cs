@@ -603,19 +603,19 @@ namespace Watermelon_Game.Fruits
         {
             Debug.Log($"[FruitBehaviour] CmdEvolve | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
             this.TargetEvolve(_Sender);
+            
+            var _targetScale = base.transform.localScale;
+            this.syncedScale = Vector3.zero;
+            this.evolve = this.Evolve(_targetScale);
+            base.StartCoroutine(this.evolve);
         }
 
         [TargetRpc]
         private void TargetEvolve(NetworkConnectionToClient _Target)
         {
             Debug.Log($"[FruitBehaviour] TargetEvolve | base: {base.netId}");
-            var _targetScale = base.transform.localScale;
-            base.transform.localScale = Vector3.zero;
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
-            
-            this.evolve = this.Evolve(_targetScale);
-            base.StartCoroutine(this.evolve);
         }
         
         /// <summary>
