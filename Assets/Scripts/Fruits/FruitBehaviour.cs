@@ -681,7 +681,7 @@ namespace Watermelon_Game.Fruits
         {
             // TODO: Add a visual animation
             FruitController.RemoveFruit(base.gameObject.GetHashCode());
-            Destroy(base.gameObject); // TODO
+            Destroy(base.gameObject);
             this.CmdDestroyFruit(base.gameObject);
         }
 

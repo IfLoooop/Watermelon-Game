@@ -1,5 +1,4 @@
 using System;
-using Mirror;
 using UnityEngine;
 
 namespace Watermelon_Game.Fruits
@@ -8,7 +7,7 @@ namespace Watermelon_Game.Fruits
     /// Contains logic for the first collision of a <see cref="FruitBehaviour"/> <br/>
     /// <i>This component is destroyed afterwards</i>
     /// </summary>
-    internal sealed class FruitsFirstCollision : NetworkBehaviour
+    internal sealed class FruitsFirstCollision : MonoBehaviour
     {
         #region Fields
         /// <summary>
