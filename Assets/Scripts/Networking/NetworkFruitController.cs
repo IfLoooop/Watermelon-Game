@@ -1,4 +1,3 @@
-using System;
 using Mirror;
 using OPS.AntiCheat.Field;
 using UnityEngine;
@@ -29,14 +28,14 @@ namespace Watermelon_Game.Networking
         [Client]
         public void Evolve(Vector2 _NextFruitPosition, ProtectedInt32 _Fruit)
         {
-            Debug.Log($"Evolve | base: {base.netId}");
+            Debug.Log($"[NetworkFruitController] Evolve | base: {base.netId}");
             this.CmdEvolve(_NextFruitPosition, _Fruit);
         }
         
         [Command(requiresAuthority = false)]
         private void CmdEvolve(Vector2 _NextFruitPosition, int _Fruit, NetworkConnectionToClient _Sender = null)
         {
-            Debug.Log($"CmdEvolve | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
+            Debug.Log($"[NetworkFruitController] CmdEvolve | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
             var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitController.FruitContainerTransform, _NextFruitPosition, Quaternion.identity, _Fruit, true);
             NetworkServer.Spawn(_fruitBehaviour.gameObject);
             _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
@@ -46,8 +45,8 @@ namespace Watermelon_Game.Networking
         [TargetRpc]
         private void TargetEvolve(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour)
         {
-            Debug.Log($"TargetEvolve | base: {base.netId}");
-            _FruitBehaviour.Evolve();
+            Debug.Log($"[NetworkFruitController] TargetEvolve | base: {base.netId}");
+            _FruitBehaviour.CmdEvolve();
             FruitController.AddFruit(_FruitBehaviour);
         }
         #endregion

@@ -420,7 +420,6 @@ namespace Watermelon_Game.Fruits
         [Command(requiresAuthority = false)]
         public void CmdRelease(Vector2 _AimRotation, NetworkConnectionToClient _Sender = null)
         {
-            Debug.Log($"CmdRelease | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
             this.TargetRelease(_Sender, _AimRotation);
         }
 
@@ -432,7 +431,6 @@ namespace Watermelon_Game.Fruits
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
         private void TargetRelease(NetworkConnectionToClient _Target, Vector2 _AimRotation)
         {
-            Debug.Log($"TargetRelease | netId: {base.netId}");
             base.transform.SetParent(FruitController.FruitContainerTransform, true); // TODO: Fruit is still in FruitSpawner on the client (doesn't affect position, maybe a bug os supposed to be like that)
             this.HasBeenReleased = true;
             this.DecreaseSortingOrder();
@@ -600,8 +598,17 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Finalizes the evolve process
         /// </summary>
-        public void Evolve()
+        [Command(requiresAuthority = false)]
+        public void CmdEvolve(NetworkConnectionToClient _Sender = null)
         {
+            Debug.Log($"[FruitBehaviour] CmdEvolve | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
+            this.TargetEvolve(_Sender);
+        }
+
+        [TargetRpc]
+        private void TargetEvolve(NetworkConnectionToClient _Target)
+        {
+            Debug.Log($"[FruitBehaviour] TargetEvolve | base: {base.netId}");
             var _targetScale = base.transform.localScale;
             base.transform.localScale = Vector3.zero;
             this.fruitsFirstCollision.DestroyComponent();
