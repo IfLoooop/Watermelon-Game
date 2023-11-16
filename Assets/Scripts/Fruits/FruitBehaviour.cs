@@ -420,6 +420,7 @@ namespace Watermelon_Game.Fruits
         [Command(requiresAuthority = false)]
         public void CmdRelease(Vector2 _AimRotation, NetworkConnectionToClient _Sender = null)
         {
+            Debug.Log($"CmdRelease | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
             this.TargetRelease(_Sender, _AimRotation);
         }
 
@@ -430,7 +431,8 @@ namespace Watermelon_Game.Fruits
         /// <param name="_AimRotation">The rotation of <see cref="FruitSpawnerAim"/></param>
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
         private void TargetRelease(NetworkConnectionToClient _Target, Vector2 _AimRotation)
-        { 
+        {
+            Debug.Log($"TargetRelease | netId: {base.netId}");
             base.transform.SetParent(FruitController.FruitContainerTransform, true); // TODO: Fruit is still in FruitSpawner on the client (doesn't affect position, maybe a bug os supposed to be like that)
             this.HasBeenReleased = true;
             this.DecreaseSortingOrder();

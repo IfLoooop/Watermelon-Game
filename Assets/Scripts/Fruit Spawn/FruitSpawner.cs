@@ -350,7 +350,8 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             if (_Sender == base.netIdentity.connectionToClient)
             {
-                this.TargetRelease(_Sender, _FruitBehaviour, _AimRotation);
+                Debug.Log($"CmdReleaseFruit | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
+                this.TargetReleaseFruit(_Sender, _FruitBehaviour, _AimRotation);
             }
         }
         
@@ -361,8 +362,9 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to release</param>
         /// <param name="_AimRotation">The direction, the <see cref="fruitSpawnerAim"/> is pointing at</param>
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
-        private void TargetRelease(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour, Vector2 _AimRotation)
+        private void TargetReleaseFruit(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour, Vector2 _AimRotation)
         {
+            Debug.Log($"TargetRelease | netId: {base.netId}");
             _FruitBehaviour.CmdRelease(_AimRotation);
         }
         
