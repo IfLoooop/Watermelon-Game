@@ -108,7 +108,7 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Coroutine for the size grow, during evolving
         /// </summary>
-        [CanBeNull] private IEnumerator evolve;
+        [CanBeNull] private IEnumerator growFruit;
         #endregion
 
         #region Properties
@@ -402,9 +402,9 @@ namespace Watermelon_Game.Fruits
                     AudioPool.PlayClip(AudioClipName.FruitDestroy);
                 }
             }
-            if (this.evolve != null)
+            if (this.growFruit != null)
             {
-                base.StopCoroutine(this.evolve);
+                base.StopCoroutine(this.growFruit);
             }
             if (this.moveTowards != null)
             {
@@ -593,43 +593,53 @@ namespace Watermelon_Game.Fruits
             return (_localScale.x + _localScale.y + _localScale.z) / 3;
         }
         
-        
-        // TODO: Make "_targetScale" a class field and activate all fruit prefabs from th start
         /// <summary>
         /// Finalizes the evolve process
         /// </summary>
+        /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
         [Command(requiresAuthority = false)]
         public void CmdEvolve(NetworkConnectionToClient _Sender = null)
         {
-            Debug.Log($"[FruitBehaviour] CmdEvolve | netId: {_Sender?.identity.netId} | _Sender: {_Sender} | connectionId: {_Sender?.connectionId} | address: {_Sender?.address}");
             this.TargetEvolve(_Sender);
-            
-            var _targetScale = base.transform.localScale;
-            this.syncedScale = Vector3.zero;
-            this.evolve = this.Evolve(_targetScale);
-            base.StartCoroutine(this.evolve);
+            this.GrowFruit();
         }
 
-        [TargetRpc]
+        /// <summary>
+        /// <see cref="CmdEvolve"/>
+        /// </summary>
+        /// <param name="_Target"><see cref="NetworkBehaviour.connectionToClient"/></param>
+        [TargetRpc] // ReSharper disable once UnusedParameter.Local // TODO: Make ClientRpc
         private void TargetEvolve(NetworkConnectionToClient _Target)
         {
-            Debug.Log($"[FruitBehaviour] TargetEvolve | base: {base.netId}");
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
         }
+
+        // TODO: Make "_targetScale" a class field and activate all fruit prefabs from th start
+        /// <summary>
+        /// Grows the evolved fruit to its target scale
+        /// </summary>
+        [Server]
+        private void GrowFruit()
+        {
+            var _targetScale = base.transform.localScale;
+            this.syncedScale = Vector3.zero;
+            this.growFruit = this.GrowFruit(_targetScale);
+            base.StartCoroutine(this.growFruit);
+        }
         
         /// <summary>
-        /// Grow this fruit to its target scale
+        /// <see cref="GrowFruit()"/>
         /// </summary>
-        /// <param name="_TargetScale">The targeted scale of this fruit</param>
+        /// <param name="_TargetScale">The target scale of this fruit</param>
         /// <returns></returns>
-        private IEnumerator Evolve(Vector3 _TargetScale)
+        private IEnumerator GrowFruit(Vector3 _TargetScale)
         {
             while (base.transform.localScale.x < _TargetScale.x)
             {
                 var _localScale = base.transform.localScale + (_TargetScale + FruitSettings.EvolveStep.Value) * Time.deltaTime;
                 this.syncedScale = _localScale.Clamp(Vector3.zero, _TargetScale);
-                yield return FruitSettings.EvolveWaitForSeconds;
+                yield return FruitSettings.GrowFruitWaitForSeconds;
             }
         }
         

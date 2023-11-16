@@ -172,7 +172,7 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// <see cref="evolveWaitTime"/>
         /// </summary>
-        public static WaitForSeconds EvolveWaitForSeconds { get; private set; }
+        public static WaitForSeconds GrowFruitWaitForSeconds { get; private set; }
         #endregion
 
         #region Methods
@@ -207,7 +207,7 @@ namespace Watermelon_Game.Fruits
         {
             instance = this;
             MoveTowardsWaitForSeconds = new(moveTowardsWaitTime);
-            EvolveWaitForSeconds = new(evolveWaitTime);
+            GrowFruitWaitForSeconds = new(evolveWaitTime);
         }
         #endregion
     }
