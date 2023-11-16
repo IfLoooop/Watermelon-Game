@@ -62,7 +62,6 @@ namespace Watermelon_Game.Networking
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
         private void TargetEvolve(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour)
         {
-            _FruitBehaviour.transform.SetParent(FruitController.FruitContainerTransform);
             _FruitBehaviour.CmdEvolve();
             FruitController.AddFruit(_FruitBehaviour); // TODO: Not added to the dict on client
         }

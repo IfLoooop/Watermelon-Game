@@ -74,12 +74,6 @@ namespace Watermelon_Game.Fruits
         private EvolvingFruitTrigger evolvingFruitTrigger;
         
         /// <summary>
-        /// Network synced <see cref="Transform.localScale"/>
-        /// </summary>
-        [SyncVar(hook = nameof(SyncScale))] // ReSharper disable once NotAccessedField.Local
-        private Vector3 syncedScale;
-        
-        /// <summary>
         /// The currently active <see cref="Skill"/> on this fruit <br/>
         /// <i>Will be null of none is active</i>
         /// </summary>
@@ -420,9 +414,23 @@ namespace Watermelon_Game.Fruits
         [Command(requiresAuthority = false)]
         public void CmdRelease(Vector2 _AimRotation, NetworkConnectionToClient _Sender = null)
         {
+            this.RpcRelease();
             this.TargetRelease(_Sender, _AimRotation);
         }
 
+        /// <summary>
+        /// <see cref="CmdRelease"/>
+        /// </summary>
+        [ClientRpc] // TODO
+        private void RpcRelease()
+        {
+            base.transform.SetParent(FruitController.FruitContainerTransform, true);
+            this.HasBeenReleased = true;
+            this.DecreaseSortingOrder();
+            this.InitializeRigidBody();
+            this.fruitsFirstCollision.SetActive();
+        }
+        
         /// <summary>
         /// <see cref="CmdRelease"/>
         /// </summary>
@@ -431,11 +439,6 @@ namespace Watermelon_Game.Fruits
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
         private void TargetRelease(NetworkConnectionToClient _Target, Vector2 _AimRotation)
         {
-            base.transform.SetParent(FruitController.FruitContainerTransform, true); // TODO: Fruit is still in FruitSpawner on the client (doesn't affect position, maybe a bug os supposed to be like that)
-            this.HasBeenReleased = true;
-            this.DecreaseSortingOrder();
-            this.InitializeRigidBody();
-            this.fruitsFirstCollision.SetActive();
             this.UseSkill(_AimRotation);
             OnFruitRelease?.Invoke(this);
         }
@@ -596,21 +599,19 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Finalizes the evolve process
         /// </summary>
-        /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
         [Command(requiresAuthority = false)]
-        public void CmdEvolve() // NetworkConnectionToClient _Sender = null
+        public void CmdEvolve()
         {
-            this.RpcEvolve(); // _Sender
-            this.GrowFruit();
+            this.RpcEvolve();
         }
 
         /// <summary>
         /// <see cref="CmdEvolve"/>
         /// </summary>
-        /// <param name="_Target"><see cref="NetworkBehaviour.connectionToClient"/></param>
-        [ClientRpc] // ReSharper disable once UnusedParameter.Local // TODO: Make ClientRpc
-        private void RpcEvolve() // NetworkConnectionToClient _Target
+        [ClientRpc]
+        private void RpcEvolve()
         {
+            base.transform.SetParent(FruitController.FruitContainerTransform); // TODO
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
             var _targetScale = base.transform.localScale;
@@ -618,22 +619,9 @@ namespace Watermelon_Game.Fruits
             this.growFruit = this.GrowFruit(_targetScale);
             base.StartCoroutine(this.growFruit);
         }
-
-        // TODO: Make "_targetScale" a class field and activate all fruit prefabs from th start
-        /// <summary>
-        /// Grows the evolved fruit to its target scale
-        /// </summary>
-        [Server]
-        private void GrowFruit()
-        {
-            // var _targetScale = base.transform.localScale;
-            // this.syncedScale = Vector3.zero;
-            // this.growFruit = this.GrowFruit(_targetScale);
-            // base.StartCoroutine(this.growFruit);
-        }
         
         /// <summary>
-        /// <see cref="GrowFruit()"/>
+        /// Grows the evolved fruit to its target scale
         /// </summary>
         /// <param name="_TargetScale">The target scale of this fruit</param>
         /// <returns></returns>
@@ -645,18 +633,6 @@ namespace Watermelon_Game.Fruits
                 this.transform.localScale = _localScale.Clamp(Vector3.zero, _TargetScale);
                 yield return FruitSettings.GrowFruitWaitForSeconds;
             }
-        }
-        
-        // TODO: SyncVar might not be needed
-        /// <summary>
-        /// Hook for <see cref="syncedScale"/>
-        /// </summary>
-        /// <param name="_OldScale">Previous value</param>
-        /// <param name="_NewScale">New value</param>
-        // ReSharper disable once UnusedParameter.Local
-        private void SyncScale(Vector3 _OldScale, Vector3 _NewScale)
-        {
-            this.transform.localScale = _NewScale;
         }
         
         /// <summary>
