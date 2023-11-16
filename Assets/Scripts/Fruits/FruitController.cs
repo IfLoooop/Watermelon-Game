@@ -364,8 +364,6 @@ namespace Watermelon_Game.Fruits
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
         public void AddFruit(FruitBehaviour _FruitBehaviour)
         {
-            Debug.Log($"HasBeenReleased: {_FruitBehaviour.HasBeenReleased} | HasBeenEvolved: {_FruitBehaviour.HasBeenEvolved}");
-            
             if (_FruitBehaviour.HasBeenReleased || _FruitBehaviour.HasBeenEvolved)
             {
                 var _hashCode = _FruitBehaviour.gameObject.GetHashCode();
