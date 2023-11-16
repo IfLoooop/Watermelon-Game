@@ -598,9 +598,9 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
         [Command(requiresAuthority = false)]
-        public void CmdEvolve(NetworkConnectionToClient _Sender = null)
+        public void CmdEvolve() // NetworkConnectionToClient _Sender = null
         {
-            this.TargetEvolve(_Sender);
+            this.RpcEvolve(); // _Sender
             this.GrowFruit();
         }
 
@@ -608,11 +608,15 @@ namespace Watermelon_Game.Fruits
         /// <see cref="CmdEvolve"/>
         /// </summary>
         /// <param name="_Target"><see cref="NetworkBehaviour.connectionToClient"/></param>
-        [TargetRpc] // ReSharper disable once UnusedParameter.Local // TODO: Make ClientRpc
-        private void TargetEvolve(NetworkConnectionToClient _Target)
+        [ClientRpc] // ReSharper disable once UnusedParameter.Local // TODO: Make ClientRpc
+        private void RpcEvolve() // NetworkConnectionToClient _Target
         {
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
+            var _targetScale = base.transform.localScale;
+            this.transform.localScale = Vector3.zero;
+            this.growFruit = this.GrowFruit(_targetScale);
+            base.StartCoroutine(this.growFruit);
         }
 
         // TODO: Make "_targetScale" a class field and activate all fruit prefabs from th start
@@ -622,10 +626,10 @@ namespace Watermelon_Game.Fruits
         [Server]
         private void GrowFruit()
         {
-            var _targetScale = base.transform.localScale;
-            this.syncedScale = Vector3.zero;
-            this.growFruit = this.GrowFruit(_targetScale);
-            base.StartCoroutine(this.growFruit);
+            // var _targetScale = base.transform.localScale;
+            // this.syncedScale = Vector3.zero;
+            // this.growFruit = this.GrowFruit(_targetScale);
+            // base.StartCoroutine(this.growFruit);
         }
         
         /// <summary>
@@ -638,11 +642,12 @@ namespace Watermelon_Game.Fruits
             while (base.transform.localScale.x < _TargetScale.x)
             {
                 var _localScale = base.transform.localScale + (_TargetScale + FruitSettings.EvolveStep.Value) * Time.deltaTime;
-                this.syncedScale = _localScale.Clamp(Vector3.zero, _TargetScale);
+                this.transform.localScale = _localScale.Clamp(Vector3.zero, _TargetScale);
                 yield return FruitSettings.GrowFruitWaitForSeconds;
             }
         }
         
+        // TODO: SyncVar might not be needed
         /// <summary>
         /// Hook for <see cref="syncedScale"/>
         /// </summary>
