@@ -44,6 +44,7 @@ GameObject:
   - component: {fileID: 8051376662093342325}
   - component: {fileID: 3822529535543107480}
   - component: {fileID: 4558505300317867853}
+  - component: {fileID: 647452479856519762}
   m_Layer: 7
   m_Name: Aim
   m_TagString: Untagged
@@ -192,6 +193,41 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationButtons: {fileID: 2330045144014398975}
+--- !u!114 &647452479856519762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3486967128714477435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 1
+  syncMode: 0
+  syncInterval: 0
+  target: {fileID: 8051376662093342325}
+  clientAuthority: 0
+  syncPosition: 0
+  syncRotation: 1
+  syncScale: 0
+  interpolatePosition: 0
+  interpolateRotation: 1
+  interpolateScale: 0
+  coordinateSpace: 0
+  sendIntervalMultiplier: 1
+  timelineOffset: 0
+  showGizmos: 0
+  showOverlay: 0
+  overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChange: 1
+  onlySyncOnChangeCorrectionMultiplier: 2
+  rotationSensitivity: 0.01
+  compressRotation: 0
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1 &6546617489822758218
 GameObject:
   m_ObjectHideFlags: 0
