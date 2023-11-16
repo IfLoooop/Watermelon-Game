@@ -272,19 +272,20 @@ namespace Watermelon_Game.Fruit_Spawn
                 var _fruitBehaviour = FruitBehaviour.SpawnFruit(base.transform, base.transform.position, _Rotation, _Fruit, false);
                 NetworkServer.Spawn(_fruitBehaviour.gameObject);
                 _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
+                this.RpcResetFruitSpawner(_fruitBehaviour);
                 this.TargetResetFruitSpawner(_Sender, _fruitBehaviour);
-                this.RpcResetFruitSpawner();
             }
         }
 
         /// <summary>
         /// <see cref="ResetFruitSpawner"/>
         /// </summary>
+        /// <param name="_FruitBehaviour">The spawned <see cref="FruitBehaviour"/></param>
         [ClientRpc]
-        private void RpcResetFruitSpawner()
+        private void RpcResetFruitSpawner(FruitBehaviour _FruitBehaviour)
         {
-            this.fruitBehaviour.transform.SetParent(base.transform, false);
-            this.fruitBehaviour.IncreaseSortingOrder();
+            _FruitBehaviour.transform.SetParent(base.transform, false);
+            _FruitBehaviour.IncreaseSortingOrder();
         }
         
         /// <summary>
