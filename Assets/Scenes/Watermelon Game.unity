@@ -748,17 +748,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
---- !u!114 &1826345265 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5004405286768758112, guid: 12bdd0f0a33b69049a99979e58e0e4eb, type: 3}
-  m_PrefabInstance: {fileID: 9046228363866177256}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e55fca1f4e4844593a3dd65a3ecb39, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2103502953
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4289,10 +4278,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2022562227954529556, guid: 12bdd0f0a33b69049a99979e58e0e4eb, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2496494947562629374, guid: 12bdd0f0a33b69049a99979e58e0e4eb, type: 3}
       propertyPath: m_Name
       value: Network Manager
@@ -4337,10 +4322,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5709113382121396638, guid: 12bdd0f0a33b69049a99979e58e0e4eb, type: 3}
-      propertyPath: transport
-      value: 
-      objectReference: {fileID: 1826345265}
+    - target: {fileID: 5004405286768758112, guid: 12bdd0f0a33b69049a99979e58e0e4eb, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -26,7 +26,8 @@ namespace Watermelon_Game
         /// </summary>
         public static bool IsGameRunning { get; private set; }
         /// <summary>
-        /// Timestamp in seconds, when the currently active game was started -> <see cref="Time"/>.<see cref="Time.time"/>
+        /// Timestamp in seconds, when the currently active game was started -> <see cref="Time"/>.<see cref="Time.time"/> <br/>
+        /// <i>Is reset on every <see cref="GameController"/>.<see cref="GameController.StartGame"/></i>
         /// </summary>
         public static ProtectedFloat CurrentGameTimeStamp { get; private set; }
         /// <summary>

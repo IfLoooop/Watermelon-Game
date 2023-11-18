@@ -1,6 +1,7 @@
 #if !DISABLESTEAMWORKS
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using OPS.AntiCheat.Field;
 using Steamworks;
 using UnityEngine;
@@ -173,8 +174,6 @@ namespace Watermelon_Game.Steamworks.NET
         /// <returns>A new <see cref="Stats"/> object, that contains all loaded stats from Steam for this user</returns>
         public static Stats LoadAllStats()
         {
-            //ResetOldPlaytimeStats();
-            
             SteamUserStats.GetStat(GAMES_FINISHED, out int _gamesFinished);
             SteamUserStats.GetStat(HIGHSCORE, out int _highscore);
             SteamUserStats.GetStat(GRAPE, out int _grapes);
@@ -195,48 +194,6 @@ namespace Watermelon_Game.Steamworks.NET
             return new Stats(_gamesFinished, _highscore, _grapes, _cherries, _strawberries, _lemons, _oranges, _apples, _pears, _pineapples, _honeymelons, _watermelons, _goldenFruits, _upgradedGoldenFruits, _skillCount, _playtime);
         }
         
-#if DEBUG || DEVELOPMENT_BUILD
-        /// <summary>
-        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
-        /// <i><see cref="SteamUserStats"/>.<see cref="SteamUserStats.GetStat(string, out int)"/> is an API call, don't use to often</i>
-        /// <b>Only works in Development builds!</b>
-        /// </summary>
-        /// <param name="_APIName">The API Name to get the value for</param>
-        public void LogInt_DEVELOPMENT(Func<Stats, string> _APIName)
-        {
-            var _apiName = _APIName(this);
-            SteamUserStats.GetStat(_apiName, out int _steamUserStatsValue);
-            this.LogStat_DEVELOPMENT(_apiName, _steamUserStatsValue);
-        }
-
-        /// <summary>
-        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
-        /// <i><see cref="SteamUserStats"/>.<see cref="SteamUserStats.GetStat(string, out int)"/> is an API call, don't use to often</i>
-        /// <b>Only works in Development builds!</b>
-        /// </summary>
-        /// <param name="_APIName">The API Name to get the value for</param>
-        public void LogFloat_DEVELOPMENT(Func<Stats, string> _APIName)
-        {
-            var _apiName = _APIName(this);
-            SteamUserStats.GetStat(_apiName, out float _steamUserStatsValue);
-            this.LogStat_DEVELOPMENT(_apiName, _steamUserStatsValue);
-        }
-        
-        /// <summary>
-        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
-        /// <b>Only works in Development builds!</b>
-        /// </summary>
-        /// <param name="_APIName">The API Name to get the value for</param>
-        /// <param name="_SteamUserStatsValue">The value from <see cref="SteamUserStats"/> to log</param>
-        private void LogStat_DEVELOPMENT(string _APIName, float _SteamUserStatsValue)
-        {
-            var _statsMapValue = this.statsMap[_APIName];
-            var _message = string.Concat($"{_APIName}\n", $"StatsMap: {_statsMapValue}\n", $"SteamUserStats: {_SteamUserStatsValue}");
-            
-            Debug.Log(_message);
-        }
-#endif
-        
         /// <summary>
         /// Returns the value from <see cref="statsMap"/> for the given API Name
         /// </summary>
@@ -245,6 +202,43 @@ namespace Watermelon_Game.Steamworks.NET
         public float GetStat(Func<Stats, string> _APIName)
         {
             return this.statsMap[_APIName(this)];
+        }
+
+        /// <summary>
+        /// Returns the value from <see cref="statsMap"/> whose key matches the given <see cref="_APIName"/> <br/>
+        /// <b>Will throw an <see cref="InvalidOperationException"/> if the given <see cref="_APIName"/> doesn't exist in <see cref="statsMap"/></b>
+        /// </summary>
+        /// <param name="_APIName">Must be a valid key in <see cref="statsMap"/></param>
+        /// <returns>The value from <see cref="statsMap"/> whose key matches the given <see cref="_APIName"/></returns>
+        public float GetStat(string _APIName)
+        {
+            return this.statsMap.First(_Kvp => _Kvp.Key == _APIName).Value;
+        }
+
+        /// <summary>
+        /// Sets the value in <see cref="statsMap"/> for the given API Name, using the given <see cref="Operation"/> <br/>
+        /// <b>Will throw a <see cref="KeyNotFoundException"/> if the given <see cref="_APIName"/> doesn't exist in  <see cref="statsMap"/></b>
+        /// </summary>
+        /// <param name="_APIName">The API Name to set the value for</param>
+        /// <param name="_Value">The value to set</param>
+        /// <param name="_Operation">The <see cref="Operation"/> to use, to set the given value</param>
+        /// <typeparam name="T">Must be <b>int</b> or <b>float</b></typeparam>
+        public void SetStat<T>(string _APIName, float _Value, Operation _Operation)
+        {
+            this.Set(_APIName, _Value, _Operation);
+            
+            if (typeof(T) == typeof(float))
+            {
+                SteamUserStats.SetStat(_APIName, this.statsMap[_APIName]);
+            }
+            else if (typeof(T) == typeof(int))
+            {
+                SteamUserStats.SetStat(_APIName, (int)this.statsMap[_APIName]);
+            }
+            else
+            {
+                throw new ArgumentException("The Type parameter must be [int] or [float]");
+            }
         }
         
         /// <summary>
@@ -301,6 +295,62 @@ namespace Watermelon_Game.Steamworks.NET
                     break;
             }
         }
+        
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
+        /// <i><see cref="SteamUserStats"/>.<see cref="SteamUserStats.GetStat(string, out int)"/> is an API call, don't use to often</i>
+        /// <b>Only works in Development builds!</b>
+        /// </summary>
+        /// <param name="_APIName">The API Name to get the value for</param>
+        public void LogInt_DEVELOPMENT(Func<Stats, string> _APIName)
+        {
+            var _apiName = _APIName(this);
+            SteamUserStats.GetStat(_apiName, out int _steamUserStatsValue);
+            this.LogStat_DEVELOPMENT(_apiName, _steamUserStatsValue);
+        }
+
+        /// <summary>
+        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
+        /// <i><see cref="SteamUserStats"/>.<see cref="SteamUserStats.GetStat(string, out int)"/> is an API call, don't use to often</i>
+        /// <b>Only works in Development builds!</b>
+        /// </summary>
+        /// <param name="_APIName">The API Name to get the value for</param>
+        public void LogFloat_DEVELOPMENT(Func<Stats, string> _APIName)
+        {
+            var _apiName = _APIName(this);
+            SteamUserStats.GetStat(_apiName, out float _steamUserStatsValue);
+            this.LogStat_DEVELOPMENT(_apiName, _steamUserStatsValue);
+        }
+        
+        /// <summary>
+        /// Logs the values for the given API Name from <see cref="statsMap"/> and <see cref="SteamUserStats"/> <br/>
+        /// <b>Only works in Development builds!</b>
+        /// </summary>
+        /// <param name="_APIName">The API Name to get the value for</param>
+        /// <param name="_SteamUserStatsValue">The value from <see cref="SteamUserStats"/> to log</param>
+        private void LogStat_DEVELOPMENT(string _APIName, float _SteamUserStatsValue)
+        {
+            var _statsMapValue = this.statsMap[_APIName];
+            var _message = string.Concat($"{_APIName}\n", $"StatsMap: {_statsMapValue}\n", $"SteamUserStats: {_SteamUserStatsValue}");
+            
+            Debug.Log(_message);
+        }
+
+        /// <summary>
+        /// Resets all values in <see cref="statsMap"/> to their default value <br/>
+        /// <b>Development only!</b>
+        /// </summary>
+        public void ResetAllStats_DEVELOPMENT()
+        {
+            // ReSharper disable once InconsistentNaming
+            for (var i = 0; i < this.statsMap.Count; i++)
+            {
+                var _key = this.statsMap.ElementAt(i).Key;
+                this.statsMap[_key] = default;
+            }
+        }
+#endif
         #endregion
     }
 }

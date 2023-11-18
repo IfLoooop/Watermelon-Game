@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using Steamworks;
@@ -30,6 +31,11 @@ namespace Watermelon_Game.Steamworks.NET
 
         #region Fields
         /// <summary>
+        /// Singleton of <see cref="SteamLeaderboard"/>
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        private static SteamLeaderboard instance;
+        /// <summary>
         /// The leaderboard that was found during <see cref="Init"/> <br/>
         /// <i>https://partner.steamgames.com/doc/api/ISteamUserStats#SteamLeaderboard_t</i>
         /// </summary>
@@ -40,6 +46,10 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private static List<LeaderboardUserData> steamUsers = new();
         /// <summary>
+        /// Indicates whether <see cref="GetDownloadedLeaderboardScoresAsync"/> is currently running or not
+        /// </summary>
+        private static bool processingLeaderboardEntries;
+        /// <summary>
         /// Indicates how many user information request have been made, e.g. how often the <see cref="GetUserName"/>-Method should be allowed to run. <br/>
         /// <i>
         /// Sometimes the <see cref="onPersonaStateChanged"/>-Callback is received without manually requesting it. <br/>
@@ -47,6 +57,10 @@ namespace Watermelon_Game.Steamworks.NET
         /// </i>
         /// </summary>
         private static uint userInformationRequested;
+        /// <summary>
+        /// Contains steam ids for users whose usernames still have to be requested
+        /// </summary>
+        private static readonly List<ulong> steamUserNameRequests = new();
         /// <summary>
         /// The current score in <see cref="steamLeaderboard"/> of <see cref="SteamManager.SteamID"/>
         /// </summary>
@@ -86,7 +100,7 @@ namespace Watermelon_Game.Steamworks.NET
 
         #region Events
         /// <summary>
-        /// Is called when all scores of the <see cref="steamLeaderboard"/> have been downloaded -> <see cref="GetDownloadedLeaderboardScores"/>
+        /// Is called when all scores of the <see cref="steamLeaderboard"/> have been downloaded -> <see cref="GetDownloadedLeaderboardScoresAsync"/>
         /// </summary>
         public static event Action OnLeaderboardScoresDownloaded;
         /// <summary>
@@ -99,10 +113,7 @@ namespace Watermelon_Game.Steamworks.NET
         #region Methods
         private void Awake()
         {
-#if DEBUG || DEVELOPMENT_BUILD
-            instance_DEVELOPMENT = this;
-#endif
-            Init();
+            this.Init();
         }
 
         private void OnEnable()
@@ -119,8 +130,10 @@ namespace Watermelon_Game.Steamworks.NET
         /// Initializes the steam leaderboard <br/>
         /// <i>https://partner.steamgames.com/doc/api/ISteamUserStats#FindLeaderboard</i>
         /// </summary>
-        private static void Init()
+        private void Init()
         {
+            instance = this;
+            
             if (!SteamManager.Initialized)
             {
                 return;
@@ -177,7 +190,7 @@ namespace Watermelon_Game.Steamworks.NET
             else
             {
                 var _steamAPICall = SteamUserStats.DownloadLeaderboardEntries(steamLeaderboard.Value, ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobal, 1, int.MaxValue);
-                onLeaderboardScoresDownloaded.Set(_steamAPICall, GetDownloadedLeaderboardScores);
+                onLeaderboardScoresDownloaded.Set(_steamAPICall, GetDownloadedLeaderboardScoresAsync);
             }
         }
 #pragma warning restore CS0162 // Unreachable code detected
@@ -191,75 +204,73 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         /// <param name="_Callback">The received callback</param>
         /// <param name="_Failure">Indicates whether the download was successful</param>
-        private static void GetDownloadedLeaderboardScores(LeaderboardScoresDownloaded_t _Callback, bool _Failure)
+        private static async void GetDownloadedLeaderboardScoresAsync(LeaderboardScoresDownloaded_t _Callback, bool _Failure)
         {
             if (!SteamManager.Initialized)
             {
                 return;
             }
-            
-            steamUsers.Clear();
-            
-            // ReSharper disable once InconsistentNaming
-            for (var i = 0; i < _Callback.m_cEntryCount; i++)
-            {
-                var _successfullyDownloadedLeaderboardEntries = SteamUserStats.GetDownloadedLeaderboardEntry(_Callback.m_hSteamLeaderboardEntries, i, out var _leaderboardEntry, null, 0);
-                if (_successfullyDownloadedLeaderboardEntries)
-                {
-                    var _steamUser = _leaderboardEntry.m_steamIDUser;
-                    var _steamID = _steamUser.m_SteamID;
-                    
-                    if (_steamUser.IsValid())
-                    {
-                        if (_steamID == SteamManager.SteamID.m_SteamID)
-                        {
-                            currentLeaderboardScore = _leaderboardEntry.m_nScore;
-                        }
-                        
-                        AddUser(_leaderboardEntry);
 
-                        userInformationRequested++;
-                        
-                        // This will only get the username for friends
-                        // To get the username for unknown players, the "onPersonaStateChanged"-Callback needs to be awaited after calling "SteamFriends.RequestUserInformation()"
-                        var _needsToRetrieveInformationFromInternet = SteamFriends.RequestUserInformation(_steamUser, true);
-                        if (!_needsToRetrieveInformationFromInternet)
+            processingLeaderboardEntries = true;
+            await Task.Run(() =>
+            {
+                steamUsers.Clear();
+            
+                // ReSharper disable once InconsistentNaming
+                for (var i = 0; i < _Callback.m_cEntryCount; i++)
+                {
+                    var _successfullyDownloadedLeaderboardEntries = SteamUserStats.GetDownloadedLeaderboardEntry(_Callback.m_hSteamLeaderboardEntries, i, out var _leaderboardEntry, null, 0);
+                    if (_successfullyDownloadedLeaderboardEntries)
+                    {
+                        var _steamUser = _leaderboardEntry.m_steamIDUser;
+                        var _steamID = _steamUser.m_SteamID;
+                    
+                        if (_steamUser.IsValid())
                         {
-                            GetUserName(_steamID);
+                            if (_steamID == SteamManager.SteamID.m_SteamID)
+                            {
+                                currentLeaderboardScore = _leaderboardEntry.m_nScore;
+                            }
+                        
+                            steamUsers.Add(new LeaderboardUserData
+                            {
+                                SteamId = _leaderboardEntry.m_steamIDUser.m_SteamID,
+                                GlobalRank = _leaderboardEntry.m_nGlobalRank,
+                                Score = _leaderboardEntry.m_nScore
+                            });
+
+                            userInformationRequested++;
+                        
+                            // This will only get the username for friends
+                            // To get the username for unknown players, the "onPersonaStateChanged"-Callback needs to be awaited after calling "SteamFriends.RequestUserInformation()"
+                            var _needsToRetrieveInformationFromInternet = SteamFriends.RequestUserInformation(_steamUser, true);
+                            if (!_needsToRetrieveInformationFromInternet)
+                            {
+                                GetUserName(_steamID, false);
+                            }
                         }
                     }
                 }
-            }
             
-            steamUsers = steamUsers.OrderBy(_SteamUser => _SteamUser.GlobalRank).ToList();
+                steamUsers = steamUsers.OrderBy(_SteamUser => _SteamUser.GlobalRank).ToList();
+            });
+            processingLeaderboardEntries = false;
+            
             OnLeaderboardScoresDownloaded?.Invoke();
+            instance.StartCoroutine(nameof(GetUserNames));
         }
-        
+
         /// <summary>
-        /// Adds the user of the given <see cref="LeaderboardEntry_t"/> to <see cref="steamUsers"/> or overwrites the data, if the user's already added 
+        /// Gets the usernames for all steam ids in <see cref="steamUserNameRequests"/>
         /// </summary>
-        /// <param name="_LeaderboardEntry">The <see cref="LeaderboardEntry_t"/> to get the data from</param>
-        private static void AddUser(LeaderboardEntry_t _LeaderboardEntry)
+        private IEnumerator GetUserNames()
         {
-            var _index = steamUsers.FindIndex(_SteamUser => _SteamUser.SteamId == _LeaderboardEntry.m_steamIDUser.m_SteamID);
-            if (_index != -1)
+            foreach (var _steamId in steamUserNameRequests)
             {
-                steamUsers[_index] = new LeaderboardUserData
-                {
-                    GlobalRank = _LeaderboardEntry.m_nGlobalRank,
-                    Username = steamUsers[_index].Username,
-                    Score = _LeaderboardEntry.m_nScore
-                };
+                GetUserName(_steamId, true);
             }
-            else // TODO: Checking for existing value is probably not needed anymore, because the List is cleared everytime a new leaderboard is downloaded (Needs testing if removed!)
-            {
-                steamUsers.Add(new LeaderboardUserData
-                {
-                    SteamId = _LeaderboardEntry.m_steamIDUser.m_SteamID,
-                    GlobalRank = _LeaderboardEntry.m_nGlobalRank,
-                    Score = _LeaderboardEntry.m_nScore
-                });
-            }
+
+            yield return null;
         }
         
         /// <summary>
@@ -268,7 +279,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_Callback">The received callback</param>
         private static void OnPersonaStateChanged(PersonaStateChange_t _Callback)
         {
-            GetUserName(_Callback.m_ulSteamID);
+            GetUserName(_Callback.m_ulSteamID, true);
         }
 
         /// <summary>
@@ -276,13 +287,19 @@ namespace Watermelon_Game.Steamworks.NET
         /// <i>https://partner.steamgames.com/doc/api/ISteamFriends#GetFriendPersonaName</i>
         /// </summary>
         /// <param name="_SteamId">The id of the user to get the username for</param>
-        private static void GetUserName(ulong _SteamId)
+        /// <param name="_RetrievedFromInternet">Indicates whether the data for the given steam id was already available, or had to be retrieved from the internet</param>
+        private static void GetUserName(ulong _SteamId, bool _RetrievedFromInternet)
         {
             if (userInformationRequested <= 0)
             {
                 return;
             }
-
+            if (processingLeaderboardEntries && _RetrievedFromInternet)
+            {
+                steamUserNameRequests.Add(_SteamId);
+                return;
+            }
+            
             userInformationRequested = (uint)Mathf.Clamp(--userInformationRequested, 0, uint.MaxValue);
             
             var _username = SteamFriends.GetFriendPersonaName(new CSteamID(_SteamId));
@@ -295,7 +312,7 @@ namespace Watermelon_Game.Steamworks.NET
             }
             else
             {
-                Debug.LogError($"Could not find an entry for ID: {_SteamId}, User: {_username} in {nameof(steamUsers)}");
+                Debug.LogError($"Could not find an entry for the given steam id, in {nameof(steamUsers)}");
             }
         }
         
@@ -357,12 +374,7 @@ namespace Watermelon_Game.Steamworks.NET
         [Tooltip("Filepath to the file that holds all names")]
         [LabelWidth(75)]
         [SerializeField]private string filepath;
-        /// <summary>
-        /// Singleton of <see cref="SteamLeaderboard"/> <br/>
-        /// <b>Only for Development!</b>
-        /// </summary>
-        // ReSharper disable once InconsistentNaming
-        private static SteamLeaderboard instance_DEVELOPMENT;
+        
         /// <summary>
         /// Amount of scores to download with <see cref="DownloadLeaderboardScores_DEVELOPMENT"/>
         /// </summary>
@@ -392,7 +404,7 @@ namespace Watermelon_Game.Steamworks.NET
         private static void DownloadLeaderboardScores_DEVELOPMENT(ulong _Amount, bool _AddNew)
         {
             ulong _id = 1000000000000000;
-            var _names = File.ReadAllLines(instance_DEVELOPMENT.filepath).ToList();
+            var _names = File.ReadAllLines(instance.filepath).ToList();
 
             steamUsers.Clear();
             
@@ -444,9 +456,14 @@ namespace Watermelon_Game.Steamworks.NET
                 m_nScore = Random.Range(0, 10000)
             };
                 
-            AddUser(_leaderboardEntry);
+            steamUsers.Add(new LeaderboardUserData
+            {
+                SteamId = _leaderboardEntry.m_steamIDUser.m_SteamID,
+                GlobalRank = _leaderboardEntry.m_nGlobalRank,
+                Score = _leaderboardEntry.m_nScore
+            });
 
-            instance_DEVELOPMENT.StartCoroutine(GetUserName_DEVELOPMENT(_SteamId, _Username, _NeedsToRetrieveInformationFromInternet));
+            instance.StartCoroutine(GetUserName_DEVELOPMENT(_SteamId, _Username, _NeedsToRetrieveInformationFromInternet));
         }
 
         /// <summary>

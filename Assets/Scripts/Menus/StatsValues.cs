@@ -165,6 +165,7 @@ namespace Watermelon_Game.Menus
             return _statsValues;
         }
 
+
         /// <summary>
         /// Returns the bigger value of the given objects
         /// </summary>
@@ -179,10 +180,16 @@ namespace Watermelon_Game.Menus
             
             if (_isInt)
             {
+#if DEBUG || DEVELOPMENT_BUILD
+                if (StatsMenu.Reset) return default;
+#endif
                 return (ProtectedInt32)_Value1 > (ProtectedInt32)_Value2 ? _Value1 : _Value2;
             }
             if (_isTimeSpan)
             {
+#if DEBUG || DEVELOPMENT_BUILD
+                if (StatsMenu.Reset) return default;
+#endif
                 return (TimeSpan)_Value1 > (TimeSpan)_Value2 ? _Value1 : _Value2;
             }
 

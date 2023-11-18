@@ -266,7 +266,7 @@ namespace Watermelon_Game.Menus
         }
 
         /// <summary>
-        /// Adds the given <see cref="Skill"/> to <see cref="Stats"/> -> <see cref="FruitController."/>
+        /// Adds the given <see cref="Skill"/> to <see cref="Stats"/> -> <see cref="FruitController"/>
         /// </summary>
         /// <param name="_Skill">The <see cref="Skill"/> to add to <see cref="Stats"/></param>
         private void AddSkill(Skill? _Skill)

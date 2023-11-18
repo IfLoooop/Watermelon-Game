@@ -34,7 +34,7 @@ namespace Watermelon_Game.Points
         
         /// <summary>
         /// The current points amount <br/>
-        /// <i>Is reset every game</i>
+        /// <i>Will be reset on <see cref="GameController"/><see cref="GameController.OnResetGameFinished"/></i>
         /// </summary>
         private ProtectedUInt32 currentPoints;
         /// <summary>

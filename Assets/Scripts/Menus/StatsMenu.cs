@@ -236,8 +236,8 @@ namespace Watermelon_Game.Menus
         /// </summary>
         public void Save()
         {
-            var _loadedStatsValues = this.Load(false);
             var _currentStatsValues = this.GetCurrentStatsValues();
+            var _loadedStatsValues = this.Load(false);
             var _biggerStatsValues = _currentStatsValues.CheckIfBigger(_loadedStatsValues);
 
             PlayerPrefs.SetInt(BEST_SCORE_KEY, _biggerStatsValues.BestScore);
@@ -334,6 +334,22 @@ namespace Watermelon_Game.Menus
         {
             this.stats.GoldenFruitCount++;
         }
+        
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// If true, <see cref="StatsValues.GetBiggerValue"/> will set every value to their default value <br/>
+        /// <b>Development only!</b>
+        /// </summary>
+        public static bool Reset { get; private set; }
+
+        /// <summary>
+        /// Resets all PlayerPrefs on Application quit
+        /// </summary>
+        public static void ResetPlayerPrefs_DEVELOPMENT()
+        {
+            Reset = true;
+        }
+#endif
         #endregion
     }
 }
