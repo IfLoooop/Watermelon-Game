@@ -22,15 +22,13 @@ namespace Watermelon_Game.Utility
         /// Singleton of <see cref="CameraUtils"/>
         /// </summary>
         private static CameraUtils instance;
-#pragma warning disable CS0109
-        /// <summary>
-        /// Main <see cref="Camera"/> on the scene
-        /// </summary>
-        private new Camera camera;
-#pragma warning restore CS0109
         #endregion
 
         #region Properties
+        /// <summary>
+        /// Main <see cref="Camera"/> in the scene
+        /// </summary>
+        public static Camera Camera { get; private set; }
         /// <summary>
         /// <see cref="xFrustumPosition"/>
         /// </summary>
@@ -55,7 +53,7 @@ namespace Watermelon_Game.Utility
         private void Awake()
         {
             instance = this;
-            this.camera = base.GetComponent<Camera>();
+            Camera = base.GetComponent<Camera>();
             
         }
         
@@ -69,7 +67,7 @@ namespace Watermelon_Game.Utility
         /// </summary>
         private void CalculateFrustumPoints()
         {
-            if (this.camera == null)
+            if (Camera == null)
             {
                 return;
             }
@@ -78,12 +76,12 @@ namespace Watermelon_Game.Utility
             var _zPositionToCalculateAt = base.transform.position.z;
             var _frustumCorners = new Vector3[4];
             
-            this.camera.CalculateFrustumCorners(_normalizedViewportCoordinates, _zPositionToCalculateAt, Camera.MonoOrStereoscopicEye.Mono, _frustumCorners);
+            Camera.CalculateFrustumCorners(_normalizedViewportCoordinates, _zPositionToCalculateAt, Camera.MonoOrStereoscopicEye.Mono, _frustumCorners);
 
             // ReSharper disable once InconsistentNaming
             for (var i = 0; i < _frustumCorners.Length; i++)
             {
-                _frustumCorners[i] = this.camera.ScreenToWorldPoint(_frustumCorners[i]);
+                _frustumCorners[i] = Camera.ScreenToWorldPoint(_frustumCorners[i]);
             }
 
             var _xPosition = _frustumCorners.Max(_Vector3 => _Vector3.x);
@@ -104,6 +102,16 @@ namespace Watermelon_Game.Utility
             var _ceiledValue = Mathf.Ceil(_absoluteValue);
 
             return _ceiledValue;
+        }
+        
+        /// <summary>
+        /// Transforms a point from screen space into world space, where world space is defined as the coordinate system at the very top of your game's hierarchy
+        /// </summary>
+        /// <param name="_Position">A screen space position (often mouse x, y), plus a z position for depth (for example, a camera clipping plane)</param>
+        /// <returns>The worldspace point created by converting the screen space point at the provided distance z from the camera plane</returns>
+        public static Vector3 ScreenToWorldPoint(Vector3 _Position)
+        {
+            return Camera.ScreenToWorldPoint(_Position);
         }
         #endregion
     }

@@ -190,7 +190,7 @@ namespace Watermelon_Game.Development
         /// </summary>
         private void ReleaseFruit()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse2))
             {
                 if (this.currentFruit != null)
                 {
@@ -232,7 +232,7 @@ namespace Watermelon_Game.Development
         /// </summary>
         private void SetCurrentFruit()
         {
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse2))
             {
                 if (this.currentFruit == null)
                 {
@@ -246,7 +246,7 @@ namespace Watermelon_Game.Development
                     }   
                 }
             }
-            if (Input.GetKeyUp(KeyCode.Mouse0))
+            if (Input.GetKeyUp(KeyCode.Mouse2))
             {
                 if (this.currentFruit != null)
                 {

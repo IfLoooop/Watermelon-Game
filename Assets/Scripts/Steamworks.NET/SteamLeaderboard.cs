@@ -308,7 +308,10 @@ namespace Watermelon_Game.Steamworks.NET
             if (_index != -1)
             {
                 steamUsers[_index] = new LeaderboardUserData(steamUsers[_index], _username);
-                OnUsernameFound?.Invoke(_index);
+                if (_RetrievedFromInternet)
+                {
+                    OnUsernameFound?.Invoke(_index);
+                }
             }
             else
             {

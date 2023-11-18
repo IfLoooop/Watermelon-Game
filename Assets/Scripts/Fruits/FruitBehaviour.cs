@@ -581,11 +581,20 @@ namespace Watermelon_Game.Fruits
         {
             this.rigidbody2D.velocity = Vector2.zero;
             var _maxDistanceDelta = this.GetSize() * FruitSettings.MoveTowardsStepMultiplier;
+            float? _previousDistance = null;
             
-            while (base.transform.position != _FruitBehaviour.transform.position)
+            while (this.rigidbody2D.position != _FruitBehaviour.rigidbody2D.position)
             {
-                var _newPosition = Vector2.MoveTowards(base.transform.position, _FruitBehaviour.transform.position, _maxDistanceDelta);
+                var _newPosition = Vector2.MoveTowards(this.rigidbody2D.position, _FruitBehaviour.rigidbody2D.position, _maxDistanceDelta);
+                var _distance = Vector2.Distance(this.rigidbody2D.position, _newPosition);
+
+                if (_distance <= _previousDistance) // Stuck
+                    this.evolvingFruitTrigger.Evolve(); // TODO: "EvolvingFruitTrigger.cs" might not be needed anymore (Needs to be tested!)
+                else
+                    _previousDistance = _distance;
+                
                 this.rigidbody2D.MovePosition(_newPosition);
+                
                 yield return FruitSettings.MoveTowardsWaitForSeconds;
             }
             

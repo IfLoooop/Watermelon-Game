@@ -37,9 +37,20 @@ namespace Watermelon_Game.Menus
 
         #region Fields
         /// <summary>
+        /// Singleton of <see cref="MenuController"/>
+        /// </summary>
+        private static MenuController instance;
+        /// <summary>
         /// Whether the <see cref="MenuController"/> currently takes input or not
         /// </summary>
         private bool allowInput = true;
+        #endregion
+        
+        #region Properties
+        /// <summary>
+        /// Indicates whether any of the menus is currently opened
+        /// </summary>
+        public static bool IsAnyMenuOpen => instance.currentActiveMenu != null;
         #endregion
         
         #region Events
@@ -57,6 +68,7 @@ namespace Watermelon_Game.Menus
         #region Methods
         private void Awake()
         {
+            instance = this;
             InitializeMenu(this.statsMenu);
             InitializeMenu(this.gameOverMenu);
             InitializeMenu(this.leaderboard);

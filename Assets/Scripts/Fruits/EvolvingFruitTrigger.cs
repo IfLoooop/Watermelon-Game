@@ -14,6 +14,10 @@ namespace Watermelon_Game.Fruits
         /// The <see cref="FruitBehaviour"/> of this <see cref="EvolvingFruitTrigger"/>, can only evolve with <see cref="fruitToEvolveWith"/>
         /// </summary>
         private FruitBehaviour fruitToEvolveWith;
+        /// <summary>
+        /// Disables the <see cref="OnTriggerEnter2D"/>-method if true
+        /// </summary>
+        private bool disableTrigger;
         #endregion
 
         #region Event
@@ -28,6 +32,11 @@ namespace Watermelon_Game.Fruits
         #region Methods
         private void OnTriggerEnter2D(Collider2D _Other)
         {
+            if (this.disableTrigger)
+            {
+                return;
+            }
+            
             var _otherHashcode = _Other.gameObject.GetHashCode();
             var _fruitToEvolveWithHashcode = this.fruitToEvolveWith.gameObject.GetHashCode();
 
@@ -45,6 +54,16 @@ namespace Watermelon_Game.Fruits
         {
             this.fruitToEvolveWith = _FruitBehaviour;
             base.gameObject.layer = LayerMaskController.FruitLayer;
+        }
+        
+        /// <summary>
+        /// Forces the fruit to evolve -> <see cref="OnCanEvolve"/> <br/>
+        /// <i>Use when the fruit is stuck and can't move any further towards <see cref="fruitToEvolveWith"/></i>
+        /// </summary>
+        public void Evolve()
+        {
+            this.disableTrigger = true;
+            OnCanEvolve?.Invoke(this.fruitToEvolveWith, base.transform.position);
         }
         #endregion
     }

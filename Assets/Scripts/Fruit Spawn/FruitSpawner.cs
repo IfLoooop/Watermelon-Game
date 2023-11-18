@@ -2,7 +2,10 @@ using Mirror;
 using OPS.AntiCheat.Field;
 using UnityEngine;
 using Watermelon_Game.Audio;
+using Watermelon_Game.Container;
+using Watermelon_Game.Controls;
 using Watermelon_Game.Fruits;
+using Watermelon_Game.Menus;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
 
@@ -126,6 +129,7 @@ namespace Watermelon_Game.Fruit_Spawn
             
             if (base.isLocalPlayer)
             {
+                InputController.OnMouseMove += MovePosition;
                 GameController.OnGameStart += this.GameStarted;
                 GameController.OnResetGameStarted += this.ResetGameStarted;
                 GameController.OnResetGameFinished += this.ResetGameFinished;
@@ -143,11 +147,13 @@ namespace Watermelon_Game.Fruit_Spawn
             
             if (base.isLocalPlayer)
             {
+                InputController.OnMouseMove -= MovePosition;
                 GameController.OnGameStart -= this.GameStarted;
                 GameController.OnResetGameStarted -= this.ResetGameStarted;
                 GameController.OnResetGameFinished -= this.ResetGameFinished;
                 FruitsFirstCollision.OnCollision -= this.UnblockRelease;
                 SkillController.OnSkillActivated -= this.SetActiveSkill;
+                FruitBehaviour.OnSkillUsed -= DeactivateRotation;
             }
         }
 
@@ -233,29 +239,52 @@ namespace Watermelon_Game.Fruit_Spawn
             {
                 if (Input.GetKey(KeyCode.A))
                 {
-                    this.Move(Vector2.left);
+                    this.MoveDirection(Vector2.left);
                 }
                 else if (Input.GetKey(KeyCode.D))
                 {
-                    this.Move(Vector2.right);
+                    this.MoveDirection(Vector2.right);
                 }
 
-                if (Input.GetKey(KeyCode.Space) && !this.blockRelease)
+                var _mouseInput = false;
+                if (!MenuController.IsAnyMenuOpen)
+                {
+                    _mouseInput = Input.GetKey(KeyCode.Mouse0);
+                    if (_mouseInput)
+                    {
+                        _mouseInput = ContainerBounds.Contains(InputController.MouseWorldPosition);
+                    }   
+                }
+                
+                if ((Input.GetKey(KeyCode.Space) || _mouseInput) && !this.blockRelease)
                 {
                     this.ReleaseFruit();
-                }   
+                }    
             }
         }
         
         /// <summary>
-        /// Moves the <see cref="FruitSpawner"/> in the given <see cref="_Direction"/>
+        /// Moves the <see cref="FruitSpawner"/> in the given <see cref="_Direction"/> <br/>
+        /// <i>For keyboard input</i>
         /// </summary>
         /// <param name="_Direction">The direction to move the <see cref="FruitSpawner"/> in</param>
-        private void Move(Vector2 _Direction)
+        private void MoveDirection(Vector2 _Direction)
         {
             var _direction = _Direction * (this.movementSpeed * Time.deltaTime);
-
             this.rigidbody2D.AddForce(_direction);
+        }
+
+        /// <summary>
+        /// Moves the <see cref="FruitSpawner"/> to the given <see cref="_Position"/> <br/>
+        /// <i>For mouse input</i>
+        /// </summary>
+        /// <param name="_Position">The direction to move the <see cref="FruitSpawner"/> to</param>
+        private void MovePosition(Vector2 _Position)
+        {
+            if (ContainerBounds.Contains(_Position))
+            {
+                this.rigidbody2D.MovePosition(_Position);   
+            }
         }
         
         /// <summary>
