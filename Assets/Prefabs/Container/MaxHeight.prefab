@@ -95,13 +95,13 @@ Animation:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13490527435397806}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Animation: {fileID: 7400000, guid: b7a814bc144469a45870d738f3834477, type: 2}
   m_Animations:
   - {fileID: 7400000, guid: b7a814bc144469a45870d738f3834477, type: 2}
   m_WrapMode: 0
-  m_PlayAutomatically: 1
+  m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
 --- !u!114 &4779914436562518312
@@ -122,6 +122,8 @@ MonoBehaviour:
   container: {fileID: 0}
   countdownTime:
     fakeValue: 8
+  countdownStartTime:
+    fakeValue: 5
   godRayDuration: 1.5
 --- !u!114 &1029240382313648689
 MonoBehaviour:
@@ -331,8 +333,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 3
-  m_fontSizeBase: 3
+  m_fontSize: 0
+  m_fontSizeBase: 0
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

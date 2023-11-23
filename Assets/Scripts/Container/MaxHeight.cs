@@ -29,7 +29,9 @@ namespace Watermelon_Game.Container
         
         [Header("Settings")]
         [Tooltip("Total duration in seconds of the countdown")]
-        [SerializeField] private ProtectedUInt32 countdownTime = 8;
+        [SerializeField] private ProtectedFloat countdownTime = 8;
+        [Tooltip("Countdown will be visible after is has reached this value")]
+        [SerializeField] private ProtectedFloat countdownStartTime = 5;
         [Tooltip("Duration in seconds the god ray stays visible before deactivating itself again")]
         [SerializeField] private float godRayDuration = 1.5f;
         #endregion
@@ -56,7 +58,11 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// The current value of the countdown
         /// </summary>
-        private ProtectedUInt32 currentCountdownTime;
+        private ProtectedFloat currentCountdownTime;
+        /// <summary>
+        /// Timestamp in  seconds when the last countdown was played
+        /// </summary>
+        private ProtectedFloat countdownTimestamp;
         
         /// <summary>
         /// Disables the <see cref="GodRayFlicker.godRay"/> when enabled
@@ -96,6 +102,7 @@ namespace Watermelon_Game.Container
             this.countdownAnimation = base.GetComponent<Animation>();
             this.countdownText = base.GetComponentInChildren<TextMeshProUGUI>();
             this.currentCountdownTime = this.countdownTime;
+            
             this.godRayFlicker = base.GetComponent<GodRayFlicker>();
             this.timeBeforeStart = new WaitForSeconds(this.godRayDuration);
         }
@@ -109,21 +116,15 @@ namespace Watermelon_Game.Container
         {
             FruitBehaviour.OnUpgradeToGoldenFruit -= this.EnableGodRay;
         }
-
-        private void OnTriggerEnter2D(Collider2D _Other)
-        {
-            if (!this.countdownAnimation.enabled)
-            {
-                this.countdownAnimation.enabled = true;
-            }
-        }
-
+        
         private void OnTriggerStay2D(Collider2D _Other)
         {
             if (!this.borderLineAnimation.isPlaying)
             {
                 this.borderLineAnimation.Play();
             }
+            
+            this.CountDown();
         }
 
         private void OnTriggerExit2D(Collider2D _Other)
@@ -139,7 +140,7 @@ namespace Watermelon_Game.Container
         /// Is called at the end of <see cref="countdownAnimation"/>
         /// </summary>
         [Client]
-        public void CountDown()
+        private void CountDown()
         {
 
             this.CmdCountdown();
@@ -160,21 +161,13 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
-            // if (_ClientConnectionId != this.container.ConnectionId)
-            // {
-            //     return;
-            // }
-            
-            Debug.Log($"RpcCountdown: {base.name}");
-            
-            this.currentCountdownTime--;
-            this.countdownText.text = this.currentCountdownTime.ToString();
+            this.currentCountdownTime -= Time.fixedDeltaTime;
 
-            if (this.currentCountdownTime == 5)
+            if (!this.countdownText.enabled && this.currentCountdownTime <= this.countdownStartTime + 1)
             {
                 this.countdownText.enabled = true;
             }
-            else if (this.currentCountdownTime == 0)
+            else if (this.currentCountdownTime <= 0)
             {
                 this.Reset();
                 OnGameOver?.Invoke();
@@ -182,7 +175,13 @@ namespace Watermelon_Game.Container
 
             if (this.countdownText.enabled)
             {
-                AudioPool.PlayClip(AudioClipName.Countdown);
+                if (Time.time - this.countdownTimestamp >= 1)
+                {
+                    this.countdownTimestamp = Time.time;
+                    this.countdownAnimation.Play();
+                    this.countdownText.text = ((int)this.currentCountdownTime).ToString();
+                    AudioPool.PlayClip(AudioClipName.Countdown);   
+                }
             }
         }
         
@@ -191,10 +190,11 @@ namespace Watermelon_Game.Container
         /// </summary>
         private void Reset()
         {
+            this.countdownAnimation.Stop();
             this.currentCountdownTime = this.countdownTime;
             this.countdownText.enabled = false;
-            this.countdownAnimation.enabled = false;
-            this.countdownAnimation.Rewind();
+            this.countdownText.fontSize = 0;
+            this.countdownText.text = this.countdownStartTime.ToString();
         }
         
         /// <summary>
