@@ -1,6 +1,8 @@
 TODO: Fruit destroy on GameOver doesn't work correctrly
 TODO: Fruit inside FruitSpawner is not destroyed (On host, for opponents FruitSpawner)
 TODO: Add Multiplayer/Singleplayer localizations
+TODO: Move menus to center of contauner (in multiplayer)
+TODO: Somtimes background fruits are way to big
 TODO: Change menu button names
 
 -Achievements localizations

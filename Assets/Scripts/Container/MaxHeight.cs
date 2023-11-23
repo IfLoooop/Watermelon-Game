@@ -175,9 +175,9 @@ namespace Watermelon_Game.Container
             
             if (this.countdown <= 1)
             {
-                Debug.Log(base.name);
                 this.Reset();
-                OnGameOver?.Invoke(); // TODO: Add who lost to the event
+                //OnGameOver?.Invoke(); // TODO: Add who lost to the event
+                this.CmdGameOver(this.container.ConnectionId!.Value);
                 return;
             }
             
@@ -196,6 +196,12 @@ namespace Watermelon_Game.Container
                     }
                 }
             }
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdGameOver(int _ConnectionId)
+        {
+            GameController.GameOver();
         }
         
         /// <summary>
