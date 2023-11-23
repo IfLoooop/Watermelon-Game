@@ -82,6 +82,11 @@ namespace Watermelon_Game.Networking
         [Client]
         public static void AssignPlayerContainer(FruitSpawner _FruitSpawner, int _ContainerIndex)
         {
+            foreach (var _kvp in NetworkServer.connections)
+            {
+                Debug.Log(_kvp);
+            }
+            
             instance.containers[_ContainerIndex].AssignToPlayer(_FruitSpawner);
         }
         #endregion

@@ -131,8 +131,6 @@ namespace Watermelon_Game.Fruit_Spawn
                 SkillController.OnSkillActivated += this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
                 
-                Debug.Log(base.connectionToClient?.connectionId);
-                Debug.Log(base.connectionToServer?.connectionId);
                 this.SetPlayerContainers();
             }
         }
