@@ -156,26 +156,41 @@ namespace Watermelon_Game.Fruit_Spawn
             this.blockedReleaseIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.BlockedRelease, base.transform);
         }
 
+        /// <summary>
+        /// Request to the server to set the <see cref="containerBounds"/>
+        /// </summary>
         [Client]
-        private void RequestContainer() // TODO
+        private void RequestContainer()
         {
             this.CmdRequestContainer();
         }
 
+        /// <summary>
+        /// Server gets the container that is assigned to the given player connection
+        /// </summary>
+        /// <param name="_Sender">The client who requested the container</param>
         [Command]
         private void CmdRequestContainer(NetworkConnectionToClient _Sender = null)
         {
-            Debug.Log($"CmdRequestContainer: {_Sender!.connectionId}");
             var _containerIndex = CustomNetworkManager.GetContainerIndex(_Sender);
             this.TargetAssignPlayerContainer(_Sender, _Sender!.connectionId, _containerIndex);
         }
 
-        [TargetRpc]
+        /// <summary>
+        /// Server assigns a container to the client with the given connection and starts the game for this player
+        /// </summary>
+        /// <param name="_Target">The client to assign the container for</param>
+        /// <param name="_ConnectionId">
+        /// The connection id of the client <br/>
+        /// <i>Is null when trying to get from <see cref="_Target"/>, so must be passed separately</i>
+        /// </param>
+        /// <param name="_ContainerIndex">The index of the container in <see cref="CustomNetworkManager.containers"/> to assign to this client</param>
+        [TargetRpc] // ReSharper disable once UnusedParameter.Local
         private void TargetAssignPlayerContainer(NetworkConnectionToClient _Target, int _ConnectionId, int _ContainerIndex)
         {
             this.SetConnectionId(_ConnectionId);
             CustomNetworkManager.AssignPlayerContainer(this, _ContainerIndex);
-            GameController.StartGame(); // TODO: Only for testing
+            GameController.StartGame();
         }
         
         /// <summary>

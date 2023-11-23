@@ -63,17 +63,25 @@ namespace Watermelon_Game.Networking
             NetworkServer.AddPlayerForConnection(_ConnectionToClient, _fruitSpawner.gameObject);
         }
 
+        /// <summary>
+        /// Gets the container from <see cref="containers"/> for the given client
+        /// </summary>
+        /// <param name="_Sender">The client who requested the container</param>
+        /// <returns>The index of the container in <see cref="containers"/></returns>
         [Server]
         public static int GetContainerIndex(NetworkConnectionToClient _Sender)
         {
-            Debug.Log($"GetContainerIndex: {_Sender.connectionId}");
             return instance.containers.FindIndex(_Container => _Container.ConnectionId == _Sender.connectionId);
         }
 
+        /// <summary>
+        /// Assigns the container in <see cref="containers"/> with the given index to the given <see cref="_FruitSpawner"/>
+        /// </summary>
+        /// <param name="_FruitSpawner">The player object to assign to the container</param>
+        /// <param name="_ContainerIndex">The index of the container in <see cref="containers"/></param>
         [Client]
         public static void AssignPlayerContainer(FruitSpawner _FruitSpawner, int _ContainerIndex)
         {
-            Debug.Log($"AssignPlayerContainer: {_ContainerIndex}");
             instance.containers[_ContainerIndex].AssignToPlayer(_FruitSpawner);
         }
         #endregion

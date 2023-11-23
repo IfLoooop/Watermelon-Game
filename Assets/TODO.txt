@@ -1,4 +1,4 @@
-TODO: Space triggers a GameMode change
+TODO: Godray is activated on both clients
 TODO: Add Multiplayer/Singleplayer localizations
 TODO: Change menu button names
 

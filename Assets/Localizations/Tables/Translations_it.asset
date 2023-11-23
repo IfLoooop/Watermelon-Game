@@ -118,6 +118,14 @@ MonoBehaviour:
     m_Localized: Controlli
     m_Metadata:
       m_Items: []
+  - m_Id: 7005890602627072
+    m_Localized: Giocatore singolo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7005894922760192
+    m_Localized: Multigiocatore
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

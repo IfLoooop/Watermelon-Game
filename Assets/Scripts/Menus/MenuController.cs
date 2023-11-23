@@ -104,6 +104,19 @@ namespace Watermelon_Game.Menus
             {
                 this.Open_Close(this.menuContainer);
             }
+#if DEBUG || DEVELOPMENT_BUILD
+            else if (this.currentActiveMenu is { Menu: Menu.Exit })
+            {
+                if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                {
+                    this.exitMenu.ExitGame();
+                }
+                else if (Input.GetKeyDown(KeyCode.R))
+                {
+                    this.Restart();
+                }
+            }
+#endif
         }
 
         /// <summary>
