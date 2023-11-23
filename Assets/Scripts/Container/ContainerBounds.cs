@@ -17,12 +17,13 @@ namespace Watermelon_Game.Container
         [Header("References")]
         [Tooltip("Inside bounds of the container")]
         [SerializeField] private RectTransform bounds;
-        [Tooltip("Border collider adjacent to the other container")]
-        [SerializeField] private BoxCollider2D border; // TODO: Don't deactivate (set to another layer), otherwise normal fruits will be able to change the container 
         [Tooltip("Animation to player during a SinglePlayer transition")]
         [SerializeField] private AnimationClip singlePlayerTransition;
         [Tooltip("Animation to player during a MultiPlayer transition")]
         [SerializeField] private AnimationClip multiPlayerTransition;
+
+        [Tooltip("Trigger of MaxHeight")]
+        [SerializeField] private BoxCollider2D maxHeightTrigger;
 
         [Header("Settings")]
         [Tooltip("Y-position of the FruitSpawner")]
@@ -79,32 +80,34 @@ namespace Watermelon_Game.Container
             {
                 case GameMode.SinglePlayer:
                     this.gameModeTransition.Play(this.singlePlayerTransition.name);
-                    this.border.enabled = true;
                     break;
                 case GameMode.MultiPlayer:
                     this.gameModeTransition.Play(this.multiPlayerTransition.name);
-                    this.border.enabled = false;
                     break;
             }
         }
 
         /// <summary>
-        /// Assigns this <see cref="ContainerBounds"/> to the given <see cref="FruitSpawner"/> 
+        /// Assigns this <see cref="ContainerBounds"/> to the given <see cref="FruitSpawner"/> <br/>
+        /// <i>Use for client container</i>
         /// </summary>
         /// <param name="_FruitSpawner">The <see cref="FruitSpawner"/> to assign this <see cref="ContainerBounds"/> to</param>
         public void AssignToPlayer(FruitSpawner _FruitSpawner)
         {
             this.fruitSpawner = _FruitSpawner;
             this.connectionId = this.fruitSpawner!.SetContainerBounds(this);
+            this.maxHeightTrigger.enabled = true;
         }
 
         /// <summary>
-        /// Assigns this container a connection id
+        /// Assigns this container a connection id <br/>
+        /// <i>Use for container of other clients</i>
         /// </summary>
         /// <param name="_ConnectionId">The connection id to assign to this container</param>
         public void AssignConnectionId(int _ConnectionId)
         {
             this.connectionId = _ConnectionId;
+            this.maxHeightTrigger.enabled = false;
         }
         
         /// <summary>

@@ -54,9 +54,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounds: {fileID: 5164968871095166111}
-  border: {fileID: 0}
   singlePlayerTransition: {fileID: 0}
   multiPlayerTransition: {fileID: 0}
+  maxHeightTrigger: {fileID: 915655012215915031}
 --- !u!111 &6998642802809751568
 Animation:
   m_ObjectHideFlags: 0
@@ -854,6 +854,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e6a435f060ac8e04dbf441cf54ca1cb5, type: 3}
+--- !u!61 &915655012215915031 stripped
+BoxCollider2D:
+  m_CorrespondingSourceObject: {fileID: 7059083535607599448, guid: e6a435f060ac8e04dbf441cf54ca1cb5, type: 3}
+  m_PrefabInstance: {fileID: 7873392153796055887}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &8010930851862497721 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 175468141863230198, guid: e6a435f060ac8e04dbf441cf54ca1cb5, type: 3}

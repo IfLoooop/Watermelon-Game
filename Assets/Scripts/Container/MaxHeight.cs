@@ -56,6 +56,7 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// The current value of the countdown
         /// </summary>
+        [SyncVar(hook = nameof(RpcCountdown))]
         private ProtectedUInt32 currentCountdownTime;
         
         /// <summary>
@@ -112,8 +113,6 @@ namespace Watermelon_Game.Container
 
         private void OnTriggerEnter2D(Collider2D _Other)
         {
-            Debug.Log(base.isClient);
-            
             if (!this.countdownAnimation.enabled)
             {
                 this.countdownAnimation.enabled = true;
@@ -144,7 +143,7 @@ namespace Watermelon_Game.Container
         public void CountDown()
         {
             this.currentCountdownTime--;
-            this.RpcCountdown();
+            //this.RpcCountdown();
             //this.CmdCountdown();
         }
 
@@ -156,7 +155,7 @@ namespace Watermelon_Game.Container
         }
         
         //[ClientRpc]
-        private void RpcCountdown()
+        private void RpcCountdown(ProtectedUInt32 _OldValue, ProtectedUInt32 _NewValue)
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
