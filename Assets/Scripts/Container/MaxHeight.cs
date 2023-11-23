@@ -175,8 +175,9 @@ namespace Watermelon_Game.Container
             
             if (this.countdown <= 1)
             {
+                Debug.Log(base.name);
                 this.Reset();
-                OnGameOver?.Invoke(); // TODO
+                OnGameOver?.Invoke(); // TODO: Add who lost to the event
                 return;
             }
             
