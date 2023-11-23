@@ -33,7 +33,7 @@ namespace Watermelon_Game.Networking
         public override void Start()
         {
             base.Start();
-            base.StartHost();
+            //base.StartHost(); // TODO: Enable
         }
         
         public override void OnServerConnect(NetworkConnectionToClient _ConnectionToClient)
