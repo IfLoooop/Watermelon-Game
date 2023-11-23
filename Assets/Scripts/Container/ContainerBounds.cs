@@ -2,6 +2,7 @@ using JetBrains.Annotations;
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Watermelon_Game.Audio;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Utility;
 
@@ -65,8 +66,16 @@ namespace Watermelon_Game.Container
             {
                 this.fruitSpawner.GameModeTransitionStarted();
             }
-            
-            // TODO: Play sound and make animation  better
+
+            switch (_GameMode)
+            {
+                case GameMode.SinglePlayer:
+                    AudioPool.PlayClip(AudioClipName.MenuPopup);
+                    break;
+                case GameMode.MultiPlayer:
+                    AudioPool.PlayClip(AudioClipName.FruitDestroy);
+                    break;
+            }
         }
 
         /// <summary>

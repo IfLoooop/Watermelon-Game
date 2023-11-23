@@ -177,8 +177,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdfcc46822610f243b87ec9fa064416d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  singlePlayerTransition: {fileID: 0}
-  multiPlayerTransition: {fileID: 0}
+  singlePlayerTransition: {fileID: 7400000, guid: ede9e81743832e048a5e0e265aab345d, type: 2}
+  multiPlayerTransition: {fileID: 7400000, guid: 4694e4419aaa5514690f8815adc8a57e, type: 2}
   nextFruit: {fileID: 48240243414636394}
   nextNextFruit: {fileID: 1821166210121043020}
   nextNextFruitAnimation: {fileID: 0}
@@ -197,7 +197,9 @@ Animation:
   m_Enabled: 1
   serializedVersion: 3
   m_Animation: {fileID: 0}
-  m_Animations: []
+  m_Animations:
+  - {fileID: 7400000, guid: 4694e4419aaa5514690f8815adc8a57e, type: 2}
+  - {fileID: 7400000, guid: ede9e81743832e048a5e0e265aab345d, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
