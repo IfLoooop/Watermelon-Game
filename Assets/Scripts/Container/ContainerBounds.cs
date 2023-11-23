@@ -113,6 +113,7 @@ namespace Watermelon_Game.Container
         public void AssignConnectionId(int _ConnectionId)
         {
             this.connectionId = _ConnectionId;
+            this.PlayerContainer = false;
             this.maxHeightTrigger.enabled = false;
         }
         
