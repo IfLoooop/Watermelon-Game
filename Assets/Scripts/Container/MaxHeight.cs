@@ -21,7 +21,7 @@ namespace Watermelon_Game.Container
 #if DEBUG || DEVELOPMENT_BUILD
         [Header("Development")]
         [Tooltip("Disables the loosing condition (Editor only)")]
-        [ShowInInspector] public static bool DisableCountDown;
+        [ShowInInspector] private static bool disableCountDown;
 #endif
         [Header("Settings")]
         [Tooltip("Total duration in seconds of the countdown")]
@@ -31,11 +31,6 @@ namespace Watermelon_Game.Container
         #endregion
         
         #region Fields
-        /// <summary>
-        /// Singleton of <see cref="MaxHeight"/>
-        /// </summary>
-        private static MaxHeight instance;
-        
         /// <summary>
         /// Detects only <see cref="Fruits.Fruit"/>s
         /// </summary>
@@ -73,6 +68,15 @@ namespace Watermelon_Game.Container
         private WaitForSeconds timeBeforeStart;
         #endregion
 
+        #region Properties
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// <see cref="disableCountDown"/>
+        /// </summary>
+        public static bool DisableCountDown { get => disableCountDown; set => disableCountDown = value; }
+#endif
+        #endregion
+        
         #region Events
         /// <summary>
         /// Is called when <see cref="currentCountdownTime"/> reaches 0
@@ -83,7 +87,6 @@ namespace Watermelon_Game.Container
         #region Methods
         private void Awake()
         {
-            instance = this;
             this.trigger = base.GetComponent<BoxCollider2D>();
             this.borderLineAnimation = base.GetComponentInChildren<SpriteRenderer>().gameObject.GetComponent<Animation>();
             this.countdownAnimation = base.GetComponent<Animation>();
@@ -95,12 +98,12 @@ namespace Watermelon_Game.Container
 
         private void OnEnable()
         {
-            FruitBehaviour.OnUpgradeToGoldenFruit += EnableGodRay;
+            FruitBehaviour.OnUpgradeToGoldenFruit += this.EnableGodRay;
         }
 
         private void OnDisable()
         {
-            FruitBehaviour.OnUpgradeToGoldenFruit -= EnableGodRay;
+            FruitBehaviour.OnUpgradeToGoldenFruit -= this.EnableGodRay;
         }
 
         private void OnTriggerEnter2D(Collider2D _Other)
@@ -173,18 +176,18 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Sets the <see cref="GodRayFlicker.godRay"/> <see cref="GameObject"/> active
         /// </summary>
-        public static void EnableGodRay()
+        private void EnableGodRay()
         {
-            if (instance.enableFlicker != null)
+            if (this.enableFlicker != null)
             {
-                instance.StopCoroutine(instance.enableFlicker);
+                this.StopCoroutine(this.enableFlicker);
             }
             
-            instance.godRayFlicker.enabled = false;
-            instance.godRayFlicker.EnableGodRay();
+            this.godRayFlicker.enabled = false;
+            this.godRayFlicker.EnableGodRay();
 
-            instance.enableFlicker = instance.EnableFlicker();
-            instance.StartCoroutine(instance.enableFlicker);
+            this.enableFlicker = this.EnableFlicker();
+            this.StartCoroutine(this.enableFlicker);
         }
 
         /// <summary>

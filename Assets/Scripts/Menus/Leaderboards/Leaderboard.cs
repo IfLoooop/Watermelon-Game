@@ -44,10 +44,6 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         private float leaderboardEntryHeight;
         /// <summary>
-        /// Indicates whether this <see cref="Leaderboard"/> has already been initialized by the <see cref="MenuController"/>
-        /// </summary>
-        private bool hasBeenInitialized;
-        /// <summary>
         /// Timestamp in seconds when the refresh button was last pressed
         /// </summary>
         private float refreshTimestamp;
@@ -61,9 +57,17 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         private int activePage;
         /// <summary>
+        /// The previous active page before the friends toggle was activated
+        /// </summary>
+        private int previousActivePage;
+        /// <summary>
+        /// The previous scroll position  before the friends toggle was activated
+        /// </summary>
+        private float previousScrollPosition;
+        /// <summary>
         /// Indicates whether the <see cref="Toggle"/> to only display friends in the leaderboard is on or not
         /// </summary>
-        private bool onlyFriendsToggleIsOn;
+        private bool friendsToggleIsOn;
         /// <summary>
         /// Contains all friends
         /// </summary>
@@ -84,9 +88,9 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         public static List<LeaderboardUserData> SteamUsers => instance.steamUsers;
         /// <summary>
-        /// Returns <see cref="friends"/> if <see cref="onlyFriendsToggleIsOn"/> it true, otherwise <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>
+        /// Returns <see cref="friends"/> if <see cref="friendsToggleIsOn"/> it true, otherwise <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>
         /// </summary>
-        private List<LeaderboardUserData> UserList => this.onlyFriendsToggleIsOn ? this.friends : SteamLeaderboard.SteamUsers;
+        private List<LeaderboardUserData> UserList => this.friendsToggleIsOn ? this.friends : SteamLeaderboard.SteamUsers;
         #endregion
         
         #region Methods
@@ -101,24 +105,16 @@ namespace Watermelon_Game.Menus.Leaderboards
         {
             SteamLeaderboard.OnLeaderboardScoresDownloaded += LeaderboardScoresDownloaded;
             SteamLeaderboard.OnUsernameFound += this.RefreshLeaderboardEntries;
-            
-            this.GetLeaderboardEntries();
-            // Needs to be set after "GetLeaderboardEntries()", otherwise the "this.scroller" will have a null ref. (Will be set first time during "MenuController.cs" initialization)
-            this.hasBeenInitialized = true;
         }
 
-        protected override void OnDisable()
+        private void OnDisable()
         {
-            base.OnDisable();
-
             SteamLeaderboard.OnLeaderboardScoresDownloaded -= LeaderboardScoresDownloaded;
             SteamLeaderboard.OnUsernameFound -= this.RefreshLeaderboardEntries;
         }
         
         private void Start()
         {
-            // Needs to be called twice the first time, ("OnEnable()" and "Start()"), otherwise the menu won't have any entries (only in build)
-            // Shitty solution but it works
             this.GetLeaderboardEntries();
         }
 
@@ -222,11 +218,14 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// <param name="_Toggle">The <see cref="Toggle"/> that called this method</param>
         public void ToggleFriends(Toggle _Toggle)
         {
-            this.activePage = 0;
-            this.onlyFriendsToggleIsOn = _Toggle.isOn;
+            this.friendsToggleIsOn = _Toggle.isOn;
             
             if (_Toggle.isOn)
             {
+                this.previousActivePage = this.activePage;
+                this.previousScrollPosition = this.scroller.NormalizedScrollPosition;
+                this.activePage = 0;
+                
                 this.friends.Clear();
                 const EFriendFlags FRIEND_FLAGS = EFriendFlags.k_EFriendFlagAll;
                 var _friendCount = SteamFriends.GetFriendCount(FRIEND_FLAGS);
@@ -269,20 +268,17 @@ namespace Watermelon_Game.Menus.Leaderboards
             }
             else
             {
-                this.GetLeaderboardEntries();
+                this.activePage = this.previousActivePage;
+                this.GetLeaderboardEntries(this.previousScrollPosition);
             }
         }
         
         /// <summary>
         /// Fills <see cref="steamUsers"/> with entries from <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>, depending on the current <see cref="activePage"/>
         /// </summary>
-        private void GetLeaderboardEntries()
+        /// <param name="_ScrollPosition">The normalized position of the scroller between 0 and 1 (0 = Top, 1 = Bottom)</param>
+        private void GetLeaderboardEntries(float _ScrollPosition = 0)
         {
-            if (!this.hasBeenInitialized)
-            {
-                return;
-            }
-            
             this.steamUsers.Clear();
             
             // ReSharper disable once InconsistentNaming
@@ -296,7 +292,7 @@ namespace Watermelon_Game.Menus.Leaderboards
                 }
             }
             
-            this.scroller.ReloadData();
+            this.scroller.ReloadData(_ScrollPosition);
             this.SetPaging();
         }
 

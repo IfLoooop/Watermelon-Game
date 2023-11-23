@@ -58,9 +58,13 @@ MonoBehaviour:
   power: {fileID: 3458906458468336051}
   evolve: {fileID: 6230120783085133352}
   destroy: {fileID: 8894135160460252906}
-  shootForceMultiplier: 100
-  powerSkillForce: 30000
-  powerSkillMass: 200
+  shootForceMultiplier:
+    fakeValue: 100
+  powerSkillForce:
+    fakeValue: 30000
+  powerSkillMass:
+    fakeValue: 200
+  scrollDelay: 0.1
 --- !u!1001 &1183648929510859029
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -77,6 +81,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Power
       objectReference: {fileID: 0}
+    - target: {fileID: 3548412686694310870, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_text
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3664683984400471688, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d192a1208ebdd6f40a3ee4fab52d4c5c, type: 3}
+    - target: {fileID: 6154891348386821645, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d192a1208ebdd6f40a3ee4fab52d4c5c, type: 3}
     - target: {fileID: 6620392819853622241, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
       propertyPath: m_TextStyleHashCode
       value: -1183493901
@@ -106,8 +122,8 @@ PrefabInstance:
       value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 8252996631552956086, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 600
+      propertyPath: m_AnchoredPosition.x
+      value: -500
       objectReference: {fileID: 0}
     - target: {fileID: 8252996631552956086, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -148,6 +164,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Destroy
       objectReference: {fileID: 0}
+    - target: {fileID: 3548412686694310870, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_text
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3664683984400471688, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 385826bd2e6e8fc46b609ea614937f99, type: 3}
+    - target: {fileID: 6154891348386821645, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 385826bd2e6e8fc46b609ea614937f99, type: 3}
     - target: {fileID: 6620392819853622241, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
       propertyPath: m_TextStyleHashCode
       value: -1183493901
@@ -165,8 +193,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8252996631552956086, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -100
+      propertyPath: m_AnchoredPosition.x
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 8252996631552956086, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -288,6 +316,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3205487586603962694, guid: e92d30edbb80dc644abf4395183a14d4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3205487586603962694, guid: e92d30edbb80dc644abf4395183a14d4, type: 3}
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
@@ -322,6 +354,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Evolve
       objectReference: {fileID: 0}
+    - target: {fileID: 3548412686694310870, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_text
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3664683984400471688, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 80eddc4f338b151439590fbb33b6eb4e, type: 3}
+    - target: {fileID: 6154891348386821645, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 80eddc4f338b151439590fbb33b6eb4e, type: 3}
     - target: {fileID: 6620392819853622241, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
       propertyPath: m_TextStyleHashCode
       value: -1183493901
@@ -339,8 +383,8 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8252996631552956086, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 250
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8252996631552956086, guid: fa68d458369dcaf4782d3b4d72a42e24, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

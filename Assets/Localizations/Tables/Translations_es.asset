@@ -18,12 +18,12 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 1207057018880
-    m_Localized: Izquierda
+  - m_Id: 5954421287841792
+    m_Localized: Global
     m_Metadata:
       m_Items: []
-  - m_Id: 39212354400256
-    m_Localized: Derecha
+  - m_Id: 5954419098415104
+    m_Localized: Actual
     m_Metadata:
       m_Items: []
   - m_Id: 39217219792896
@@ -100,6 +100,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2290309332758528
     m_Localized: Amigos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5953995863781376
+    m_Localized: Movimiento
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954000376852480
+    m_Localized: Rotar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954309895516160
+    m_Localized: Habilidades
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954423032672256
+    m_Localized: Controles
     m_Metadata:
       m_Items: []
   references:

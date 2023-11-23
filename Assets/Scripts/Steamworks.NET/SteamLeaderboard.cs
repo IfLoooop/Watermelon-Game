@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -9,8 +10,10 @@ using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using Steamworks;
 using UnityEngine;
+using Watermelon_Game.Development;
 using Watermelon_Game.Menus.Leaderboards;
 using Watermelon_Game.Points;
+using Watermelon_Game.Utility;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Steamworks.NET
@@ -238,7 +241,7 @@ namespace Watermelon_Game.Steamworks.NET
                                 GlobalRank = _leaderboardEntry.m_nGlobalRank,
                                 Score = _leaderboardEntry.m_nScore
                             });
-
+                            
                             userInformationRequested++;
                         
                             // This will only get the username for friends
@@ -258,6 +261,10 @@ namespace Watermelon_Game.Steamworks.NET
             
             OnLeaderboardScoresDownloaded?.Invoke();
             instance.StartCoroutine(nameof(GetUserNames));
+            
+#if DEBUG || DEVELOPMENT_BUILD
+            CheckForMissingCharactersAsync_DEVELOPMENT();   
+#endif
         }
 
         /// <summary>
@@ -303,7 +310,13 @@ namespace Watermelon_Game.Steamworks.NET
             userInformationRequested = (uint)Mathf.Clamp(--userInformationRequested, 0, uint.MaxValue);
             
             var _username = SteamFriends.GetFriendPersonaName(new CSteamID(_SteamId));
-            
+
+#if DEBUG || DEVELOPMENT_BUILD
+            if (string.IsNullOrWhiteSpace(_username))
+            {
+                Debug.LogError($"Username empty: {_SteamId} {_username}");
+            }
+#endif
             var _index = steamUsers.FindIndex(_SteamUser => _SteamUser.SteamId == _SteamId);
             if (_index != -1)
             {
@@ -345,9 +358,15 @@ namespace Watermelon_Game.Steamworks.NET
                 {
                     return;
                 }
-                
+
+#if UNITY_EDITOR
+                return;
+#endif
+#pragma warning disable CS0162 // Unreachable code detected
+                // ReSharper disable once HeuristicUnreachableCode
                 var _steamAPICall = SteamUserStat.UploadLeaderboardScore(steamLeaderboard.Value, ELeaderboardUploadScoreMethod.k_ELeaderboardUploadScoreMethodKeepBest, (int)_Score, null, 0);
                 onLeaderboardScoreUploaded.Set(_steamAPICall, OnScoreUploaded);
+#pragma warning restore CS0162 // Unreachable code detected
             }
         }
         
@@ -491,6 +510,45 @@ namespace Watermelon_Game.Steamworks.NET
             {
                 steamUsers[_index] = new LeaderboardUserData(steamUsers[_index], _Username);
                 OnUsernameFound?.Invoke(_index);
+            }
+        }
+        
+        /// <summary>
+        /// Checks if any username in <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/> contains a character that is not supported <br/>
+        /// <b>Development only!</b>
+        /// </summary>
+        private static async void CheckForMissingCharactersAsync_DEVELOPMENT()
+        {
+            var _usernames = new ConcurrentBag<string>();
+
+            await Task.Run(() =>
+            {
+                Parallel.ForEach(steamUsers, _SteamUser =>
+                {
+                    _usernames.Add(_SteamUser.Username);
+                });
+            });
+            
+            await FontManager.AddCharactersToFontAssetAsync_DEVELOPMENT(_usernames);
+            
+            var _missingCharactersFound = false;
+            
+            await Task.Run(() =>
+            {
+                Parallel.ForEach(steamUsers, _SteamUser =>
+                {
+                    var _info = $"[{_SteamUser.GlobalRank}] {_SteamUser.Username} [{_SteamUser.Score}]";
+                    
+                    if (FontManager.CheckForMissingCharacters_DEVELOPMENT(_SteamUser.Username, _info))
+                    {
+                        _missingCharactersFound = true;
+                    }
+                });
+            });
+            
+            if (_missingCharactersFound)
+            {
+                FontManager.WriteToFile_DEVELOPMENT();
             }
         }
 #endif

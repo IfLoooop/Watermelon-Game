@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Audio;
 
@@ -7,14 +8,17 @@ namespace Watermelon_Game.Menus
     /// <summary>
     /// Base class for every <see cref="Menus.Menu"/>
     /// </summary>
-    internal abstract class MenuBase : MonoBehaviour
+    [RequireComponent(typeof(Animation))]
+    internal abstract class MenuBase : SerializedMonoBehaviour
     {
         #region Inspector Fieds
+        [Header("References")]
+        [Tooltip("Open animation for the menu")]
+        [SerializeField] private Animation menuPopup;
+        
         [Header("Settings")]
         [Tooltip("The type of the menu")]
         [SerializeField] private Menu menu;
-        [Tooltip("Other menus will not be able to close this one, if set to true")]
-        [SerializeField] private bool canNotBeClosedByDifferentMenu;
         #endregion
         
         #region Properties
@@ -26,54 +30,43 @@ namespace Watermelon_Game.Menus
 
         #region Methods
         /// <summary>
-        /// Controls the open/close logic of a <see cref="Menus.Menu"/>
+        /// Closes the given <see cref="MenuBase"/> and opens this one
         /// </summary>
-        /// <param name="_CurrentActiveMenu"><see cref="MenuController.currentActiveMenu"/></param>
-        /// <param name="_ForceClose">Forces the active menu to close even if <see cref="canNotBeClosedByDifferentMenu"/> is true</param>
-        /// <returns>The new active <see cref="Menus.Menu"/> or null if all menus are closed</returns>
-        [CanBeNull]
-        public virtual MenuBase Open_Close([CanBeNull] MenuBase _CurrentActiveMenu, bool _ForceClose = false)
+        /// <param name="_CurrentActiveMenu">The <see cref="MenuBase"/> to close</param>
+        /// <returns>This <see cref="MenuBase"/></returns>
+        public virtual MenuBase Open([CanBeNull] MenuBase _CurrentActiveMenu)
         {
-            AudioPool.PlayClip(AudioClipName.MenuPopup);
-            
-            if (_ForceClose && _CurrentActiveMenu != null)
+            if (_CurrentActiveMenu != null)
             {
-                this.SwitchActiveState(_CurrentActiveMenu, true);
-                return null;
-            }
-            
-            if (_CurrentActiveMenu != null && _CurrentActiveMenu.menu != this.menu)
-            {
-                if (_CurrentActiveMenu.canNotBeClosedByDifferentMenu)
+                if (_CurrentActiveMenu.menu != this.menu)
                 {
-                    return _CurrentActiveMenu;   
+                    _CurrentActiveMenu!.Close();
                 }
-
-                this.SwitchActiveState(_CurrentActiveMenu);
+                else
+                {
+                    return this;
+                }
             }
-            
-            var _active = this.SwitchActiveState(this);
+            else
+            {
+                AudioPool.PlayClip(AudioClipName.MenuPopup);
+            }
 
-            return _active ? this : null;
+            this.menuPopup.Play();
+            return this;
         }
 
         /// <summary>
-        /// Switches the active state of the given <see cref="MenuBase"/>
+        /// Closes this menu
         /// </summary>
-        /// <param name="_Menu">The <see cref="MenuBase"/> to switch the active state of</param>
-        /// <param name="_ForceClose">Forces the active menu to close even if <see cref="canNotBeClosedByDifferentMenu"/> is true</param>
-        /// <returns></returns>
-        private bool SwitchActiveState(MenuBase _Menu, bool _ForceClose = false)
+        /// <returns>Always returns null</returns>
+        [CanBeNull]
+        public virtual MenuBase Close()
         {
-            if (!_ForceClose)
-            {
-                var _activeState = !_Menu.gameObject.activeSelf;
-                _Menu.gameObject.SetActive(_activeState);
-                return _activeState;   
-            }
+            AudioPool.PlayClip(AudioClipName.MenuPopup);
+            base.transform.localScale = Vector3.zero;
             
-            _Menu.gameObject.SetActive(false);
-            return false;
+            return null;
         }
         #endregion
     }

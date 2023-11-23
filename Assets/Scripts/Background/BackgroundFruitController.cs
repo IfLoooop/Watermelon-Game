@@ -137,9 +137,9 @@ namespace Watermelon_Game.Background
             foreach (var _fruitData in _fruits)
             {
                 var _sprite = _fruitData.Prefab.GetComponent<SpriteRenderer>().sprite;
-                var _sizeMultiplier = _fruitData.Prefab.transform.localScale.x;
+                var _fruitPrefabSize = _fruitData.Scale.Value.x;
                 
-                this.fruitSprites.Add((_sprite, _sizeMultiplier));
+                this.fruitSprites.Add((_sprite, _fruitPrefabSize));
             }
 
             this.biggestFruitHeight = this.fruitSprites.Max(_Fruit => _Fruit.sprite.bounds.size.y);

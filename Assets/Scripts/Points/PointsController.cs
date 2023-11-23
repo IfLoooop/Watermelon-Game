@@ -81,7 +81,7 @@ namespace Watermelon_Game.Points
             FruitController.OnEvolve += AddPoints;
             FruitController.OnGoldenFruitCollision += AddPoints;
             SkillController.OnSkillUsed += this.SubtractPoints;
-            MenuController.OnNewBestScore += this.NewBestScore;
+            MenuContainer.OnNewBestScore += this.NewBestScore;
         }
         
         private void OnDisable()
@@ -90,12 +90,12 @@ namespace Watermelon_Game.Points
             FruitController.OnEvolve -= AddPoints;
             FruitController.OnGoldenFruitCollision += AddPoints;
             SkillController.OnSkillUsed -= this.SubtractPoints;
-            MenuController.OnNewBestScore -= this.NewBestScore;
+            MenuContainer.OnNewBestScore -= this.NewBestScore;
         }
 
         private void Start()
         {
-            this.bestScoreAmount.text = StatsMenu.Instance.BestScore.ToString();
+            this.bestScoreAmount.text = GlobalStats.Instance.BestScore.ToString();
         }
 
 #if DEBUG || DEVELOPMENT_BUILD

@@ -56,16 +56,15 @@ namespace Watermelon_Game.Fruits
         #endregion
         
         #region Fields
+#pragma warning disable CS0109
         /// <summary>
         /// <see cref="CircleCollider2D"/>
         /// </summary>
         private CircleCollider2D circleCollider2D;
-#pragma warning disable CS0109
         /// <summary>
         /// <see cref="UnityEngine.Rigidbody2D"/>
         /// </summary>
         private new Rigidbody2D rigidbody2D;
-#pragma warning restore CS0109
         /// <summary>
         /// <see cref="FruitsFirstCollision"/>
         /// </summary>
@@ -105,6 +104,7 @@ namespace Watermelon_Game.Fruits
         /// Coroutine for the size grow, during evolving
         /// </summary>
         [CanBeNull] private IEnumerator growFruit;
+#pragma warning restore CS0109
         #endregion
 
         #region Properties
@@ -223,6 +223,7 @@ namespace Watermelon_Game.Fruits
                 if (_isOutOfScreen)
                 {
                     this.GoldenFruit(true);
+                    Debug.Log("OnBecameInvisible");
                     OnUpgradeToGoldenFruit?.Invoke();
                 }
             }

@@ -15,14 +15,6 @@ MonoBehaviour:
   m_TableCollectionName: Translations
   m_TableCollectionNameGuidString: 563ebb2a7d431c647a9481dd54566af6
   m_Entries:
-  - m_Id: 1207057018880
-    m_Key: left
-    m_Metadata:
-      m_Items: []
-  - m_Id: 39212354400256
-    m_Key: right
-    m_Metadata:
-      m_Items: []
   - m_Id: 39217219792896
     m_Key: drop
     m_Metadata:
@@ -60,7 +52,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39237398589440
-    m_Key: skills
+    m_Key: used_skills
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
@@ -97,6 +89,38 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2290309332758528
     m_Key: friends
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5953995863781376
+    m_Key: move
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954000376852480
+    m_Key: rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954309895516160
+    m_Key: skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954419098415104
+    m_Key: current
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954421287841792
+    m_Key: global
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954423032672256
+    m_Key: controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7005890602627072
+    m_Key: singleplayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7005894922760192
+    m_Key: multiplayer
     m_Metadata:
       m_Items: []
   m_Metadata:

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Watermelon_Game.Controls;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Fruit_Spawn
@@ -37,7 +38,17 @@ namespace Watermelon_Game.Fruit_Spawn
             this.lineRenderer = this.GetComponent<LineRenderer>();
             this.contactFilter2D.SetLayerMask(LayerMaskController.Container_Fruit_Mask);
         }
-        
+
+        private void OnEnable()
+        {
+            InputController.OnMouseMove += MouseInput;
+        }
+
+        private void OnDisable()
+        {
+            InputController.OnMouseMove -= MouseInput;
+        }
+
         private void Update()
         {
             this.SetLineRendererSize();
@@ -45,9 +56,18 @@ namespace Watermelon_Game.Fruit_Spawn
 
         private void FixedUpdate()
         {
-            RotationInput();
+            this.KeyboardInput();
         }
 
+        /// <summary>
+        /// Activates/deactivates the aim rotation controls
+        /// </summary>
+        /// <param name="_Value">The value to set <see cref="rotationButtons"/>.<see cref="GameObject.SetActive(bool)"/> to</param>
+        public void EnableRotation(bool _Value)
+        {
+            this.rotationButtons.SetActive(_Value);
+        }
+        
         /// <summary>
         /// Sets the length of the <see cref="lineRenderer"/> to the position of the first fruit that was hit by the raycast
         /// </summary>
@@ -59,22 +79,26 @@ namespace Watermelon_Game.Fruit_Spawn
             Physics2D.Raycast(_transform.position, -_transform.up, contactFilter2D, raycastHits2D);
 
             var _rayCastHit2D = this.raycastHits2D.First();
-            this.lineRenderer.SetPosition(1, new Vector3(0, -_rayCastHit2D.distance, 1));
+            this.lineRenderer.SetPosition(1, new Vector3(0, -_rayCastHit2D.distance, 0));
         }
         
         /// <summary>
-        /// Activates/deactivates the aim rotation controls
+        /// Rotates the aim in the direction of the mouse -> <see cref="InputController.OnMouseMove"/>
         /// </summary>
-        /// <param name="_Value">The value to set <see cref="rotationButtons"/>.<see cref="GameObject.SetActive(bool)"/> to</param>
-        public void ActivateRotationButtons(bool _Value)
+        /// <param name="_MouseWorldPosition">The position of the mouse in world space</param>
+        private void MouseInput(Vector2 _MouseWorldPosition)
         {
-            this.rotationButtons.SetActive(_Value);
+            if (this.rotationButtons.activeSelf)
+            {
+                var _angle = Mathf.Atan2(_MouseWorldPosition.y - base.transform.position.y, _MouseWorldPosition.x - base.transform.position.x) * Mathf.Rad2Deg + 90;
+                base.transform.rotation = Quaternion.Euler(0, 0, Mathf.Clamp(Mathfx.SignedAngle(_angle), -FruitSpawner.MaxRotationAngle, FruitSpawner.MaxRotationAngle));
+            }
         }
         
         /// <summary>
         /// Handles the input, for when this <see cref="FruitSpawnerAim"/> should <see cref="Rotate"/>
         /// </summary>
-        private void RotationInput()
+        private void KeyboardInput()
         {
             if (this.rotationButtons.activeSelf)
             {

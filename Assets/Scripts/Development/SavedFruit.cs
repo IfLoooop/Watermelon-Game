@@ -3,6 +3,8 @@ using Watermelon_Game.Fruits;
 
 namespace Watermelon_Game.Development
 {
+#if DEBUG ||DEVELOPMENT_BUILD
+    
     /// <summary>
     /// Holds information of a <see cref="Fruit"/> <br/>
     /// <i>For development only</i>
@@ -38,4 +40,5 @@ namespace Watermelon_Game.Development
         }
         #endregion
     }
+#endif
 }

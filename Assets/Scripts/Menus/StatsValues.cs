@@ -91,7 +91,7 @@ namespace Watermelon_Game.Menus
         #region Constructors
         /// <summary>
         /// <see cref="StatsValues"/> <br/>
-        /// <i>Needed for <see cref="StatsMenu"/>.<see cref="StatsMenu.Load"/></i>
+        /// <i>Needed for <see cref="GlobalStats"/>.<see cref="GlobalStats.Load"/></i>
         /// </summary>
         /// <param name="_BestScore"><see cref="BestScore"/></param>
         /// <param name="_BestMultiplier"><see cref="BestMultiplier"/></param>
@@ -181,14 +181,14 @@ namespace Watermelon_Game.Menus
             if (_isInt)
             {
 #if DEBUG || DEVELOPMENT_BUILD
-                if (StatsMenu.Reset) return default;
+                if (GlobalStats.Reset) return default;
 #endif
                 return (ProtectedInt32)_Value1 > (ProtectedInt32)_Value2 ? _Value1 : _Value2;
             }
             if (_isTimeSpan)
             {
 #if DEBUG || DEVELOPMENT_BUILD
-                if (StatsMenu.Reset) return default;
+                if (GlobalStats.Reset) return default;
 #endif
                 return (TimeSpan)_Value1 > (TimeSpan)_Value2 ? _Value1 : _Value2;
             }

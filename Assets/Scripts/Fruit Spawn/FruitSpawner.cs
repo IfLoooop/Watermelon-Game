@@ -37,18 +37,26 @@ namespace Watermelon_Game.Fruit_Spawn
         [SerializeField] private ProtectedFloat colliderSizeOffset = 3.85f; 
         #endregion
         
+#pragma warning disable CS0109
         #region Fields
         /// <summary>
         /// Singleton of <see cref="FruitSpawner"/>
         /// </summary>
         private static FruitSpawner instance;
+
+        /// <summary>
+        /// <see cref="NetworkConnectionToClient.connectionId"/>
+        /// </summary>
+        private ProtectedInt32 connectionId;
+        /// <summary>
+        /// Container for this <see cref="FruitSpawner"/>
+        /// </summary>
+        private ContainerBounds containerBounds;
         
-#pragma warning disable CS0109
         /// <summary>
         /// <see cref="Rigidbody2D"/>
         /// </summary>
         private new Rigidbody2D rigidbody2D;
-#pragma warning restore CS0109
         /// <summary>
         /// <see cref="BoxCollider2D"/>
         /// </summary>
@@ -58,25 +66,19 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private CircleCollider2D fruitTrigger;
         
-        /// <summary>
-        /// Uses the position the GameObject has at start of game <br/>
-        /// <b>Should not be modified afterwards</b>
-        /// </summary>
-        private Vector2 startingPosition;
-        /// <summary>
-        /// <see cref="Time.time"/> in seconds, of the last fruit release -> <see cref="ReleaseFruit"/>
-        /// </summary>
-        private ProtectedFloat lastRelease;
-        
         // TODO: Use InputController
         /// <summary>
         /// Blocks movement input while this field is set to true
         /// </summary>
-        private ProtectedBool blockInput;
+        private ProtectedBool inputBlocked;
         /// <summary>
         /// Blocks fruit release while true
         /// </summary>
         private ProtectedBool blockRelease;
+        /// <summary>
+        /// <see cref="Time.time"/> in seconds, of the last fruit release -> <see cref="ReleaseFruit"/>
+        /// </summary>
+        private ProtectedFloat lastRelease;
         /// <summary>
         /// Index of the <see cref="AudioWrapper"/> in <see cref="AudioPool.assignedAudioWrappers"/>, for the <see cref="AudioClipName.BlockedRelease"/> <see cref="AudioClip"/>
         /// </summary>
@@ -86,7 +88,12 @@ namespace Watermelon_Game.Fruit_Spawn
         /// The <see cref="FruitBehaviour"/> that is currently attached to this <see cref="FruitSpawner"/> 
         /// </summary>
         private FruitBehaviour fruitBehaviour;
+        /// <summary>
+        /// Indicates whether any <see cref="Skill"/> is currently active
+        /// </summary>
+        private bool anyActiveSkill;
         #endregion
+#pragma warning restore CS0109
 
         #region Properties
         /// <summary>
@@ -107,22 +114,8 @@ namespace Watermelon_Game.Fruit_Spawn
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
             this.fruitSpawnerCollider = base.GetComponent<BoxCollider2D>();
             this.fruitTrigger = base.GetComponentInChildren<CircleCollider2D>();
-            
-            this.startingPosition = base.transform.position;
         }
-
-        // ReSharper disable once Unity.RedundantEventFunction
-        private void OnEnable()
-        {
-            // TODO: Needs to subscribe to everything in "OnStartClient()" when not a network game
-        }
-
-        // ReSharper disable once Unity.RedundantEventFunction
-        private void OnDisable()
-        {
-            // TODO: Needs to unsubscribe from everything in "OnStopClient()" when not a network game
-        }
-
+        
         public override void OnStartClient()
         {
             base.OnStartClient();
@@ -181,6 +174,7 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             this.BlockInput(true);
             this.fruitSpawnerAim.EnableAim(false);
+            this.fruitSpawnerAim.EnableRotation(false);
         }
         
         /// <summary>
@@ -190,16 +184,17 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             Destroy(this.fruitBehaviour.gameObject);
             this.fruitBehaviour = null;
+            this.anyActiveSkill = false;
             this.BlockInput(false);
         }
         
         /// <summary>
-        /// Sets <see cref="blockInput"/> to true
+        /// Sets <see cref="inputBlocked"/> to true
         /// </summary>
-        /// <param name="_Value">The value to set <see cref="blockInput"/> to</param>
+        /// <param name="_Value">The value to set <see cref="inputBlocked"/> to</param>
         private void BlockInput(bool _Value)
         {
-            this.blockInput = _Value;
+            this.inputBlocked = _Value;
         }
         
         /// <summary>
@@ -235,7 +230,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 return;
             }
             
-            if (!this.blockInput)
+            if (!this.inputBlocked)
             {
                 if (Input.GetKey(KeyCode.A))
                 {
@@ -252,7 +247,7 @@ namespace Watermelon_Game.Fruit_Spawn
                     _mouseInput = Input.GetKey(KeyCode.Mouse0);
                     if (_mouseInput)
                     {
-                        _mouseInput = ContainerBounds.Contains(InputController.MouseWorldPosition);
+                        _mouseInput = this.containerBounds.Contains(InputController.MouseWorldPosition);
                     }   
                 }
                 
@@ -281,7 +276,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_Position">The direction to move the <see cref="FruitSpawner"/> to</param>
         private void MovePosition(Vector2 _Position)
         {
-            if (ContainerBounds.Contains(_Position))
+            if (!this.anyActiveSkill && this.containerBounds.Contains(_Position))
             {
                 this.rigidbody2D.MovePosition(_Position);   
             }
@@ -290,12 +285,12 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// Resets the Fruit Spawner to its original position
         /// </summary>
-        /// <param name="_ResetPosition">If true, resets the <see cref="FruitSpawner"/> position to <see cref="startingPosition"/></param>
+        /// <param name="_ResetPosition">If true, resets the <see cref="FruitSpawner"/> position to <see cref="ContainerBounds.StartingPosition"/></param>
         [Client]
         private void ResetFruitSpawner(bool _ResetPosition)
         {
             if (_ResetPosition)
-                this.rigidbody2D.MovePosition(this.startingPosition);
+                this.rigidbody2D.MovePosition(this.containerBounds.StartingPosition);
             
             var _fruit = NextFruit.GetFruit(out var _rotation);
             this.CmdResetFruitSpawner(_fruit, _rotation);
@@ -431,11 +426,13 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             if (_ActiveSkill != null)
             {
-                this.fruitBehaviour.SetActiveSkill(_ActiveSkill); // TODO
-                this.fruitSpawnerAim.ActivateRotationButtons(true);   
+                this.anyActiveSkill = true;
+                this.fruitBehaviour.SetActiveSkill(_ActiveSkill);
+                this.fruitSpawnerAim.EnableRotation(true);
             }
             else
             {
+                this.anyActiveSkill = false;
                 this.fruitBehaviour.SetActiveSkill(null);
                 this.DeactivateRotation(null);
             }
@@ -447,8 +444,47 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_">Not needed here</param>
         private void DeactivateRotation(Skill? _)
         {
-            this.fruitSpawnerAim.ActivateRotationButtons(false);  
+            this.anyActiveSkill = false;
+            this.fruitSpawnerAim.EnableRotation(false);  
             this.fruitSpawnerAim.ResetAimRotation();
+        }
+
+        /// <summary>
+        /// Sets <see cref="connectionId"/> to the given <see cref="NetworkConnectionToClient.connectionId"/>
+        /// </summary>
+        /// <param name="_NetworkConnectionToClient">The connection the server has to this client</param>
+        public void SetConnectionId(NetworkConnectionToClient _NetworkConnectionToClient)
+        {
+            this.connectionId = _NetworkConnectionToClient.connectionId;
+        }
+        
+        /// <summary>
+        /// Sets <see cref="containerBounds"/> to the given <see cref="ContainerBounds"/>
+        /// </summary>
+        /// <param name="_ContainerBounds">The container for this <see cref="FruitSpawner"/></param>
+        /// <returns><see cref="connectionId"/></returns>
+        public int SetContainerBounds(ContainerBounds _ContainerBounds)
+        {
+            this.containerBounds = _ContainerBounds;
+
+            return this.connectionId;
+        }
+
+        /// <summary>
+        /// Disables this <see cref="FruitSpawner"/> <see cref="GameObject"/>
+        /// </summary>
+        public void GameModeTransitionStarted()
+        {
+            base.gameObject.SetActive(false);
+        }
+        
+        /// <summary>
+        /// Enables this <see cref="FruitSpawner"/> <see cref="GameObject"/> and sets its <see cref="Transform.position"/> to <see cref="ContainerBounds.StartingPosition"/>
+        /// </summary>
+        public void GameModeTransitionEnded()
+        {
+            base.transform.position = this.containerBounds.StartingPosition.Value;
+            base.gameObject.SetActive(true);
         }
         
 #if DEBUG || DEVELOPMENT_BUILD

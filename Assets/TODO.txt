@@ -1,4 +1,9 @@
-TODO: Achievements localizations
+TODO: Space triggers a GameMode change
+TODO: Add Multiplayer/Singleplayer localizations
+TODO: Change menu button names
+
+-Achievements localizations
+-DevelopmentTools fruit spawning is not working online (check what elso is not working)
 -On UWP build, rewired always asks to install the same missing package
 -Infobox which buttons are used in "DevelopmentTools.cs"
 -Test game with Application.TargetFramerate

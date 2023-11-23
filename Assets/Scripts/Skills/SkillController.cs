@@ -2,11 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
+using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
+using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruits;
+using Watermelon_Game.Menus;
 using Watermelon_Game.Points;
 using Watermelon_Game.Utility;
 using Watermelon_Game.Web;
@@ -48,6 +52,8 @@ namespace Watermelon_Game.Skills
         [SerializeField] private ProtectedFloat powerSkillForce = 30000f;
         [Tooltip("Mass of the fruit when the power skill is used")]
         [SerializeField] private ProtectedFloat powerSkillMass = 200f;
+        [Tooltip("Delay in seconds between skill selection for the scroll wheel")]
+        [SerializeField] private float scrollDelay = .1f;
         #endregion
 
         #region Fields
@@ -57,21 +63,17 @@ namespace Watermelon_Game.Skills
         private static SkillController instance;
         
         /// <summary>
-        /// Contains data for the power skill
-        /// </summary>
-        private SkillData powerSkill;
-        /// <summary>
-        /// Contains data for the evolve skill
-        /// </summary>
-        private SkillData evolveSkill;
-        /// <summary>
-        /// Contains data for the destroy skill
-        /// </summary>
-        private SkillData destroySkill;
-        /// <summary>
         /// Maps a <see cref="Skill"/> to its data
         /// </summary>
         private ReadOnlyDictionary<Skill, SkillData> skillMap;
+        /// <summary>
+        /// Index in <see cref="skillMap"/> of the last active skill
+        /// </summary>
+        private int lastActiveSkill;
+        /// <summary>
+        /// Timestamp when the last skill was selected
+        /// </summary>
+        private float lastSkillSelectionTimestamp;
         
         /// <summary>
         /// Time in seconds to wait before the mass of aa <see cref="FruitBehaviour"/> is reset
@@ -145,6 +147,7 @@ namespace Watermelon_Game.Skills
 
         private void OnEnable()
         {
+            OnSkillActivated += SetActiveSkill;
             GameController.OnResetGameStarted += this.ResetSkillPointsRequirement;
             PointsController.OnPointsChanged += this.PointsChanged;
             FruitBehaviour.OnSkillUsed += this.SkillUsed;
@@ -152,6 +155,7 @@ namespace Watermelon_Game.Skills
 
         private void OnDisable()
         {
+            OnSkillActivated -= SetActiveSkill;
             GameController.OnResetGameStarted -= this.ResetSkillPointsRequirement;
             PointsController.OnPointsChanged -= this.PointsChanged;
             FruitBehaviour.OnSkillUsed -= this.SkillUsed;
@@ -161,15 +165,11 @@ namespace Watermelon_Game.Skills
         {
             instance = this;
             
-            this.powerSkill = InitializeSkill(this.power, KeyCode.Alpha1, Skill.Power, powerPointsRequirement);
-            this.evolveSkill = InitializeSkill(this.evolve, KeyCode.Alpha2, Skill.Evolve, evolvePointsRequirement);
-            this.destroySkill = InitializeSkill(this.destroy, KeyCode.Alpha3, Skill.Destroy, destroyPointsRequirement);
-
             this.skillMap = new ReadOnlyDictionary<Skill, SkillData>(new Dictionary<Skill, SkillData>
             {
-                { Skill.Power, this.powerSkill },
-                { Skill.Evolve, this.evolveSkill },
-                { Skill.Destroy, this.destroySkill }
+                { Skill.Power, InitializeSkill(this.power, KeyCode.Alpha1, Skill.Power, powerPointsRequirement) },
+                { Skill.Evolve, InitializeSkill(this.evolve, KeyCode.Alpha2, Skill.Evolve, evolvePointsRequirement) },
+                { Skill.Destroy, InitializeSkill(this.destroy, KeyCode.Alpha3, Skill.Destroy, destroyPointsRequirement) }
             });
         }
 
@@ -193,42 +193,128 @@ namespace Watermelon_Game.Skills
         {
             if (this.forceEnableSkills)
             {
-                this.powerSkill.EnableSkill();
-                this.evolveSkill.EnableSkill();
-                this.destroySkill.EnableSkill();   
+                this.skillMap.ForEach(_Skill => _Skill.Value.EnableSkill());
             }
         }
 #endif
-
-        private void Update()
+        
+        private void Update() // TODO: Use InputController
         {
-            this.SkillInput(this.powerSkill);
-            this.SkillInput(this.evolveSkill);
-            this.SkillInput(this.destroySkill);
+            if (!GameController.IsGameRunning || MenuController.IsAnyMenuOpen)
+            {
+                return;
+            }
+            
+            this.KeyboardInput();
+            this.MouseInput();
+        }
+
+        /// <summary>
+        /// Sets <see cref="lastActiveSkill"/> <see cref="OnSkillActivated"/>
+        /// </summary>
+        /// <param name="_Skill"></param>
+        private void SetActiveSkill(Skill? _Skill)
+        {
+            if (_Skill != null)
+            {
+                this.lastActiveSkill = this.skillMap.FindIndex(_Kvp => _Kvp.Key == _Skill.Value);
+            }
         }
         
         /// <summary>
-        /// Handles the input for when a skill button is pressed
+        /// Handles keyboard input
         /// </summary>
-        /// <param name="_SkillToActivate">The <see cref="Skill"/> button that was pressed</param>
-        private void SkillInput(SkillData _SkillToActivate)
+        private void KeyboardInput()
         {
-            if (Input.GetKeyDown(_SkillToActivate.KeyToActivate) && _SkillToActivate.CanBeActivated)
+            // ReSharper disable once InconsistentNaming
+            for (var i = 0; i < this.skillMap.Count; i++)
             {
+                if (Input.GetKeyDown(this.skillMap.ElementAt(i).Value.KeyToActivate))
+                {
+                    this.SelectSkill((uint)i);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles mouse input
+        /// </summary>
+        private void MouseInput()
+        {
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                this.SelectSkill(0);
+            }
+
+            if (Time.time > this.lastSkillSelectionTimestamp + this.scrollDelay)
+            {
+                if (Input.mouseScrollDelta.y > 0)
+                {
+                    this.SelectSkill(+1);
+                }
+                else if (Input.mouseScrollDelta.y < 0)
+                {
+                    this.SelectSkill(-1);
+                }   
+            }
+        }
+
+        /// <summary>
+        /// Selects the next skill that can be activated in the given direction, or none of no skill could be activated
+        /// </summary>
+        /// <param name="_Direction">
+        /// <b>0:</b> Uses <see cref="lastActiveSkill"/> <br/>
+        /// <b>-1:</b> Left <br/>
+        /// <b>+1:</b> Right
+        /// </param>
+        private void SelectSkill(int _Direction)
+        {
+            var _index = this.lastActiveSkill;
+            // ReSharper disable once InconsistentNaming
+            for (var i = 0; i < this.skillMap.Count - 1; i++)
+            {
+                _index += _Direction;
+                
+                if (_index >= this.skillMap.Count)
+                {
+                    _index = 0;
+                }
+                else if (_index < 0)
+                {
+                    _index = this.skillMap.Count - 1;
+                }
+
+                if (this.skillMap.ElementAt(_index).Value.CanBeActivated)
+                {
+                    this.SelectSkill((uint)_index);
+                    break;
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Selects the skill with the given index in <see cref="skillMap"/>
+        /// </summary>
+        /// <param name="_Index">Must be a valid index in <see cref="skillMap"/></param>
+        private void SelectSkill(uint _Index)
+        {
+            var _index = (int)_Index;
+            var _skillData = this.skillMap.ElementAt(_index).Value;
+            
+            if (_skillData.CanBeActivated)
+            {
+                this.lastSkillSelectionTimestamp = Time.time;
+                this.lastActiveSkill = _index;
                 AudioPool.PlayClip(AudioClipName.SkillSelect);
                 
-                if (!_SkillToActivate.IsActive)
+                if (!_skillData.IsActive)
                 {
-                    this.DeactivateActiveSkills();
-                    
-                    _SkillToActivate.ActivateSkill();
-                    OnSkillActivated?.Invoke(_SkillToActivate.Skill);
+                    OnSkillActivated?.Invoke(_skillData.Skill);
                 }
                 else
                 {
-                    _SkillToActivate.DeactivateSkill();
                     OnSkillActivated?.Invoke(null);
-                }
+                }   
             }
         }
         
@@ -244,31 +330,12 @@ namespace Watermelon_Game.Skills
                 return;
             }
 #endif
-            if (_CurrentPoints >= this.powerSkill.CurrentPointsRequirement)
+            foreach (var (_, _skill) in this.skillMap)
             {
-                this.powerSkill.EnableSkill();
-            }
-            else
-            {
-                this.powerSkill.DisableSkill();
-            }
-            
-            if (_CurrentPoints >= this.evolveSkill.CurrentPointsRequirement)
-            {
-                this.evolveSkill.EnableSkill();
-            }
-            else
-            {
-                this.evolveSkill.DisableSkill();
-            }
-            
-            if (_CurrentPoints >= this.destroySkill.CurrentPointsRequirement)
-            {
-                this.destroySkill.EnableSkill();
-            }
-            else
-            {
-                this.destroySkill.DisableSkill();
+                if (_CurrentPoints >= _skill.CurrentPointsRequirement)
+                    _skill.EnableSkill();
+                else
+                    _skill.DisableSkill();
             }
         }
         
@@ -277,9 +344,10 @@ namespace Watermelon_Game.Skills
         /// </summary>
         private void DeactivateActiveSkills()
         {
-            this.powerSkill.DeactivateSkill();
-            this.evolveSkill.DeactivateSkill();
-            this.destroySkill.DeactivateSkill();
+            foreach (var (_, _skill) in this.skillMap)
+            {
+                _skill.DeactivateSkill();
+            }
         }
         
         /// <summary>
@@ -352,9 +420,9 @@ namespace Watermelon_Game.Skills
         /// </summary>
         private void ResetSkillPointsRequirement()
         {
-            this.powerSkill.CurrentPointsRequirement = powerPointsRequirement;
-            this.evolveSkill.CurrentPointsRequirement = evolvePointsRequirement;
-            this.destroySkill.CurrentPointsRequirement = destroyPointsRequirement;
+            this.skillMap[Skill.Power].CurrentPointsRequirement = powerPointsRequirement;
+            this.skillMap[Skill.Evolve].CurrentPointsRequirement = evolvePointsRequirement;
+            this.skillMap[Skill.Destroy].CurrentPointsRequirement = destroyPointsRequirement;
         }
         #endregion
     }

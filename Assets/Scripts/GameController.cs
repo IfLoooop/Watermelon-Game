@@ -65,8 +65,8 @@ namespace Watermelon_Game
         {
             MaxHeight.OnGameOver += this.GameOver;
             MenuController.OnManualRestart += this.ManualRestart;
+            MenuController.OnRestartGame += StartGame;
             OnResetGameFinished += this.GameReset;
-            GameOverMenu.OnGameOverMenuClosed += StartGame;
             Application.quitting += this.ApplicationIsQuitting;
         }
 
@@ -74,15 +74,9 @@ namespace Watermelon_Game
         {
             MaxHeight.OnGameOver -= this.GameOver;
             MenuController.OnManualRestart -= this.ManualRestart;
+            MenuController.OnRestartGame -= StartGame;
             OnResetGameFinished -= this.GameReset;
-            GameOverMenu.OnGameOverMenuClosed -= StartGame;
             Application.quitting -= this.ApplicationIsQuitting;
-        }
-        
-        private void Start()
-        {
-            // TODO: Replace with menu logic
-            //StartGame(); // TODO
         }
         
         /// <summary>

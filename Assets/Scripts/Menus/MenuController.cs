@@ -3,10 +3,6 @@ using System.Collections;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Watermelon_Game.Fruits;
-using Watermelon_Game.Menus.Leaderboards;
-using Watermelon_Game.Points;
-using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Menus
 {
@@ -17,12 +13,8 @@ namespace Watermelon_Game.Menus
     {
         #region Inspector Fields
         [Header("References")]
-        [Tooltip("Reference to the StatsMenu component")]
-        [SerializeField] private StatsMenu statsMenu;
-        [Tooltip("Reference to the GameOverMenu component")]
-        [SerializeField] private GameOverMenu gameOverMenu;
-        [Tooltip("Reference to the Leaderboard component")]
-        [SerializeField] private Leaderboard leaderboard;
+        [Tooltip("Container for all menus")]
+        [SerializeField] private MenuContainer menuContainer;
         [Tooltip("Reference to the ExitMenu component")]
         [SerializeField] private ExitMenu exitMenu;
 
@@ -44,6 +36,10 @@ namespace Watermelon_Game.Menus
         /// Whether the <see cref="MenuController"/> currently takes input or not
         /// </summary>
         private bool allowInput = true;
+        /// <summary>
+        /// Restarts the game if true and the <see cref="CurrentStats"/>-Menu is closed -> <see cref="RestartGame"/>
+        /// </summary>
+        private bool readyToRestart;
         #endregion
         
         #region Properties
@@ -55,67 +51,35 @@ namespace Watermelon_Game.Menus
         
         #region Events
         /// <summary>
-        /// Is called when a new best score is reached <br/>
-        /// <b>Parameter:</b> The new best score amount
-        /// </summary>
-        public static event Action<uint> OnNewBestScore;
-        /// <summary>
         /// Is called when the player manually restarts the game through the <see cref="ExitMenu"/>
         /// </summary>
         public static event Action OnManualRestart;
+        /// <summary>
+        /// Is called when the <see cref="CurrentStats"/> is closed
+        /// </summary>
+        public static event Action OnRestartGame; 
         #endregion
         
         #region Methods
         private void Awake()
         {
             instance = this;
-            InitializeMenu(this.statsMenu);
-            InitializeMenu(this.gameOverMenu);
-            InitializeMenu(this.leaderboard);
-            InitializeMenu(this.exitMenu);
-        }
-        
-        /// <summary>
-        /// Activates and deactivates the given menu, to initialize all needed values <br/>
-        /// <i>Because all menu GameObjects start inactive</i>
-        /// </summary>
-        /// <param name="_Menu">The menu to initialize</param>
-        private static void InitializeMenu(MenuBase _Menu)
-        {
-            _Menu.gameObject.SetActive(true);
-            _Menu.gameObject.SetActive(false);
         }
         
         private void OnEnable()
         {
-            GameController.OnGameStart += this.GameStarted;
             GameController.OnResetGameStarted += this.ResetGameStarted;
             GameController.OnResetGameFinished += this.EnableInput;
             GameController.OnRestartGame += this.GameOver;
-            FruitController.OnEvolve += this.AddFruit;
-            FruitBehaviour.OnGoldenFruitSpawn += this.AddGoldenFruit;
-            FruitBehaviour.OnSkillUsed += this.AddSkill;
-            Multiplier.OnMultiplierActivated += this.MultiplierActivated;
             LanguageController.OnLanguageChanged += this.ReopenMenu;
         }
-
+        
         private void OnDisable()
         {
-            GameController.OnGameStart -= this.GameStarted;
             GameController.OnResetGameStarted -= this.ResetGameStarted;
             GameController.OnResetGameFinished -= this.EnableInput;
             GameController.OnRestartGame -= this.GameOver;
-            FruitController.OnEvolve -= this.AddFruit;
-            FruitBehaviour.OnGoldenFruitSpawn -= this.AddGoldenFruit;
-            FruitBehaviour.OnSkillUsed -= this.AddSkill;
-            Multiplier.OnMultiplierActivated -= this.MultiplierActivated;
             LanguageController.OnLanguageChanged -= this.ReopenMenu;
-        }
-        
-        private void OnApplicationQuit()
-        {
-            this.CheckForNewBestScore(PointsController.CurrentPoints);
-            StatsMenu.Instance.Save();
         }
         
         private void Update()
@@ -127,57 +91,88 @@ namespace Watermelon_Game.Menus
             
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (this.currentActiveMenu == null)
+                if (this.currentActiveMenu != null)
                 {
-                    this.Open_CloseMenu(this.exitMenu);
+                    this.CloseCurrentMenu();
                 }
                 else
                 {
-                    this.Open_CloseMenu(this.currentActiveMenu, true);
+                    this.Open_Close(this.exitMenu);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.M))
             {
-                this.Open_CloseMenu(this.statsMenu);
+                this.Open_Close(this.menuContainer);
             }
-            else if (Input.GetKeyDown(KeyCode.L))
+            // else if (this.currentActiveMenu is { Menu: Menu.Exit }) // TODO: Remove
+            // {
+            //     if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            //     {
+            //         this.exitMenu.ExitGame();
+            //     }
+            //     else if (Input.GetKeyDown(KeyCode.R))
+            //     {
+            //         this.CloseCurrentMenu();
+            //         OnManualRestart?.Invoke();
+            //     }
+            // }
+        }
+
+        /// <summary>
+        /// Opens the given <see cref="MenuBase"/> if it's not <see cref="currentActiveMenu"/>, otherwise closes it
+        /// </summary>
+        /// <param name="_Menu">The menu to open/close</param>
+        public void Open_Close(MenuBase _Menu)
+        {
+            if (this.currentActiveMenu != null && this.currentActiveMenu.Menu == _Menu.Menu)
             {
-                this.Open_CloseMenu(this.leaderboard);
+                this.CloseCurrentMenu();
             }
-            else if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            else
             {
-                if (this.currentActiveMenu is { Menu: Menu.Exit })
-                {
-                    this.exitMenu.ExitGame();
-                }
-            }
-            else if (Input.GetKeyDown(KeyCode.R))
-            {
-                if (this.currentActiveMenu is { Menu: Menu.Exit })
-                {
-                    this.Open_CloseMenu(this.exitMenu);
-                    OnManualRestart?.Invoke();
-                }
+                this.Open(_Menu);
             }
         }
         
         /// <summary>
-        /// <see cref="MenuBase.Open_Close"/>
+        /// Opens the given <see cref="MenuBase"/>
         /// </summary>
-        /// <param name="_Menu">The <see cref="Menus.Menu"/> to change the open/closed state of</param>
-        /// <param name="_ForceClose">Forces the active menu to close even if <see cref="MenuBase.canNotBeClosedByDifferentMenu"/> is true</param>
-        private void Open_CloseMenu(MenuBase _Menu, bool _ForceClose = false)
+        /// <param name="_Menu">The menu to open</param>
+        public void Open(MenuBase _Menu)
         {
-            this.currentActiveMenu = _Menu.Open_Close(this.currentActiveMenu, _ForceClose);
+            this.currentActiveMenu = _Menu.Open(this.currentActiveMenu);
+        }
+
+        /// <summary>
+        /// Opens the given submenu in <see cref="menuContainer"/>
+        /// </summary>
+        /// <param name="_ContainerMenu">The <see cref="ContainerMenu"/> to open</param>
+        private void Open(ContainerMenu _ContainerMenu)
+        {
+            this.currentActiveMenu = this.menuContainer.Open(this.currentActiveMenu, _ContainerMenu);
         }
         
         /// <summary>
-        /// <see cref="GameController.OnGameStart"/>
+        /// Closes the <see cref="currentActiveMenu"/> <br/>
+        /// <i>Won't do anything if no menu is currently open</i>
         /// </summary>
-        private void GameStarted()
+        private void CloseCurrentMenu()
         {
-            this.statsMenu.AddGamesPlayed();
-            this.gameOverMenu.Reset();
+            if (this.currentActiveMenu != null)
+            {
+                this.currentActiveMenu = this.currentActiveMenu.Close();
+                this.RestartGame();
+            }
+        }
+
+        /// <summary>
+        /// Manual game restart <br/>
+        /// <i>Is called from the <see cref="ExitMenu"/>-button</i>
+        /// </summary>
+        public void Restart()
+        {
+            this.CloseCurrentMenu();
+            OnManualRestart?.Invoke();
         }
         
         /// <summary>
@@ -185,13 +180,10 @@ namespace Watermelon_Game.Menus
         /// </summary>
         private void ResetGameStarted()
         {
-            var _points = PointsController.CurrentPoints.Value;
-            this.gameOverMenu.Points = (int)_points;
-            this.CheckForNewBestScore(_points);
-            this.CloseCurrentlyActiveMenu();
             this.DisableInput();
+            this.CloseCurrentMenu();
         }
-
+        
         /// <summary>
         /// Enables <see cref="allowInput"/> and sets it to true
         /// </summary>
@@ -209,82 +201,25 @@ namespace Watermelon_Game.Menus
         }
         
         /// <summary>
-        /// Checks if a new best score was reached
-        /// </summary>
-        /// <param name="_NewScore">The new score amount to check</param>
-        private void CheckForNewBestScore(uint _NewScore)
-        {
-            var _newBestScore = _NewScore > this.statsMenu.BestScore;
-            if (_newBestScore)
-            {
-                OnNewBestScore?.Invoke(_NewScore);
-                this.statsMenu.SetBestScore((int)_NewScore);
-            }
-        }
-        
-        /// <summary>
-        /// Closes <see cref="currentActiveMenu"/>
-        /// </summary>
-        private void CloseCurrentlyActiveMenu()
-        {
-            if (this.currentActiveMenu != null)
-            {
-                this.Open_CloseMenu(this.currentActiveMenu, true);   
-            }
-        }
-        
-        /// <summary>
-        /// Opens the <see cref="GameOverMenu"/> at the end of a game -> <see cref="GameController.OnRestartGame"/>
+        /// Opens the <see cref="CurrentStats"/> at the end of a game -> <see cref="GameController.OnRestartGame"/>
         /// </summary>
         private void GameOver()
         {
-            this.Open_CloseMenu(this.gameOverMenu);
+            this.Open(ContainerMenu.CurrentStats);
+            this.readyToRestart = true;
         }
 
-        /// <summary>
-        /// Checks if the given multiplier is higher than the multiplier saved in <see cref="GameOverMenu"/> and <see cref="StatsMenu"/>
+        /// <summary> // TODO: Needs better solution
+        /// Restarts the game when <see cref="GameController.IsGameRunning"/> is false
         /// </summary>
-        /// <param name="_CurrentMultiplier"></param>
-        private void MultiplierActivated(uint _CurrentMultiplier)
+        private void RestartGame()
         {
-            if (_CurrentMultiplier > this.gameOverMenu.Stats.BestMultiplier)
+            if (this.readyToRestart)
             {
-                this.gameOverMenu.Stats.BestMultiplier = (int)_CurrentMultiplier;
+                this.readyToRestart = false;
+                OnRestartGame?.Invoke();
+                Debug.Log("!GameController.IsGameRunning"); // TODO: Remove
             }
-            if (_CurrentMultiplier > this.statsMenu.Stats.BestMultiplier)
-            {
-                this.statsMenu.Stats.BestMultiplier = (int)_CurrentMultiplier;
-            }
-        }
-        
-        /// <summary>
-        /// Adds the given <see cref="Fruit"/> to <see cref="Stats"/> -> <see cref="FruitController.OnEvolve"/>
-        /// </summary>
-        /// <param name="_Fruit">The <see cref="Fruit"/> to add to <see cref="Stats"/></param>
-        private void AddFruit(Fruit _Fruit)
-        {
-            this.gameOverMenu.AddFruitCount(_Fruit);
-            this.statsMenu.AddFruitCount(_Fruit);
-        }
-
-        /// <summary>
-        /// Increments <see cref="Stats.GoldenFruitCount"/> in <see cref="GameOverMenu"/> and <see cref="StatsMenu"/>
-        /// </summary>
-        /// <param name="_IsUpgradedGoldenFruit">Indicates whether the golden fruit is an upgraded golden fruit or not</param>
-        private void AddGoldenFruit(bool _IsUpgradedGoldenFruit)
-        {
-            this.gameOverMenu.AddGoldenFruit();
-            this.statsMenu.AddGoldenFruit();
-        }
-
-        /// <summary>
-        /// Adds the given <see cref="Skill"/> to <see cref="Stats"/> -> <see cref="FruitController"/>
-        /// </summary>
-        /// <param name="_Skill">The <see cref="Skill"/> to add to <see cref="Stats"/></param>
-        private void AddSkill(Skill? _Skill)
-        {
-            this.gameOverMenu.AddSkillCount(_Skill);
-            this.statsMenu.AddSkillCount(_Skill);
         }
         
         /// <summary>
@@ -304,15 +239,13 @@ namespace Watermelon_Game.Menus
         /// <returns></returns>
         private IEnumerator ReOpen()
         {
-            this.allowInput = false;
+            this.DisableInput();
             var _menu = this.currentActiveMenu;
-            this.Open_CloseMenu(this.currentActiveMenu, true);
-            if (_menu!.Menu != Menu.GameOver) // TODO: Not the best solution
-            {
-                yield return new WaitForSeconds(menuReopenDelay);
-                this.Open_CloseMenu(_menu);
-            }
-            this.allowInput = true;
+            this.CloseCurrentMenu();
+            
+            yield return new WaitForSeconds(this.menuReopenDelay);
+            this.Open(_menu);
+            this.EnableInput();
         }
         #endregion
     }

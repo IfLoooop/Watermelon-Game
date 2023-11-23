@@ -212,7 +212,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_AnyAchievementSet">Indicates whether any achievement has been unlocked through this method or not</param>
         private void UnlockAchievements(ref bool _AnyAchievementSet)
         {
-            var _stats = StatsMenu.Instance.Stats;
+            var _stats = GlobalStats.Instance.Stats;
             this.UnlockAchievement(MULTIPLIER_10, _stats.BestMultiplier, 10, ref _AnyAchievementSet);
             this.UnlockAchievement(MULTIPLIER_20, _stats.BestMultiplier, 20, ref _AnyAchievementSet);
             this.UnlockAchievement(FIRST_WATERMELON, _stats.WatermelonEvolvedCount, 1, ref _AnyAchievementSet);
@@ -241,12 +241,12 @@ namespace Watermelon_Game.Steamworks.NET
         }
         
         /// <summary>
-        /// Retroactively overwrites stats with the values from <see cref="StatsMenu"/> if they're greater 
+        /// Retroactively overwrites stats with the values from <see cref="GlobalStats"/> if they're greater 
         /// </summary>
         /// <param name="_AnyStatOverwritten">Indicates whether any stat has been overwritten</param>
         private void OverwriteStats(ref bool _AnyStatOverwritten)
         {
-            var _statsMenuInstance = StatsMenu.Instance;
+            var _statsMenuInstance = GlobalStats.Instance;
             var _stats = _statsMenuInstance.Stats;
             this.OverwriteStat(this.stats.Highscore, _statsMenuInstance.BestScore, ref _AnyStatOverwritten);
             this.OverwriteStat(this.stats.Grapes, _stats.GrapeEvolvedCount, ref _AnyStatOverwritten);
@@ -266,7 +266,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// Sets the stat for the given <see cref="_APIName"/> to <see cref="_StatsMenuValue"/>, if <see cref="_StatsMenuValue"/> is greater
         /// </summary>
         /// <param name="_APIName">The API name of the stat</param>
-        /// <param name="_StatsMenuValue">The value in <see cref="StatsMenu"/></param>
+        /// <param name="_StatsMenuValue">The value in <see cref="GlobalStats"/></param>
         /// <param name="_StatSet">Indicates whether the value has been overwritten or not</param>
         private void OverwriteStat(string _APIName, int _StatsMenuValue, ref bool _StatSet)
         {
@@ -489,7 +489,7 @@ namespace Watermelon_Game.Steamworks.NET
         {
             Debug.LogWarning("Resetting");
             this.stats.ResetAllStats_DEVELOPMENT();
-            StatsMenu.ResetPlayerPrefs_DEVELOPMENT();
+            GlobalStats.ResetPlayerPrefs_DEVELOPMENT();
             SteamUserStats.ResetAllStats(true);
             SteamUserStats.StoreStats();
         }

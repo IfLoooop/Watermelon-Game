@@ -31,9 +31,17 @@ MonoBehaviour:
   m_autoSizeTextContainer: 0
   m_IsTextObjectScaleStatic: 0
   m_fallbackFontAssets:
-  - {fileID: 11400000, guid: 70cebf767f81b224090f9305f2f4e1a3, type: 2}
-  - {fileID: 11400000, guid: 8740302daab4911469149be2f97d3925, type: 2}
-  - {fileID: 11400000, guid: d84a7a72b9f2d4341a46107aceabb60f, type: 2}
+  - {fileID: 11400000, guid: 4e7a7ae00e864264f8189174ef20dcfd, type: 2}
+  - {fileID: 11400000, guid: affbc8ae35556054b9ef4999425a6bd1, type: 2}
+  - {fileID: 11400000, guid: 390d0f28b933b3c48bd8a4c5b17edb2b, type: 2}
+  - {fileID: 11400000, guid: 8dbc75b743351d640b6009c509284774, type: 2}
+  - {fileID: 11400000, guid: 0c7b41d4b75edbd46ae86864dcb570f3, type: 2}
+  - {fileID: 11400000, guid: b471a2892a40742468108155e7d34425, type: 2}
+  - {fileID: 11400000, guid: 4aaeb78d6ba4aa44f9e73a9ba7a82859, type: 2}
+  - {fileID: 11400000, guid: 767ed9c84eb15db4d81547b1de1a5fdd, type: 2}
+  - {fileID: 11400000, guid: d87886c3d12b52147be025309d5b646b, type: 2}
+  - {fileID: 11400000, guid: 634539728814af44288b35c4ec70ebff, type: 2}
+  - {fileID: 11400000, guid: 40cd6ad3fed4c7345abba9badb700e9b, type: 2}
   m_matchMaterialPreset: 0
   m_defaultSpriteAsset: {fileID: 11400000, guid: c41005c129ba4d66911b75229fd70b45, type: 2}
   m_defaultSpriteAssetPath: Sprite Assets/

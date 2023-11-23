@@ -18,12 +18,12 @@ MonoBehaviour:
   m_Metadata:
     m_Items: []
   m_TableData:
-  - m_Id: 1207057018880
-    m_Localized: Left
+  - m_Id: 5954421287841792
+    m_Localized: Global
     m_Metadata:
       m_Items: []
-  - m_Id: 39212354400256
-    m_Localized: Right
+  - m_Id: 5954419098415104
+    m_Localized: Current
     m_Metadata:
       m_Items: []
   - m_Id: 39217219792896
@@ -100,6 +100,30 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 2290309332758528
     m_Localized: Friends
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5953995863781376
+    m_Localized: Movement
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954000376852480
+    m_Localized: Rotate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954309895516160
+    m_Localized: Skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5954423032672256
+    m_Localized: Controls
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7005890602627072
+    m_Localized: Singleplayer
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7005894922760192
+    m_Localized: Multiplayer
     m_Metadata:
       m_Items: []
   references:

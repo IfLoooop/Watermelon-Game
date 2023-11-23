@@ -1,6 +1,6 @@
 using OPS.AntiCheat.Field;
 using UnityEngine;
-using Watermelon_Game.ExtensionMethods;
+using Watermelon_Game.Points;
 
 namespace Watermelon_Game.Skills
 {
@@ -62,6 +62,13 @@ namespace Watermelon_Game.Skills
             this.KeyToActivate = _KeyToActivate;
             this.Skill = _Skill;
             this.CurrentPointsRequirement = _PointsRequirement;
+
+            SkillController.OnSkillActivated += SkillActivated;
+        }
+
+        ~SkillData()
+        {
+            SkillController.OnSkillActivated -= SkillActivated;
         }
         #endregion
 
@@ -80,7 +87,7 @@ namespace Watermelon_Game.Skills
         public void EnableSkill()
         {
             this.CanBeActivated = true;
-            this.skillReferences.ButtonImage.gameObject.SetActive(true);
+            this.skillReferences.EnableSkill();
         }
         
         /// <summary>
@@ -89,17 +96,17 @@ namespace Watermelon_Game.Skills
         public void DisableSkill()
         {
             this.CanBeActivated = false;
-            this.skillReferences.ButtonImage.gameObject.SetActive(false);
+            this.skillReferences.DisableSkill();
             this.DeactivateSkill();
         }
 
         /// <summary>
         /// Sets this as the currently active skill
         /// </summary>
-        public void ActivateSkill()
+        private void ActivateSkill()
         {
             this.IsActive = true;
-            this.skillReferences.SkillIconImage.color = this.skillReferences.SkillIconImage.color.WithAlpha(1);
+            this.skillReferences.ActivateSkill();
         }
 
         /// <summary>
@@ -108,7 +115,7 @@ namespace Watermelon_Game.Skills
         public void DeactivateSkill()
         {
             this.IsActive = false;
-            this.skillReferences.SkillIconImage.color = this.skillReferences.SkillIconImage.color.WithAlpha(0.5f);
+            this.skillReferences.DeactivateSkill();
         }
 
         /// <summary>
@@ -117,6 +124,38 @@ namespace Watermelon_Game.Skills
         public void PlayAnimation()
         {
             this.skillReferences.SkillPointsIncrease.Play();
+        }
+
+        /// <summary>
+        /// Is called on <see cref="SkillController.OnSkillActivated"/>
+        /// </summary>
+        /// <param name="_Skill">The <see cref="Skills.Skill"/> that was activated</param>
+        private void SkillActivated(Skill? _Skill)
+        {
+            // Deactivate skill
+            if (_Skill is null)
+            {
+                this.DeactivateSkill();
+                if (PointsController.CurrentPoints >= this.currentPointsRequirement)
+                {
+                    this.skillReferences.MouseButtonImage.gameObject.SetActive(true);
+                    this.skillReferences.MouseWheelImage.gameObject.SetActive(false);
+                }
+            }
+            // Currently selected skill
+            else if (_Skill == this.Skill)
+            {
+                this.ActivateSkill();
+            }
+            else
+            {
+                this.DeactivateSkill();
+                if (PointsController.CurrentPoints >= this.currentPointsRequirement)
+                {
+                    this.skillReferences.MouseWheelImage.gameObject.SetActive(true);
+                    this.skillReferences.MouseButtonImage.gameObject.SetActive(false);
+                }
+            }
         }
         #endregion
     }
