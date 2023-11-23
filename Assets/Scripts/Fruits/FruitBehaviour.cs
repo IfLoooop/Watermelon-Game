@@ -427,7 +427,8 @@ namespace Watermelon_Game.Fruits
             {
                 if ((this.HasBeenReleased || this.HasBeenEvolved) && !this.IsEvolving)
                 {
-                    AudioPool.PlayClip(AudioClipName.FruitDestroy, base.authority); // TODO: Play at half sound on !authority
+                    // TODO: No authority for some reason, maybe just pass "true"
+                    AudioPool.PlayClip(AudioClipName.FruitDestroy, base.authority);
                 }
             }
             if (this.growFruit != null)
@@ -463,6 +464,8 @@ namespace Watermelon_Game.Fruits
             this.DecreaseSortingOrder();
             this.InitializeRigidBody();
             this.fruitsFirstCollision.SetActive();
+            
+            AudioPool.PlayClip(this.activeSkill != null ? AudioClipName.Shoot : AudioClipName.ReleaseFruit, base.authority);
         }
         
         /// <summary>
@@ -521,12 +524,11 @@ namespace Watermelon_Game.Fruits
         /// Uses the <see cref="Skill"/> set in <see cref="activeSkill"/>, if not null
         /// </summary>
         /// <param name="_AimRotation">The rotation of <see cref="FruitSpawnerAim"/></param>
+        [Client]
         private void UseSkill(Vector2 _AimRotation)
         {
             if (this.activeSkill != null)
             {
-                AudioPool.PlayClip(AudioClipName.Shoot);
-                
                 switch (this.activeSkill)
                 {
                     case Skill.Evolve or Skill.Destroy:
@@ -542,7 +544,6 @@ namespace Watermelon_Game.Fruits
             else
             {
                 this.SetMass(FruitSettings.MassMultiplier, Operation.Multiply);
-                AudioPool.PlayClip(AudioClipName.ReleaseFruit);
             }
         }
         

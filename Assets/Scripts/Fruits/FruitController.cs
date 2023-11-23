@@ -301,7 +301,7 @@ namespace Watermelon_Game.Fruits
                 _fruit.DestroyFruit();
             }
             
-            AudioPool.PlayClip(AudioClipName.FruitDestroy, _Authority); // TODO: Play at half volume
+            AudioPool.PlayClip(AudioClipName.FruitDestroy, _Authority);
             
             if (_enumFruit != Fruit.Watermelon)
             {

@@ -54,7 +54,7 @@ namespace Watermelon_Game.Audio
             var _audioWrapper = instance.audioPool.Get(_Parent);
             var _audioClipSettings = AudioClips.Clips[_AudioClipName];
             
-            Set(_audioWrapper, _audioClipSettings, _Loop);
+            Set(_audioWrapper, _audioClipSettings, true, _Loop);
             
             instance.assignedAudioWrappers.Add(_audioWrapper);
             return instance.assignedAudioWrappers.Count - 1;
@@ -118,13 +118,8 @@ namespace Watermelon_Game.Audio
         public static void PlayClip(AudioClipName _AudioClipName, bool _NormalVolume)
         {
             var _audioWrapper = Init(null, _AudioClipName, out var _audioClipSettings, out var _waitTime);
-
-            if (!_NormalVolume)
-            {
-                _audioClipSettings.volume *= .5f;
-            }
             
-            Set(_audioWrapper, _audioClipSettings);
+            Set(_audioWrapper, _audioClipSettings, _NormalVolume);
             Play(_audioWrapper, _waitTime);
         }
 
@@ -149,11 +144,12 @@ namespace Watermelon_Game.Audio
         /// </summary>
         /// <param name="_AudioWrapper">The <see cref="AudioWrapper"/>to set the value in</param>
         /// <param name="_AudioClipSettings">The <see cref="AudioClipSettings"/> to take the values from</param>
+        /// <param name="_NormalVolume">If false, plays the clip at half volume</param>
         /// <param name="_Loop">Whether the <see cref="AudioClip"/> should play in a loop or not</param>
-        private static void Set(AudioWrapper _AudioWrapper, AudioClipSettings _AudioClipSettings, bool _Loop = false)
+        private static void Set(AudioWrapper _AudioWrapper, AudioClipSettings _AudioClipSettings, bool _NormalVolume = true, bool _Loop = false)
         {
             _AudioWrapper.AudioSource.clip = _AudioClipSettings.audioClip;
-            _AudioWrapper.AudioSource.volume = _AudioClipSettings.volume;
+            _AudioWrapper.AudioSource.volume = _NormalVolume == false ? _AudioClipSettings.volume * .5f : _AudioClipSettings.volume;
             _AudioWrapper.AudioSource.time = _AudioClipSettings.startTime;
             _AudioWrapper.AudioSource.loop = _Loop;
         }
