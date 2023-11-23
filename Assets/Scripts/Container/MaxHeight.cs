@@ -180,7 +180,7 @@ namespace Watermelon_Game.Container
                     this.countdownTimestamp = Time.time;
                     this.countdownAnimation.Play();
                     this.countdownText.text = ((int)this.currentCountdownTime).ToString();
-                    AudioPool.PlayClip(AudioClipName.Countdown);   
+                    AudioPool.PlayClip(AudioClipName.Countdown); // TODO: Maybe only play for the own client
                 }
             }
         }
@@ -188,7 +188,7 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Resets all values to their default state
         /// </summary>
-        private void Reset()
+        private void Reset() // TODO: Also needs to be called on other players
         {
             this.countdownAnimation.Stop();
             this.currentCountdownTime = this.countdownTime;

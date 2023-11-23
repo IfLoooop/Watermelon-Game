@@ -122,7 +122,7 @@ namespace Watermelon_Game.Fruit_Spawn
         public override void OnStartClient()
         {
             base.OnStartClient();
-            
+            Debug.Log(base.gameObject.name);
             if (base.isLocalPlayer)
             {
                 InputController.OnMouseMove += MovePosition;
