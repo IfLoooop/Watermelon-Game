@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using Mirror;
 using OPS.AntiCheat.Field;
-using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -15,13 +15,13 @@ namespace Watermelon_Game.Container
     /// Contains logic for the game over conditions
     /// </summary>
     [RequireComponent(typeof(BoxCollider2D), typeof(Animation), typeof(GodRayFlicker))]
-    internal sealed class MaxHeight : MonoBehaviour
+    internal sealed class MaxHeight : NetworkBehaviour
     {
         #region Inspector Fields
 #if DEBUG || DEVELOPMENT_BUILD
         [Header("Development")]
         [Tooltip("Disables the loosing condition (Editor only)")]
-        [ShowInInspector] private static bool disableCountDown;
+        [Sirenix.OdinInspector.ShowInInspector] private static bool disableCountDown;
 #endif
         [Header("References")]
         [Tooltip("The container for this MaxHeight object")]
@@ -182,6 +182,18 @@ namespace Watermelon_Game.Container
         /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
         private void EnableGodRay(int _ClientConnectionId)
         {
+            this.CmdEnableGodRay(_ClientConnectionId);
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdEnableGodRay(int _ClientConnectionId)
+        {
+            this.RpcEnableGodRay(_ClientConnectionId);
+        }
+        
+        [ClientRpc]
+        private void RpcEnableGodRay(int _ClientConnectionId)
+        {
             if (_ClientConnectionId != this.container.ConnectionId)
             {
                 return;
@@ -198,7 +210,7 @@ namespace Watermelon_Game.Container
             this.enableFlicker = this.EnableFlicker();
             this.StartCoroutine(this.enableFlicker);
         }
-
+        
         /// <summary>
         /// Enables <see cref="godRayFlicker"/> after <see cref="timeBeforeStart"/>
         /// </summary>
