@@ -58,7 +58,6 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// The current value of the countdown
         /// </summary>
-        [SyncVar(hook = nameof(RpcCountdown))]
         private ProtectedFloat countdown;
         /// <summary>
         /// Timestamp in  seconds when the last countdown was played
@@ -133,8 +132,7 @@ namespace Watermelon_Game.Container
             var _fruitInTrigger = this.trigger.IsTouchingLayers(LayerMaskController.FruitMask);
             if (!_fruitInTrigger)
             {
-                this.countdown = this.countdownStartTime;
-                //this.Reset(); // TODO
+                this.Reset();
             }
         }
         
@@ -144,8 +142,7 @@ namespace Watermelon_Game.Container
         [Client]
         private void CountDown()
         {
-            this.countdown -= Time.fixedDeltaTime;
-            //this.CmdCountdown();
+            this.CmdCountdown();
         }
 
         /// <summary>
@@ -154,14 +151,14 @@ namespace Watermelon_Game.Container
         [Command(requiresAuthority = false)]
         private void CmdCountdown()
         {
-            //this.RpcCountdown();
+            this.RpcCountdown();
         }
         
         /// <summary>
         /// TODO
         /// </summary>
-        //[ClientRpc]
-        private void RpcCountdown(ProtectedFloat _OldValue, ProtectedFloat _NewValue)
+        [ClientRpc]
+        private void RpcCountdown()
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
@@ -169,6 +166,8 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
+            this.countdown -= Time.fixedDeltaTime;
+            
             if (!this.countdownText.enabled && this.countdown <= this.countdownVisibleAt + 1)
             {
                 this.countdownText.enabled = true;
@@ -190,11 +189,6 @@ namespace Watermelon_Game.Container
                     this.countdownText.text = ((int)this.countdown).ToString();
                     AudioPool.PlayClip(AudioClipName.Countdown); // TODO: Only play for the own client 
                 }
-            }
-
-            if (this.countdown >= this.countdownStartTime)
-            {
-                this.Reset();
             }
         }
         
