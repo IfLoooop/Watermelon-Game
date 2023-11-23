@@ -169,7 +169,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <see cref="AssignContainers"/>
         /// </summary>
         /// <param name="_Sender"></param>
-        [Command]
+        [Command(requiresAuthority = false)]
         private void CmdAssignContainers(NetworkConnectionToClient _Sender = null)
         {
             var _containerConnectionMap = CustomNetworkManager.GetContainerConnectionMap();
