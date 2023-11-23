@@ -147,6 +147,7 @@ namespace Watermelon_Game.Container
         [Command(requiresAuthority = false)]
         private void CmdCountdown(NetworkConnectionToClient _Sender = null)
         {
+            Debug.Log("CmdCountdown");
             this.RpcCountdown(_Sender!.connectionId);
         }
         
@@ -159,10 +160,12 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
-            if (_ClientConnectionId != this.container.ConnectionId)
-            {
-                return;
-            }
+            // if (_ClientConnectionId != this.container.ConnectionId)
+            // {
+            //     return;
+            // }
+            
+            Debug.Log("RpcCountdown");
             
             this.currentCountdownTime--;
             this.countdownText.text = this.currentCountdownTime.ToString();
