@@ -180,19 +180,19 @@ namespace Watermelon_Game.Container
         /// Sets the <see cref="GodRayFlicker.godRay"/> <see cref="GameObject"/> active
         /// </summary>
         /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
-        private void EnableGodRay(int _ClientConnectionId)
+        private void EnableGodRay(int? _ClientConnectionId)
         {
             this.CmdEnableGodRay(_ClientConnectionId);
         }
 
         [Command(requiresAuthority = false)]
-        private void CmdEnableGodRay(int _ClientConnectionId)
+        private void CmdEnableGodRay(int? _ClientConnectionId)
         {
             this.RpcEnableGodRay(_ClientConnectionId);
         }
         
         [ClientRpc]
-        private void RpcEnableGodRay(int _ClientConnectionId)
+        private void RpcEnableGodRay(int? _ClientConnectionId)
         {
             if (_ClientConnectionId != this.container.ConnectionId)
             {

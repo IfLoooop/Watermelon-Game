@@ -25,7 +25,10 @@ namespace Watermelon_Game.Fruits
 #if DEBUG || DEVELOPMENT_BUILD
         [Header("Development")]
         [Tooltip("Set to true for fruits that are not spawned through a script (Only for Development!)")]
-        public bool debugFruit;
+        [SerializeField] private bool debugFruit;
+        [Tooltip("The connection id of the client who requested the spawn for this fruit")]
+        // ReSharper disable once InconsistentNaming
+        [SerializeField][ReadOnly] private string clientConnectionId_DEBUG = "null";
 #endif
         [Header("References")]
         [Tooltip("SpriteRenderer of the Fruit")]
@@ -77,7 +80,7 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// The connection id of the client who requested the spawn for this fruit
         /// </summary>
-        private ProtectedInt32 clientConnectionId;
+        private ProtectedInt32? clientConnectionId;
         
         /// <summary>
         /// The currently active <see cref="Skill"/> on this fruit <br/>
@@ -121,7 +124,21 @@ namespace Watermelon_Game.Fruits
         // ReSharper disable once InconsistentNaming
         public Rigidbody2D Rigidbody2D_DEVELOPMENT => this.rigidbody2D;
 #endif
-        
+        /// <summary>
+        /// <see cref="clientConnectionId"/>
+        /// </summary>
+        private ProtectedInt32? ClientConnectionId 
+        {
+            get => this.clientConnectionId;
+            set
+            {
+                this.clientConnectionId = value;
+#if UNITY_EDITOR
+                this.clientConnectionId_DEBUG = value != null ? value.Value.ToString() : "null";
+#endif
+            }
+            
+        }
         /// <summary>
         /// <see cref="fruit"/>
         /// </summary>
@@ -179,9 +196,9 @@ namespace Watermelon_Game.Fruits
         public static event Func<int, bool, bool> OnGoldenFruitCollision;
         /// <summary>
         /// Is called when a fruit leaves the visible area of the map <br/>
-        /// <b>Parameter:</b> <see cref="clientConnectionId"/>
+        /// <b>Parameter:</b> <see cref="ClientConnectionId"/>
         /// </summary>
-        public static event Action<int> OnUpgradeToGoldenFruit;
+        public static event Action<int?> OnUpgradeToGoldenFruit;
         /// <summary>
         /// Is called when any kind of golden fruits spawns <br/>
         /// <b>Parameter:</b> Indicates whether the golden fruit is an upgraded golden fruit or not
@@ -235,7 +252,7 @@ namespace Watermelon_Game.Fruits
                 {
                     this.GoldenFruit(true);
                     Debug.Log("OnBecameInvisible"); // TODO: Remove
-                    OnUpgradeToGoldenFruit?.Invoke(this.clientConnectionId);
+                    OnUpgradeToGoldenFruit?.Invoke(this.ClientConnectionId);
                 }
             }
         }
@@ -249,7 +266,7 @@ namespace Watermelon_Game.Fruits
         public void ForceGoldenFruit_DEVELOPMENT(bool _ForceGolden = false)
         {
             this.GoldenFruit(true, _ForceGolden);
-            OnUpgradeToGoldenFruit?.Invoke(this.clientConnectionId);
+            OnUpgradeToGoldenFruit?.Invoke(this.ClientConnectionId);
         }
 #endif
         
@@ -744,12 +761,12 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Sets <see cref="HasBeenEvolved"/> to the given value
         /// </summary>
-        /// <param name="_ClientConnectionId"><see cref="clientConnectionId"/></param>
+        /// <param name="_ClientConnectionId"><see cref="ClientConnectionId"/></param>
         /// <param name="_Value">The value to set <see cref="HasBeenEvolved"/> to</param>
         [ClientRpc]
         private void RpcSpawnFruit(int _ClientConnectionId, bool _Value)
         {
-            this.clientConnectionId = _ClientConnectionId;
+            this.ClientConnectionId = _ClientConnectionId;
             this.HasBeenEvolved = _Value;
         }
 
