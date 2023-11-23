@@ -132,7 +132,6 @@ namespace Watermelon_Game.Fruit_Spawn
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
                 
                 this.RequestContainer();
-                GameController.StartGame(); // TODO: Only for testing
             }
         }
 
@@ -176,6 +175,7 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             this.SetConnectionId(_ConnectionId);
             CustomNetworkManager.AssignPlayerContainer(this, _ContainerIndex);
+            GameController.StartGame(); // TODO: Only for testing
         }
         
         /// <summary>
