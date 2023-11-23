@@ -918,7 +918,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7884683519191026145, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_Name
-      value: MaxHeight 2
+      value: MaxHeight
       objectReference: {fileID: 0}
     - target: {fileID: 7884683519191026145, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_IsActive
@@ -2919,7 +2919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7884683519191026145, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_Name
-      value: MaxHeight 1
+      value: MaxHeight
       objectReference: {fileID: 0}
     - target: {fileID: 7884683519191026145, guid: eb969248153ecfb4dbf00205e6c3b70f, type: 3}
       propertyPath: m_IsActive

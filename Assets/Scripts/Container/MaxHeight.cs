@@ -195,7 +195,20 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Resets all values to their default state
         /// </summary>
+        [Client]
         private void Reset() // TODO: Also needs to be called on other players
+        {
+            this.CmdReset();
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdReset()
+        {
+            this.RpcReset();
+        }
+        
+        [ClientRpc]
+        private void RpcReset()
         {
             this.countdownAnimation.Stop();
             this.countdown = this.countdownStartTime;
