@@ -142,18 +142,25 @@ namespace Watermelon_Game.Container
         [Client]
         private void CountDown()
         {
-
             this.CmdCountdown();
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="_Sender"></param>
         [Command(requiresAuthority = false)]
-        private void CmdCountdown()//NetworkConnectionToClient _Sender = null
+        private void CmdCountdown(NetworkConnectionToClient _Sender = null)
         {
-            this.RpcCountdown();
+            this.RpcCountdown(_Sender!.connectionId);
         }
         
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="_SenderConnectionId"></param>
         [ClientRpc]
-        private void RpcCountdown()
+        private void RpcCountdown(int _SenderConnectionId)
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
@@ -180,7 +187,12 @@ namespace Watermelon_Game.Container
                     this.countdownTimestamp = Time.time;
                     this.countdownAnimation.Play();
                     this.countdownText.text = ((int)this.currentCountdownTime).ToString();
-                    AudioPool.PlayClip(AudioClipName.Countdown); // TODO: Maybe only play for the own client
+
+                    // Only play sound for own client
+                    if (_SenderConnectionId == this.container.ConnectionId)
+                    {
+                        AudioPool.PlayClip(AudioClipName.Countdown); // TODO: Maybe only play for the own client   
+                    }
                 }
             }
         }
@@ -195,6 +207,11 @@ namespace Watermelon_Game.Container
             this.countdownText.enabled = false;
             this.countdownText.fontSize = 0;
             this.countdownText.text = this.countdownStartTime.ToString();
+        }
+
+        private void CmdReset()
+        {
+            
         }
         
         /// <summary>
