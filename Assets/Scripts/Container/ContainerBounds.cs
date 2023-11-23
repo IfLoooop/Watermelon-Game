@@ -47,6 +47,11 @@ namespace Watermelon_Game.Container
         
         #region Properties
         /// <summary>
+        /// True if this container is assigned to the local client <br/>
+        /// False if it assigned to another client
+        /// </summary>
+        public ProtectedBool PlayerContainer { get; private set; }
+        /// <summary>
         /// <see cref="connectionId"/>
         /// </summary>
         public ProtectedInt32? ConnectionId => this.connectionId;
@@ -96,6 +101,7 @@ namespace Watermelon_Game.Container
         {
             this.fruitSpawner = _FruitSpawner;
             this.connectionId = this.fruitSpawner!.SetContainerBounds(this);
+            this.PlayerContainer = true;
             this.maxHeightTrigger.enabled = true;
         }
 

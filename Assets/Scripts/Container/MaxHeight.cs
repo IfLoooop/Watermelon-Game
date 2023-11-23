@@ -142,23 +142,23 @@ namespace Watermelon_Game.Container
         [Client]
         private void CountDown()
         {
-            this.CmdCountdown(base.netId);
+            this.CmdCountdown();
         }
 
         /// <summary>
         /// <see cref="CountDown"/>
         /// </summary>
         [Command(requiresAuthority = false)]
-        private void CmdCountdown(uint _NetId)
+        private void CmdCountdown()
         {
-            this.RpcCountdown(_NetId);
+            this.RpcCountdown();
         }
         
         /// <summary>
         /// <see cref="CountDown"/>
         /// </summary>
         [ClientRpc]
-        private void RpcCountdown(uint _NetId)
+        private void RpcCountdown()
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
@@ -188,7 +188,7 @@ namespace Watermelon_Game.Container
                     this.countdownAnimation.Play();
                     this.countdownText.text = ((int)this.countdown).ToString();
 
-                    if (_NetId == base.netId)
+                    if (this.container.PlayerContainer)
                     {
                         Debug.Log(base.name);
                         AudioPool.PlayClip(AudioClipName.Countdown); // TODO: Only play for the own client    
