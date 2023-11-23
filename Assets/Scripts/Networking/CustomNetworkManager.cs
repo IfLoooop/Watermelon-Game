@@ -64,9 +64,14 @@ namespace Watermelon_Game.Networking
             NetworkServer.AddPlayerForConnection(_ConnectionToClient, _fruitSpawner.gameObject);
         }
         
-        
+        /// <summary>
+        /// Returns the connection id for every connected client and the index of the corresponding container in <see cref="containers"/> <br/>
+        /// <b>Key:</b> Index of the container in <see cref="containers"/> <br/>
+        /// <b>Value:</b> Connection od of the client that is assigned to the container
+        /// </summary>
+        /// <returns>The connection id for every connected client and the index of the corresponding container in <see cref="containers"/></returns>
         [Server]
-        public static Dictionary<int, int> GetContainerIndex(NetworkConnectionToClient _Sender)
+        public static Dictionary<int, int> GetContainerConnectionMap()
         {
             var _dict = new Dictionary<int, int>();
 
@@ -79,7 +84,15 @@ namespace Watermelon_Game.Networking
             return _dict;
         }
         
-        
+        /// <summary>
+        /// Assigns the the container in <see cref="containers"/> with the given index to the given connection id
+        /// </summary>
+        /// <param name="_FruitSpawner">
+        /// If the container to assign belongs to the client, pass a reference of the <see cref="FruitSpawner"/> <br/>
+        /// If it belongs to another player, pass null
+        /// </param>
+        /// <param name="_ContainerIndex">The index in <see cref="containers"/> to assign the connection to</param>
+        /// <param name="_ConnectionId">The connection to assign</param>
         [Client]
         public static void AssignContainer([CanBeNull] FruitSpawner _FruitSpawner, int _ContainerIndex, int _ConnectionId)
         {

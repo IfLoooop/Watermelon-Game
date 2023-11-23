@@ -251,7 +251,7 @@ namespace Watermelon_Game.Fruits
                 if (_isOutOfScreen)
                 {
                     this.GoldenFruit(true);
-                    Debug.Log("OnBecameInvisible"); // TODO: Remove
+                    
                     OnUpgradeToGoldenFruit?.Invoke(this.ClientConnectionId);
                 }
             }

@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Mirror;
 using OPS.AntiCheat.Field;
@@ -132,7 +133,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 SkillController.OnSkillActivated += this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
                 
-                this.SetPlayerContainers();
+                this.AssignContainers();
             }
         }
 
@@ -157,24 +158,36 @@ namespace Watermelon_Game.Fruit_Spawn
             this.blockedReleaseIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.BlockedRelease, base.transform);
         }
         
-        
+        /// <summary>
+        /// Assigns all container to a player connection
+        /// </summary>
         [Client]
-        private void SetPlayerContainers()
+        private void AssignContainers()
         {
-            this.CmdSetPlayerContainers();
+            this.CmdAssignContainers();
         }
         
-        
+        /// <summary>
+        /// <see cref="AssignContainers"/>
+        /// </summary>
+        /// <param name="_Sender"></param>
         [Command]
-        private void CmdSetPlayerContainers(NetworkConnectionToClient _Sender = null)
+        private void CmdAssignContainers(NetworkConnectionToClient _Sender = null)
         {
-            var _containerConnectionMap = CustomNetworkManager.GetContainerIndex(_Sender);
+            var _containerConnectionMap = CustomNetworkManager.GetContainerConnectionMap();
 
             this.TargetSetPlayerContainers(_Sender, _containerConnectionMap.Keys.ToArray(), _containerConnectionMap.Values.ToArray(), _Sender!.connectionId);
         }
         
-        
-        [TargetRpc] // ReSharper disable once UnusedParameter.Local
+        /// <summary>
+        /// <see cref="AssignContainers"/>
+        /// </summary>
+        /// <param name="_Target"></param>
+        /// <param name="_ContainerIndices"><see cref="CustomNetworkManager.GetContainerConnectionMap"/></param>
+        /// <param name="_ConnectionIds"><see cref="CustomNetworkManager.GetContainerConnectionMap"/></param>
+        /// <param name="_SenderConnectionId">Connection id of the sender</param>
+        [TargetRpc] 
+        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")] // ReSharper disable once UnusedParameter.Local
         private void TargetSetPlayerContainers(NetworkConnectionToClient _Target, int[] _ContainerIndices, int[] _ConnectionIds, int _SenderConnectionId)
         {
             // ReSharper disable once InconsistentNaming
