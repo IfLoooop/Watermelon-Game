@@ -99,6 +99,15 @@ namespace Watermelon_Game.Container
         }
 
         /// <summary>
+        /// Assigns this container a connection id
+        /// </summary>
+        /// <param name="_ConnectionId">The connection id to assign to this container</param>
+        public void AssignConnectionId(int _ConnectionId)
+        {
+            this.connectionId = _ConnectionId;
+        }
+        
+        /// <summary>
         /// Sets <see cref="fruitSpawner"/> and <see cref="connectionId"/> to null
         /// </summary>
         public void FreeContainer()

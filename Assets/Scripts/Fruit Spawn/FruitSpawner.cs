@@ -1,3 +1,4 @@
+using System.Linq;
 using Mirror;
 using OPS.AntiCheat.Field;
 using UnityEngine;
@@ -155,41 +156,41 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             this.blockedReleaseIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.BlockedRelease, base.transform);
         }
-
-        /// <summary>
-        /// Request to the server to set the <see cref="containerBounds"/>
-        /// </summary>
+        
+        
         [Client]
         private void SetPlayerContainers()
         {
             this.CmdSetPlayerContainers();
         }
-
-        /// <summary>
-        /// Server gets the container that is assigned to the given player connection
-        /// </summary>
-        /// <param name="_Sender">The client who requested the container</param>
+        
+        
         [Command]
         private void CmdSetPlayerContainers(NetworkConnectionToClient _Sender = null)
         {
-            var _containerIndex = CustomNetworkManager.GetContainerIndex(_Sender);
-            this.TargetSetPlayerContainers(_Sender, _Sender!.connectionId, _containerIndex);
-        }
+            var _containerConnectionMap = CustomNetworkManager.GetContainerIndex(_Sender);
 
-        /// <summary>
-        /// Server assigns a container to the client with the given connection and starts the game for this player
-        /// </summary>
-        /// <param name="_Target">The client to assign the container for</param>
-        /// <param name="_ConnectionId">
-        /// The connection id of the client <br/>
-        /// <i>Is null when trying to get from <see cref="_Target"/>, so must be passed separately</i>
-        /// </param>
-        /// <param name="_ContainerIndex">The index of the container in <see cref="CustomNetworkManager.containers"/> to assign to this client</param>
+            this.TargetSetPlayerContainers(_Sender, _containerConnectionMap.Keys.ToArray(), _containerConnectionMap.Values.ToArray(), _Sender!.connectionId);
+        }
+        
+        
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
-        private void TargetSetPlayerContainers(NetworkConnectionToClient _Target, int _ConnectionId, int _ContainerIndex)
+        private void TargetSetPlayerContainers(NetworkConnectionToClient _Target, int[] _ContainerIndices, int[] _ConnectionIds, int _SenderConnectionId)
         {
-            this.SetConnectionId(_ConnectionId);
-            CustomNetworkManager.AssignPlayerContainer(this, _ContainerIndex);
+            // ReSharper disable once InconsistentNaming
+            for (var i = 0; i < _ConnectionIds.Length; i++)
+            {
+                if (_ConnectionIds[i] == _SenderConnectionId)
+                {
+                    this.SetConnectionId(_SenderConnectionId);
+                    CustomNetworkManager.AssignContainer(this, _ContainerIndices[i], _SenderConnectionId);
+                }
+                else
+                {
+                    CustomNetworkManager.AssignContainer(null, _ContainerIndices[i], _ConnectionIds[i]);
+                }
+            }
+            
             GameController.StartGame();
         }
         

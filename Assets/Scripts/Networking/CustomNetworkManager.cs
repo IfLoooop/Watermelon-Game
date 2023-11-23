@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Mirror;
 using Mirror.FizzySteam;
 using UnityEngine;
@@ -62,32 +63,34 @@ namespace Watermelon_Game.Networking
             
             NetworkServer.AddPlayerForConnection(_ConnectionToClient, _fruitSpawner.gameObject);
         }
-
-        /// <summary>
-        /// Gets the container from <see cref="containers"/> for the given client
-        /// </summary>
-        /// <param name="_Sender">The client who requested the container</param>
-        /// <returns>The index of the container in <see cref="containers"/></returns>
+        
+        
         [Server]
-        public static int GetContainerIndex(NetworkConnectionToClient _Sender)
+        public static Dictionary<int, int> GetContainerIndex(NetworkConnectionToClient _Sender)
         {
-            return instance.containers.FindIndex(_Container => _Container.ConnectionId == _Sender.connectionId);
-        }
+            var _dict = new Dictionary<int, int>();
 
-        /// <summary>
-        /// Assigns the container in <see cref="containers"/> with the given index to the given <see cref="_FruitSpawner"/>
-        /// </summary>
-        /// <param name="_FruitSpawner">The player object to assign to the container</param>
-        /// <param name="_ContainerIndex">The index of the container in <see cref="containers"/></param>
-        [Client]
-        public static void AssignPlayerContainer(FruitSpawner _FruitSpawner, int _ContainerIndex)
-        {
-            foreach (var _kvp in NetworkServer.connections)
+            foreach (var _connectionId in NetworkServer.connections.Keys)
             {
-                Debug.Log(_kvp);
+                var _containerIndex = instance.containers.FindIndex(_Container => _Container.ConnectionId == _connectionId);
+                _dict.Add(_containerIndex, _connectionId);
             }
-            
-            instance.containers[_ContainerIndex].AssignToPlayer(_FruitSpawner);
+
+            return _dict;
+        }
+        
+        
+        [Client]
+        public static void AssignContainer([CanBeNull] FruitSpawner _FruitSpawner, int _ContainerIndex, int _ConnectionId)
+        {
+            if (_FruitSpawner != null)
+            {
+                instance.containers[_ContainerIndex].AssignToPlayer(_FruitSpawner);
+            }
+            else
+            {
+                instance.containers[_ContainerIndex].AssignConnectionId(_ConnectionId);
+            }
         }
         #endregion
     }
