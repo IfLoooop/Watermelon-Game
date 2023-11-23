@@ -131,7 +131,8 @@ namespace Watermelon_Game.Fruit_Spawn
                 SkillController.OnSkillActivated += this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
                 
-                this.RequestContainer();
+                Debug.Log(base.connectionToClient.connectionId);
+                this.SetPlayerContainers();
             }
         }
 
@@ -160,9 +161,14 @@ namespace Watermelon_Game.Fruit_Spawn
         /// Request to the server to set the <see cref="containerBounds"/>
         /// </summary>
         [Client]
-        private void RequestContainer()
+        private void SetPlayerContainers()
         {
-            this.CmdRequestContainer();
+            if (base.isServer) // Already set for the host in "CustomNetworkManager.cs"
+            {
+                return;
+            }
+            
+            this.CmdSetPlayerContainers();
         }
 
         /// <summary>
@@ -170,10 +176,10 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         /// <param name="_Sender">The client who requested the container</param>
         [Command]
-        private void CmdRequestContainer(NetworkConnectionToClient _Sender = null)
+        private void CmdSetPlayerContainers(NetworkConnectionToClient _Sender = null)
         {
             var _containerIndex = CustomNetworkManager.GetContainerIndex(_Sender);
-            this.TargetAssignPlayerContainer(_Sender, _Sender!.connectionId, _containerIndex);
+            this.TargetSetPlayerContainers(_Sender, _Sender!.connectionId, _containerIndex);
         }
 
         /// <summary>
@@ -186,7 +192,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </param>
         /// <param name="_ContainerIndex">The index of the container in <see cref="CustomNetworkManager.containers"/> to assign to this client</param>
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
-        private void TargetAssignPlayerContainer(NetworkConnectionToClient _Target, int _ConnectionId, int _ContainerIndex)
+        private void TargetSetPlayerContainers(NetworkConnectionToClient _Target, int _ConnectionId, int _ContainerIndex)
         {
             this.SetConnectionId(_ConnectionId);
             CustomNetworkManager.AssignPlayerContainer(this, _ContainerIndex);
