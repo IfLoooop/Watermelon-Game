@@ -4,6 +4,7 @@ TODO: Add Multiplayer/Singleplayer localizations
 TODO: Move menus to center of contauner (in multiplayer)
 TODO: Somtimes background fruits are way to big
 TODO: Change menu button names
+TODO: Game over menu scroll position is not at top
 
 -Achievements localizations
 -DevelopmentTools fruit spawning is not working online (check what elso is not working)

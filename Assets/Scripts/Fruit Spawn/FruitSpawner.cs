@@ -237,7 +237,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         private void ResetGameFinished()
         {
-            Destroy(this.fruitBehaviour.gameObject);
+            //Destroy(this.fruitBehaviour.gameObject);
             this.fruitBehaviour = null;
             this.anyActiveSkill = false;
             this.BlockInput(false);
