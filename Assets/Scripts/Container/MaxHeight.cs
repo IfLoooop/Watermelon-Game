@@ -146,19 +146,19 @@ namespace Watermelon_Game.Container
         }
 
         /// <summary>
-        /// TODO
+        /// <see cref="CountDown"/>
         /// </summary>
         [Command(requiresAuthority = false)]
-        private void CmdCountdown()
+        private void CmdCountdown(NetworkConnectionToClient _Sender = null)
         {
-            this.RpcCountdown();
+            this.RpcCountdown(_Sender!.connectionId);
         }
         
         /// <summary>
-        /// TODO
+        /// <see cref="CountDown"/>
         /// </summary>
         [ClientRpc]
-        private void RpcCountdown()
+        private void RpcCountdown(int _SenderConnectionId)
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
@@ -166,6 +166,8 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
+            Debug.Log(_SenderConnectionId);
+            
             this.countdown -= Time.fixedDeltaTime;
             
             if (!this.countdownText.enabled && this.countdown <= this.countdownVisibleAt + 1)
@@ -196,17 +198,23 @@ namespace Watermelon_Game.Container
         /// Resets all values to their default state
         /// </summary>
         [Client]
-        private void Reset() // TODO: Also needs to be called on other players
+        private void Reset()
         {
             this.CmdReset();
         }
 
+        /// <summary>
+        /// <see cref="Reset"/>
+        /// </summary>
         [Command(requiresAuthority = false)]
         private void CmdReset()
         {
             this.RpcReset();
         }
         
+        /// <summary>
+        /// <see cref="Reset"/>
+        /// </summary>
         [ClientRpc]
         private void RpcReset()
         {
