@@ -194,7 +194,7 @@ namespace Watermelon_Game.Development
             {
                 if (this.currentFruit != null)
                 {
-                    this.currentFruit.CmdRelease(new Vector2(0, -1));
+                    this.currentFruit.CmdRelease(new Vector2(0, -1), false);
                     this.currentFruit = null;
                 }
             }
@@ -346,7 +346,7 @@ namespace Watermelon_Game.Development
 
                     foreach (var _savedFruit in this.savedFruits)
                     {
-                        this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation).CmdRelease(new Vector2(0, -1));
+                        this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation).CmdRelease(new Vector2(0, -1), false);
                     }
 #if UNITY_EDITOR
                     Debug.Log($"{this.savedFruits.Count} Fruits spawned.");
@@ -370,7 +370,7 @@ namespace Watermelon_Game.Development
             {
                 var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Grape, Quaternion.identity);
                 _fruitBehaviour.ForceGoldenFruit_DEVELOPMENT();
-                _fruitBehaviour.CmdRelease(new Vector2(0, -1));
+                _fruitBehaviour.CmdRelease(new Vector2(0, -1), false);
             }
         }
         

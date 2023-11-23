@@ -445,19 +445,21 @@ namespace Watermelon_Game.Fruits
         /// Releases the <see cref="Fruit"/> from the <see cref="FruitSpawner"/>
         /// </summary>
         /// <param name="_AimRotation">The rotation of <see cref="FruitSpawnerAim"/></param>
+        /// <param name="_AnyActiveSkill">Is a skill currently active?</param>
         /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
         [Command(requiresAuthority = false)]
-        public void CmdRelease(Vector2 _AimRotation, NetworkConnectionToClient _Sender = null)
+        public void CmdRelease(Vector2 _AimRotation, bool _AnyActiveSkill, NetworkConnectionToClient _Sender = null)
         {
-            this.RpcRelease();
+            this.RpcRelease(_AnyActiveSkill);
             this.TargetRelease(_Sender, _AimRotation);
         }
 
         /// <summary>
         /// <see cref="CmdRelease"/>
         /// </summary>
+        /// <param name="_AnyActiveSkill">Is a skill currently active?</param>
         [ClientRpc]
-        private void RpcRelease()
+        private void RpcRelease(bool _AnyActiveSkill)
         {
             base.transform.SetParent(FruitController.FruitContainerTransform, true);
             this.HasBeenReleased = true;
@@ -465,7 +467,7 @@ namespace Watermelon_Game.Fruits
             this.InitializeRigidBody();
             this.fruitsFirstCollision.SetActive();
             
-            AudioPool.PlayClip(this.activeSkill != null ? AudioClipName.Shoot : AudioClipName.ReleaseFruit, base.authority);
+            AudioPool.PlayClip(_AnyActiveSkill ? AudioClipName.Shoot : AudioClipName.ReleaseFruit, base.authority);
         }
         
         /// <summary>
