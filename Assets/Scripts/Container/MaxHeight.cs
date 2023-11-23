@@ -145,13 +145,13 @@ namespace Watermelon_Game.Container
         }
 
         [Command(requiresAuthority = false)]
-        private void CmdCountdown()
+        private void CmdCountdown(NetworkConnectionToClient _Sender = null)
         {
-            this.RpcCountdown();
+            this.RpcCountdown(_Sender!.connectionId);
         }
         
         [ClientRpc]
-        private void RpcCountdown()
+        private void RpcCountdown(int _ClientConnectionId)
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
@@ -159,8 +159,11 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
+            if (_ClientConnectionId != this.container.ConnectionId)
+            {
+                return;
+            }
             
-            // TODO
             this.currentCountdownTime--;
             this.countdownText.text = this.currentCountdownTime.ToString();
 
@@ -194,19 +197,18 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Sets the <see cref="GodRayFlicker.godRay"/> <see cref="GameObject"/> active
         /// </summary>
-        /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
         [Client]
-        private void EnableGodRay(int? _ClientConnectionId)
+        private void EnableGodRay()
         {
-            this.CmdEnableGodRay(_ClientConnectionId);
+            this.CmdEnableGodRay();
         }
 
         /// <summary>
         /// <see cref="EnableGodRay"/>
         /// </summary>
-        /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
+        /// <param name="_Sender"><see cref="FruitBehaviour.clientConnectionId"/></param>
         [Command(requiresAuthority = false)]
-        private void CmdEnableGodRay(int? _ClientConnectionId, NetworkConnectionToClient _Sender = null)
+        private void CmdEnableGodRay(NetworkConnectionToClient _Sender = null)
         {
             this.RpcEnableGodRay(_Sender!.connectionId);
         }
@@ -216,7 +218,7 @@ namespace Watermelon_Game.Container
         /// </summary>
         /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
         [ClientRpc]
-        private void RpcEnableGodRay(int? _ClientConnectionId)
+        private void RpcEnableGodRay(int _ClientConnectionId)
         {
             if (_ClientConnectionId != this.container.ConnectionId)
             {

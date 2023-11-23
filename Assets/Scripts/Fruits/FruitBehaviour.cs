@@ -195,10 +195,9 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         public static event Func<int, bool, bool> OnGoldenFruitCollision;
         /// <summary>
-        /// Is called when a fruit leaves the visible area of the map <br/>
-        /// <b>Parameter:</b> <see cref="ClientConnectionId"/>
+        /// Is called when a fruit leaves the visible area of the map
         /// </summary>
-        public static event Action<int?> OnUpgradeToGoldenFruit;
+        public static event Action OnUpgradeToGoldenFruit;
         /// <summary>
         /// Is called when any kind of golden fruits spawns <br/>
         /// <b>Parameter:</b> Indicates whether the golden fruit is an upgraded golden fruit or not
@@ -252,7 +251,7 @@ namespace Watermelon_Game.Fruits
                 {
                     this.GoldenFruit(true);
                     
-                    OnUpgradeToGoldenFruit?.Invoke(this.ClientConnectionId);
+                    OnUpgradeToGoldenFruit?.Invoke();
                 }
             }
         }
@@ -266,7 +265,7 @@ namespace Watermelon_Game.Fruits
         public void ForceGoldenFruit_DEVELOPMENT(bool _ForceGolden = false)
         {
             this.GoldenFruit(true, _ForceGolden);
-            OnUpgradeToGoldenFruit?.Invoke(this.ClientConnectionId);
+            OnUpgradeToGoldenFruit?.Invoke();
         }
 #endif
         
