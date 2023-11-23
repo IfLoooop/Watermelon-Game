@@ -219,6 +219,11 @@ namespace Watermelon_Game.Fruits
 
         private void OnBecameInvisible()
         {
+            if (!base.authority)
+            {
+                return;
+            }
+            
             if (this.collisionWithMaxHeight)
             {
                 var _centerPoint = base.transform.position.y;
