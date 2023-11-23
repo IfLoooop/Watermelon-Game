@@ -50,7 +50,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13490527435397806}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -116,13 +116,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8397b925480cd7a43aaeb623b4d90ca8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  syncDirection: 0
+  syncDirection: 1
   syncMode: 0
   syncInterval: 0
   container: {fileID: 0}
-  countdownTime:
-    fakeValue: 8
   countdownStartTime:
+    fakeValue: 8
+  countdownVisibleAt:
     fakeValue: 5
   godRayDuration: 1.5
 --- !u!114 &1029240382313648689
