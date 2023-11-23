@@ -104,18 +104,6 @@ namespace Watermelon_Game.Menus
             {
                 this.Open_Close(this.menuContainer);
             }
-            // else if (this.currentActiveMenu is { Menu: Menu.Exit }) // TODO: Remove
-            // {
-            //     if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-            //     {
-            //         this.exitMenu.ExitGame();
-            //     }
-            //     else if (Input.GetKeyDown(KeyCode.R))
-            //     {
-            //         this.CloseCurrentMenu();
-            //         OnManualRestart?.Invoke();
-            //     }
-            // }
         }
 
         /// <summary>

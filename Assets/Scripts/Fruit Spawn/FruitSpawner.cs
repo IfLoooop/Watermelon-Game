@@ -6,6 +6,7 @@ using Watermelon_Game.Container;
 using Watermelon_Game.Controls;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
+using Watermelon_Game.Networking;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
 
@@ -130,6 +131,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 SkillController.OnSkillActivated += this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
                 
+                this.RequestContainer();
                 GameController.StartGame(); // TODO: Only for testing
             }
         }
@@ -155,6 +157,27 @@ namespace Watermelon_Game.Fruit_Spawn
             this.blockedReleaseIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.BlockedRelease, base.transform);
         }
 
+        [Client]
+        private void RequestContainer() // TODO
+        {
+            this.CmdRequestContainer();
+        }
+
+        [Command]
+        private void CmdRequestContainer(NetworkConnectionToClient _Sender = null)
+        {
+            Debug.Log($"CmdRequestContainer: {_Sender!.connectionId}");
+            var _containerIndex = CustomNetworkManager.GetContainerIndex(_Sender);
+            this.TargetAssignPlayerContainer(_Sender, _Sender!.connectionId, _containerIndex);
+        }
+
+        [TargetRpc]
+        private void TargetAssignPlayerContainer(NetworkConnectionToClient _Target, int _ConnectionId, int _ContainerIndex)
+        {
+            this.SetConnectionId(_ConnectionId);
+            CustomNetworkManager.AssignPlayerContainer(this, _ContainerIndex);
+        }
+        
         /// <summary>
         /// <see cref="GameController.OnGameStart"/>
         /// </summary>
@@ -452,10 +475,10 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// Sets <see cref="connectionId"/> to the given <see cref="NetworkConnectionToClient.connectionId"/>
         /// </summary>
-        /// <param name="_NetworkConnectionToClient">The connection the server has to this client</param>
-        public void SetConnectionId(NetworkConnectionToClient _NetworkConnectionToClient)
+        /// <param name="_ConnectionId">The connection the server has to this client</param>
+        public void SetConnectionId(int _ConnectionId)
         {
-            this.connectionId = _NetworkConnectionToClient.connectionId;
+            this.connectionId = _ConnectionId;
         }
         
         /// <summary>
