@@ -219,7 +219,6 @@ namespace Watermelon_Game.Menus
             {
                 this.readyToRestart = false;
                 OnRestartGame?.Invoke();
-                Debug.Log("!GameController.IsGameRunning"); // TODO: Remove
             }
         }
         

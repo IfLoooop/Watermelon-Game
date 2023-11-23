@@ -1,9 +1,11 @@
 using System;
+using Mirror;
 using UnityEngine;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Fruits
 {
+    // TODO: Probably not needed anymore
     /// <summary>
     /// Contains information for a fruit to evolve
     /// </summary>
@@ -60,7 +62,8 @@ namespace Watermelon_Game.Fruits
         /// Forces the fruit to evolve -> <see cref="OnCanEvolve"/> <br/>
         /// <i>Use when the fruit is stuck and can't move any further towards <see cref="fruitToEvolveWith"/></i>
         /// </summary>
-        public void Evolve()
+        /// <param name="_HasAuthority"></param>
+        public void Evolve(bool _HasAuthority) // TODO
         {
             this.disableTrigger = true;
             OnCanEvolve?.Invoke(this.fruitToEvolveWith, base.transform.position);

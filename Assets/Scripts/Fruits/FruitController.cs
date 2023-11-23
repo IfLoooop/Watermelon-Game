@@ -106,7 +106,7 @@ namespace Watermelon_Game.Fruits
         }
 
         /// <summary>
-        /// Initializes the <see cref="FruitPrefab.spawnWeight"/>s of all <see cref="FruitPrefab"/> in <see cref="fruitData"/>
+        /// Initializes the <see cref="FruitPrefab.spawnWeight"/>s for every <see cref="FruitPrefab"/> in <see cref="FruitPrefabSettings.FruitPrefabs"/>
         /// </summary>
         private void InitializeSpawnWeights()
         {
@@ -227,7 +227,7 @@ namespace Watermelon_Game.Fruits
             {
                 if (_fruitToDestroy.IsGoldenFruit && !_ForceDestroy)
                 {
-                    return _otherIsNotGoldenFruit = false;
+                    return false;
                 }
                 
                 var _enumFruit = enumFruits.FirstOrDefault(_Fruit => _Fruit == (Fruit)_fruitToDestroy.Fruit.Value);
@@ -299,7 +299,7 @@ namespace Watermelon_Game.Fruits
                 _fruit.DestroyFruit();
             }
             
-            AudioPool.PlayClip(AudioClipName.FruitDestroy);
+            AudioPool.PlayClip(AudioClipName.FruitDestroy); // TODO: Play at half volume
             
             if (_enumFruit != Fruit.Watermelon)
             {

@@ -1,4 +1,8 @@
-TODO: Exit menut buttons dont reset selected color after click
+TODO: Play sound of opponent at half volume
+-Release sound (skills too)
+-Evolve
+TODO: Fruit inside FruitSpawner is not destroyed (On host, for opponents FruitSpawner)
+TODO: Fruit destroy on GameOver doesn't work correctrly
 TODO: Add Multiplayer/Singleplayer localizations
 TODO: Change menu button names
 
