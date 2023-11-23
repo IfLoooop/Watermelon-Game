@@ -730,36 +730,21 @@ namespace Watermelon_Game.Fruits
             
             NetworkServer.Spawn(_fruitBehaviour.gameObject);
             
-            _fruitBehaviour.AssignToClient(_Sender);
-            _fruitBehaviour.RpcSetEvolvedState(_HasBeenEvolved);
+            _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
+            _fruitBehaviour.RpcSpawnFruit(_Sender?.connectionId ?? 0, _HasBeenEvolved);
 
             return _fruitBehaviour;
-        }
-
-        /// <summary>
-        /// Assigns authority for this fruit to the given client
-        /// </summary>
-        /// <param name="_Sender">The connection of the client to give authority to</param>
-        [Server]
-        private void AssignToClient([CanBeNull] NetworkConnectionToClient _Sender)
-        {
-#if DEBUG || DEVELOPMENT_BUILD // TODO: Should never be null, temporary fix for DevelopmentTools.cs
-            if (_Sender == null)
-            {
-                return;
-            }
-#endif
-            this.clientConnectionId = _Sender.connectionId;
-            this.netIdentity.AssignClientAuthority(_Sender);
         }
         
         /// <summary>
         /// Sets <see cref="HasBeenEvolved"/> to the given value
         /// </summary>
+        /// <param name="_ClientConnectionId"><see cref="clientConnectionId"/></param>
         /// <param name="_Value">The value to set <see cref="HasBeenEvolved"/> to</param>
         [ClientRpc]
-        private void RpcSetEvolvedState(bool _Value)
+        private void RpcSpawnFruit(int _ClientConnectionId, bool _Value)
         {
+            this.clientConnectionId = _ClientConnectionId;
             this.HasBeenEvolved = _Value;
         }
 

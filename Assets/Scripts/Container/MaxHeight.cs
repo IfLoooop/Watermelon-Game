@@ -146,7 +146,6 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
-            
             this.currentCountdownTime--;
             this.countdownText.text = this.currentCountdownTime.ToString();
 
