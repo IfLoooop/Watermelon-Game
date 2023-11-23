@@ -141,7 +141,7 @@ namespace Watermelon_Game.Container
         [Client]
         public void CountDown()
         {
-            this.currentCountdownTime--;
+
             this.CmdCountdown();
         }
 
@@ -167,7 +167,7 @@ namespace Watermelon_Game.Container
             
             Debug.Log($"RpcCountdown: {base.name}");
             
-            
+            this.currentCountdownTime--;
             this.countdownText.text = this.currentCountdownTime.ToString();
 
             if (this.currentCountdownTime == 5)

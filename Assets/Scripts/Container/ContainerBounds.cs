@@ -96,7 +96,7 @@ namespace Watermelon_Game.Container
         {
             this.fruitSpawner = _FruitSpawner;
             this.connectionId = this.fruitSpawner!.SetContainerBounds(this);
-            this.maxHeightTrigger.enabled = true;
+            this.maxHeightTrigger.enabled = true; // TODO: Maybe not needed
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Watermelon_Game.Container
         public void AssignConnectionId(int _ConnectionId)
         {
             this.connectionId = _ConnectionId;
-            this.maxHeightTrigger.enabled = false;
+            this.maxHeightTrigger.enabled = false; // TODO: Maybe not needed
         }
         
         /// <summary>
