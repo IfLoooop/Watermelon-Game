@@ -166,7 +166,7 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
-            Debug.Log(_SenderConnectionId);
+            Debug.Log(base.netId);
             
             this.countdown -= Time.fixedDeltaTime;
             
