@@ -203,8 +203,11 @@ namespace Watermelon_Game.Fruit_Spawn
                     CustomNetworkManager.AssignContainer(null, _ContainerIndices[i], _ConnectionIds[i]);
                 }
             }
-            
-            GameController.StartGame();
+
+            if (!GameController.ActiveGame && base.isLocalPlayer)
+            {
+                GameController.StartGame();
+            }
         }
         
         /// <summary>

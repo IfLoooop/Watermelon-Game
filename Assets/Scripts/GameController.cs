@@ -22,9 +22,9 @@ namespace Watermelon_Game
         
         #region Properties
         /// <summary>
-        /// Indicates whether the game is over or running
+        /// Indicates whether a game is currently running or over
         /// </summary>
-        public static bool IsGameRunning { get; private set; }
+        public static bool ActiveGame { get; private set; }
         /// <summary>
         /// Timestamp in seconds, when the currently active game was started -> <see cref="Time"/>.<see cref="Time.time"/> <br/>
         /// <i>Is reset on every <see cref="GameController"/>.<see cref="GameController.StartGame"/></i>
@@ -84,7 +84,7 @@ namespace Watermelon_Game
         /// </summary>
         public static void StartGame() // TODO: Make private
         {
-            IsGameRunning = true;
+            ActiveGame = true;
             OnGameStart?.Invoke();
             CurrentGameTimeStamp = Time.time;
         }
@@ -94,7 +94,7 @@ namespace Watermelon_Game
         /// </summary>
         private void GameOver()
         {
-            IsGameRunning = false;
+            ActiveGame = false;
             this.resetReason = ResetReason.GameOver;
             base.StartCoroutine(ResetGame());
         }

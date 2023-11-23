@@ -211,7 +211,7 @@ namespace Watermelon_Game.Menus
         }
 
         /// <summary> // TODO: Needs better solution
-        /// Restarts the game when <see cref="GameController.IsGameRunning"/> is false
+        /// Restarts the game when <see cref="GameController.ActiveGame"/> is false
         /// </summary>
         private void RestartGame()
         {

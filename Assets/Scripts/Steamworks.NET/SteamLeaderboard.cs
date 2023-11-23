@@ -343,7 +343,7 @@ namespace Watermelon_Game.Steamworks.NET
             {
                 return;
             }
-            if (GameController.IsGameRunning)
+            if (GameController.ActiveGame)
             {
                 return;
             }

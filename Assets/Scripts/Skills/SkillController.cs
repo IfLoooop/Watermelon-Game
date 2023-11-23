@@ -200,7 +200,7 @@ namespace Watermelon_Game.Skills
         
         private void Update() // TODO: Use InputController
         {
-            if (!GameController.IsGameRunning || MenuController.IsAnyMenuOpen)
+            if (!GameController.ActiveGame || MenuController.IsAnyMenuOpen)
             {
                 return;
             }
