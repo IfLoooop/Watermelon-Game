@@ -3,7 +3,7 @@ using UnityEngine;
 namespace Watermelon_Game.Audio
 {
     /// <summary>
-    /// Wrapper <see cref="GameObject"/> for for the pool objects of the <see cref="AudioPool"/>
+    /// Wrapper <see cref="GameObject"/> for the pool objects of the <see cref="AudioPool"/>
     /// </summary>
     [RequireComponent(typeof(AudioSource))]
     internal sealed class AudioWrapper : MonoBehaviour

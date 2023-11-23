@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6180658795836833958}
-  - component: {fileID: 6147268069461901606}
   - component: {fileID: 2755201103276505374}
   m_Layer: 3
   m_Name: Evolving Fruit Trigger
@@ -33,41 +32,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6705278006809960091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &6147268069461901606
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5753176783059277575}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.1
 --- !u!114 &2755201103276505374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +149,7 @@ Rigidbody2D:
   m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 1
-  m_Mass: 1
+  m_Mass: 0.0001
   m_LinearDrag: 0
   m_AngularDrag: 0
   m_GravityScale: 9.81
@@ -251,6 +215,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   debugFruit: 0
+  clientConnectionId_DEBUG: null
   fruitSpriteRenderer: {fileID: 4946083969665849143}
   faceSpriteRenderer: {fileID: 1437083243244978668}
   fruit:

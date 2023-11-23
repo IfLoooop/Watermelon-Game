@@ -358,7 +358,7 @@ namespace Watermelon_Game.Fruits
                 {
                     case Skill.Evolve:
                         this.DeactivateSkill();
-                        SkillController.Skill_Evolve(_otherHashCode);
+                        SkillController.Skill_Evolve(base.authority, _otherHashCode);
                         return;
                     case Skill.Destroy:
                         this.DeactivateSkill();
@@ -427,7 +427,7 @@ namespace Watermelon_Game.Fruits
             {
                 if ((this.HasBeenReleased || this.HasBeenEvolved) && !this.IsEvolving)
                 {
-                    AudioPool.PlayClip(AudioClipName.FruitDestroy);
+                    AudioPool.PlayClip(AudioClipName.FruitDestroy, base.authority); // TODO: Play at half sound on !authority
                 }
             }
             if (this.growFruit != null)
@@ -617,7 +617,7 @@ namespace Watermelon_Game.Fruits
                 var _distance = Vector2.Distance(this.rigidbody2D.position, _newPosition);
                 
                 if (_distance <= _previousDistance) // Stuck
-                    this.evolvingFruitTrigger.Evolve(false); // TODO: "EvolvingFruitTrigger.cs" might not be needed anymore (Needs to be tested!)
+                    this.evolvingFruitTrigger.Evolve(base.authority); // TODO: "EvolvingFruitTrigger.cs" might not be needed anymore (Needs to be tested!)
                 else
                     _previousDistance = _distance;
                 
@@ -765,8 +765,6 @@ namespace Watermelon_Game.Fruits
         [ClientRpc]
         private void RpcSpawnFruit(int _ClientConnectionId, bool _Value)
         {
-            Debug.Log($"isOwned: {base.isOwned} | {base.name}");
-            Debug.Log($"authority: {base.authority} | {base.name}");
             this.ClientConnectionId = _ClientConnectionId;
             this.HasBeenEvolved = _Value;
         }

@@ -249,7 +249,8 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         /// <param name="_FruitBehaviourToEvolve">The <see cref="FruitBehaviour"/> to evolve</param>
         /// <param name="_NextFruitPosition">The position, the evolved fruit will spawn at</param>
-        private void CanEvolve(FruitBehaviour _FruitBehaviourToEvolve, Vector2 _NextFruitPosition)
+        /// <param name="_Authority">Indicates if the local client has authority over this fruit</param>
+        private void CanEvolve(FruitBehaviour _FruitBehaviourToEvolve, Vector2 _NextFruitPosition, bool _Authority)
         {
             foreach (var _evolvingFruits in evolvingFruits)
             {
@@ -265,7 +266,7 @@ namespace Watermelon_Game.Fruits
                     _evolvingFruits.Fruit1HasReachedTarget();
                     if (_evolvingFruits.HaveBothFinished())
                     {
-                        Evolve(_NextFruitPosition, _fruitBehaviour1, _fruitBehaviour2);
+                        Evolve(_Authority, _NextFruitPosition, _fruitBehaviour1, _fruitBehaviour2);
                         break;
                     }
                 }
@@ -274,7 +275,7 @@ namespace Watermelon_Game.Fruits
                     _evolvingFruits.Fruit2HasReachedTarget();
                     if (_evolvingFruits.HaveBothFinished())
                     {
-                        Evolve(_NextFruitPosition, _fruitBehaviour1, _fruitBehaviour2);
+                        Evolve(_Authority, _NextFruitPosition, _fruitBehaviour1, _fruitBehaviour2);
                         break;
                     }
                 }
@@ -284,10 +285,11 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Evolves the given fruits
         /// </summary>
+        /// <param name="_Authority">Indicates if the local client has authority over this fruit</param>
         /// <param name="_NextFruitPosition">Position where to spawn the evolved fruit</param>
         /// <param name="_FruitsToEvolve">The fruit/s to evolve (More than one = evolve with each other)</param>
         /// <returns>The <see cref="Fruit"/> type of the evolved fruit</returns>
-        public static void Evolve(Vector2 _NextFruitPosition, params FruitBehaviour[] _FruitsToEvolve)
+        public static void Evolve(bool _Authority, Vector2 _NextFruitPosition, params FruitBehaviour[] _FruitsToEvolve)
         {
             var _enumFruit = enumFruits.FirstOrDefault(_Fruit => _Fruit == (Fruit)_FruitsToEvolve[0].Fruit.Value);
             
@@ -299,7 +301,7 @@ namespace Watermelon_Game.Fruits
                 _fruit.DestroyFruit();
             }
             
-            AudioPool.PlayClip(AudioClipName.FruitDestroy); // TODO: Play at half volume
+            AudioPool.PlayClip(AudioClipName.FruitDestroy, _Authority); // TODO: Play at half volume
             
             if (_enumFruit != Fruit.Watermelon)
             {

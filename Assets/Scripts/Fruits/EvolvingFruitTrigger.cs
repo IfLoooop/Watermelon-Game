@@ -1,5 +1,4 @@
 using System;
-using Mirror;
 using UnityEngine;
 using Watermelon_Game.Utility;
 
@@ -16,38 +15,19 @@ namespace Watermelon_Game.Fruits
         /// The <see cref="FruitBehaviour"/> of this <see cref="EvolvingFruitTrigger"/>, can only evolve with <see cref="fruitToEvolveWith"/>
         /// </summary>
         private FruitBehaviour fruitToEvolveWith;
-        /// <summary>
-        /// Disables the <see cref="OnTriggerEnter2D"/>-method if true
-        /// </summary>
-        private bool disableTrigger;
         #endregion
 
         #region Event
         /// <summary>
         /// Is called when the fruit is ready to evolve <br/>
         /// <b>Parameter1:</b> The <see cref="FruitBehaviour"/> to evolve <br/>
-        /// <b>Parameter2:</b> The position, the evolved fruit will spawn at
+        /// <b>Parameter2:</b> The position, the evolved fruit will spawn at <br/>
+        /// <b>Parameter3:</b> Indicates if the local client has authority over this fruit
         /// </summary>
-        public static event Action<FruitBehaviour, Vector2> OnCanEvolve; 
+        public static event Action<FruitBehaviour, Vector2, bool> OnCanEvolve; 
         #endregion
         
         #region Methods
-        private void OnTriggerEnter2D(Collider2D _Other)
-        {
-            if (this.disableTrigger)
-            {
-                return;
-            }
-            
-            var _otherHashcode = _Other.gameObject.GetHashCode();
-            var _fruitToEvolveWithHashcode = this.fruitToEvolveWith.gameObject.GetHashCode();
-
-            if (_otherHashcode == _fruitToEvolveWithHashcode)
-            {
-                OnCanEvolve?.Invoke(this.fruitToEvolveWith, base.transform.position);
-            }
-        }
-
         /// <summary>
         /// Sets the fruit, this fruit can only evolve with
         /// </summary>
@@ -62,11 +42,10 @@ namespace Watermelon_Game.Fruits
         /// Forces the fruit to evolve -> <see cref="OnCanEvolve"/> <br/>
         /// <i>Use when the fruit is stuck and can't move any further towards <see cref="fruitToEvolveWith"/></i>
         /// </summary>
-        /// <param name="_HasAuthority"></param>
-        public void Evolve(bool _HasAuthority) // TODO
+        /// <param name="_HasAuthority">Indicates if the local client has authority over this fruit</param>
+        public void Evolve(bool _HasAuthority)
         {
-            this.disableTrigger = true;
-            OnCanEvolve?.Invoke(this.fruitToEvolveWith, base.transform.position);
+            OnCanEvolve?.Invoke(this.fruitToEvolveWith, base.transform.position, _HasAuthority);
         }
         #endregion
     }

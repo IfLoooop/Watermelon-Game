@@ -381,13 +381,14 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// Evolves the <see cref="FruitBehaviour"/> with the given <see cref="HashCode"/>
         /// </summary>
+        /// <param name="_Authority">Indicates if the local client has authority over this fruit</param>
         /// <param name="_FruitHashcode">The <see cref="HashCode"/> of the <see cref="FruitBehaviour"/> to evolve</param>
-        public static void Skill_Evolve(int _FruitHashcode)
+        public static void Skill_Evolve(bool _Authority, int _FruitHashcode)
         {
             var _fruit = FruitController.GetFruit(_FruitHashcode)!;
             var _position = _fruit.transform.position;
             
-            FruitController.Evolve(_position, _fruit);
+            FruitController.Evolve(_Authority, _position, _fruit);
         }
 
         /// <summary>

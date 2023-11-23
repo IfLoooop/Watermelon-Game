@@ -101,21 +101,49 @@ namespace Watermelon_Game.Audio
         /// Plays the <see cref="AudioClip"/> in <see cref="AudioClips.Clips"/> with the given <see cref="AudioClipName"/>
         /// </summary>
         /// <param name="_AudioClipName"><see cref="AudioClipName"/></param>
-        /// <param name="_Parent">
-        /// If the lifetime of the <see cref="AudioClip"/> is dependant on the lifetime of a specific <see cref="GameObject"/>, set the <see cref="Transform"/> of that <see cref="GameObject"/> as the <see cref="_Parent"/>
-        /// </param>
+        /// <param name="_Parent">If the lifetime of the <see cref="AudioClip"/> is dependant on the lifetime of a specific <see cref="GameObject"/>, set the <see cref="Transform"/> of that <see cref="GameObject"/> as the <see cref="_Parent"/></param>
         public static void PlayClip(AudioClipName _AudioClipName, [CanBeNull] Transform _Parent = null)
         {
-            var _audioWrapper = instance.audioPool.Get(_Parent);
-            var _audioClipSettings = AudioClips.Clips[_AudioClipName];
-            var _waitTime = _audioClipSettings.audioClip.length;
+            var _audioWrapper = Init(_Parent, _AudioClipName, out var _audioClipSettings, out var _waitTime);
             
             Set(_audioWrapper, _audioClipSettings);
-            
-            _audioWrapper.AudioSource.Play();
-            _audioWrapper.Invoke(nameof(_audioWrapper.ReturnToPool), _waitTime);
+            Play(_audioWrapper, _waitTime);
         }
 
+        /// <summary>
+        /// Plays the <see cref="AudioClip"/> in <see cref="AudioClips.Clips"/> with the given <see cref="AudioClipName"/>
+        /// </summary>
+        /// <param name="_AudioClipName"><see cref="AudioClipName"/></param>
+        /// <param name="_NormalVolume">If false, plays the clip at half volume</param>
+        public static void PlayClip(AudioClipName _AudioClipName, bool _NormalVolume)
+        {
+            var _audioWrapper = Init(null, _AudioClipName, out var _audioClipSettings, out var _waitTime);
+
+            if (!_NormalVolume)
+            {
+                _audioClipSettings.volume *= .5f;
+            }
+            
+            Set(_audioWrapper, _audioClipSettings);
+            Play(_audioWrapper, _waitTime);
+        }
+
+        /// <summary>
+        /// Initializes all needed value for the <see cref="AudioWrapper"/>
+        /// </summary>
+        /// <param name="_Parent">If the lifetime of the <see cref="AudioClip"/> is dependant on the lifetime of a specific <see cref="GameObject"/>, set the <see cref="Transform"/> of that <see cref="GameObject"/> as the <see cref="_Parent"/></param>
+        /// <param name="_AudioClipName"><see cref="AudioClipName"/></param>
+        /// <param name="_AudioClipSettings"><see cref="AudioClipSettings"/></param>
+        /// <param name="_WaitTime">Time in seconds after which the <see cref="AudioWrapper"/> should return to its pool</param>
+        /// <returns></returns>
+        private static AudioWrapper Init([CanBeNull] Transform _Parent, AudioClipName _AudioClipName, out AudioClipSettings _AudioClipSettings, out float _WaitTime)
+        {
+            _AudioClipSettings = AudioClips.Clips[_AudioClipName];
+            _WaitTime = _AudioClipSettings.audioClip.length;
+
+            return instance.audioPool.Get(_Parent);
+        }
+        
         /// <summary>
         /// Sets the values of the <see cref="AudioSource"/> in <see cref="AudioWrapper"/> from <see cref="AudioClipSettings"/>
         /// </summary>
@@ -128,6 +156,17 @@ namespace Watermelon_Game.Audio
             _AudioWrapper.AudioSource.volume = _AudioClipSettings.volume;
             _AudioWrapper.AudioSource.time = _AudioClipSettings.startTime;
             _AudioWrapper.AudioSource.loop = _Loop;
+        }
+
+        /// <summary>
+        /// Plays the clip and invokes <see cref="AudioWrapper.ReturnToPool"/> after the given <see cref="_WaitTime"/>
+        /// </summary>
+        /// <param name="_AudioWrapper"><see cref="AudioWrapper"/></param>
+        /// <param name="_WaitTime">Time in seconds after which the given <see cref="_AudioWrapper"/> should return to its pool</param>
+        private static void Play(AudioWrapper _AudioWrapper, float _WaitTime)
+        {
+            _AudioWrapper.AudioSource.Play();
+            _AudioWrapper.Invoke(nameof(_AudioWrapper.ReturnToPool), _WaitTime);
         }
         
         /// <summary>
