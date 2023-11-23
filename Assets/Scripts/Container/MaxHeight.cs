@@ -167,7 +167,7 @@ namespace Watermelon_Game.Container
             //     return;
             // }
             
-            Debug.Log("RpcCountdown");
+            Debug.Log($"RpcCountdown: {base.name}");
             
             
             this.countdownText.text = this.currentCountdownTime.ToString();
