@@ -1,4 +1,3 @@
-TODO: Godray is activated on both clients
 TODO: Add Multiplayer/Singleplayer localizations
 TODO: Change menu button names
 

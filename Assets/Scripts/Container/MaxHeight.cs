@@ -138,7 +138,20 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Is called at the end of <see cref="countdownAnimation"/>
         /// </summary>
+        [Client]
         public void CountDown()
+        {
+            this.CmdCountdown();
+        }
+
+        [Command(requiresAuthority = false)]
+        private void CmdCountdown()
+        {
+            this.RpcCountdown();
+        }
+        
+        [ClientRpc]
+        private void RpcCountdown()
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
@@ -146,6 +159,8 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
+            
+            // TODO
             this.currentCountdownTime--;
             this.countdownText.text = this.currentCountdownTime.ToString();
 
@@ -164,7 +179,7 @@ namespace Watermelon_Game.Container
                 AudioPool.PlayClip(AudioClipName.Countdown);
             }
         }
-
+        
         /// <summary>
         /// Resets all values to their default state
         /// </summary>
@@ -180,17 +195,26 @@ namespace Watermelon_Game.Container
         /// Sets the <see cref="GodRayFlicker.godRay"/> <see cref="GameObject"/> active
         /// </summary>
         /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
+        [Client]
         private void EnableGodRay(int? _ClientConnectionId)
         {
             this.CmdEnableGodRay(_ClientConnectionId);
         }
 
+        /// <summary>
+        /// <see cref="EnableGodRay"/>
+        /// </summary>
+        /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
         [Command(requiresAuthority = false)]
-        private void CmdEnableGodRay(int? _ClientConnectionId)
+        private void CmdEnableGodRay(int? _ClientConnectionId, NetworkConnectionToClient _Sender = null)
         {
-            this.RpcEnableGodRay(_ClientConnectionId);
+            this.RpcEnableGodRay(_Sender!.connectionId);
         }
         
+        /// <summary>
+        /// <see cref="EnableGodRay"/>
+        /// </summary>
+        /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
         [ClientRpc]
         private void RpcEnableGodRay(int? _ClientConnectionId)
         {
