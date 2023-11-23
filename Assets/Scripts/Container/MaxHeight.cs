@@ -23,6 +23,10 @@ namespace Watermelon_Game.Container
         [Tooltip("Disables the loosing condition (Editor only)")]
         [ShowInInspector] private static bool disableCountDown;
 #endif
+        [Header("References")]
+        [Tooltip("The container for this MaxHeight object")]
+        [SerializeField] private ContainerBounds container;
+        
         [Header("Settings")]
         [Tooltip("Total duration in seconds of the countdown")]
         [SerializeField] private ProtectedUInt32 countdownTime = 8;
@@ -176,8 +180,14 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Sets the <see cref="GodRayFlicker.godRay"/> <see cref="GameObject"/> active
         /// </summary>
-        private void EnableGodRay()
+        /// <param name="_ClientConnectionId"><see cref="FruitBehaviour.clientConnectionId"/></param>
+        private void EnableGodRay(int _ClientConnectionId)
         {
+            if (_ClientConnectionId != this.container.ConnectionId)
+            {
+                return;
+            }
+            
             if (this.enableFlicker != null)
             {
                 this.StopCoroutine(this.enableFlicker);

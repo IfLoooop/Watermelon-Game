@@ -73,6 +73,11 @@ namespace Watermelon_Game.Fruits
         /// <see cref="EvolvingFruitTrigger"/>
         /// </summary>
         private EvolvingFruitTrigger evolvingFruitTrigger;
+
+        /// <summary>
+        /// The connection id of the client who requested the spawn for this fruit
+        /// </summary>
+        private ProtectedInt32 clientConnectionId;
         
         /// <summary>
         /// The currently active <see cref="Skill"/> on this fruit <br/>
@@ -94,7 +99,7 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Disables most of the collision logic if true
         /// </summary>
-        private bool disableEvolving;
+        private ProtectedBool disableEvolving;
         
         /// <summary>
         /// Coroutine for the movement towards another fruit, during evolving
@@ -173,9 +178,10 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         public static event Func<int, bool, bool> OnGoldenFruitCollision;
         /// <summary>
-        /// Is called when a fruit leaves the visible area of the map
+        /// Is called when a fruit leaves the visible area of the map <br/>
+        /// <b>Parameter:</b> <see cref="clientConnectionId"/>
         /// </summary>
-        public static event Action OnUpgradeToGoldenFruit;
+        public static event Action<int> OnUpgradeToGoldenFruit;
         /// <summary>
         /// Is called when any kind of golden fruits spawns <br/>
         /// <b>Parameter:</b> Indicates whether the golden fruit is an upgraded golden fruit or not
@@ -223,8 +229,8 @@ namespace Watermelon_Game.Fruits
                 if (_isOutOfScreen)
                 {
                     this.GoldenFruit(true);
-                    Debug.Log("OnBecameInvisible");
-                    OnUpgradeToGoldenFruit?.Invoke();
+                    Debug.Log("OnBecameInvisible"); // TODO: Remove
+                    OnUpgradeToGoldenFruit?.Invoke(this.clientConnectionId);
                 }
             }
         }
@@ -238,7 +244,7 @@ namespace Watermelon_Game.Fruits
         public void ForceGoldenFruit_DEVELOPMENT(bool _ForceGolden = false)
         {
             this.GoldenFruit(true, _ForceGolden);
-            OnUpgradeToGoldenFruit?.Invoke();
+            OnUpgradeToGoldenFruit?.Invoke(this.clientConnectionId);
         }
 #endif
         
@@ -714,20 +720,39 @@ namespace Watermelon_Game.Fruits
         /// <param name="_Rotation">The rotation of the spawned fruit</param>
         /// <param name="_Fruit">The <see cref="Fruits.Fruit"/> to spawn</param>
         /// <param name="_HasBeenEvolved">Is this fruit spawned because of an evolution?</param>
+        /// <param name="_Sender">The client who requested the fruit</param>
         /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
         [Server]
-        public static FruitBehaviour SpawnFruit([CanBeNull] Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved)
+        public static FruitBehaviour SpawnFruit([CanBeNull] Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved, NetworkConnectionToClient _Sender = null) // TODO: Should never be null, temporary fix for DevelopmentTools.cs
         {
             var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, _Rotation, _Parent).GetComponent<FruitBehaviour>();
             
             NetworkServer.Spawn(_fruitBehaviour.gameObject);
             
+            _fruitBehaviour.AssignToClient(_Sender);
             _fruitBehaviour.RpcSetEvolvedState(_HasBeenEvolved);
 
             return _fruitBehaviour;
         }
 
+        /// <summary>
+        /// Assigns authority for this fruit to the given client
+        /// </summary>
+        /// <param name="_Sender">The connection of the client to give authority to</param>
+        [Server]
+        private void AssignToClient([CanBeNull] NetworkConnectionToClient _Sender)
+        {
+#if DEBUG || DEVELOPMENT_BUILD // TODO: Should never be null, temporary fix for DevelopmentTools.cs
+            if (_Sender == null)
+            {
+                return;
+            }
+#endif
+            this.clientConnectionId = _Sender.connectionId;
+            this.netIdentity.AssignClientAuthority(_Sender);
+        }
+        
         /// <summary>
         /// Sets <see cref="HasBeenEvolved"/> to the given value
         /// </summary>
