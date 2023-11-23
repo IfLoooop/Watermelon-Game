@@ -476,22 +476,47 @@ namespace Watermelon_Game.Fruit_Spawn
         /// The currently active <see cref="Skill"/> <br/>
         /// <i>Null means no <see cref="Skill"/> is currently active</i>
         /// </param>
+        [Client]
         private void SetActiveSkill(Skill? _ActiveSkill)
         {
+            var _activeSkill = -1;
             if (_ActiveSkill != null)
             {
+                _activeSkill = (int)_ActiveSkill;
                 this.anyActiveSkill = true;
-                this.fruitBehaviour.SetActiveSkill(_ActiveSkill);
+                //this.fruitBehaviour.SetActiveSkill(_ActiveSkill);
                 this.fruitSpawnerAim.EnableRotation(true);
             }
             else
             {
                 this.anyActiveSkill = false;
-                this.fruitBehaviour.SetActiveSkill(null);
+                //this.fruitBehaviour.SetActiveSkill(null);
                 this.DeactivateRotation(null);
             }
+            
+            this.CmdSetActiveSkill(_activeSkill);
         }
 
+        [Command]
+        private void CmdSetActiveSkill(int _ActiveSkill)
+        {
+            this.RpcSetActiveSkill(_ActiveSkill);
+        }
+
+        [ClientRpc]
+        private void RpcSetActiveSkill(int _ActiveSkill)
+        {
+            Debug.Log("RpcSetActiveSkill");
+            if (_ActiveSkill == -1)
+            {
+                this.fruitBehaviour.SetActiveSkill(null);
+            }
+            else
+            {
+                this.fruitBehaviour.SetActiveSkill((Skill)_ActiveSkill);
+            }
+        }
+        
         /// <summary>
         /// Deactivates the rotation of <see cref="FruitSpawnerAim"/>
         /// </summary>

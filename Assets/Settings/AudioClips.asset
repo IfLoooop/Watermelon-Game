@@ -20,7 +20,7 @@ MonoBehaviour:
   fruitDestroy:
     key: 1
     audioClip: {fileID: 8300000, guid: 29bde6326b4c34ad8a12da475f79b50a, type: 3}
-    volume: 0.0375
+    volume: 0.03125
     startTime: 0
   blockedRelease:
     key: 2
