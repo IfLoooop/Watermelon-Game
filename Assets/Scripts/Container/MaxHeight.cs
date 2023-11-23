@@ -201,7 +201,13 @@ namespace Watermelon_Game.Container
         [Command(requiresAuthority = false)]
         private void CmdGameOver(int _ConnectionId)
         {
-            GameController.GameOver();
+            this.RpcGameOver();
+        }
+
+        [ClientRpc]
+        private void RpcGameOver()
+        {
+            OnGameOver?.Invoke();
         }
         
         /// <summary>
