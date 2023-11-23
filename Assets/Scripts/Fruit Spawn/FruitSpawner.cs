@@ -122,7 +122,7 @@ namespace Watermelon_Game.Fruit_Spawn
         public override void OnStartClient()
         {
             base.OnStartClient();
-            this.AssignContainers();
+            
             if (base.isLocalPlayer)
             {
                 InputController.OnMouseMove += MovePosition;
@@ -133,6 +133,8 @@ namespace Watermelon_Game.Fruit_Spawn
                 SkillController.OnSkillActivated += this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
             }
+            
+            this.AssignContainers();
         }
 
         public override void OnStopClient()
