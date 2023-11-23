@@ -36,7 +36,7 @@ namespace Watermelon_Game.Container
 
         #region Fields
         /// <summary>
-        /// <see cref="Animation"/> component to play, on <see cref="ExitMenu.OnGameModeTransition"/>
+        /// <see cref="Animation"/> component to play on <see cref="ExitMenu.OnGameModeTransition"/>
         /// </summary>
         private Animation gameModeTransition;
         /// <summary>
@@ -81,7 +81,7 @@ namespace Watermelon_Game.Container
                 this.fruitSpawner.GameModeTransitionStarted();
             }
             
-            switch (_GameMode)
+            switch (_GameMode) // TODO: Play sound and make animation  better
             {
                 case GameMode.SinglePlayer:
                     this.gameModeTransition.Play(this.singlePlayerTransition.name);

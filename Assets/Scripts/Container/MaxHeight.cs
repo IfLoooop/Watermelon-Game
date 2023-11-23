@@ -176,7 +176,7 @@ namespace Watermelon_Game.Container
             if (this.countdown <= 1)
             {
                 this.Reset();
-                OnGameOver?.Invoke();
+                OnGameOver?.Invoke(); // TODO
                 return;
             }
             
@@ -188,10 +188,10 @@ namespace Watermelon_Game.Container
                     this.countdownAnimation.Play();
                     this.countdownText.text = ((int)this.countdown).ToString();
 
+                    // Sound is only player for the local client
                     if (this.container.PlayerContainer)
                     {
-                        Debug.Log(base.name);
-                        AudioPool.PlayClip(AudioClipName.Countdown); // TODO: Only play for the own client    
+                        AudioPool.PlayClip(AudioClipName.Countdown);   
                     }
                 }
             }
