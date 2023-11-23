@@ -112,9 +112,10 @@ namespace Watermelon_Game.Container
 
         private void OnTriggerEnter2D(Collider2D _Other)
         {
+            Debug.Log(base.isClient);
+            
             if (!this.countdownAnimation.enabled)
             {
-                Debug.Log("OnTriggerEnter2D");
                 this.countdownAnimation.enabled = true;
             }
         }
