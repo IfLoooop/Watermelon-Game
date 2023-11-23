@@ -7,10 +7,11 @@ using UnityEngine;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
 using Watermelon_Game.Skills;
+using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Points
 {
-    internal sealed class PointsController : MonoBehaviour
+    internal sealed class PointsController : GameModeTransition
     {
         #region Inspector Fields
         [Header("References")]
@@ -68,15 +69,18 @@ namespace Watermelon_Game.Points
         #endregion
         
         #region Methods
-        private void Awake()
+        protected override void Awake()
         {
-            instance = this;
+            base.Awake();
             
+            instance = this;
             this.pointsWaitForSeconds = new WaitForSeconds(this.pointsWaitTime);
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             GameController.OnResetGameFinished += this.ResetPoints;
             FruitController.OnEvolve += AddPoints;
             FruitController.OnGoldenFruitCollision += AddPoints;
@@ -84,8 +88,10 @@ namespace Watermelon_Game.Points
             MenuContainer.OnNewBestScore += this.NewBestScore;
         }
         
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
+            
             GameController.OnResetGameFinished -= this.ResetPoints;
             FruitController.OnEvolve -= AddPoints;
             FruitController.OnGoldenFruitCollision += AddPoints;
@@ -97,33 +103,7 @@ namespace Watermelon_Game.Points
         {
             this.bestScoreAmount.text = GlobalStats.Instance.BestScore.ToString();
         }
-
-#if DEBUG || DEVELOPMENT_BUILD
-        /// <summary>
-        /// <see cref="AddPoints"/> <br/>
-        /// <b>Only for Development!</b>
-        /// </summary>
-        /// <param name="_Fruit">The <see cref="Fruit"/> to get the points for</param>
-        /// <param name="_Multiplier">Multiplier for the added points</param>
-        public static void AddPoints_DEVELOPMENT(Fruit _Fruit, float _Multiplier)
-        {
-            instance.multiplier.StartMultiplier();
-
-            var _points = (int)(((int)_Fruit + instance.multiplier.CurrentMultiplier) * _Multiplier);
-            instance.SetPoints(_points);
-        }
         
-        /// <summary>
-        /// <see cref="SubtractPoints"/> <br/>
-        /// <b>Only for Development!</b>
-        /// </summary>
-        /// <param name="_PointsToSubtract">The points to subtract from <see cref="currentPoints"/></param>
-        /// <param name="_Multiplier">Multiplier for the subtracted points</param>
-        public static void SubtractPoints_DEVELOPMENT(uint _PointsToSubtract, float _Multiplier)
-        {
-            instance.SetPoints(-(int)(_PointsToSubtract * _Multiplier));
-        }
-#endif
         /// <summary>
         /// Adds points to <see cref="currentPoints"/> depending on the given <see cref="Fruit"/>
         /// </summary>
@@ -212,7 +192,7 @@ namespace Watermelon_Game.Points
         }
 
         /// <summary>
-        /// <see cref="MenuController.OnNewBestScore"/>
+        /// <see cref="MenuContainer.OnNewBestScore"/>
         /// </summary>
         /// <param name="_NewBestScore">The new best score amount</param>
         private void NewBestScore(uint _NewBestScore)
@@ -227,6 +207,33 @@ namespace Watermelon_Game.Points
         {
             this.SetPoints(0);
         }
+        
+#if DEBUG || DEVELOPMENT_BUILD
+        /// <summary>
+        /// <see cref="AddPoints"/> <br/>
+        /// <b>Only for Development!</b>
+        /// </summary>
+        /// <param name="_Fruit">The <see cref="Fruit"/> to get the points for</param>
+        /// <param name="_Multiplier">Multiplier for the added points</param>
+        public static void AddPoints_DEVELOPMENT(Fruit _Fruit, float _Multiplier)
+        {
+            instance.multiplier.StartMultiplier();
+
+            var _points = (int)(((int)_Fruit + instance.multiplier.CurrentMultiplier) * _Multiplier);
+            instance.SetPoints(_points);
+        }
+        
+        /// <summary>
+        /// <see cref="SubtractPoints"/> <br/>
+        /// <b>Only for Development!</b>
+        /// </summary>
+        /// <param name="_PointsToSubtract">The points to subtract from <see cref="currentPoints"/></param>
+        /// <param name="_Multiplier">Multiplier for the subtracted points</param>
+        public static void SubtractPoints_DEVELOPMENT(uint _PointsToSubtract, float _Multiplier)
+        {
+            instance.SetPoints(-(int)(_PointsToSubtract * _Multiplier));
+        }
+#endif
         #endregion
     }
 }

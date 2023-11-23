@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5283535061041604302}
   - component: {fileID: 1612588229999608210}
+  - component: {fileID: 1691295671607253551}
   m_Layer: 0
   m_Name: Points Controller
   m_TagString: Untagged
@@ -45,10 +46,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14532cdece38eb04e989dc11daa1b022, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  singlePlayerTransition: {fileID: 7400000, guid: ca00eda5228cc7d4782f8b4d9a492cd0, type: 2}
+  multiPlayerTransition: {fileID: 7400000, guid: 4175ed4a21b2ba9498401cf437ae3836, type: 2}
   multiplier: {fileID: 7666002169833563122}
   pointsAmount: {fileID: 4855397117364489716}
   bestScoreAmount: {fileID: 5544476311407990851}
   pointsWaitTime: 0.05
+--- !u!111 &1691295671607253551
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3596071221215474632}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 4175ed4a21b2ba9498401cf437ae3836, type: 2}
+  - {fileID: 7400000, guid: ca00eda5228cc7d4782f8b4d9a492cd0, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1001 &1339303247444432004
 PrefabInstance:
   m_ObjectHideFlags: 0

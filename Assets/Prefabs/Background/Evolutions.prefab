@@ -46,10 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 603c025a3559a7246804c165b73e2fbf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  singlePlayerTransition: {fileID: 0}
-  multiPlayerTransition: {fileID: 0}
-  openAnimation: {fileID: 0}
-  closeAnimation: {fileID: 0}
+  animation: {fileID: 6590327038232091328}
+  singlePlayerTransition: {fileID: 7400000, guid: 7fbd6818d5143904088e99082324bee2, type: 2}
+  multiPlayerTransition: {fileID: 7400000, guid: 9bc382020a251a54a97e6c410c4e891a, type: 2}
+  openAnimation: {fileID: 7400000, guid: 8cc29957f6cd7984bb6bb39948d99cff, type: 2}
+  closeAnimation: {fileID: 7400000, guid: d2f63bc3dc87b0d4e88b1ea7068dd364, type: 2}
 --- !u!111 &6590327038232091328
 Animation:
   m_ObjectHideFlags: 0
@@ -61,10 +62,10 @@ Animation:
   serializedVersion: 3
   m_Animation: {fileID: 0}
   m_Animations:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 7400000, guid: 9bc382020a251a54a97e6c410c4e891a, type: 2}
+  - {fileID: 7400000, guid: 7fbd6818d5143904088e99082324bee2, type: 2}
+  - {fileID: 7400000, guid: 8cc29957f6cd7984bb6bb39948d99cff, type: 2}
+  - {fileID: 7400000, guid: d2f63bc3dc87b0d4e88b1ea7068dd364, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
@@ -317,13 +318,38 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1091867826283011521, guid: e92d30edbb80dc644abf4395183a14d4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4308620810129012079}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 716389169349155871, guid: e92d30edbb80dc644abf4395183a14d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4854041464183750841}
   m_SourcePrefab: {fileID: 100100000, guid: e92d30edbb80dc644abf4395183a14d4, type: 3}
 --- !u!224 &6355398835380777485 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1091867826283011521, guid: e92d30edbb80dc644abf4395183a14d4, type: 3}
   m_PrefabInstance: {fileID: 6275187262016434124}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6837820714481218515 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 716389169349155871, guid: e92d30edbb80dc644abf4395183a14d4, type: 3}
+  m_PrefabInstance: {fileID: 6275187262016434124}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4854041464183750841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6837820714481218515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 2047
 --- !u!1001 &7246593881154082660
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -663,12 +689,12 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_HighlightedColor: {r: 0.7490196, g: 0.7490196, b: 0.7490196, a: 1}
+    m_PressedColor: {r: 0.627451, g: 0.627451, b: 0.627451, a: 1}
+    m_SelectedColor: {r: 1, g: 1, b: 1, a: 1}
+    m_DisabledColor: {r: 1, g: 1, b: 1, a: 0.5019608}
     m_ColorMultiplier: 1
-    m_FadeDuration: 0.1
+    m_FadeDuration: 0.05
   m_SpriteState:
     m_HighlightedSprite: {fileID: 0}
     m_PressedSprite: {fileID: 0}
@@ -685,15 +711,15 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1416760337016662413}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
+      - m_Target: {fileID: 4569188516027789507}
+        m_TargetAssemblyTypeName: Watermelon_Game.Background.EvolutionsChart, WatermelonGame
+        m_MethodName: Open_Close
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2

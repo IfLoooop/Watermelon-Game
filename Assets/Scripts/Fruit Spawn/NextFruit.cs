@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
+using Watermelon_Game.Utility;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Fruit_Spawn
@@ -13,7 +14,7 @@ namespace Watermelon_Game.Fruit_Spawn
     /// <summary>
     /// Holds the next fruit that will be given to the <see cref="FruitSpawner"/>
     /// </summary>
-    internal sealed class NextFruit : MonoBehaviour
+    internal sealed class NextFruit : GameModeTransition
     {
         #region Inspector Fields
         [Header("References")]
@@ -51,21 +52,27 @@ namespace Watermelon_Game.Fruit_Spawn
         #endregion
         
         #region Methods
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
+            
             instance = this;
             this.timerText = this.timer.GetComponent<TextMeshProUGUI>();
         }
 
-        private void OnEnable()
+        protected override void OnEnable()
         {
+            base.OnEnable();
+            
             GameController.OnGameStart += this.SpawnFruits;
             GameController.OnResetGameStarted += this.ResetGame;
             FruitController.OnEvolve += ShowNextNextFruit;
         }
 
-        private void OnDisable()
+        protected override void OnDisable()
         {
+            base.OnDisable();
+            
             GameController.OnGameStart -= this.SpawnFruits;
             GameController.OnResetGameStarted -= this.ResetGame;
             FruitController.OnEvolve -= ShowNextNextFruit;

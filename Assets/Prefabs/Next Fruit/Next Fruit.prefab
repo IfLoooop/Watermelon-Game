@@ -141,6 +141,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7670704886762870063}
   - component: {fileID: 1446764723163717299}
+  - component: {fileID: 7358508950287298079}
   m_Layer: 0
   m_Name: Next Fruit
   m_TagString: Untagged
@@ -176,6 +177,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdfcc46822610f243b87ec9fa064416d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  singlePlayerTransition: {fileID: 0}
+  multiPlayerTransition: {fileID: 0}
   nextFruit: {fileID: 48240243414636394}
   nextNextFruit: {fileID: 1821166210121043020}
   nextNextFruitAnimation: {fileID: 0}
@@ -184,6 +187,21 @@ MonoBehaviour:
   nextNextFruitDisabledAnimation: {fileID: 7400000, guid: 591ad58157a06cf419807fc33eadfea0, type: 2}
   nextNextFruitTime:
     fakeValue: 300
+--- !u!111 &7358508950287298079
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774523948533097280}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &3030818699504314192
 GameObject:
   m_ObjectHideFlags: 0

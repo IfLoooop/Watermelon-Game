@@ -3,7 +3,6 @@ using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Fruit_Spawn;
-using Watermelon_Game.Menus;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Container
@@ -17,11 +16,6 @@ namespace Watermelon_Game.Container
         [Header("References")]
         [Tooltip("Inside bounds of the container")]
         [SerializeField] private RectTransform bounds;
-        [Tooltip("Animation to player during a SinglePlayer transition")]
-        [SerializeField] private AnimationClip singlePlayerTransition;
-        [Tooltip("Animation to player during a MultiPlayer transition")]
-        [SerializeField] private AnimationClip multiPlayerTransition;
-
         [Tooltip("Trigger of MaxHeight")]
         [SerializeField] private BoxCollider2D maxHeightTrigger;
 
@@ -35,10 +29,6 @@ namespace Watermelon_Game.Container
         #endregion
 
         #region Fields
-        /// <summary>
-        /// <see cref="Animation"/> component to play on <see cref="ExitMenu.OnGameModeTransition"/>
-        /// </summary>
-        private Animation gameModeTransition;
         /// <summary>
         /// Reference to the <see cref="FruitSpawner"/> that is assigned to this container
         /// </summary>
@@ -62,11 +52,6 @@ namespace Watermelon_Game.Container
         #endregion
         
         #region Methods
-        private void Awake()
-        {
-            this.gameModeTransition = base.GetComponent<Animation>();
-        }
-
         private void Start()
         {
             this.bounds.GetComponent<Canvas>().worldCamera = CameraUtils.Camera;
@@ -81,15 +66,7 @@ namespace Watermelon_Game.Container
                 this.fruitSpawner.GameModeTransitionStarted();
             }
             
-            switch (_GameMode) // TODO: Play sound and make animation  better
-            {
-                case GameMode.SinglePlayer:
-                    this.gameModeTransition.Play(this.singlePlayerTransition.name);
-                    break;
-                case GameMode.MultiPlayer:
-                    this.gameModeTransition.Play(this.multiPlayerTransition.name);
-                    break;
-            }
+            // TODO: Play sound and make animation  better
         }
 
         /// <summary>

@@ -53,9 +53,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c075792cb70cae4d8315b12b06fb7c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bounds: {fileID: 5164968871095166111}
+  animation: {fileID: 6998642802809751568}
   singlePlayerTransition: {fileID: 0}
   multiPlayerTransition: {fileID: 0}
+  bounds: {fileID: 5164968871095166111}
   maxHeightTrigger: {fileID: 915655012215915031}
 --- !u!111 &6998642802809751568
 Animation:

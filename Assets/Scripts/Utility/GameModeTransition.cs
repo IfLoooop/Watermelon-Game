@@ -7,8 +7,17 @@ namespace Watermelon_Game.Utility
     /// Handles the <see cref="ExitMenu"/>.<see cref="ExitMenu.OnGameModeTransition"/> event <br/>
     /// <i>Overwrite <see cref="Transition"/> to execute custom logic on transition</i>
     /// </summary>
+    [RequireComponent(typeof(Animation))]
     internal abstract class GameModeTransition : MonoBehaviour
     {
+        #region Inspector Fields
+        [Header("Transitions")]
+        [Tooltip("Animation to player during a SinglePlayer transition")]
+        [SerializeField] private AnimationClip singlePlayerTransition;
+        [Tooltip("Animation to player during a MultiPlayer transition")]
+        [SerializeField] private AnimationClip multiPlayerTransition;
+        #endregion
+        
         #region Fields
         /// <summary>
         /// Should always be different from the incoming <see cref="GameMode"/> in <see cref="Transition"/> <br/>
@@ -16,8 +25,20 @@ namespace Watermelon_Game.Utility
         /// </summary>
         private GameMode? currentGameMode;
         #endregion
+
+        #region Properties
+        /// <summary>
+        /// Animation component to play the animation clips through
+        /// </summary>
+        protected Animation Animation { get; private set; }
+        #endregion
         
         #region Methods
+        protected virtual void Awake()
+        {
+            this.Animation = base.GetComponent<Animation>();
+        }
+
         protected virtual void OnEnable()
         {
             ExitMenu.OnGameModeTransition += Transition;
@@ -41,6 +62,16 @@ namespace Watermelon_Game.Utility
             }
 
             this.currentGameMode = _GameMode;
+            
+            switch (_GameMode)
+            {
+                case GameMode.SinglePlayer:
+                    this.Animation.Play(this.singlePlayerTransition.name);
+                    break;
+                case GameMode.MultiPlayer:
+                    this.Animation.Play(this.multiPlayerTransition.name);
+                    break;
+            }
         }
         #endregion
     }

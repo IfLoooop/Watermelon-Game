@@ -1,3 +1,4 @@
+TODO: Exit menut buttons dont reset selected color after click
 TODO: Add Multiplayer/Singleplayer localizations
 TODO: Change menu button names
 
