@@ -56,7 +56,6 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// The current value of the countdown
         /// </summary>
-        [SyncVar(hook = nameof(RpcCountdown))]
         private ProtectedUInt32 currentCountdownTime;
         
         /// <summary>
@@ -139,23 +138,21 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Is called at the end of <see cref="countdownAnimation"/>
         /// </summary>
-        //[Client]
+        [Client]
         public void CountDown()
         {
             this.currentCountdownTime--;
-            //this.RpcCountdown();
-            //this.CmdCountdown();
+            this.CmdCountdown();
         }
 
-        //[Command(requiresAuthority = false)]
-        private void CmdCountdown(NetworkConnectionToClient _Sender = null)
+        [Command(requiresAuthority = false)]
+        private void CmdCountdown()//NetworkConnectionToClient _Sender = null
         {
-            Debug.Log("CmdCountdown");
-            //this.RpcCountdown();
+            this.RpcCountdown();
         }
         
-        //[ClientRpc]
-        private void RpcCountdown(ProtectedUInt32 _OldValue, ProtectedUInt32 _NewValue)
+        [ClientRpc]
+        private void RpcCountdown()
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
