@@ -212,6 +212,7 @@ namespace Watermelon_Game.Menus
         /// <param name="_Timestamp">Timestamp in seconds, when the game was over</param>
         private void GameOver(float _Timestamp)
         {
+            Debug.Log($"MenuController.GameOver {_Timestamp}");
             this.menuContainer.CurrentStats.GameOverTimestamp = _Timestamp;
             this.Open(ContainerMenu.CurrentStats);
             this.readyToRestart = true;
