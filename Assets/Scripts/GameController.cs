@@ -96,6 +96,7 @@ namespace Watermelon_Game
         /// <param name="_ConnectionId">The connection id of the client that lost</param>
         private void GameOver(int _ConnectionId) // TODO: Use _ConnectionId
         {
+            Debug.Log("GameOver");
             ActiveGame = false;
             this.resetReason = ResetReason.GameOver;
             this.StartCoroutine(this.ResetGame());
@@ -116,6 +117,7 @@ namespace Watermelon_Game
         /// <returns></returns>
         private IEnumerator ResetGame()
         {
+            Debug.Log("ResetGame");
             OnResetGameStarted?.Invoke();
             
             var _waitTime = new WaitForSeconds(.1f);
@@ -140,6 +142,7 @@ namespace Watermelon_Game
         /// </summary>
         private void GameReset()
         {
+            Debug.Log("GameReset");
             switch (this.resetReason)
             {
                 case ResetReason.GameOver:

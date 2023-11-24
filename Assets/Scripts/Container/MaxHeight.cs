@@ -176,6 +176,7 @@ namespace Watermelon_Game.Container
             
             if (this.countdown <= 1)
             {
+                Debug.Log("RpcCountdown");
                 this.Reset();
                 this.CmdGameOver(this.container.ConnectionId!.Value);
                 return;
@@ -205,6 +206,7 @@ namespace Watermelon_Game.Container
         [Command(requiresAuthority = false)]
         private void CmdGameOver(int _ConnectionId)
         {
+            Debug.Log("CmdGameOver");
             this.RpcGameOver(_ConnectionId);
         }
 
@@ -215,6 +217,7 @@ namespace Watermelon_Game.Container
         [ClientRpc]
         private void RpcGameOver(int _ConnectionId)
         {
+            Debug.Log("RpcGameOver");
             OnGameOver?.Invoke(_ConnectionId);
         }
         
