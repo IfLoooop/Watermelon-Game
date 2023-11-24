@@ -9,7 +9,7 @@ using Watermelon_Game.Menus.Leaderboards;
 using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
 
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.MenuContainers
 {
     /// <summary>
     /// Container for the menus in <see cref="ContainerMenu"/>
@@ -106,11 +106,8 @@ namespace Watermelon_Game.Menus
             this.CheckForNewBestScore(PointsController.CurrentPoints);
             this.GlobalStats.Save();
         }
-
-        /// <summary>
-        /// <see cref="ScrollRectBase.LockScrollPosition"/>
-        /// </summary>
-        public void DisableSetScrollPosition()
+        
+        public override void OnAnimationFinished()
         {
             this.currentActiveMenu!.LockScrollPosition(false);
         }

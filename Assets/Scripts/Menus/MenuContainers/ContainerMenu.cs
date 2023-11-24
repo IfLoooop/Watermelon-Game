@@ -1,4 +1,4 @@
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.MenuContainers
 {
     /// <summary>
     /// Submenus for <see cref="MenuContainer"/>
@@ -6,11 +6,11 @@ namespace Watermelon_Game.Menus
     internal enum ContainerMenu
     {
         /// <summary>
-        /// <see cref="Menus.GlobalStats"/>
+        /// <see cref="MenuContainers.GlobalStats"/>
         /// </summary>
         GlobalStats,
         /// <summary>
-        /// <see cref="Menus.CurrentStats"/>
+        /// <see cref="MenuContainers.CurrentStats"/>
         /// </summary>
         CurrentStats,
         /// <summary>

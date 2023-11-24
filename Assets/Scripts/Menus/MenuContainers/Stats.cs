@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
 
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.MenuContainers
 {
     /// <summary>
     /// Contains various statistics
@@ -96,7 +96,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.GrapeEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.GrapeEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 GrapeEvolvedCount
         {
@@ -108,7 +108,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.CherryEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.CherryEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 CherryEvolvedCount
         {
@@ -120,7 +120,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.StrawberryEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.StrawberryEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 StrawberryEvolvedCount
         {
@@ -132,7 +132,7 @@ namespace Watermelon_Game.Menus
             }
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.LemonEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.LemonEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 LemonEvolvedCount
         {
@@ -144,7 +144,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.OrangeEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.OrangeEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 OrangeEvolvedCount
         {
@@ -156,7 +156,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.AppleEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.AppleEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 AppleEvolvedCount
         {
@@ -168,7 +168,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.PearEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.PearEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 PearEvolvedCount
         {
@@ -180,7 +180,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.PineappleEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.PineappleEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 PineappleEvolvedCount
         {
@@ -192,7 +192,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.HoneymelonEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.HoneymelonEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 HoneymelonEvolvedCount
         {
@@ -204,7 +204,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.WatermelonEvolvedCount"/>
+        /// <see cref="MenuContainers.StatsValues.WatermelonEvolvedCount"/>
         /// </summary>
         public ProtectedInt32 WatermelonEvolvedCount
         {
@@ -216,7 +216,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.StatsValues.GoldenFruitCount"/>
+        /// <see cref="MenuContainers.StatsValues.GoldenFruitCount"/>
         /// </summary>
         public ProtectedInt32 GoldenFruitCount
         {

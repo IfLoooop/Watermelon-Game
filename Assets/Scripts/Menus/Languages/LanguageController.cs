@@ -10,7 +10,7 @@ using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using Watermelon_Game.ExtensionMethods;
 
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.Languages
 {
     /// <summary>
     /// Contains logic for language selection

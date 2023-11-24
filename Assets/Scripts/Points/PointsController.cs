@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
+using Watermelon_Game.Menus.MenuContainers;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
 
@@ -203,7 +204,8 @@ namespace Watermelon_Game.Points
         /// <summary>
         /// Sets <see cref="currentPoints"/> to 0
         /// </summary>
-        private void ResetPoints()
+        /// <param name="_ResetReason">Not needed here</param>
+        private void ResetPoints(ResetReason _ResetReason)
         {
             this.SetPoints(0);
         }

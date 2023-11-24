@@ -10,6 +10,7 @@ using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Menus;
+using Watermelon_Game.Menus.MainMenus;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Utility;
 using Watermelon_Game.Web;
@@ -134,7 +135,7 @@ namespace Watermelon_Game.Fruits
             GameController.OnResetGameStarted += this.DisableFruitEvolving;
             GameController.OnResetGameFinished += this.ClearFruits;
 
-            ExitMenu.OnGameModeTransition += _Mode => this.currentGameMode = _Mode; // TODO: Temporary
+            MainMenuBase.OnGameModeTransition += _Mode => this.currentGameMode = _Mode; // TODO: Temporary
         }
         
         private void OnDisable()
@@ -337,7 +338,8 @@ namespace Watermelon_Game.Fruits
         /// Shouldn't be needed, just a failsafe
         /// </i>
         /// </summary>
-        private void ClearFruits()
+        /// <param name="_ResetReason">Not needed here</param>
+        private void ClearFruits(ResetReason _ResetReason)
         {
             fruits.Clear();
 

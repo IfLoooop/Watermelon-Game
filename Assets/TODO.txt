@@ -1,7 +1,10 @@
+TODO: Test if hosting without a internet connection works
 TODO: Change the WebSettings setting "SizeMultiplier" for the BackgroundFruit in Github 
 TODO: Change menu button names
 TODO: Add a control button to the footer 
 TODO: Use looser connection id -> MaxHeight.OnGameOver
+
+TODO: Game crashes when closing it immediately after opening (maybe something with steam or leaderboard)
 
 -Achievements localizations
 -Reduce the "WaitForEndOfFrame" delay in "FontManager.cs"

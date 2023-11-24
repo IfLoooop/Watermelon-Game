@@ -38,12 +38,13 @@ namespace Watermelon_Game.Menus
         /// <returns>This <see cref="MenuBase"/></returns>
         public virtual MenuBase Open([CanBeNull] MenuBase _CurrentActiveMenu)
         {
-            if (ContainerBounds.GetOwnContainer() is {} _container)
-            {
-                var _rectPoint = CameraUtils.WorldPointToLocalPointInRectangle(MenuController.Canvas, _container.transform.position);
-                var _rectTransform = (base.transform as RectTransform)!;
-                _rectTransform.anchoredPosition = new Vector2(_rectPoint.x, _rectTransform.anchoredPosition.y);   
-            }
+            // TODO: Not sure if needed
+            // if (ContainerBounds.GetOwnContainer() is {} _container)
+            // {
+            //     var _rectPoint = CameraUtils.WorldPointToLocalPointInRectangle(MenuController.Canvas, _container.transform.position);
+            //     var _rectTransform = (base.transform as RectTransform)!;
+            //     _rectTransform.anchoredPosition = new Vector2(_rectPoint.x, _rectTransform.anchoredPosition.y);   
+            // }
             
             if (_CurrentActiveMenu != null)
             {
@@ -77,6 +78,11 @@ namespace Watermelon_Game.Menus
             
             return null;
         }
+        
+        /// <summary>
+        /// Is called at the end of the <see cref="menuPopup"/> animation
+        /// </summary>
+        public virtual void OnAnimationFinished() { }
         #endregion
     }
 }

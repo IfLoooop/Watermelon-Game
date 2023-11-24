@@ -86,7 +86,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// Index of the <see cref="AudioWrapper"/> in <see cref="AudioPool.assignedAudioWrappers"/>, for the <see cref="AudioClipName.BlockedRelease"/> <see cref="AudioClip"/>
         /// </summary>
         private int blockedReleaseIndex;
-        
+
         /// <summary>
         /// The <see cref="FruitBehaviour"/> that is currently attached to this <see cref="FruitSpawner"/> 
         /// </summary>
@@ -94,7 +94,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// Indicates whether any <see cref="Skill"/> is currently active
         /// </summary>
-        private bool anyActiveSkill;
+        private ProtectedBool anyActiveSkill;
         #endregion
 #pragma warning restore CS0109
 
@@ -216,7 +216,6 @@ namespace Watermelon_Game.Fruit_Spawn
         private void GameStarted()
         {
             this.ResetFruitSpawner(true);
-            
             this.BlockInput(false);
             this.UnblockRelease();
             this.CmdGameStarted();
@@ -272,26 +271,29 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// <see cref="GameController.OnResetGameFinished"/>
         /// </summary>
+        /// <param name="_ResetReason"><see cref="ResetReason"/></param>
         [Client]
-        private void ResetGameFinished()
+        private void ResetGameFinished(ResetReason _ResetReason)
         {
-            this.CmdResetGameFinished();
+            this.CmdResetGameFinished(_ResetReason);
         }
 
         /// <summary>
         /// <see cref="ResetGameFinished"/>
         /// </summary>
+        /// <param name="_ResetReason"><see cref="ResetReason"/></param>
         [Command(requiresAuthority = false)]
-        private void CmdResetGameFinished()
+        private void CmdResetGameFinished(ResetReason _ResetReason)
         {
-            this.RpcResetGameFinished();
+            this.RpcResetGameFinished(_ResetReason);
         }
-
+        
         /// <summary>
         /// <see cref="ResetGameFinished"/>
         /// </summary>
+        /// <param name="_ResetReason"><see cref="ResetReason"/></param>
         [ClientRpc]
-        private void RpcResetGameFinished()
+        private void RpcResetGameFinished(ResetReason _ResetReason)
         {
             if (this.fruitBehaviour != null)
             {
@@ -300,6 +302,11 @@ namespace Watermelon_Game.Fruit_Spawn
             this.fruitBehaviour = null;
             this.anyActiveSkill = false;
             this.BlockInput(false);
+
+            if (_ResetReason == ResetReason.ManualRestart)
+            {
+                this.GameStarted();
+            }
         }
         
         /// <summary>

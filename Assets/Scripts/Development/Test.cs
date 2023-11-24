@@ -27,14 +27,6 @@ namespace Watermelon_Game.Development
         #endregion
         
         #region Methods
-        private void Update()
-        {
-            if (GameController.ActiveGame)
-            {
-                this.testTMP.text = (Time.time - GameController.CurrentGameTimeStamp).Value.ToString("F");
-            }
-        }
-
         [Button]
         private void TestButton()
         {

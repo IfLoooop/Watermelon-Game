@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
 
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.MenuContainers
 {
     /// <summary>
     /// Contains global stats
@@ -72,7 +72,7 @@ namespace Watermelon_Game.Menus
         public static GlobalStats Instance { get; private set; }
         
         /// <summary>
-        /// <see cref="Menus.Stats"/>
+        /// <see cref="MenuContainers.Stats"/>
         /// </summary>
         public Stats Stats => this.stats;
         

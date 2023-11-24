@@ -1,10 +1,10 @@
 using UnityEngine;
-using Watermelon_Game.Menus;
+using Watermelon_Game.Menus.MainMenus;
 
 namespace Watermelon_Game.Utility
 {
     /// <summary>
-    /// Handles the <see cref="ExitMenu"/>.<see cref="ExitMenu.OnGameModeTransition"/> event <br/>
+    /// Handles the <see cref="SingleplayerMenu"/>.<see cref="SingleplayerMenu.OnGameModeTransition"/> event <br/>
     /// <i>Overwrite <see cref="Transition"/> to execute custom logic on transition</i>
     /// </summary>
     [RequireComponent(typeof(Animation))]
@@ -21,7 +21,7 @@ namespace Watermelon_Game.Utility
         #region Fields
         /// <summary>
         /// Should always be different from the incoming <see cref="GameMode"/> in <see cref="Transition"/> <br/>
-        /// <b>Same value indicates that a <see cref="ExitMenu.OnGameModeTransition"/>-event has been missed and this GameObject might not be in sync with the current transition state anymore</b>
+        /// <b>Same value indicates that a <see cref="SingleplayerMenu.OnGameModeTransition"/>-event has been missed and this GameObject might not be in sync with the current transition state anymore</b>
         /// </summary>
         private GameMode? currentGameMode;
         #endregion
@@ -41,16 +41,16 @@ namespace Watermelon_Game.Utility
 
         protected virtual void OnEnable()
         {
-            ExitMenu.OnGameModeTransition += Transition;
+            MainMenuBase.OnGameModeTransition += Transition;
         }
 
         protected virtual void OnDisable()
         {
-            ExitMenu.OnGameModeTransition -= Transition;
+            MainMenuBase.OnGameModeTransition -= Transition;
         }
 
         /// <summary>
-        /// Is called on <see cref="ExitMenu.OnGameModeTransition"/> <br/>
+        /// Is called on <see cref="SingleplayerMenu.OnGameModeTransition"/> <br/>
         /// <i>Prints a warning if the incoming <see cref="GameMode"/> is the same as <see cref="currentGameMode"/></i>
         /// </summary>
         /// <param name="_GameMode">The <see cref="GameMode"/> to transition to</param>

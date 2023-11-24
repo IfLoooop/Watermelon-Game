@@ -41,7 +41,7 @@ namespace Watermelon_Game.Networking
         public override void Start()
         {
             base.Start();
-            //base.StartHost(); // TODO: Enable
+            base.StartHost();
         }
         
         public override void OnServerDisconnect(NetworkConnectionToClient _ConnectionToClient)

@@ -3,6 +3,10 @@ using System.Collections;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
+using Watermelon_Game.Menus.Languages;
+using Watermelon_Game.Menus.MainMenus;
+using Watermelon_Game.Menus.MenuContainers;
+using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Menus
 {
@@ -13,10 +17,12 @@ namespace Watermelon_Game.Menus
     {
         #region Inspector Fields
         [Header("References")]
-        [Tooltip("Container for all menus")]
+        [Tooltip("Container for submenus")]
         [SerializeField] private MenuContainer menuContainer;
-        [Tooltip("Reference to the ExitMenu component")]
-        [SerializeField] private ExitMenu exitMenu;
+        [Tooltip("Reference to the Singleplayer menu")]
+        [SerializeField] private SingleplayerMenu singleplayerMenu;
+        [Tooltip("Reference to the Multiplayer menu")]
+        [SerializeField] private MultiplayerMenu multiplayerMenu;
 
         [Header("Settings")]
         [Tooltip("Delay in seconds, between opening and closing the menu, on language change")]
@@ -55,7 +61,7 @@ namespace Watermelon_Game.Menus
         
         #region Events
         /// <summary>
-        /// Is called when the player manually restarts the game through the <see cref="ExitMenu"/>
+        /// Is called when the player manually restarts the game through the <see cref="SingleplayerMenu"/>
         /// </summary>
         public static event Action OnManualRestart;
         /// <summary>
@@ -74,16 +80,16 @@ namespace Watermelon_Game.Menus
         private void OnEnable()
         {
             GameController.OnResetGameStarted += this.ResetGameStarted;
-            GameController.OnResetGameFinished += this.EnableInput;
-            GameController.OnRestartGame += this.GameOver;
+            GameController.OnResetGameFinished += this.ResetGameFinished;
+            MainMenuBase.OnGameModeTransition += OpenMenuForGameMode;
             LanguageController.OnLanguageChanged += this.ReopenMenu;
         }
         
         private void OnDisable()
         {
             GameController.OnResetGameStarted -= this.ResetGameStarted;
-            GameController.OnResetGameFinished -= this.EnableInput;
-            GameController.OnRestartGame -= this.GameOver;
+            GameController.OnResetGameFinished -= this.ResetGameFinished;
+            MainMenuBase.OnGameModeTransition -= OpenMenuForGameMode;
             LanguageController.OnLanguageChanged -= this.ReopenMenu;
         }
         
@@ -102,7 +108,7 @@ namespace Watermelon_Game.Menus
                 }
                 else
                 {
-                    this.Open_Close(this.exitMenu);
+                    this.OpenMenuForGameMode(MainMenuBase.CurrentGameMode);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.M))
@@ -110,15 +116,15 @@ namespace Watermelon_Game.Menus
                 this.Open_Close(this.menuContainer);
             }
 #if DEBUG || DEVELOPMENT_BUILD
-            else if (this.currentActiveMenu is { Menu: Menu.Exit })
+            else if (this.currentActiveMenu is { Menu: Menu.Singleplayer })
             {
                 if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                 {
-                    this.exitMenu.ExitGame();
+                    this.singleplayerMenu.ExitGame();
                 }
                 else if (Input.GetKeyDown(KeyCode.R))
                 {
-                    this.Restart();
+                    Restart();
                 }
             }
 #endif
@@ -173,11 +179,11 @@ namespace Watermelon_Game.Menus
 
         /// <summary>
         /// Manual game restart <br/>
-        /// <i>Is called from the <see cref="ExitMenu"/>-button</i>
+        /// <i>Is called from the <see cref="SingleplayerMenu"/>-button</i>
         /// </summary>
-        public void Restart()
+        public static void Restart()
         {
-            this.CloseCurrentMenu();
+            instance.CloseCurrentMenu();
             OnManualRestart?.Invoke();
         }
         
@@ -188,6 +194,20 @@ namespace Watermelon_Game.Menus
         {
             this.DisableInput();
             this.CloseCurrentMenu();
+        }
+        
+        /// <summary>
+        /// <see cref="GameController.OnResetGameFinished"/>
+        /// </summary>
+        /// <param name="_ResetReason"><see cref="ResetReason"/></param>
+        private void ResetGameFinished(ResetReason _ResetReason)
+        {
+            this.EnableInput();
+            
+            if (_ResetReason == ResetReason.GameOver)
+            {
+                this.GameOver(Time.time);
+            }
         }
         
         /// <summary>
@@ -215,7 +235,6 @@ namespace Watermelon_Game.Menus
             this.menuContainer.CurrentStats.GameOverTimestamp = _Timestamp;
             this.Open(ContainerMenu.CurrentStats);
             this.readyToRestart = true;
-            Debug.Log($"this.menuContainer.CurrentStats.GameOverTimestamp = {_Timestamp}");   
         }
 
         /// <summary> // TODO: Needs better solution
@@ -227,6 +246,23 @@ namespace Watermelon_Game.Menus
             {
                 this.readyToRestart = false;
                 OnRestartGame?.Invoke();
+            }
+        }
+
+        /// <summary>
+        /// Opens the menu for the given <see cref="GameMode"/>
+        /// </summary>
+        /// <param name="_GameMode">The <see cref="GameMode"/> to open the menu of</param>
+        private void OpenMenuForGameMode(GameMode _GameMode)
+        {
+            switch (_GameMode)
+            {
+                case GameMode.SinglePlayer:
+                    this.Open_Close(this.singleplayerMenu);
+                    break;
+                case GameMode.MultiPlayer:
+                    this.Open_Close(this.multiplayerMenu);
+                    break;
             }
         }
         

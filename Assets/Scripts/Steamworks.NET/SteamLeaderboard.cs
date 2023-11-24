@@ -360,6 +360,7 @@ namespace Watermelon_Game.Steamworks.NET
                 }
 
 #if UNITY_EDITOR
+                Debug.LogWarning($"{nameof(SteamLeaderboard)}.{nameof(UploadScore)} should never be called!");
                 return;
 #endif
 #pragma warning disable CS0162 // Unreachable code detected

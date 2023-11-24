@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
 
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.MenuContainers
 {
     internal sealed class CurrentStats : ScrollRectBase
     {
@@ -42,7 +42,7 @@ namespace Watermelon_Game.Menus
             } 
         }
         /// <summary>
-        /// <see cref="Menus.Stats"/>
+        /// <see cref="MenuContainers.Stats"/>
         /// </summary>
         public Stats Stats => this.stats;
         /// <summary>
@@ -87,7 +87,7 @@ namespace Watermelon_Game.Menus
                 _duration = Time.time - GameController.CurrentGameTimeStamp;
             else
                 _duration = this.GameOverTimestamp - GameController.CurrentGameTimeStamp;
-            Debug.Log($"SetDuration: {_duration}");
+            
             this.Duration = TimeSpan.FromSeconds(_duration);
         }
         

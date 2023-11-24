@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.Languages
 {
     /// <summary>
     /// Contains logic for the dropdown menu

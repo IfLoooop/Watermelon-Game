@@ -1,4 +1,4 @@
-namespace Watermelon_Game.Menus
+namespace Watermelon_Game.Menus.MenuContainers
 {
     /// <summary>
     /// Contains no logic

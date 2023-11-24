@@ -176,7 +176,6 @@ namespace Watermelon_Game.Container
             
             if (this.countdown <= 1)
             {
-                Debug.Log("RpcCountdown");
                 this.Reset();
                 this.CmdGameOver(this.container.ConnectionId!.Value);
                 return;
@@ -202,22 +201,22 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Tells the server this client has lost
         /// </summary>
-        /// <param name="_ConnectionId">The connection id of this client</param>
+        /// <param name="_ConnectionId">The connection id of the client who lost</param>
+        /// <param name="_Sender">The local client</param>
         [Command(requiresAuthority = false)]
         private void CmdGameOver(int _ConnectionId, NetworkConnectionToClient _Sender = null)
         {
-            Debug.Log("CmdGameOver");
             this.TargetGameOver(_Sender, _ConnectionId);
         }
 
         /// <summary>
         /// Tell every client the game is over
         /// </summary>
+        /// <param name="_Target">The local client</param>
         /// <param name="_ConnectionId">The connection id of the client that lost</param>
-        [TargetRpc]
+        [TargetRpc] // ReSharper disable once UnusedParameter.Local
         private void TargetGameOver(NetworkConnectionToClient _Target, int _ConnectionId)
         {
-            Debug.Log("RpcGameOver");
             OnGameOver?.Invoke(_ConnectionId);
         }
         

@@ -1,3 +1,5 @@
+using Watermelon_Game.Menus.MainMenus;
+
 namespace Watermelon_Game.Menus
 {
     /// <summary>
@@ -10,8 +12,12 @@ namespace Watermelon_Game.Menus
         /// </summary>
         MenuContainer,
         /// <summary>
-        /// <see cref="ExitMenu"/>
+        /// <see cref="SingleplayerMenu"/>
         /// </summary>
-        Exit
+        Singleplayer,
+        /// <summary>
+        /// <see cref="MultiplayerMenu"/>
+        /// </summary>
+        Multiplayer
     }
 }

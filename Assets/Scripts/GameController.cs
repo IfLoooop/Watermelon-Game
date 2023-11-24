@@ -46,14 +46,10 @@ namespace Watermelon_Game
         /// </summary>
         public static event Action OnResetGameStarted;
         /// <summary>
-        /// Is called when <see cref="ResetGame"/> has finished
+        /// Is called when <see cref="ResetGame"/> has finished <br/>
+        /// <b>Parameter:</b> <see cref="ResetReason"/>
         /// </summary>
-        public static event Action OnResetGameFinished;
-        /// <summary>
-        /// Is called <see cref="MaxHeight.OnGameOver"/> after <see cref="ResetGame"/> has finished <br/>
-        /// <b>Parameter:</b> Timestamp in seconds, when the game was over
-        /// </summary>
-        public static event Action<float> OnRestartGame;
+        public static event Action<ResetReason> OnResetGameFinished;
         #endregion
         
         #region Methods
@@ -67,7 +63,6 @@ namespace Watermelon_Game
             MaxHeight.OnGameOver += this.GameOver;
             MenuController.OnManualRestart += this.ManualRestart;
             MenuController.OnRestartGame += StartGame;
-            OnResetGameFinished += this.GameReset;
             Application.quitting += this.ApplicationIsQuitting;
         }
 
@@ -76,7 +71,6 @@ namespace Watermelon_Game
             MaxHeight.OnGameOver -= this.GameOver;
             MenuController.OnManualRestart -= this.ManualRestart;
             MenuController.OnRestartGame -= StartGame;
-            OnResetGameFinished -= this.GameReset;
             Application.quitting -= this.ApplicationIsQuitting;
         }
         
@@ -96,8 +90,6 @@ namespace Watermelon_Game
         /// <param name="_ConnectionId">The connection id of the client that lost</param>
         private void GameOver(int _ConnectionId) // TODO: Use _ConnectionId
         {
-            Debug.Log("GameOver");
-            ActiveGame = false;
             this.resetReason = ResetReason.GameOver;
             this.StartCoroutine(this.ResetGame());
         }
@@ -117,7 +109,7 @@ namespace Watermelon_Game
         /// <returns></returns>
         private IEnumerator ResetGame()
         {
-            Debug.Log("ResetGame");
+            ActiveGame = false;
             OnResetGameStarted?.Invoke();
             
             var _waitTime = new WaitForSeconds(.1f);
@@ -134,24 +126,7 @@ namespace Watermelon_Game
                 yield return _waitTime;
             }
             
-            OnResetGameFinished?.Invoke();
-        }
-
-        /// <summary>
-        /// <see cref="OnResetGameFinished"/>
-        /// </summary>
-        private void GameReset()
-        {
-            Debug.Log("GameReset");
-            switch (this.resetReason)
-            {
-                case ResetReason.GameOver:
-                    OnRestartGame?.Invoke(Time.time);
-                    break;
-                case ResetReason.ManualRestart:
-                    StartGame();
-                    break;
-            }
+            OnResetGameFinished?.Invoke(this.resetReason);
         }
         
         /// <summary>
