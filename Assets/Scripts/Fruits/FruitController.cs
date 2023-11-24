@@ -9,7 +9,9 @@ using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.ExtensionMethods;
+using Watermelon_Game.Menus;
 using Watermelon_Game.Networking;
+using Watermelon_Game.Utility;
 using Watermelon_Game.Web;
 
 namespace Watermelon_Game.Fruits
@@ -51,6 +53,11 @@ namespace Watermelon_Game.Fruits
         /// Contains every entry of the <see cref="Fruit"/> <see cref="Enum"/> in order
         /// </summary>
         private static readonly Fruit[] enumFruits = Enum.GetValues(typeof(Fruit)).Cast<Fruit>().ToArray();
+
+        /// <summary> // TODO: Temporary
+        /// The current <see cref="GameMode"/>
+        /// </summary>
+        private GameMode currentGameMode;
         #endregion
 
         #region Properties
@@ -126,6 +133,8 @@ namespace Watermelon_Game.Fruits
             EvolvingFruitTrigger.OnCanEvolve += this.CanEvolve;
             GameController.OnResetGameStarted += this.DisableFruitEvolving;
             GameController.OnResetGameFinished += this.ClearFruits;
+
+            ExitMenu.OnGameModeTransition += _Mode => this.currentGameMode = _Mode; // TODO: Temporary
         }
         
         private void OnDisable()
@@ -335,8 +344,11 @@ namespace Watermelon_Game.Fruits
             var _fruitContainerTransform = this.fruitContainer.transform;
             var _childCount = _fruitContainerTransform.childCount;
 
-#if UNITY_EDITOR
-            if (_childCount > 0) // TODO: No idea why sometimes fruits all left in the container
+#if UNITY_EDITOR 
+            // Can happen in multiplayer, because the "Fruit Container" contains the fruits of all clients
+            // TODO: On GameOver, fruits have to be destroyed by the server, not by the individual clients
+            // TODO: Remove "this.currentGameMode"
+            if (_childCount > 0 && this.currentGameMode == GameMode.SinglePlayer) // TODO: No idea why sometimes fruits all left in the container
             {
                 Debug.LogError($"{fruitContainer.name} has still {_childCount} children, destroying now.");
             }

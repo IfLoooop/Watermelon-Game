@@ -87,7 +87,7 @@ namespace Watermelon_Game.Menus
                 _duration = Time.time - GameController.CurrentGameTimeStamp;
             else
                 _duration = this.GameOverTimestamp - GameController.CurrentGameTimeStamp;
-            
+            Debug.Log($"SetDuration: {_duration}");
             this.Duration = TimeSpan.FromSeconds(_duration);
         }
         
