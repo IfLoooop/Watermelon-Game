@@ -254,7 +254,10 @@ namespace Watermelon_Game.Fruit_Spawn
         [ClientRpc]
         private void RpcResetGameFinished()
         {
-            Destroy(this.fruitBehaviour.gameObject);
+            if (this.fruitBehaviour != null)
+            {
+                this.fruitBehaviour.DestroyFruit();   
+            }
             this.fruitBehaviour = null;
             this.anyActiveSkill = false;
             this.BlockInput(false);
