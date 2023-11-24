@@ -204,18 +204,18 @@ namespace Watermelon_Game.Container
         /// </summary>
         /// <param name="_ConnectionId">The connection id of this client</param>
         [Command(requiresAuthority = false)]
-        private void CmdGameOver(int _ConnectionId)
+        private void CmdGameOver(int _ConnectionId, NetworkConnectionToClient _Sender = null)
         {
             Debug.Log("CmdGameOver");
-            this.RpcGameOver(_ConnectionId);
+            this.TargetGameOver(_Sender, _ConnectionId);
         }
 
         /// <summary>
         /// Tell every client the game is over
         /// </summary>
         /// <param name="_ConnectionId">The connection id of the client that lost</param>
-        [ClientRpc]
-        private void RpcGameOver(int _ConnectionId)
+        [TargetRpc]
+        private void TargetGameOver(NetworkConnectionToClient _Target, int _ConnectionId)
         {
             Debug.Log("RpcGameOver");
             OnGameOver?.Invoke(_ConnectionId);
