@@ -89,9 +89,10 @@ namespace Watermelon_Game.Container
         
         #region Events
         /// <summary>
-        /// Is called when <see cref="countdown"/> reaches 0
+        /// Is called when <see cref="countdown"/> reaches 0 <br/>
+        /// <b>Parameter:</b> The connection id of the client that lost
         /// </summary>
-        public static event Action OnGameOver;
+        public static event Action<int> OnGameOver;
         #endregion
         
         #region Methods
@@ -176,7 +177,6 @@ namespace Watermelon_Game.Container
             if (this.countdown <= 1)
             {
                 this.Reset();
-                //OnGameOver?.Invoke(); // TODO: Add who lost to the event
                 this.CmdGameOver(this.container.ConnectionId!.Value);
                 return;
             }
@@ -198,16 +198,24 @@ namespace Watermelon_Game.Container
             }
         }
 
+        /// <summary>
+        /// Tells the server this client has lost
+        /// </summary>
+        /// <param name="_ConnectionId">The connection id of this client</param>
         [Command(requiresAuthority = false)]
         private void CmdGameOver(int _ConnectionId)
         {
-            this.RpcGameOver();
+            this.RpcGameOver(_ConnectionId);
         }
 
+        /// <summary>
+        /// Tell every client the game is over
+        /// </summary>
+        /// <param name="_ConnectionId">The connection id of the client that lost</param>
         [ClientRpc]
-        private void RpcGameOver()
+        private void RpcGameOver(int _ConnectionId)
         {
-            OnGameOver?.Invoke();
+            OnGameOver?.Invoke(_ConnectionId);
         }
         
         /// <summary>

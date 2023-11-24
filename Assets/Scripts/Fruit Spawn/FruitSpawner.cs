@@ -225,7 +225,26 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// <see cref="GameController.OnResetGameStarted"/>
         /// </summary>
+        [Client]
         private void ResetGameStarted()
+        {
+            this.CmdResetGameStarted();
+        }
+
+        /// <summary>
+        /// <see cref="ResetGameStarted"/>
+        /// </summary>
+        [Command(requiresAuthority = false)]
+        private void CmdResetGameStarted()
+        {
+            this.RpcResetGameStarted();
+        }
+        
+        /// <summary>
+        /// <see cref="ResetGameStarted"/>
+        /// </summary>
+        [ClientRpc]
+        private void RpcResetGameStarted()
         {
             this.BlockInput(true);
             this.fruitSpawnerAim.EnableAim(false);
@@ -238,19 +257,21 @@ namespace Watermelon_Game.Fruit_Spawn
         [Client]
         private void ResetGameFinished()
         {
-            //Destroy(this.fruitBehaviour.gameObject);
-            // this.fruitBehaviour = null;
-            // this.anyActiveSkill = false;
-            // this.BlockInput(false);
-            this.CmdResetGameFinished(this.fruitBehaviour);
+            this.CmdResetGameFinished();
         }
 
+        /// <summary>
+        /// <see cref="ResetGameFinished"/>
+        /// </summary>
         [Command]
-        private void CmdResetGameFinished(FruitBehaviour _FruitBehaviour)
+        private void CmdResetGameFinished()
         {
             this.RpcResetGameFinished();
         }
 
+        /// <summary>
+        /// <see cref="ResetGameFinished"/>
+        /// </summary>
         [ClientRpc]
         private void RpcResetGameFinished()
         {

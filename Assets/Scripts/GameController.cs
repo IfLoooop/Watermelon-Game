@@ -15,10 +15,6 @@ namespace Watermelon_Game
     {
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="GameController"/>
-        /// </summary>
-        private static GameController instance;
-        /// <summary>
         /// <see cref="ResetReason"/>
         /// </summary>
         private ResetReason resetReason;
@@ -62,13 +58,12 @@ namespace Watermelon_Game
         #region Methods
         private void Awake()
         {
-            instance = this;
             Application.targetFrameRate = 120;
         }
 
         private void OnEnable()
         {
-            MaxHeight.OnGameOver += GameOver;
+            MaxHeight.OnGameOver += this.GameOver;
             MenuController.OnManualRestart += this.ManualRestart;
             MenuController.OnRestartGame += StartGame;
             OnResetGameFinished += this.GameReset;
@@ -77,7 +72,7 @@ namespace Watermelon_Game
 
         private void OnDisable()
         {
-            MaxHeight.OnGameOver -= GameOver;
+            MaxHeight.OnGameOver -= this.GameOver;
             MenuController.OnManualRestart -= this.ManualRestart;
             MenuController.OnRestartGame -= StartGame;
             OnResetGameFinished -= this.GameReset;
@@ -97,11 +92,12 @@ namespace Watermelon_Game
         /// <summary>
         /// <see cref="MaxHeight.OnGameOver"/>
         /// </summary>
-        public static void GameOver()
+        /// <param name="_ConnectionId">The connection id of the client that lost</param>
+        private void GameOver(int _ConnectionId)
         {
             ActiveGame = false;
-            instance.resetReason = ResetReason.GameOver;
-            instance.StartCoroutine(instance.ResetGame());
+            this.resetReason = ResetReason.GameOver;
+            this.StartCoroutine(this.ResetGame());
         }
 
         /// <summary>
