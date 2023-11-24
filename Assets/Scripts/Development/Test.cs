@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 
 namespace Watermelon_Game.Development
@@ -8,6 +9,11 @@ namespace Watermelon_Game.Development
     internal sealed class Test : MonoBehaviour
     {
 #if DEBUG || DEVELOPMENT_BUILD
+
+        #region Inspector Fields
+        [Tooltip("For outputting test data")]
+        [SerializeField] private TextMeshProUGUI testTMP;
+        #endregion
         
         #region Fields
         /// <summary>
@@ -21,6 +27,14 @@ namespace Watermelon_Game.Development
         #endregion
         
         #region Methods
+        private void Update()
+        {
+            if (GameController.ActiveGame)
+            {
+                this.testTMP.text = (Time.time - GameController.CurrentGameTimeStamp).Value.ToString("F");
+            }
+        }
+
         [Button]
         private void TestButton()
         {

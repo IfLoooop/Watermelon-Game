@@ -735,7 +735,10 @@ namespace Watermelon_Game.Fruits
         [Command(requiresAuthority = false)]
         private void CmdDestroyFruit(GameObject _Fruit)
         {
-            NetworkServer.Destroy(_Fruit);
+            if (_Fruit != null)
+            {
+                NetworkServer.Destroy(_Fruit);
+            }
         }
         
         /// <summary>

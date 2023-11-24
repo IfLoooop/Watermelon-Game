@@ -1,13 +1,11 @@
-TODO: Fruit destroy on GameOver doesn't work correctrly
-TODO: Fruit inside FruitSpawner is not destroyed (On host, for opponents FruitSpawner)
-TODO: Add Multiplayer/Singleplayer localizations
-TODO: Move menus to center of contauner (in multiplayer)
-TODO: Somtimes background fruits are way to big
+TODO: Change the WebSettings setting "SizeMultiplier" for the BackgroundFruit in Github 
 TODO: Change menu button names
-TODO: Game over menu scroll position is not at top
-TODO: Deactivate FruitSpawner aim on game over (still visible)
+TODO: Add a control button to the footer 
+TODO: Use looser connection id -> MaxHeight.OnGameOver
 
 -Achievements localizations
+-Reduce the "WaitForEndOfFrame" delay in "FontManager.cs"
+-Check if the Leaderboard entries should be capped
 -DevelopmentTools fruit spawning is not working online (check what elso is not working)
 -On UWP build, rewired always asks to install the same missing package
 -Infobox which buttons are used in "DevelopmentTools.cs"

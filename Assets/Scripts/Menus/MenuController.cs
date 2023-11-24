@@ -47,6 +47,10 @@ namespace Watermelon_Game.Menus
         /// Indicates whether any of the menus is currently opened
         /// </summary>
         public static bool IsAnyMenuOpen => instance.currentActiveMenu != null;
+        /// <summary>
+        /// The <see cref="UnityEngine.Canvas"/> of this <see cref="MenuController"/>
+        /// </summary>
+        public static Canvas Canvas { get; private set; }
         #endregion
         
         #region Events
@@ -64,6 +68,7 @@ namespace Watermelon_Game.Menus
         private void Awake()
         {
             instance = this;
+            Canvas = base.GetComponentInChildren<Canvas>();
         }
         
         private void OnEnable()
@@ -204,8 +209,10 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Opens the <see cref="CurrentStats"/> at the end of a game -> <see cref="GameController.OnRestartGame"/>
         /// </summary>
-        private void GameOver()
+        /// <param name="_Timestamp">Timestamp in seconds, when the game was over</param>
+        private void GameOver(float _Timestamp)
         {
+            this.menuContainer.CurrentStats.GameOverTimestamp = _Timestamp;
             this.Open(ContainerMenu.CurrentStats);
             this.readyToRestart = true;
         }

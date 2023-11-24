@@ -122,10 +122,6 @@ namespace Watermelon_Game.Menus
             this.Load(true);
         }
         
-        /// <summary>
-        /// <see cref="ScrollRectBase.SetActive"/>
-        /// </summary>
-        /// <param name="_CurrentActiveMenu">The <see cref="ScrollRectBase"/> to disable the <see cref="GameObject"/> of</param>
         public override ScrollRectBase SetActive(ScrollRectBase _CurrentActiveMenu)
         {
             this.SetTimeSpendInGameText(Time.time);

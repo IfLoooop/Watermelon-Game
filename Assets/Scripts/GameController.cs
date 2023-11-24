@@ -50,9 +50,10 @@ namespace Watermelon_Game
         /// </summary>
         public static event Action OnResetGameFinished;
         /// <summary>
-        /// Is called <see cref="MaxHeight.OnGameOver"/> after <see cref="ResetGame"/> has finished
+        /// Is called <see cref="MaxHeight.OnGameOver"/> after <see cref="ResetGame"/> has finished <br/>
+        /// <b>Parameter:</b> Timestamp in seconds, when the game was over
         /// </summary>
-        public static event Action OnRestartGame;
+        public static event Action<float> OnRestartGame;
         #endregion
         
         #region Methods
@@ -93,7 +94,7 @@ namespace Watermelon_Game
         /// <see cref="MaxHeight.OnGameOver"/>
         /// </summary>
         /// <param name="_ConnectionId">The connection id of the client that lost</param>
-        private void GameOver(int _ConnectionId)
+        private void GameOver(int _ConnectionId) // TODO: Use _ConnectionId
         {
             ActiveGame = false;
             this.resetReason = ResetReason.GameOver;
@@ -142,7 +143,7 @@ namespace Watermelon_Game
             switch (this.resetReason)
             {
                 case ResetReason.GameOver:
-                    OnRestartGame?.Invoke();
+                    OnRestartGame?.Invoke(Time.time);
                     break;
                 case ResetReason.ManualRestart:
                     StartGame();

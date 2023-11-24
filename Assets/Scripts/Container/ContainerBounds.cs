@@ -31,7 +31,13 @@ namespace Watermelon_Game.Container
 
         #region Fields
         /// <summary>
-        /// Reference to the <see cref="FruitSpawner"/> that is assigned to this container
+        /// Singleton of <see cref="ContainerBounds"/> <br/>
+        /// <i>The container that is assigned to the local player</i>
+        /// </summary>
+        [CanBeNull] private static ContainerBounds instance;
+        /// <summary>
+        /// Reference to the <see cref="FruitSpawner"/> that is assigned to this container <br/>
+        /// <b>Will only be set for the local client, for every other client this will be null!</b>
         /// </summary>
         [CanBeNull] private FruitSpawner fruitSpawner;
         #endregion
@@ -85,6 +91,7 @@ namespace Watermelon_Game.Container
         /// <param name="_FruitSpawner">The <see cref="FruitSpawner"/> to assign this <see cref="ContainerBounds"/> to</param>
         public void AssignToPlayer(FruitSpawner _FruitSpawner)
         {
+            instance = this;
             this.fruitSpawner = _FruitSpawner;
             this.connectionId = this.fruitSpawner!.SetContainerBounds(this);
             this.PlayerContainer = true;
@@ -134,6 +141,16 @@ namespace Watermelon_Game.Container
         public bool Contains(Vector2 _Point)
         {
             return this.bounds.rect.Contains(new Vector3(_Point.x, _Point.y) - this.bounds.position);
+        }
+        
+        /// <summary>
+        /// Returns the container that is assigned to the local player
+        /// </summary>
+        /// <returns>The container that is assigned to the local player</returns>
+        [CanBeNull]
+        public static ContainerBounds GetOwnContainer()
+        {
+            return instance;
         }
         #endregion
     }

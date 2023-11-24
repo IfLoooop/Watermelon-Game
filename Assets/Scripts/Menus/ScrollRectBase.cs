@@ -25,35 +25,25 @@ namespace Watermelon_Game.Menus
         /// </summary>
         private float lastScrollPosition = 1;
         /// <summary>
-        /// Indicates whether the <see cref="lastScrollPosition"/> should be set or not
+        /// Locks the scroll position to <see cref="lastScrollPosition"/> while true
         /// </summary>
-        private bool setLastScrollPosition;
+        private bool lockScrollPosition;
+        #endregion
+
+        #region Properties
+        /// <summary>
+        /// <see cref="menu"/>
+        /// </summary>
+        public ContainerMenu Menu => this.menu;
         #endregion
         
         #region Methods
         /// <summary>
-        /// Used for logic when the <see cref="MenuContainer"/> opens
+        /// Sets the value of <see cref="lockScrollPosition"/>
         /// </summary>
-        public virtual void CustomOnEnable()
+        public void LockScrollPosition(bool _Value)
         {
-            this.setLastScrollPosition = true;
-        }
-        
-        /// <summary>
-        /// Sets <see cref="lastScrollPosition"/> to the current value of the scrollbar and enables <see cref="setLastScrollPosition"/>
-        /// </summary>
-        public void SetLastScrollPosition()
-        {
-            this.lastScrollPosition = this.scrollBar.value;
-        }
-        
-        /// <summary>
-        /// Sets <see cref="setLastScrollPosition"/> to false <br/>
-        /// <i>Is called at the end of the "MenuPopUp"-Animation</i>
-        /// </summary>
-        public void DisableSetScrollPosition()
-        {
-            this.setLastScrollPosition = false;
+            this.lockScrollPosition = _Value;
         }
         
         /// <summary>
@@ -62,7 +52,7 @@ namespace Watermelon_Game.Menus
         /// <param name="_Scrollbar">The <see cref="Scrollbar"/> whose <see cref="Scrollbar.value"/> was changed</param>
         public virtual void OnScrollPositionChanged(Scrollbar _Scrollbar)
         {
-            if (this.setLastScrollPosition)
+            if (this.lockScrollPosition)
             {
                 this.scrollBar.value = this.lastScrollPosition;
             }
@@ -83,6 +73,15 @@ namespace Watermelon_Game.Menus
             this.gameObject.SetActive(true);
 
             return this;
+        }
+        
+        /// <summary>
+        /// Disables this <see cref="ScrollRectBase"/>
+        /// </summary>
+        public void SetInactive()
+        {
+            this.lastScrollPosition = this.scrollBar.value;
+            this.gameObject.SetActive(false);
         }
         #endregion
     }

@@ -12,14 +12,14 @@ namespace Watermelon_Game.Background
     /// <summary>
     /// Controls the <see cref="BackgroundFruit"/> in the background of the scene
     /// </summary>
-    internal sealed class BackgroundFruitController : SerializedMonoBehaviour
+    internal sealed class BackgroundFruitController : MonoBehaviour
     {
         #region Websettings
         [Header("WebSettings")]
         [Tooltip("Time in seconds, between the fruit spawns")]
         [ShowInInspector] private static float fruitSpawnDelay = .25f;
         [Tooltip("Is multiplied on the size of every background fruit")]
-        [ShowInInspector] private static float sizeMultiplier = .2f;
+        [ShowInInspector] private static float sizeMultiplier = 1;
         [Tooltip("Controls the force with which the fruits are dropped")]
         [ShowInInspector] private static float forceMultiplier = 25;
         [Tooltip("Alpha value for the sprites, must be between 0-1")]
@@ -88,31 +88,32 @@ namespace Watermelon_Game.Background
         #endregion
         
         #region Methods
-        /// <summary>
-        /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
-        /// </summary>
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
-        private static void SubscribeToWebSettings()
-        {
-            WebSettings.OnApplyWebSettings += ApplyWebSettings;
-        }
-
-        private void OnDestroy()
-        {
-            WebSettings.OnApplyWebSettings -= ApplyWebSettings;
-        }
-
-        /// <summary>
-        /// Tries to set the values from the web settings
-        /// </summary>
-        private static void ApplyWebSettings()
-        {
-            var _callerType = typeof(BackgroundFruitController);
-            WebSettings.TrySetValue(nameof(FruitSpawnDelay), ref fruitSpawnDelay, _callerType);
-            WebSettings.TrySetValue(nameof(SizeMultiplier), ref sizeMultiplier, _callerType);
-            WebSettings.TrySetValue(nameof(ForceMultiplier), ref forceMultiplier, _callerType);
-            WebSettings.TrySetValue(nameof(SpriteAlphaValue), ref spriteAlphaValue, _callerType);
-        }
+        // TODO: In some videos the settings are completely false, no idea why, try the next build without the WebSettings
+        // /// <summary>
+        // /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
+        // /// </summary>
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+        // private static void SubscribeToWebSettings()
+        // {
+        //     WebSettings.OnApplyWebSettings += ApplyWebSettings;
+        // }
+        //
+        // private void OnDestroy()
+        // {
+        //     WebSettings.OnApplyWebSettings -= ApplyWebSettings;
+        // }
+        //
+        // /// <summary>
+        // /// Tries to set the values from the web settings
+        // /// </summary>
+        // private static void ApplyWebSettings()
+        // {
+        //     var _callerType = typeof(BackgroundFruitController);
+        //     WebSettings.TrySetValue(nameof(FruitSpawnDelay), ref fruitSpawnDelay, _callerType);
+        //     WebSettings.TrySetValue(nameof(SizeMultiplier), ref sizeMultiplier, _callerType);
+        //     WebSettings.TrySetValue(nameof(ForceMultiplier), ref forceMultiplier, _callerType);
+        //     WebSettings.TrySetValue(nameof(SpriteAlphaValue), ref spriteAlphaValue, _callerType);
+        // }
         
         private void Awake()
         {
@@ -136,7 +137,7 @@ namespace Watermelon_Game.Background
 
             foreach (var _fruitData in _fruits)
             {
-                var _sprite = _fruitData.Prefab.GetComponent<SpriteRenderer>().sprite;
+                var _sprite = _fruitData.Sprite;
                 var _fruitPrefabSize = _fruitData.Scale.Value.x;
                 
                 this.fruitSprites.Add((_sprite, _fruitPrefabSize));

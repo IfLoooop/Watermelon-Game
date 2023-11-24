@@ -335,11 +335,12 @@ namespace Watermelon_Game.Fruits
             var _fruitContainerTransform = this.fruitContainer.transform;
             var _childCount = _fruitContainerTransform.childCount;
 
-            if (_childCount > 0)
+#if UNITY_EDITOR
+            if (_childCount > 0) // TODO: No idea why sometimes fruits all left in the container
             {
                 Debug.LogError($"{fruitContainer.name} has still {_childCount} children, destroying now.");
             }
-            
+#endif
             // ReSharper disable once InconsistentNaming
             for (var i = _childCount - 1; i >= 0; i--)
             {

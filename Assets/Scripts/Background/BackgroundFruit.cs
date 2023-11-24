@@ -9,27 +9,22 @@ namespace Watermelon_Game.Background
     [RequireComponent(typeof(SpriteRenderer), typeof(Rigidbody2D), typeof(CircleCollider2D))]
     internal sealed class BackgroundFruit : MonoBehaviour
     {
+#pragma warning disable CS0109
         #region Fields
-        /// <summary>
-        /// The initial size of this <see cref="Transform"/>
-        /// </summary>
-        private Vector3 baseSize;
         /// <summary>
         /// The <see cref="SpriteRenderer"/> component of ths <see cref="GameObject"/>
         /// </summary>
         private SpriteRenderer spriteRenderer;
-#pragma warning disable CS0109
         /// <summary>
         /// The <see cref="Rigidbody2D"/> component of this <see cref="GameObject"/>
         /// </summary>
         private new Rigidbody2D rigidbody2D;
-#pragma warning restore CS0109
         #endregion
+#pragma warning restore CS0109
         
         #region Methods
         private void Awake()
         {
-            this.baseSize = base.transform.localScale;
             this.spriteRenderer = base.GetComponent<SpriteRenderer>();
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
             
@@ -38,7 +33,6 @@ namespace Watermelon_Game.Background
 
         private void OnBecameInvisible()
         {
-            base.transform.localScale = this.baseSize;
             BackgroundFruitController.ReturnToPool(this);
         }
         
@@ -49,7 +43,7 @@ namespace Watermelon_Game.Background
         public void Set((Sprite sprite, float fruitPrefabSize) _FruitData)
         {
             this.spriteRenderer.sprite = _FruitData.sprite;
-            base.transform.localScale *= _FruitData.fruitPrefabSize * BackgroundFruitController.SizeMultiplier;
+            base.transform.localScale = Vector3.one * (_FruitData.fruitPrefabSize * BackgroundFruitController.SizeMultiplier);
         }
 
         /// <summary>

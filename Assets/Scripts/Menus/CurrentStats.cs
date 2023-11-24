@@ -57,6 +57,11 @@ namespace Watermelon_Game.Menus
                 SetDurationText();
             } 
         }
+        
+        /// <summary>
+        /// Timestamp in seconds, of the last game over
+        /// </summary>
+        public ProtectedFloat GameOverTimestamp { get; set; }
         #endregion
         
         #region Methods
@@ -64,17 +69,7 @@ namespace Watermelon_Game.Menus
         {
             this.Reset();
         }
-
-        public override void CustomOnEnable()
-        {
-            this.SetDuration();
-            base.CustomOnEnable();
-        }
         
-        /// <summary>
-        /// <see cref="ScrollRectBase.SetActive"/>
-        /// </summary>
-        /// <param name="_CurrentActiveMenu">The <see cref="ScrollRectBase"/> to disable the <see cref="GameObject"/> of</param>
         public override ScrollRectBase SetActive(ScrollRectBase _CurrentActiveMenu)
         {
             this.SetDuration();
@@ -87,11 +82,13 @@ namespace Watermelon_Game.Menus
         /// </summary>
         private void SetDuration()
         {
+            float _duration;
             if (GameController.ActiveGame)
-            {
-                var _currentGameDuration = Time.time - GameController.CurrentGameTimeStamp;
-                this.Duration = TimeSpan.FromSeconds(_currentGameDuration);   
-            }
+                _duration = Time.time - GameController.CurrentGameTimeStamp;
+            else
+                _duration = this.GameOverTimestamp - GameController.CurrentGameTimeStamp;
+            
+            this.Duration = TimeSpan.FromSeconds(_duration);
         }
         
         // TODO: Try to combine with "GlobalStats.cs" "SetTimeSpendText()"-Method

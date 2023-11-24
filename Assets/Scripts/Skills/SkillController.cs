@@ -17,7 +17,7 @@ using Watermelon_Game.Web;
 
 namespace Watermelon_Game.Skills
 {
-    internal sealed class SkillController : SerializedMonoBehaviour
+    internal sealed class SkillController : MonoBehaviour
     {
         #region WebSettings
         [Header("WebSettings")]

@@ -2,6 +2,8 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Audio;
+using Watermelon_Game.Container;
+using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Menus
 {
@@ -27,7 +29,7 @@ namespace Watermelon_Game.Menus
         /// </summary>
         public Menu Menu => this.menu;
         #endregion
-
+        
         #region Methods
         /// <summary>
         /// Closes the given <see cref="MenuBase"/> and opens this one
@@ -36,6 +38,13 @@ namespace Watermelon_Game.Menus
         /// <returns>This <see cref="MenuBase"/></returns>
         public virtual MenuBase Open([CanBeNull] MenuBase _CurrentActiveMenu)
         {
+            if (ContainerBounds.GetOwnContainer() is {} _container)
+            {
+                var _rectPoint = CameraUtils.WorldPointToLocalPointInRectangle(MenuController.Canvas, _container.transform.position);
+                var _rectTransform = (base.transform as RectTransform)!;
+                _rectTransform.anchoredPosition = new Vector2(_rectPoint.x, _rectTransform.anchoredPosition.y);   
+            }
+            
             if (_CurrentActiveMenu != null)
             {
                 if (_CurrentActiveMenu.menu != this.menu)

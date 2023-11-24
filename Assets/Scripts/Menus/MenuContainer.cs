@@ -22,23 +22,38 @@ namespace Watermelon_Game.Menus
         
         [Header("Debug")]
         [Tooltip("The currently active menu")]
-        [SerializeField][ReadOnly] private ScrollRectBase currentActiveMenu;
+        [SerializeField][ReadOnly][CanBeNull] private ScrollRectBase currentActiveMenu;
         #endregion
 
+        #region Fields
+        /// <summary>
+        /// This menu will be opened when <see cref="currentActiveMenu"/> is null
+        /// </summary>
+        private ContainerMenu lastActiveMenu = ContainerMenu.GlobalStats;
+        #endregion
+        
+        // ReSharper disable MemberCanBePrivate.Global
+        // ReSharper disable UnusedMember.Global
         #region Properties
         /// <summary>
         /// <see cref="GlobalStats"/>
         /// </summary>
-        private GlobalStats GlobalStats => (GlobalStats)this.menus[ContainerMenu.GlobalStats];
+        public GlobalStats GlobalStats => (GlobalStats)this.menus[ContainerMenu.GlobalStats];
         /// <summary>
         /// <see cref="CurrentStats"/>
         /// </summary>
-        private CurrentStats CurrentStats => (CurrentStats)this.menus[ContainerMenu.CurrentStats];
+        public CurrentStats CurrentStats => (CurrentStats)this.menus[ContainerMenu.CurrentStats];
         /// <summary>
         /// <see cref="Leaderboard"/>
         /// </summary>
-        private Leaderboard Leaderboard => (Leaderboard)this.menus[ContainerMenu.Leaderboard];
+        public Leaderboard Leaderboard => (Leaderboard)this.menus[ContainerMenu.Leaderboard];
+        /// <summary>
+        /// <see cref="Controls"/>
+        /// </summary>
+        public Controls Controls => (Controls)this.menus[ContainerMenu.Controls];
         #endregion
+        // ReSharper restore UnusedMember.Global
+        // ReSharper restore MemberCanBePrivate.Global
         
         #region Events
         /// <summary>
@@ -86,11 +101,6 @@ namespace Watermelon_Game.Menus
             Multiplier.OnMultiplierActivated -= this.MultiplierActivated;
         }
         
-        private void Start()
-        {
-            this.currentActiveMenu = this.GlobalStats.SetActive(this.currentActiveMenu);
-        }
-
         private void OnApplicationQuit()
         {
             this.CheckForNewBestScore(PointsController.CurrentPoints);
@@ -98,11 +108,11 @@ namespace Watermelon_Game.Menus
         }
 
         /// <summary>
-        /// <see cref="ScrollRectBase.DisableSetScrollPosition"/>
+        /// <see cref="ScrollRectBase.LockScrollPosition"/>
         /// </summary>
         public void DisableSetScrollPosition()
         {
-            this.currentActiveMenu.DisableSetScrollPosition();
+            this.currentActiveMenu!.LockScrollPosition(false);
         }
         
         /// <summary>
@@ -128,19 +138,20 @@ namespace Watermelon_Game.Menus
                 this.currentActiveMenu = _menu.SetActive(this.currentActiveMenu);
             }
 
+            this.currentActiveMenu!.LockScrollPosition(true);
+            
             return base.Open(_CurrentActiveMenu);
         }
 
         public override MenuBase Open(MenuBase _CurrentActiveMenu)
         {
-            this.currentActiveMenu.CustomOnEnable();
-            
-            return base.Open(_CurrentActiveMenu);
+            return this.Open(_CurrentActiveMenu, this.lastActiveMenu);
         }
         
         public override MenuBase Close()
         {
-            this.currentActiveMenu.SetLastScrollPosition();
+            this.lastActiveMenu = this.currentActiveMenu!.Menu;
+            this.currentActiveMenu!.SetInactive();
             
             return base.Close();
         }
