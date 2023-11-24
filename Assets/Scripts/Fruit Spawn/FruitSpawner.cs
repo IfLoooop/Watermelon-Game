@@ -248,13 +248,13 @@ namespace Watermelon_Game.Fruit_Spawn
         [Command]
         private void CmdResetGameFinished(FruitBehaviour _FruitBehaviour)
         {
-            NetworkServer.Destroy(_FruitBehaviour.gameObject);
             this.RpcResetGameFinished();
         }
 
         [ClientRpc]
         private void RpcResetGameFinished()
         {
+            Destroy(this.fruitBehaviour.gameObject);
             this.fruitBehaviour = null;
             this.anyActiveSkill = false;
             this.BlockInput(false);
