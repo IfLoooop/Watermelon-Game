@@ -73,15 +73,7 @@ namespace Watermelon_Game.Container
                 this.fruitSpawner.GameModeTransitionStarted();
             }
 
-            switch (_GameMode)
-            {
-                case GameMode.SinglePlayer:
-                    AudioPool.PlayClip(AudioClipName.MenuPopup);
-                    break;
-                case GameMode.MultiPlayer:
-                    AudioPool.PlayClip(AudioClipName.FruitDestroy);
-                    break;
-            }
+            AudioPool.PlayClip(AudioClipName.FruitDestroy);
         }
 
         /// <summary>

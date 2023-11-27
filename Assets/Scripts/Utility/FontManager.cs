@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -79,12 +80,13 @@ namespace Watermelon_Game.Utility
         /// Adds all unicode characters from <see cref="watermelonGame"/> and all its fallback FontAssets to <see cref="unicodes"/> <br/>
         /// <i>Distinct list</i>
         /// </summary>
+        /// <param name="_AddFallbackFonts">If true also adds the unicodes of the fallback font assets</param>
         /// <returns></returns>
-        private Task AddAllUnicodeCharactersAsync_DEVELOPMENT()
+        private Task AddAllUnicodeCharactersAsync_DEVELOPMENT(bool _AddFallbackFonts = true)
         {
             return Task.Run(() =>
             {
-                var _allCharacters = new List<TMP_FontAsset>(watermelonGame.fallbackFontAssetTable) { watermelonGame }.SelectMany(_FontAsset => _FontAsset.characterTable);
+                var _allCharacters = new List<TMP_FontAsset>(_AddFallbackFonts ? watermelonGame.fallbackFontAssetTable : Array.Empty<TMP_FontAsset>()) { watermelonGame }.SelectMany(_FontAsset => _FontAsset.characterTable);
                 Parallel.ForEach(_allCharacters, _Character =>
                 {
                     if (!this.unicodes.Contains(_Character.unicode))
@@ -107,7 +109,7 @@ namespace Watermelon_Game.Utility
                 return;
             }
 
-            await this.AddAllUnicodeCharactersAsync_DEVELOPMENT();
+            await this.AddAllUnicodeCharactersAsync_DEVELOPMENT(false);
             
             var _missingCharacters = new List<char>();
             var _unicodes = new List<uint>();

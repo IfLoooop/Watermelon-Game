@@ -4,6 +4,7 @@ using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus.Leaderboards;
 using Watermelon_Game.Points;
@@ -18,16 +19,17 @@ namespace Watermelon_Game.Menus.MenuContainers
     {
         #region Inspector Fields
         [Tooltip("1: StatsMenu, 2: GameOverMenu: 3: Leaderboard")]
-        [OdinSerialize] private Dictionary<ContainerMenu, ScrollRectBase> menus = new();
+        [OdinSerialize] private Dictionary<ContainerMenu, ContainerMenuBase> menus = new();
         
+        [FormerlySerializedAs("currentActiveMenu")]
         [Header("Debug")]
         [Tooltip("The currently active menu")]
-        [SerializeField][ReadOnly][CanBeNull] private ScrollRectBase currentActiveMenu;
+        [SerializeField][ReadOnly][CanBeNull] private ContainerMenuBase currentActiveContainerMenu;
         #endregion
 
         #region Fields
         /// <summary>
-        /// This menu will be opened when <see cref="currentActiveMenu"/> is null
+        /// This menu will be opened when <see cref="currentActiveContainerMenu"/> is null
         /// </summary>
         private ContainerMenu lastActiveMenu = ContainerMenu.GlobalStats;
         #endregion
@@ -109,7 +111,7 @@ namespace Watermelon_Game.Menus.MenuContainers
         
         public override void OnAnimationFinished()
         {
-            this.currentActiveMenu!.LockScrollPosition(false);
+            this.currentActiveContainerMenu!.ScrollBase.LockScrollPosition(false);
         }
         
         /// <summary>
@@ -117,9 +119,9 @@ namespace Watermelon_Game.Menus.MenuContainers
         /// <i>Is used by the Tab-Buttons</i>
         /// </summary>
         /// <param name="_Menu">The <see cref="ContainerMenu"/> to open</param>
-        public void Open(ScrollRectBase _Menu)
+        public void Open(ContainerMenuBase _Menu)
         {
-            this.currentActiveMenu = _Menu.SetActive(this.currentActiveMenu);
+            this.currentActiveContainerMenu = _Menu.SetActive(this.currentActiveContainerMenu);
         }
         
         /// <summary>
@@ -132,10 +134,10 @@ namespace Watermelon_Game.Menus.MenuContainers
         {
             if (this.menus.TryGetValue(_ContainerMenu, out var _menu))
             {
-                this.currentActiveMenu = _menu.SetActive(this.currentActiveMenu);
+                this.currentActiveContainerMenu = _menu.SetActive(this.currentActiveContainerMenu);
             }
 
-            this.currentActiveMenu!.LockScrollPosition(true);
+            this.currentActiveContainerMenu!.ScrollBase.LockScrollPosition(true);
             
             return base.Open(_CurrentActiveMenu);
         }
@@ -145,12 +147,11 @@ namespace Watermelon_Game.Menus.MenuContainers
             return this.Open(_CurrentActiveMenu, this.lastActiveMenu);
         }
         
-        public override MenuBase Close()
+        public override void Close(bool _PlaySound)
         {
-            this.lastActiveMenu = this.currentActiveMenu!.Menu;
-            this.currentActiveMenu!.SetInactive();
-            
-            return base.Close();
+            base.Close(_PlaySound);
+            this.lastActiveMenu = this.currentActiveContainerMenu!.Menu;
+            this.currentActiveContainerMenu!.SetInactive();
         }
 
         /// <summary>

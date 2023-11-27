@@ -5,17 +5,17 @@ using System.Globalization;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.Localization.Settings;
 using UnityEngine.UI;
 using Watermelon_Game.ExtensionMethods;
+using Watermelon_Game.Menus.Dropdown;
 
 namespace Watermelon_Game.Menus.Languages
 {
     /// <summary>
     /// Contains logic for language selection
     /// </summary>
-    internal sealed class LanguageController : TMP_Dropdown
+    internal sealed class LanguageController : DropdownBase
     {
         #region Constants
         /// <summary>
@@ -45,11 +45,6 @@ namespace Watermelon_Game.Menus.Languages
             { "한국어", 6 },
             { "Italiano", 4 }
         });
-
-        /// <summary>
-        /// The currently active language <see cref="Toggle"/>
-        /// </summary>
-        private string currentActiveToggle = string.Empty;
         #endregion
 
         #region Events
@@ -87,7 +82,7 @@ namespace Watermelon_Game.Menus.Languages
         private void SaveLanguage()
         {
             // IMPORTAND: Must be saved as a string because ints default value is 0, and 0 is a valid value in this context
-            PlayerPrefs.SetString(SAVED_LANGUAGE, this.languageTableMap[this.currentActiveToggle].ToString());
+            PlayerPrefs.SetString(SAVED_LANGUAGE, this.languageTableMap[base.CurrentActiveToggle].ToString());
         }
 
         /// <summary>
@@ -108,7 +103,7 @@ namespace Watermelon_Game.Menus.Languages
             
             // Sets the selected dropdown language to the currently active locale
             base.value = this.languageTableMap.Values.FindIndex(_Value => _Value.ToString() == _tableIndex);
-            this.currentActiveToggle = base.options[base.value].text;
+            base.CurrentActiveToggle = base.options[base.value].text;
         }
         
         /// <summary>
@@ -122,30 +117,9 @@ namespace Watermelon_Game.Menus.Languages
             LocalizationSettings.SelectedLocale = LocalizationSettings.AvailableLocales.Locales[_tableId];
         }
         
-        /// <summary>
-        /// Sets <see cref="currentActiveToggle"/> to the given <see cref="Toggle"/>
-        /// </summary>
-        /// <param name="_Toggle">A <see cref="Toggle"/> from the dropdown menu in <see cref="TMP_Dropdown.options"/></param>
-        public void LanguageSelected(Toggle _Toggle)
+        public override void OnToggleChange(Toggle _Toggle)
         {
-            var _isNotTheCurrentlyActiveToggle = string.IsNullOrWhiteSpace(this.currentActiveToggle) || !_Toggle.name.Contains(this.currentActiveToggle);
-            if (_isNotTheCurrentlyActiveToggle && _Toggle.isOn)
-            {
-                this.currentActiveToggle = this.languageTableMap.First(_Kvp => _Toggle.name.Contains(_Kvp.Key)).Key;
-                this.Hide();
-                
-                OnLanguageChanged?.Invoke();
-            }
-        }
-        
-        /// <summary>
-        /// Disables the dropdown menu
-        /// </summary>
-        public new void Hide()
-        {
-            base.Hide();
-            EventSystem.current.SetSelectedGameObject(null);
-            base.OnDeselect(null);
+            base.OnToggleChange(_Toggle.name, _Toggle.isOn, OnLanguageChanged);
         }
         #endregion
     }

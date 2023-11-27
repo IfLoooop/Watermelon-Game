@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3172980446511631128}
   - component: {fileID: 6059580353312551379}
   - component: {fileID: 150137472097039528}
+  - component: {fileID: 389367449281571381}
   m_Layer: 0
   m_Name: Steam Controller
   m_TagString: Untagged
@@ -57,4 +58,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 800c9b5caec63664baeca55f9ee515d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filepath: C:/Unity Projects/Watermelon-Game/Assets/Test/Names.txt
+  filepath_DEVELOPMENT: C:/Unity Projects/Watermelon-Game/Assets/Test/Names.txt
+--- !u!114 &389367449281571381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1186248653208402001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b82b1f13604da7e4aa59a9ce24c5bcf3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

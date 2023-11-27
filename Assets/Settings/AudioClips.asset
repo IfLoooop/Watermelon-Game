@@ -57,6 +57,11 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 0994c12e202f342459a4212e7287f7e8, type: 3}
     volume: 0.05
     startTime: 0
+  inputError:
+    key: 12
+    audioClip: {fileID: 8300000, guid: 0f056d26f024ebb4fb4e06f46d9f46c0, type: 3}
+    volume: 0.025
+    startTime: 0
   nextNextFruitEnabled:
     key: 9
     audioClip: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}

@@ -9,7 +9,7 @@ namespace Watermelon_Game.Menus.MenuContainers
     /// <summary>
     /// Contains global stats
     /// </summary>
-    internal sealed class GlobalStats : ScrollRectBase
+    internal sealed class GlobalStats : ContainerMenuBase
     {
         #region Inspector Fields
         [Tooltip("TMP component that displays the best score")]
@@ -115,14 +115,15 @@ namespace Watermelon_Game.Menus.MenuContainers
         #endregion
 
         #region Methods
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             Instance = this;
 
             this.Load(true);
         }
         
-        public override ScrollRectBase SetActive(ScrollRectBase _CurrentActiveMenu)
+        public override ContainerMenuBase SetActive(ContainerMenuBase _CurrentActiveMenu)
         {
             this.SetTimeSpendInGameText(Time.time);
             

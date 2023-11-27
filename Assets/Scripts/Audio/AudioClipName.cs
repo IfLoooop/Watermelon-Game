@@ -16,6 +16,7 @@ namespace Watermelon_Game.Audio
         MenuPopup,
         NextNextFruitEnabled,
         NextNextFruitDisabled,
-        SkillSelect
+        SkillSelect,
+        InputError
     }
 }

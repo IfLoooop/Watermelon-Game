@@ -59,15 +59,15 @@ namespace Watermelon_Game.Web
         private void Awake()
         {
             instance = this;
-            
             this.version = base.GetComponent<TextMeshProUGUI>();
-            this.updatesAvailable = base.GetComponentInChildren<Image>();
             this.version.text = string.Concat(VERSION_PREFIX, Application.version);
+            this.updatesAvailable = base.GetComponentInChildren<Image>();
         }
 
+        // ReSharper disable once Unity.RedundantEventFunction
         private void Start()
         {
-            CheckIfNewVersionIsAvailable();
+            //CheckIfNewVersionIsAvailable();
         }
 
         /// <summary>

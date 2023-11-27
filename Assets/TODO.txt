@@ -1,11 +1,21 @@
+[Lobby System]
+-Exit lobby
+-Show lobby password
+-Refresh lobby password
+-Keep scroll position on reopen in lobby menu
+
+TODO: After stopping the host and starting again, no fruit is on the fruit spawner
+TODO: Lobby menu is not closed correctly when open the menu container while lobby menu is opened
+TODO: Add exit button to all menus (clickable by mouse)
 TODO: Test if hosting without a internet connection works
-TODO: Change the WebSettings setting "SizeMultiplier" for the BackgroundFruit in Github 
 TODO: Change menu button names
 TODO: Add a control button to the footer 
 TODO: Use looser connection id -> MaxHeight.OnGameOver
+TODO: Change the WebSettings setting "SizeMultiplier" for the BackgroundFruit in Github 
 
 TODO: Game crashes when closing it immediately after opening (maybe something with steam or leaderboard)
 
+-Split MenuBase.cs into 2 base classes, one for the MenuContainer-submenus and one for the Lobby menus
 -Achievements localizations
 -Reduce the "WaitForEndOfFrame" delay in "FontManager.cs"
 -Check if the Leaderboard entries should be capped

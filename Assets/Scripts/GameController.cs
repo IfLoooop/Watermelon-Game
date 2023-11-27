@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
@@ -13,7 +15,17 @@ namespace Watermelon_Game
     /// </summary>
     internal sealed class GameController : MonoBehaviour
     {
+        #region Inspector Fields
+        [Tooltip("All container in the scene")]
+        [SceneObjectsOnly]
+        [SerializeField] private List<ContainerBounds> containers;
+        #endregion
+        
         #region Fields
+        /// <summary>
+        /// Singleton of <see cref="GameController"/>
+        /// </summary>
+        private static GameController instance;
         /// <summary>
         /// <see cref="ResetReason"/>
         /// </summary>
@@ -21,6 +33,10 @@ namespace Watermelon_Game
         #endregion
         
         #region Properties
+        /// <summary>
+        /// <see cref="containers"/>
+        /// </summary>
+        public static List<ContainerBounds> Containers => instance.containers;
         /// <summary>
         /// Indicates whether a game is currently running or over
         /// </summary>
@@ -55,6 +71,7 @@ namespace Watermelon_Game
         #region Methods
         private void Awake()
         {
+            instance = this;
             Application.targetFrameRate = 120;
         }
 

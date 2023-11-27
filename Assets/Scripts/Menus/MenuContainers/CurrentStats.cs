@@ -6,7 +6,7 @@ using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Menus.MenuContainers
 {
-    internal sealed class CurrentStats : ScrollRectBase
+    internal sealed class CurrentStats : ContainerMenuBase
     {
         #region Inspector Fields
         [Header("References")]
@@ -65,12 +65,13 @@ namespace Watermelon_Game.Menus.MenuContainers
         #endregion
         
         #region Methods
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             this.Reset();
         }
         
-        public override ScrollRectBase SetActive(ScrollRectBase _CurrentActiveMenu)
+        public override ContainerMenuBase SetActive(ContainerMenuBase _CurrentActiveMenu)
         {
             this.SetDuration();
             

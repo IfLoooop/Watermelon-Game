@@ -1,9 +1,8 @@
+using System;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Audio;
-using Watermelon_Game.Container;
-using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Menus
 {
@@ -29,6 +28,14 @@ namespace Watermelon_Game.Menus
         /// </summary>
         public Menu Menu => this.menu;
         #endregion
+
+        #region Events
+        /// <summary>
+        /// Is called whenever the <see cref="Close"/>-Method of <see cref="MenuBase"/> is called <br/>
+        /// <b>Parameter:</b> The instance of the <see cref="MenuBase"/> that was closed
+        /// </summary>
+        public static event Action<MenuBase> OnMenuClose; 
+        #endregion
         
         #region Methods
         /// <summary>
@@ -38,19 +45,11 @@ namespace Watermelon_Game.Menus
         /// <returns>This <see cref="MenuBase"/></returns>
         public virtual MenuBase Open([CanBeNull] MenuBase _CurrentActiveMenu)
         {
-            // TODO: Not sure if needed
-            // if (ContainerBounds.GetOwnContainer() is {} _container)
-            // {
-            //     var _rectPoint = CameraUtils.WorldPointToLocalPointInRectangle(MenuController.Canvas, _container.transform.position);
-            //     var _rectTransform = (base.transform as RectTransform)!;
-            //     _rectTransform.anchoredPosition = new Vector2(_rectPoint.x, _rectTransform.anchoredPosition.y);   
-            // }
-            
             if (_CurrentActiveMenu != null)
             {
                 if (_CurrentActiveMenu.menu != this.menu)
                 {
-                    _CurrentActiveMenu!.Close();
+                    _CurrentActiveMenu!.ForceClose(true);
                 }
                 else
                 {
@@ -61,7 +60,7 @@ namespace Watermelon_Game.Menus
             {
                 AudioPool.PlayClip(AudioClipName.MenuPopup);
             }
-
+            
             this.menuPopup.Play();
             return this;
         }
@@ -69,14 +68,25 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Closes this menu
         /// </summary>
-        /// <returns>Always returns null</returns>
-        [CanBeNull]
-        public virtual MenuBase Close()
+        /// <param name="_PlaySound">Should the menu sound be played</param>
+        public virtual void Close(bool _PlaySound)
         {
-            AudioPool.PlayClip(AudioClipName.MenuPopup);
-            base.transform.localScale = Vector3.zero;
+            if (_PlaySound)
+            {
+                AudioPool.PlayClip(AudioClipName.MenuPopup);
+            }
             
-            return null;
+            base.transform.localScale = Vector3.zero;
+            OnMenuClose?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Use this to force close a menu and all its sub menus
+        /// </summary>
+        /// <param name="_PlaySound">Should the menu sound be played</param>
+        public virtual void ForceClose(bool _PlaySound)
+        {
+            this.Close(_PlaySound);
         }
         
         /// <summary>

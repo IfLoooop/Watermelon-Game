@@ -10,7 +10,6 @@ using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using Steamworks;
 using UnityEngine;
-using Watermelon_Game.Development;
 using Watermelon_Game.Menus.Leaderboards;
 using Watermelon_Game.Points;
 using Watermelon_Game.Utility;
@@ -272,12 +271,12 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private IEnumerator GetUserNames()
         {
+            var _waitTime = new WaitForEndOfFrame();
             foreach (var _steamId in steamUserNameRequests)
             {
                 GetUserName(_steamId, true);
+                yield return _waitTime;
             }
-
-            yield return null;
         }
         
         /// <summary>
@@ -311,12 +310,14 @@ namespace Watermelon_Game.Steamworks.NET
             
             var _username = SteamFriends.GetFriendPersonaName(new CSteamID(_SteamId));
 
-#if DEBUG || DEVELOPMENT_BUILD
             if (string.IsNullOrWhiteSpace(_username))
             {
+#if DEBUG || DEVELOPMENT_BUILD
                 Debug.LogError($"Username empty: {_SteamId} {_username}");
-            }
 #endif
+                return;
+            }
+            
             var _index = steamUsers.FindIndex(_SteamUser => _SteamUser.SteamId == _SteamId);
             if (_index != -1)
             {
@@ -360,7 +361,7 @@ namespace Watermelon_Game.Steamworks.NET
                 }
 
 #if UNITY_EDITOR
-                Debug.LogWarning($"{nameof(SteamLeaderboard)}.{nameof(UploadScore)} should never be called!");
+                Debug.LogWarning($"{nameof(SteamLeaderboard)}.{nameof(UploadScore)} should not be called in editor");
                 return;
 #endif
 #pragma warning disable CS0162 // Unreachable code detected
@@ -396,7 +397,8 @@ namespace Watermelon_Game.Steamworks.NET
         [FilePath(AbsolutePath = true, RequireExistingPath = true, ParentFolder = "Assets/Test", Extensions = ".txt")]
         [Tooltip("Filepath to the file that holds all names")]
         [LabelWidth(75)]
-        [SerializeField]private string filepath;
+        // ReSharper disable once InconsistentNaming
+        [SerializeField]private string filepath_DEVELOPMENT;
         
         /// <summary>
         /// Amount of scores to download with <see cref="DownloadLeaderboardScores_DEVELOPMENT"/>
@@ -427,7 +429,7 @@ namespace Watermelon_Game.Steamworks.NET
         private static void DownloadLeaderboardScores_DEVELOPMENT(ulong _Amount, bool _AddNew)
         {
             ulong _id = 1000000000000000;
-            var _names = File.ReadAllLines(instance.filepath).ToList();
+            var _names = File.ReadAllLines(instance.filepath_DEVELOPMENT).ToList();
 
             steamUsers.Clear();
             

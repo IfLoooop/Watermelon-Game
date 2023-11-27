@@ -23,22 +23,15 @@ namespace Watermelon_Game.Menus.Leaderboards
         [Tooltip("TMP that displays the score of the players")]
         [SerializeField] private TextMeshProUGUI score;
         #endregion
-
-        #region Fields
-        /// <summary>
-        /// Index in <see cref="Leaderboard.steamUsers"/>, this object holds the data of
-        /// </summary>
-        private int steamUsersDataIndex;
-        #endregion
         
         #region Methods
         /// <summary>
         /// Sets the data of this <see cref="LeaderboardEntry"/>
         /// </summary>
-        /// <param name="_SteamUsersDataIndex"><see cref="steamUsersDataIndex"/></param>
+        /// <param name="_SteamUsersDataIndex">Index in <see cref="Leaderboard.steamUsers"/>, this object holds the data of</param>
         public void SetData(int _SteamUsersDataIndex)
         {
-            this.steamUsersDataIndex = _SteamUsersDataIndex;
+            base.dataIndex = _SteamUsersDataIndex;
             this.RefreshCellView();
         }
 
@@ -46,7 +39,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         {
             base.RefreshCellView();
 
-            var _steamUser = Leaderboard.SteamUsers[this.steamUsersDataIndex];
+            var _steamUser = Leaderboard.SteamUsers[base.dataIndex];
             var _isLocalUser = _steamUser.SteamId == SteamManager.SteamID.m_SteamID;
             
             this.background.color = _isLocalUser ? this.background.color.WithAlpha(.5f) : this.background.color.WithAlpha(0);

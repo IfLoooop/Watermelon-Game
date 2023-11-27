@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 5eb8d4a0c63c92e4cb9113deb6516d93
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Watermelon Game
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 099f63af666370845a271f1fc2f66515, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

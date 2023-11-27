@@ -15,7 +15,7 @@ namespace Watermelon_Game.Menus.Leaderboards
     /// <summary>
     /// Leaderboard menu
     /// </summary>
-    internal sealed class Leaderboard : ScrollRectBase, IEnhancedScrollerDelegate
+    internal sealed class Leaderboard : ContainerMenuBase, IEnhancedScrollerDelegate
     {
         #region Inspector Fields
         [Tooltip("Displays the current/max page")]
@@ -61,7 +61,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         private int previousActivePage;
         /// <summary>
-        /// The previous scroll position  before the friends toggle was activated
+        /// The previous scroll position before the friends toggle was activated
         /// </summary>
         private float previousScrollPosition;
         /// <summary>
@@ -94,8 +94,9 @@ namespace Watermelon_Game.Menus.Leaderboards
         #endregion
         
         #region Methods
-        private void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             instance = this;
             this.leaderboardEntryHeight = (this.leaderboardEntryPrefab.transform as RectTransform)!.sizeDelta.y;
             this.scroller.Delegate = this;
@@ -308,7 +309,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         }
 
         /// <summary>
-        /// Updates the names of the <see cref="activePage"/> -> <see cref="SteamLeaderboard.OnUsernameFound"/>
+        /// Updates the name of an entry on the <see cref="activePage"/> -> <see cref="SteamLeaderboard.OnUsernameFound"/>
         /// </summary>
         /// <param name="_Index">The index in <see cref="SteamLeaderboard.steamUsers"/>, for whom the username was found</param>
         private void RefreshLeaderboardEntries(int _Index)

@@ -305,7 +305,7 @@ namespace Watermelon_Game.Fruit_Spawn
 
             if (_ResetReason == ResetReason.ManualRestart)
             {
-                this.GameStarted();
+                GameController.StartGame();
             }
         }
         
@@ -351,32 +351,34 @@ namespace Watermelon_Game.Fruit_Spawn
                 return;
             }
             
-            if (!this.inputBlocked)
+            if (MenuController.IsAnyMenuOpen || this.inputBlocked)
             {
-                if (Input.GetKey(KeyCode.A))
-                {
-                    this.MoveDirection(Vector2.left);
-                }
-                else if (Input.GetKey(KeyCode.D))
-                {
-                    this.MoveDirection(Vector2.right);
-                }
-
-                var _mouseInput = false;
-                if (!MenuController.IsAnyMenuOpen)
-                {
-                    _mouseInput = Input.GetKey(KeyCode.Mouse0);
-                    if (_mouseInput)
-                    {
-                        _mouseInput = this.containerBounds.Contains(InputController.MouseWorldPosition);
-                    }   
-                }
-                
-                if ((Input.GetKey(KeyCode.Space) || _mouseInput) && !this.blockRelease)
-                {
-                    this.ReleaseFruit();
-                }    
+                return;
             }
+            
+            if (Input.GetKey(KeyCode.A))
+            {
+                this.MoveDirection(Vector2.left);
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                this.MoveDirection(Vector2.right);
+            }
+
+            var _mouseInput = false;
+            if (!MenuController.IsAnyMenuOpen)
+            {
+                _mouseInput = Input.GetKey(KeyCode.Mouse0);
+                if (_mouseInput)
+                {
+                    _mouseInput = this.containerBounds.Contains(InputController.MouseWorldPosition);
+                }   
+            }
+                
+            if ((Input.GetKey(KeyCode.Space) || _mouseInput) && !this.blockRelease)
+            {
+                this.ReleaseFruit();
+            } 
         }
         
         /// <summary>

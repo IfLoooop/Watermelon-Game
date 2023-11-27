@@ -43,6 +43,8 @@ namespace Watermelon_Game.Audio
         [Header("Menu")]
         [Tooltip("When a menu opens/closes")]
         [SerializeField] private AudioClipSettings menuPopup;
+        [Tooltip("When a wrong password is entered")]
+        [SerializeField] private AudioClipSettings inputError;
         
         [Header("Next Next Fruit")]
         [Tooltip("When NextNextFruit becomes enabled")]
