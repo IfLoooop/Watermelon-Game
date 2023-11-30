@@ -1,4 +1,5 @@
 using UnityEngine;
+using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Background
@@ -6,7 +7,7 @@ namespace Watermelon_Game.Background
     /// <summary>
     /// Handles logic for the evolutions chart
     /// </summary>
-    internal sealed class EvolutionsChart : GameModeTransition
+    internal sealed class EvolutionsChart : PersistantGameModeTransition<EvolutionsChart>
     {
         #region Inspector Fields
         [Tooltip("Animation to open the chart (for multiplayer)")]

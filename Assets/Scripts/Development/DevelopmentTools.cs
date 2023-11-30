@@ -383,7 +383,7 @@ namespace Watermelon_Game.Development
         /// <returns></returns>
         private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation)
         {
-            var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitController.FruitContainerTransform, _Position, _Rotation, (int)_Fruit, true);
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitContainer.Transform, _Position, _Rotation, (int)_Fruit, true);
 
             return _fruitBehaviour;
         }

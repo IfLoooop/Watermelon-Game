@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
-using Watermelon_Game.Utility;
+using Watermelon_Game.Singletons;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Fruit_Spawn
@@ -14,7 +14,7 @@ namespace Watermelon_Game.Fruit_Spawn
     /// <summary>
     /// Holds the next fruit that will be given to the <see cref="FruitSpawner"/>
     /// </summary>
-    internal sealed class NextFruit : GameModeTransition
+    internal sealed class NextFruit : PersistantGameModeTransition<NextFruit>
     {
         #region Inspector Fields
         [Header("References")]
@@ -38,10 +38,6 @@ namespace Watermelon_Game.Fruit_Spawn
         
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="NextFruit"/>
-        /// </summary>
-        private static NextFruit instance;
-        /// <summary>
         /// <see cref="TextMeshProUGUI"/> component that displays the time
         /// </summary>
         private TextMeshProUGUI timerText;
@@ -52,14 +48,12 @@ namespace Watermelon_Game.Fruit_Spawn
         #endregion
         
         #region Methods
-        protected override void Awake()
+        protected override void Init()
         {
-            base.Awake();
-            
-            instance = this;
+            base.Init();
             this.timerText = this.timer.GetComponent<TextMeshProUGUI>();
         }
-
+        
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -86,18 +80,18 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <returns>The type of the <see cref="Fruit"/> for the <see cref="FruitSpawner"/></returns>
         public static ProtectedInt32 GetFruit(out Quaternion _Rotation)
         {
-            instance.nextFruit.gameObject.SetActive(true);
-            instance.nextNextFruit.gameObject.SetActive(true);
+            Instance.nextFruit.gameObject.SetActive(true);
+            Instance.nextNextFruit.gameObject.SetActive(true);
             
             // Give fruit to FruitSpawner
-            var _fruit = instance.nextFruit.Fruit.Value;
-            _Rotation = instance.nextFruit.transform.rotation;
+            var _fruit = Instance.nextFruit.Fruit.Value;
+            _Rotation = Instance.nextFruit.transform.rotation;
             
             // Take from from NextNextFruit
-            instance.nextFruit.CopyFruit(instance.nextNextFruit);
+            Instance.nextFruit.CopyFruit(Instance.nextNextFruit);
             
             // Spawn new fruit
-            instance.nextNextFruit.CopyFruit(GetRandomFruit(_fruit));
+            Instance.nextNextFruit.CopyFruit(GetRandomFruit(_fruit));
             
             return _fruit;
         }

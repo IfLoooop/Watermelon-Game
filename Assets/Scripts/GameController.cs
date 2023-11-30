@@ -7,25 +7,33 @@ using UnityEngine;
 using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
+using Watermelon_Game.Menus.MainMenus;
+using Watermelon_Game.Networking;
+using Watermelon_Game.Singletons;
+using Watermelon_Game.Utility;
 
 namespace Watermelon_Game
 {
     /// <summary>
     /// Contains general game and game-state logic
     /// </summary>
-    internal sealed class GameController : MonoBehaviour
+    internal sealed class GameController : PersistantMonoBehaviour<GameController>
     {
         #region Inspector Fields
+        [Header("References")]
         [Tooltip("All container in the scene")]
         [SceneObjectsOnly]
         [SerializeField] private List<ContainerBounds> containers;
+
+#if UNITY_EDITOR
+        [Header("Debug")]
+        [Tooltip("The currently active GameMode")]
+        // ReSharper disable once NotAccessedField.Local
+        [SerializeField][ReadOnly] private GameMode currentGameMode;
+#endif
         #endregion
         
         #region Fields
-        /// <summary>
-        /// Singleton of <see cref="GameController"/>
-        /// </summary>
-        private static GameController instance;
         /// <summary>
         /// <see cref="ResetReason"/>
         /// </summary>
@@ -36,7 +44,7 @@ namespace Watermelon_Game
         /// <summary>
         /// <see cref="containers"/>
         /// </summary>
-        public static List<ContainerBounds> Containers => instance.containers;
+        public static List<ContainerBounds> Containers => Instance.containers;
         /// <summary>
         /// Indicates whether a game is currently running or over
         /// </summary>
@@ -69,32 +77,56 @@ namespace Watermelon_Game
         #endregion
         
         #region Methods
-        private void Awake()
+
+        protected override void Init()
         {
-            instance = this;
+            base.Init();
+            this.containers.ForEach(DontDestroyOnLoad);
             Application.targetFrameRate = 120;
         }
-
+        
         private void OnEnable()
         {
+            CustomNetworkManager.OnConnectionStopped += this.ConnectionStopped;
             MaxHeight.OnGameOver += this.GameOver;
             MenuController.OnManualRestart += this.ManualRestart;
             MenuController.OnRestartGame += StartGame;
             Application.quitting += this.ApplicationIsQuitting;
+
+#if UNITY_EDITOR
+            MainMenuBase.OnGameModeTransition += SetCurrentGameMode_EDITOR;
+#endif
         }
 
         private void OnDisable()
         {
+            CustomNetworkManager.OnConnectionStopped -= this.ConnectionStopped;
             MaxHeight.OnGameOver -= this.GameOver;
             MenuController.OnManualRestart -= this.ManualRestart;
             MenuController.OnRestartGame -= StartGame;
             Application.quitting -= this.ApplicationIsQuitting;
+            
+#if UNITY_EDITOR
+            MainMenuBase.OnGameModeTransition -= SetCurrentGameMode_EDITOR;
+#endif
         }
+
+#if UNITY_EDITOR
+        /// <summary>
+        /// Sets <see cref="currentGameMode"/> to the given value <br/>
+        /// <i>Only for debug purposes in editor</i>
+        /// </summary>
+        /// <param name="_GameMode">The <see cref="GameMode"/> to set <see cref="currentGameMode"/> to</param>
+        private void SetCurrentGameMode_EDITOR(GameMode _GameMode)
+        {
+            this.currentGameMode = _GameMode;
+        }  
+#endif
         
         /// <summary>
         /// Starts the game
         /// </summary>
-        public static void StartGame() // TODO: Make private
+        public static void StartGame()
         {
             ActiveGame = true;
             OnGameStart?.Invoke();
@@ -152,6 +184,16 @@ namespace Watermelon_Game
         private void ApplicationIsQuitting()
         {
             IsApplicationQuitting = true;
+        }
+
+        /// <summary>
+        /// Is called whenever the host or client connection has been stopped
+        /// </summary>
+        private void ConnectionStopped()
+        {
+            ActiveGame = false;
+            this.resetReason = ResetReason.ManualRestart;
+            OnResetGameFinished?.Invoke(this.resetReason);
         }
         #endregion
     }

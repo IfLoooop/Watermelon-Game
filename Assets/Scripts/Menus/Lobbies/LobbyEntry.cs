@@ -26,7 +26,7 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <summary>
         /// Sets the data of this <see cref="LobbyEntry"/>
         /// </summary>
-        /// <param name="_LobbiesDataIndex">Index in <see cref="JoinLobbyMenu.lobbyList"/>, this object holds the data of</param>
+        /// <param name="_LobbiesDataIndex">Index in <see cref="LobbyJoinMenu.lobbyList"/>, this object holds the data of</param>
         public void SetData(int _LobbiesDataIndex)
         {
             base.dataIndex = _LobbiesDataIndex;
@@ -37,13 +37,13 @@ namespace Watermelon_Game.Menus.Lobbies
         {
             base.RefreshCellView();
 
-            this.lobbyName.text = JoinLobbyMenu.LobbyList[base.dataIndex].LobbyName;
-            this.requiresPassword.enabled = JoinLobbyMenu.LobbyList[base.dataIndex].RequiresPassword;
-            this.joinButton.interactable = JoinLobbyMenu.LobbyList[base.dataIndex].Interactable;
+            this.lobbyName.text = LobbyJoinMenu.LobbyList[base.dataIndex].LobbyName;
+            this.requiresPassword.enabled = LobbyJoinMenu.LobbyList[base.dataIndex].RequiresPassword;
+            this.joinButton.interactable = LobbyJoinMenu.LobbyList[base.dataIndex].Interactable;
         }
 
         /// <summary>
-        /// Tries joining the lobby with the index of <see cref="EnhancedScrollerCellView.dataIndex"/> in <see cref="JoinLobbyMenu"/>.<see cref="JoinLobbyMenu.LobbyList"/>
+        /// Tries joining the lobby with the index of <see cref="EnhancedScrollerCellView.dataIndex"/> in <see cref="LobbyJoinMenu"/>.<see cref="LobbyJoinMenu.LobbyList"/>
         /// </summary>
         public void Join()
         {
@@ -52,7 +52,7 @@ namespace Watermelon_Game.Menus.Lobbies
                 return;
             }
             
-            var _lobbyData = JoinLobbyMenu.LobbyList[base.dataIndex];
+            var _lobbyData = LobbyJoinMenu.LobbyList[base.dataIndex];
             if (SteamLobby.CurrentLobbyId is {} _lobbyId)
             {
                 if (_lobbyData.LobbyId == _lobbyId.m_SteamID)
@@ -61,9 +61,11 @@ namespace Watermelon_Game.Menus.Lobbies
                 }
             }
             
+            LobbyJoinMenu.AllowJoinButtonInteraction(false);
+            
             if (_lobbyData.RequiresPassword)
             {
-                JoinLobbyMenu.OpenPasswordMenu(_lobbyData.LobbyId);
+                LobbyJoinMenu.OpenPasswordMenu(_lobbyData.LobbyId);
             }
             else
             {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using EnhancedUI.EnhancedScroller;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon_Game.Networking;
@@ -10,29 +11,30 @@ namespace Watermelon_Game.Menus.Lobbies
     /// <summary>
     /// Menu that lists all available lobbies to join
     /// </summary>
-    internal sealed class JoinLobbyMenu : MenuBase, IEnhancedScrollerDelegate, IScrollBase
+    internal sealed class LobbyJoinMenu : MenuBase, IEnhancedScrollerDelegate, IScrollBase
     {
         #region Inspector Fields
-        [Header("References")]
         [Tooltip("EnhancedScroller component")]
-        [SerializeField] private EnhancedScroller scroller;
+        [PropertyOrder(1)][SerializeField] private EnhancedScroller scroller;
         [Tooltip("Displays one row in the leaderboard")]
-        [SerializeField] private LobbyEntry lobbyEntryPrefab;
+        [PropertyOrder(1)][SerializeField] private LobbyEntry lobbyEntryPrefab;
         [Tooltip("Password menu, for when trying to enter a password protected lobby")]
-        [SerializeField] private LobbyPasswordMenu lobbyPasswordMenu;
+        [PropertyOrder(1)][SerializeField] private LobbyPasswordMenu lobbyPasswordMenu;
+        [Tooltip("Menu for joining or canceling the lobby enter attempt")]
+        [PropertyOrder(1)][SerializeField] private LobbyConnectMenu lobbyConnectMenu;
         #endregion
         
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="JoinLobbyMenu"/>
+        /// Singleton of <see cref="LobbyJoinMenu"/>
         /// </summary>
-        private static JoinLobbyMenu instance;
+        private static LobbyJoinMenu instance;
         /// <summary>
         /// Reference to <see cref="IScrollBase"/>
         /// </summary>
         private IScrollBase scrollBase;
         /// <summary>
-        /// Indicates whether this <see cref="JoinLobbyMenu"/> is currently open or not
+        /// Indicates whether this <see cref="LobbyJoinMenu"/> is currently open or not
         /// </summary>
         private bool isOpen;
         /// <summary>
@@ -61,6 +63,11 @@ namespace Watermelon_Game.Menus.Lobbies
         #region Methods
         private void Awake()
         {
+            if (instance != null)
+            {
+                return;
+            }
+            
             instance = this;
             this.scrollBase = this;
             this.lobbyEntryHeight = (this.lobbyEntryPrefab.transform as RectTransform)!.sizeDelta.y;
@@ -78,15 +85,6 @@ namespace Watermelon_Game.Menus.Lobbies
             SteamLobby.OnLobbyEntriesProcessed -= this.ReloadLobbyList;
             CustomNetworkManager.OnSteamLobbyEnterAttempt -= this.SteamLobbyEnterAttempt;
         }
-
-        /// <summary>
-        /// Opens the <see cref="LobbyPasswordMenu"/>
-        /// </summary>
-        /// <param name="_LobbyId">The id of the lobby to enter the password for</param>
-        public static void OpenPasswordMenu(ulong _LobbyId)
-        { 
-            instance.lobbyPasswordMenu.Open(_LobbyId);
-        }
         
         public override MenuBase Open(MenuBase _CurrentActiveMenu)
         {
@@ -102,30 +100,46 @@ namespace Watermelon_Game.Menus.Lobbies
             if (this.lobbyPasswordMenu.IsOpen)
             {
                 this.lobbyPasswordMenu.Close(_PlaySound);
+                AllowJoinButtonInteraction(true);
+            }
+            else if (this.lobbyConnectMenu.IsOpen)
+            {
+                this.lobbyConnectMenu.Close(_PlaySound);
+                AllowJoinButtonInteraction(true);
             }
             else
             {
-                this.Close();
+                this.SetScrollPosition();
+                base.Close(false);
                 MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.MultiplayerMenu);
             }
         }
 
         public override void ForceClose(bool _PlaySound)
         {
-            this.lobbyPasswordMenu.Close(_PlaySound);
-            this.Close();
+            this.lobbyPasswordMenu.Close(false);
+            this.lobbyConnectMenu.Close(false);
+            this.SetScrollPosition();
+            base.Close(_PlaySound);
         }
 
         /// <summary>
-        /// Closes this menu and sets <see cref="isOpen"/> to false <br/>
-        /// <b>Use this method for closing, instead of the override or base method</b>
+        /// Sets the scroll position when closing this menu
         /// </summary>
-        private void Close()
+        private void SetScrollPosition()
         {
             this.isOpen = false;
             this.normalizedScrollPosition = this.scroller.NormalizedScrollPosition;
             this.scrollBase.SetLastScrollPosition(this.scroller.ScrollRect.verticalScrollbar);
-            base.Close(false);
+        }
+        
+        /// <summary>
+        /// Sets <see cref="MenuBase.KeepOpen"/> to the given value
+        /// </summary>
+        /// <param name="_Value">Sets the value of <see cref="MenuBase.KeepOpen"/></param>
+        public new void KeepOpen(bool _Value)
+        {
+            base.KeepOpen = _Value;
         }
         
         /// <summary>
@@ -143,12 +157,22 @@ namespace Watermelon_Game.Menus.Lobbies
         }
         
         /// <summary>
+        /// Opens the <see cref="LobbyPasswordMenu"/>
+        /// </summary>
+        /// <param name="_LobbyId">The id of the lobby to enter the password for</param>
+        public static void OpenPasswordMenu(ulong _LobbyId)
+        {
+            AllowJoinButtonInteraction(false);
+            instance.lobbyPasswordMenu.Open(_LobbyId);
+        }
+        
+        /// <summary>
         /// <see cref="CustomNetworkManager.OnSteamLobbyEnterAttempt"/>
         /// </summary>
         /// <param name="_Failure">Indicates if the attempt failed</param>
         private void SteamLobbyEnterAttempt(bool _Failure)
         {
-            if (!isOpen)
+            if (!this.isOpen)
             {
                 return;
             }
@@ -157,20 +181,19 @@ namespace Watermelon_Game.Menus.Lobbies
             {
                 if (this.lobbyPasswordMenu.IsOpen)
                 {
-                    this.lobbyPasswordMenu.EnterAttemptFailed();   
+                    this.lobbyPasswordMenu.EnterAttemptFailed();
                 }
                 else
                 {
                     // TODO: Feedback on failure
+                    AllowJoinButtonInteraction(true);
                 }
             }
             else
             {
                 this.lobbyPasswordMenu.Close(true);
-                this.Close();
+                this.lobbyConnectMenu.Open(null);
             }
-            
-            AllowJoinButtonInteraction(true);
         }
         
         /// <summary>

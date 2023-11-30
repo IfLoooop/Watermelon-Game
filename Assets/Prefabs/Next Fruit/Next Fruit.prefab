@@ -181,7 +181,7 @@ MonoBehaviour:
   multiPlayerTransition: {fileID: 7400000, guid: 4694e4419aaa5514690f8815adc8a57e, type: 2}
   nextFruit: {fileID: 48240243414636394}
   nextNextFruit: {fileID: 1821166210121043020}
-  nextNextFruitAnimation: {fileID: 0}
+  nextNextFruitAnimation: {fileID: 4836563671854626019}
   timer: {fileID: 7645869644194463606}
   nextNextFruitEnabledAnimation: {fileID: 7400000, guid: 9dfe23ec39312c24a90bc753830cec64, type: 2}
   nextNextFruitDisabledAnimation: {fileID: 7400000, guid: 591ad58157a06cf419807fc33eadfea0, type: 2}
@@ -753,7 +753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_fontSize
-      value: 100
+      value: 99.9
       objectReference: {fileID: 0}
     - target: {fileID: 4124863786955780952, guid: 1a653b21666dbec44813f633e1eb5e96, type: 3}
       propertyPath: m_fontStyle

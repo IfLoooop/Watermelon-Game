@@ -74,6 +74,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 402654538142310902}
+  - component: {fileID: 1989533846267442362}
   m_Layer: 5
   m_Name: Player List
   m_TagString: Untagged
@@ -100,6 +101,32 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1989533846267442362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3455886579129157843}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: -400
+    m_Right: 0
+    m_Top: -25
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &4051864157348216875
 GameObject:
   m_ObjectHideFlags: 0
@@ -935,6 +962,8 @@ MonoBehaviour:
     SerializationNodes: []
   menuPopup: {fileID: 7399037709205857812}
   menu: 6
+  playerList: {fileID: 402654538142310902}
+  lobbyMemberPrefab: {fileID: 1615503437314412074, guid: c02bde10e2b91a04b8c34aaa41f632c1, type: 3}
   password: {fileID: 7807003877180984936}
   refreshButton: {fileID: 7626664009125532419}
   hideButton: {fileID: 4747756608620638239}

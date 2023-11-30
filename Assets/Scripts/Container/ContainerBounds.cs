@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
@@ -31,11 +32,6 @@ namespace Watermelon_Game.Container
 
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="ContainerBounds"/> <br/>
-        /// <i>The container that is assigned to the local player</i>
-        /// </summary>
-        [CanBeNull] private static ContainerBounds instance;
-        /// <summary>
         /// Reference to the <see cref="FruitSpawner"/> that is assigned to this container <br/>
         /// <b>Will only be set for the local client, for every other client this will be null!</b>
         /// </summary>
@@ -61,18 +57,23 @@ namespace Watermelon_Game.Container
         #region Methods
         private void Start()
         {
+            if (!GameController.Containers.Contains(this))
+            {
+                Destroy(base.gameObject);
+            }
+            
             this.bounds.GetComponent<Canvas>().worldCamera = CameraUtils.Camera;
         }
 
         protected override void Transition(GameMode _GameMode)
         {
-            base.Transition(_GameMode);
-            
             if (this.fruitSpawner != null)
             {
                 this.fruitSpawner.GameModeTransitionStarted();
             }
-
+            
+            base.Transition(_GameMode);
+            
             AudioPool.PlayClip(AudioClipName.FruitDestroy);
         }
 
@@ -83,7 +84,6 @@ namespace Watermelon_Game.Container
         /// <param name="_FruitSpawner">The <see cref="FruitSpawner"/> to assign this <see cref="ContainerBounds"/> to</param>
         public void AssignToPlayer(FruitSpawner _FruitSpawner)
         {
-            instance = this;
             this.fruitSpawner = _FruitSpawner;
             this.connectionId = this.fruitSpawner!.SetContainerBounds(this);
             this.PlayerContainer = true;
@@ -113,7 +113,10 @@ namespace Watermelon_Game.Container
 
         /// <summary>
         /// Sets the <see cref="StartingPosition"/> for the <see cref="FruitSpawner"/> <br/>
-        /// <i>Call this after the container has been positioned correctly</i>
+        /// <i>
+        /// Call this after the container has been positioned correctly <br/>
+        /// Currently called at the end of the transition animation
+        /// </i>
         /// </summary>
         public void SetStartingPosition()
         {
@@ -133,16 +136,6 @@ namespace Watermelon_Game.Container
         public bool Contains(Vector2 _Point)
         {
             return this.bounds.rect.Contains(new Vector3(_Point.x, _Point.y) - this.bounds.position);
-        }
-        
-        /// <summary>
-        /// Returns the container that is assigned to the local player
-        /// </summary>
-        /// <returns>The container that is assigned to the local player</returns>
-        [CanBeNull]
-        public static ContainerBounds GetOwnContainer()
-        {
-            return instance;
         }
         #endregion
     }

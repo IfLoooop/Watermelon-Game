@@ -1,6 +1,4 @@
 using System;
-using Sirenix.OdinInspector;
-using UnityEngine;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Menus.MainMenus
@@ -10,17 +8,11 @@ namespace Watermelon_Game.Menus.MainMenus
     /// </summary>
     internal abstract class MainMenuBase : MenuBase
     {
-        #region Inspector Fields
-        [Header("Debug")]
-        [Tooltip("The currently active GameMode")]
-        [ShowInInspector][ReadOnly] private static GameMode currentGameMode = GameMode.SinglePlayer;
-        #endregion
-
         #region Properties
         /// <summary>
-        /// <see cref="currentGameMode"/>
+        /// The currently active GameMode
         /// </summary>
-        public static GameMode CurrentGameMode { get => currentGameMode; protected set => currentGameMode = value; }
+        public static GameMode CurrentGameMode { get; protected set; } = GameMode.SinglePlayer;
         #endregion
         
         #region Events

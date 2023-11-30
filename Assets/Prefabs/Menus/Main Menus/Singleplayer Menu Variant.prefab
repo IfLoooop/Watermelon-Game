@@ -164,9 +164,7 @@ MonoBehaviour:
     SerializationNodes: []
   menuPopup: {fileID: 1150414326077742644}
   menu: 1
-  multiplayer: {fileID: 0}
-  singleplayer: {fileID: 0}
-  currentGameMode: 0
+  multiplayerButton: {fileID: 3163841325575548496}
 --- !u!1001 &3004976146812815931
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -444,6 +442,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ea0a717be600d994fad1286a4589d175, type: 3}
+--- !u!114 &3163841325575548496 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8238188209682418922, guid: ea0a717be600d994fad1286a4589d175, type: 3}
+  m_PrefabInstance: {fileID: 6465995246689788602}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &4826278489688075622 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1964051968833376220, guid: ea0a717be600d994fad1286a4589d175, type: 3}

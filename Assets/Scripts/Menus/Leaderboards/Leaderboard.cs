@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using EnhancedUI.EnhancedScroller;
-using Steamworks;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Steamworks.NET;
 
 namespace Watermelon_Game.Menus.Leaderboards
@@ -19,26 +19,21 @@ namespace Watermelon_Game.Menus.Leaderboards
     {
         #region Inspector Fields
         [Tooltip("Displays the current/max page")]
-        [SerializeField] private TextMeshProUGUI paging;
+        [PropertyOrder(1)][SerializeField] private TextMeshProUGUI paging;
         [Tooltip("Button to refresh all leaderboard entries")]
-        [SerializeField] private Button refreshButton;
+        [PropertyOrder(1)][SerializeField] private Button refreshButton;
         [Tooltip("Image component of the refresh button")]
-        [SerializeField] private Image refreshButtonImage;
+        [PropertyOrder(1)][SerializeField] private Image refreshButtonImage;
         [Tooltip("EnhancedScroller component")]
-        [SerializeField] private EnhancedScroller scroller;
+        [PropertyOrder(1)][SerializeField] private EnhancedScroller scroller;
         [Tooltip("Displays one row in the leaderboard")]
-        [SerializeField] private LeaderboardEntry leaderboardEntryPrefab;
+        [PropertyOrder(1)][SerializeField] private LeaderboardEntry leaderboardEntryPrefab;
         
-        [Header("Settings")]
         [Tooltip("The maximum number of entries per page")]
-        [SerializeField] private uint maxEntriesPerPage = 100;
+        [PropertyOrder(2)][SerializeField] private uint maxEntriesPerPage = 100;
         #endregion
         
         #region Fields
-        /// <summary>
-        /// Singleton of <see cref="Leaderboard"/>
-        /// </summary>
-        private static Leaderboard instance;
         /// <summary>
         /// The heit of one <see cref="leaderboardEntryPrefab"/>
         /// </summary>
@@ -68,14 +63,6 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// Indicates whether the <see cref="Toggle"/> to only display friends in the leaderboard is on or not
         /// </summary>
         private bool friendsToggleIsOn;
-        /// <summary>
-        /// Contains all friends
-        /// </summary>
-        private List<LeaderboardUserData> friends = new();
-        /// <summary>
-        /// Hold the data for the currently active page in the leaderboard menu
-        /// </summary>
-        private readonly List<LeaderboardUserData> steamUsers = new();
         #endregion
 
         #region Properties
@@ -84,20 +71,19 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         private int LastPage => (int)(this.UserList.Count / this.maxEntriesPerPage);
         /// <summary>
-        /// <see cref="steamUsers"/>
+        /// Hold the data for the currently active page in the leaderboard menu
         /// </summary>
-        public static List<LeaderboardUserData> SteamUsers => instance.steamUsers;
+        public static List<LeaderboardUserData> SteamUsers { get; } = new();
         /// <summary>
-        /// Returns <see cref="friends"/> if <see cref="friendsToggleIsOn"/> it true, otherwise <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>
+        /// Returns <see cref="SteamUsers"/> if <see cref="friendsToggleIsOn"/> it true, otherwise <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>
         /// </summary>
-        private List<LeaderboardUserData> UserList => this.friendsToggleIsOn ? this.friends : SteamLeaderboard.SteamUsers;
+        private List<LeaderboardUserData> UserList => this.friendsToggleIsOn ? SteamUsers : SteamLeaderboard.SteamUsers;
         #endregion
         
         #region Methods
         protected override void Awake()
         {
             base.Awake();
-            instance = this;
             this.leaderboardEntryHeight = (this.leaderboardEntryPrefab.transform as RectTransform)!.sizeDelta.y;
             this.scroller.Delegate = this;
         }
@@ -116,6 +102,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         
         private void Start()
         {
+            this.RefreshLeaderboard();
             this.GetLeaderboardEntries();
         }
 
@@ -135,10 +122,20 @@ namespace Watermelon_Game.Menus.Leaderboards
             }
             
             this.refreshButtonImage.fillAmount = Mathf.Clamp01((Time.time - this.refreshTimestamp) / REFRESH_COOLDOWN);
+            this.EnableRefreshButton();
+        }
 
+        /// <summary>
+        /// Makes the <see cref="refreshButton"/> <see cref="Button.interactable"/> again
+        /// </summary>
+        private void EnableRefreshButton()
+        {
             if (this.refreshButtonImage.fillAmount >= 1)
             {
-                this.refreshButton.interactable = true;
+                if (!SteamLeaderboard.ProcessingLeaderboardEntries)
+                {
+                    this.refreshButton.interactable = true;
+                }
             }
         }
         
@@ -178,7 +175,7 @@ namespace Watermelon_Game.Menus.Leaderboards
             // TODO:
             // Set the jump position to be the middle of the leaderboard (if possible, e.g. enough entries are in it)
             // Maybe smooth scroll towards the position, instead of jumping
-            var _index = this.UserList.FindIndex(_SteamUser => _SteamUser.SteamId == SteamManager.SteamID.m_SteamID);
+            var _index = this.UserList.FindIndexParallel(_SteamUser => _SteamUser.SteamId == SteamManager.SteamID.m_SteamID);
             if (_index != -1)
             {
                 var _targetPage = (int)(_index / this.maxEntriesPerPage);
@@ -210,6 +207,8 @@ namespace Watermelon_Game.Menus.Leaderboards
             this.refreshTimestamp = Time.time;
             this.refreshButtonImage.fillAmount = 0;
             
+            SteamUsers.Clear();
+            this.scroller.ReloadData();
             SteamLeaderboard.DownloadLeaderboardScores();
         }
         
@@ -227,42 +226,8 @@ namespace Watermelon_Game.Menus.Leaderboards
                 this.previousScrollPosition = this.scroller.NormalizedScrollPosition;
                 this.activePage = 0;
                 
-                this.friends.Clear();
-                const EFriendFlags FRIEND_FLAGS = EFriendFlags.k_EFriendFlagAll;
-                var _friendCount = SteamFriends.GetFriendCount(FRIEND_FLAGS);
-                
-                var _userIndex = SteamLeaderboard.SteamUsers.FindIndex(_SteamUser => _SteamUser.SteamId == SteamManager.SteamID.m_SteamID);
-                if (_userIndex != -1)
-                {
-                    this.friends.Add(SteamLeaderboard.SteamUsers[_userIndex]);
-                }
-                
-                // ReSharper disable once InconsistentNaming
-                for (var i = 0; i < _friendCount; i++)
-                {
-                    var _friendID = SteamFriends.GetFriendByIndex(i, FRIEND_FLAGS).m_SteamID;
-                    var _friendIndex = SteamLeaderboard.SteamUsers.FindIndex(_SteamUser => _SteamUser.SteamId == _friendID);
-                    
-                    if (_friendIndex != -1)
-                    {
-                        this.friends.Add(SteamLeaderboard.SteamUsers[_friendIndex]);
-                    }
-                }
-
-                this.friends = this.friends.OrderBy(_Friend => _Friend.GlobalRank).ToList();
-                
-                this.steamUsers.Clear();
-                
-                // ReSharper disable once InconsistentNaming
-                foreach (var _friend in this.friends)
-                {
-                    this.steamUsers.Add(_friend);
-                    
-                    if (this.steamUsers.Count == this.maxEntriesPerPage)
-                    {
-                        break;
-                    }
-                }
+                SteamUsers.Clear();
+                SteamUsers.AddRange(SteamLeaderboard.Friends);
                 
                 this.scroller.ReloadData();
                 this.SetPaging();
@@ -275,29 +240,6 @@ namespace Watermelon_Game.Menus.Leaderboards
         }
         
         /// <summary>
-        /// Fills <see cref="steamUsers"/> with entries from <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>, depending on the current <see cref="activePage"/>
-        /// </summary>
-        /// <param name="_ScrollPosition">The normalized position of the scroller between 0 and 1 (0 = Top, 1 = Bottom)</param>
-        private void GetLeaderboardEntries(float _ScrollPosition = 0)
-        {
-            this.steamUsers.Clear();
-            
-            // ReSharper disable once InconsistentNaming
-            for (var i = (int)(this.activePage * this.maxEntriesPerPage); i < this.UserList.Count; i++)
-            {
-                this.steamUsers.Add(this.UserList[i]);
-                
-                if (this.steamUsers.Count == this.maxEntriesPerPage)
-                {
-                    break;
-                }
-            }
-            
-            this.scroller.ReloadData(_ScrollPosition);
-            this.SetPaging();
-        }
-
-        /// <summary>
         /// <see cref="GetLeaderboardEntries"/>
         /// </summary>
         private void LeaderboardScoresDownloaded()
@@ -307,15 +249,39 @@ namespace Watermelon_Game.Menus.Leaderboards
             this.GetLeaderboardEntries();
             this.GetLeaderboardEntries();
         }
-
+        
+        /// <summary>
+        /// Fills <see cref="SteamUsers"/> with entries from <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>, depending on the current <see cref="activePage"/>
+        /// </summary>
+        /// <param name="_ScrollPosition">The normalized position of the scroller between 0 and 1 (0 = Top, 1 = Bottom)</param>
+        private void GetLeaderboardEntries(float _ScrollPosition = 0)
+        {
+            SteamUsers.Clear();
+            
+            // ReSharper disable once InconsistentNaming
+            for (var i = (int)(this.activePage * this.maxEntriesPerPage); i < this.UserList.Count; i++)
+            {
+                SteamUsers.Add(this.UserList[i]);
+                
+                if (SteamUsers.Count == this.maxEntriesPerPage)
+                {
+                    break;
+                }
+            }
+            
+            this.scroller.ReloadData(_ScrollPosition);
+            this.SetPaging();
+            this.EnableRefreshButton();
+        }
+        
         /// <summary>
         /// Updates the name of an entry on the <see cref="activePage"/> -> <see cref="SteamLeaderboard.OnUsernameFound"/>
         /// </summary>
-        /// <param name="_Index">The index in <see cref="SteamLeaderboard.steamUsers"/>, for whom the username was found</param>
+        /// <param name="_Index">The index in <see cref="SteamLeaderboard.SteamUsers"/>, for whom the username was found</param>
         private void RefreshLeaderboardEntries(int _Index)
         {
             var _dataIndex = (int)(_Index - this.activePage * this.maxEntriesPerPage);
-            if (_dataIndex > this.steamUsers.Count - 1)
+            if (_dataIndex > SteamUsers.Count - 1)
             {
                 return;
             }
@@ -324,12 +290,12 @@ namespace Watermelon_Game.Menus.Leaderboards
                 return;
             }
             
-            var _currentUser = this.steamUsers[_dataIndex];
+            var _currentUser = SteamUsers[_dataIndex];
             var _incomingUser = SteamLeaderboard.SteamUsers[_Index];
             
             if (_currentUser.SteamId == _incomingUser.SteamId)
             {
-                this.steamUsers[_dataIndex] = new LeaderboardUserData(_currentUser, _incomingUser.Username);
+                SteamUsers[_dataIndex] = new LeaderboardUserData(_currentUser, _incomingUser.Username);
             }
             
             this.scroller.RefreshActiveCellViews();
@@ -337,7 +303,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         
         public int GetNumberOfCells(EnhancedScroller _Scroller)
         {
-            return this.steamUsers.Count;
+            return SteamUsers.Count;
         }
 
         public float GetCellViewSize(EnhancedScroller _Scroller, int _DataIndex)

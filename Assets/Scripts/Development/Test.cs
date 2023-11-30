@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace Watermelon_Game.Development
         
         #region Methods
         [Button]
-        private void TestButton()
+        private void TestButton1()
         {
             var _tags = new List<string>();
             
@@ -53,6 +54,25 @@ namespace Watermelon_Game.Development
             Debug.Log($"Final: {_tags.Count}");
             
             Debug.Log("TestButton Finished");
+        }
+
+        [SerializeField] private ulong steamId = 12345678910121314;
+        
+        [Button]
+        private void TestButton2()
+        {
+            var _body = System.Text.Encoding.UTF8.GetBytes(steamId.ToString());
+            Debug.Log($"{string.Join("", _body.Select(_Byte => _Byte.ToString()))} | {_body.Length}");
+            
+            // Assuming receivedBytes is the byte array received from the message
+            string receivedMessage = System.Text.Encoding.UTF8.GetString(_body);
+            
+            ulong receivedSteamId;
+            if (ulong.TryParse(receivedMessage, out receivedSteamId))
+            {
+                // Use receivedSteamId as needed, for instance:
+                Debug.Log("Received Steam ID: " + receivedSteamId);
+            }
         }
         #endregion
 #endif

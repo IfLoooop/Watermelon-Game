@@ -5,14 +5,13 @@ using OPS.AntiCheat.Field;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Fruits;
-using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.MenuContainers;
+using Watermelon_Game.Singletons;
 using Watermelon_Game.Skills;
-using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Points
 {
-    internal sealed class PointsController : GameModeTransition
+    internal sealed class PointsController : PersistantGameModeTransition<PointsController>
     {
         #region Inspector Fields
         [Header("References")]
@@ -29,11 +28,6 @@ namespace Watermelon_Game.Points
         #endregion
         
         #region Fields
-        /// <summary>
-        /// Singleton of <see cref="PointsController"/>
-        /// </summary>
-        private static PointsController instance;
-        
         /// <summary>
         /// The current points amount <br/>
         /// <i>Will be reset on <see cref="GameController"/><see cref="GameController.OnResetGameFinished"/></i>
@@ -58,7 +52,7 @@ namespace Watermelon_Game.Points
         /// <summary>
         /// <see cref="currentPoints"/>
         /// </summary>
-        public static ProtectedUInt32 CurrentPoints => instance.currentPoints;
+        public static ProtectedUInt32 CurrentPoints => Instance.currentPoints;
         #endregion
 
         #region Events
@@ -70,14 +64,12 @@ namespace Watermelon_Game.Points
         #endregion
         
         #region Methods
-        protected override void Awake()
+        protected override void Init()
         {
-            base.Awake();
-            
-            instance = this;
+            base.Init();
             this.pointsWaitForSeconds = new WaitForSeconds(this.pointsWaitTime);
         }
-
+        
         protected override void OnEnable()
         {
             base.OnEnable();
@@ -219,10 +211,10 @@ namespace Watermelon_Game.Points
         /// <param name="_Multiplier">Multiplier for the added points</param>
         public static void AddPoints_DEVELOPMENT(Fruit _Fruit, float _Multiplier)
         {
-            instance.multiplier.StartMultiplier();
+            Instance.multiplier.StartMultiplier();
 
-            var _points = (int)(((int)_Fruit + instance.multiplier.CurrentMultiplier) * _Multiplier);
-            instance.SetPoints(_points);
+            var _points = (int)(((int)_Fruit + Instance.multiplier.CurrentMultiplier) * _Multiplier);
+            Instance.SetPoints(_points);
         }
         
         /// <summary>
@@ -233,7 +225,7 @@ namespace Watermelon_Game.Points
         /// <param name="_Multiplier">Multiplier for the subtracted points</param>
         public static void SubtractPoints_DEVELOPMENT(uint _PointsToSubtract, float _Multiplier)
         {
-            instance.SetPoints(-(int)(_PointsToSubtract * _Multiplier));
+            Instance.SetPoints(-(int)(_PointsToSubtract * _Multiplier));
         }
 #endif
         #endregion

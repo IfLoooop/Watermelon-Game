@@ -20,20 +20,24 @@ namespace Watermelon_Game.Menus
         /// </summary>
         Multiplayer,
         /// <summary>
-        /// <see cref="JoinLobbyMenu"/>
+        /// <see cref="LobbyJoin"/>
         /// </summary>
-        JoinLobbyMenu,
+        LobbyJoin,
         /// <summary>
-        /// <see cref="CreateLobbyMenu"/>
+        /// <see cref="LobbyCreate"/>
         /// </summary>
-        CreateLobbyMenu,
+        LobbyCreate,
         /// <summary>
-        /// <see cref="LobbyPasswordMenu"/>
+        /// <see cref="LobbyPassword"/>
         /// </summary>
-        LobbyPasswordMenu,
+        LobbyPassword,
         /// <summary>
-        /// <see cref="LobbyHostMenu"/>
+        /// <see cref="LobbyHost"/>
         /// </summary>
-        LobbyHostMenu
+        LobbyHost,
+        /// <summary>
+        /// <see cref="LobbyConnect"/>
+        /// </summary>
+        LobbyConnect
     }
 }

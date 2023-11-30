@@ -55,27 +55,36 @@ namespace Watermelon_Game.Menus.Languages
         #endregion
         
         #region Methods
-        private void OnApplicationQuit()
-        {
-            this.SaveLanguage();
-        }
-
         protected override void Awake()
         {
             base.Awake();
 
-#if UNITY_EDITOR
-            // Sometimes the Awake is called outside of the playmode 
+#if UNITY_EDITOR // TODO: Check if this only happens in Editor
+            // Awake is called when exiting playmode
             // Doesn't break anything, just to remove the error message
             if (!Application.isPlaying)
             {
                 return;
             }
 #endif
-            
             this.LoadLanguage();
         }
-        
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            
+#if UNITY_EDITOR // TODO: Check if this only happens in Editor
+            // OnDestroy is called when starting playmode
+            // Doesn't break anything, just to remove the error message
+            if (!Application.isPlaying)
+            {
+                return;
+            }
+#endif
+            this.SaveLanguage();
+        }
+
         /// <summary>
         /// Saves the currently active language
         /// </summary>

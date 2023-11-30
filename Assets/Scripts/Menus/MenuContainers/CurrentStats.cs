@@ -1,5 +1,6 @@
 using System;
 using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
@@ -9,13 +10,13 @@ namespace Watermelon_Game.Menus.MenuContainers
     internal sealed class CurrentStats : ContainerMenuBase
     {
         #region Inspector Fields
-        [Header("References")]
         [Tooltip("TMP component that displays the current points")]
-        [SerializeField] private TextMeshProUGUI pointsText;
+        [PropertyOrder(1)][SerializeField] private TextMeshProUGUI pointsText;
         [Tooltip("Contains various statistics")]
+        [PropertyOrder(1)][HideLabel]
         [SerializeField] private Stats stats;
         [Tooltip("TMP component that displays the duration of the current game")]
-        [SerializeField] private TextMeshProUGUI durationText;
+        [PropertyOrder(1)][SerializeField] private TextMeshProUGUI durationText;
         #endregion
 
         #region Fields

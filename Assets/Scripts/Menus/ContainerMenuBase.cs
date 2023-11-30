@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon_Game.Menus.MenuContainers;
@@ -13,11 +14,11 @@ namespace Watermelon_Game.Menus
         #region Inspector Fields
         [Header("References")]
         [Tooltip("The Scrollbar component of the menu")]
-        [SerializeField] protected Scrollbar scrollBar;
+        [PropertyOrder(1)][SerializeField] protected Scrollbar scrollBar;
         
         [Header("Settings")]
         [Tooltip("The type of the menu")]
-        [SerializeField] private ContainerMenu menu;
+        [PropertyOrder(2)][SerializeField] private ContainerMenu menu;
         #endregion
         
         #region Properties

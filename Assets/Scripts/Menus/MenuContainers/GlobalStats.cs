@@ -1,5 +1,6 @@
 using System;
 using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Skills;
@@ -13,13 +14,14 @@ namespace Watermelon_Game.Menus.MenuContainers
     {
         #region Inspector Fields
         [Tooltip("TMP component that displays the best score")]
-        [SerializeField] private TextMeshProUGUI bestScoreText;
+        [PropertyOrder(1)][SerializeField] private TextMeshProUGUI bestScoreText;
         [Tooltip("Contains various statistics")]
+        [PropertyOrder(1)][HideLabel]
         [SerializeField] private Stats stats;
         [Tooltip("TMP component that displays the played games amount")]
-        [SerializeField] private TextMeshProUGUI gamesPlayedText;
+        [PropertyOrder(1)][SerializeField] private TextMeshProUGUI gamesPlayedText;
         [Tooltip("TMP component that displays the total time spend in game")]
-        [SerializeField] private TextMeshProUGUI timeSpendInGameText;
+        [PropertyOrder(1)][SerializeField] private TextMeshProUGUI timeSpendInGameText;
         #endregion
 
         // TODO: Use safe-controller

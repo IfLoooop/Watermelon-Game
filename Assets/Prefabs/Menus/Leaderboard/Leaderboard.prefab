@@ -1229,6 +1229,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Friends Toggle
       objectReference: {fileID: 0}
+    - target: {fileID: 5486223073331406642, guid: 996fea8d7ec775347878788dfccdc070, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5486223073331406642, guid: 996fea8d7ec775347878788dfccdc070, type: 3}
+      propertyPath: m_Color.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5486223073331406642, guid: 996fea8d7ec775347878788dfccdc070, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8094725775425294823, guid: 996fea8d7ec775347878788dfccdc070, type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 

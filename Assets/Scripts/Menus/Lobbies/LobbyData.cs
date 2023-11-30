@@ -26,7 +26,8 @@ namespace Watermelon_Game.Menus.Lobbies
 
         #region Constructor
         /// <summary>
-        /// <see cref="LobbyData"/>
+        /// When downloading a new set of lobby entries <br/>
+        /// <i><see cref="Interactable"/> will be true</i>
         /// </summary>
         /// <param name="_LobbyId"><see cref="LobbyId"/></param>
         /// <param name="_LobbyName"><see cref="LobbyName"/></param>
@@ -40,7 +41,7 @@ namespace Watermelon_Game.Menus.Lobbies
         }
 
         /// <summary>
-        /// <see cref="LobbyData"/>
+        /// For updating the <see cref="Interactable"/> state of an existing set of lobby entries
         /// </summary>
         /// <param name="_LobbyData"><see cref="LobbyData"/></param>
         /// <param name="_Interactable"><see cref="Interactable"/></param>

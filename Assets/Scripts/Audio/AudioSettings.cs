@@ -93,7 +93,7 @@ namespace Watermelon_Game.Audio
             this.LoadSettings();
         }
 
-        private void OnApplicationQuit()
+        private void OnDestroy()
         {
             this.SaveSettings();
         }

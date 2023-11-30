@@ -9,9 +9,9 @@ using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.ExtensionMethods;
-using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.MainMenus;
 using Watermelon_Game.Networking;
+using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
 using Watermelon_Game.Web;
 
@@ -20,7 +20,7 @@ namespace Watermelon_Game.Fruits
     /// <summary>
     /// Contains logic for <see cref="FruitBehaviour"/>
     /// </summary>
-    internal sealed class FruitController : MonoBehaviour
+    internal sealed class FruitController : PersistantMonoBehaviour<FruitController>
     {
         #region Inspector Fields
         [Header("References")]
@@ -30,16 +30,9 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private FruitPrefabSettings fruitPrefabSettings;
         [Tooltip("Reference to the NetworkFruitController child")]
         [SerializeField] private NetworkFruitController networkFruitController;
-        [Tooltip("Contains all released fruits in the scene")]
-        [SerializeField] private GameObject fruitContainer;
         #endregion
         
         #region Fields
-        /// <summary>
-        /// Singleton of <see cref="FruitController"/>
-        /// </summary>
-        private static FruitController instance;
-        
         /// <summary>
         /// Contains all instantiated <see cref="Fruit"/>s in the scene <br/>
         /// <b>Key:</b> Hashcode of the <see cref="Fruit"/> <see cref="GameObject"/> <br/>
@@ -62,10 +55,8 @@ namespace Watermelon_Game.Fruits
         #endregion
 
         #region Properties
-        /// <summary>
-        /// <see cref="Transform"/> component of the <see cref="fruitContainer"/>
-        /// </summary>
-        public static Transform FruitContainerTransform => instance.fruitContainer.transform;
+
+        
         /// <summary>
         /// <see cref="fruits"/> <br/>
         /// <i>Only contains the <see cref="FruitBehaviour"/></i>
@@ -100,19 +91,20 @@ namespace Watermelon_Game.Fruits
             WebSettings.OnApplyWebSettings += FruitSettings.ApplyWebSettings;
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             WebSettings.OnApplyWebSettings -= FruitSettings.ApplyWebSettings;
         }
-        
-        private void Awake()
+
+        protected override void Init()
         {
-            instance = this;
+            base.Init();
             this.fruitPrefabSettings.Init();
             this.fruitSettings.Init();
             this.InitializeSpawnWeights();
         }
-
+        
         /// <summary>
         /// Initializes the <see cref="FruitPrefab.spawnWeight"/>s for every <see cref="FruitPrefab"/> in <see cref="FruitPrefabSettings.FruitPrefabs"/>
         /// </summary>
@@ -316,7 +308,7 @@ namespace Watermelon_Game.Fruits
             if (_enumFruit != Fruit.Watermelon)
             {
                 var _fruit = FruitPrefabSettings.FruitPrefabs[(int)_enumFruit + 1].Fruit;
-                instance.networkFruitController.Evolve(_NextFruitPosition, _fruit);
+                Instance.networkFruitController.Evolve(_NextFruitPosition, _fruit);
             }
         }
         
@@ -334,7 +326,7 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Clears <see cref="fruits"/> -> <see cref="GameController.OnResetGameFinished"/> <br/>
         /// <i>
-        /// Also destroys all remaining child objects (fruits) of <see cref="fruitContainer"/> <br/>
+        /// Also destroys all remaining child objects (fruits) of <see cref="FruitContainer"/> <br/>
         /// Shouldn't be needed, just a failsafe
         /// </i>
         /// </summary>
@@ -342,8 +334,8 @@ namespace Watermelon_Game.Fruits
         private void ClearFruits(ResetReason _ResetReason)
         {
             fruits.Clear();
-
-            var _fruitContainerTransform = this.fruitContainer.transform;
+            
+            var _fruitContainerTransform = FruitContainer.Transform;
             var _childCount = _fruitContainerTransform.childCount;
 
 #if UNITY_EDITOR 
@@ -352,7 +344,7 @@ namespace Watermelon_Game.Fruits
             // TODO: Remove "this.currentGameMode"
             if (_childCount > 0 && this.currentGameMode == GameMode.SinglePlayer) // TODO: No idea why sometimes fruits all left in the container
             {
-                Debug.LogError($"{fruitContainer.name} has still {_childCount} children, destroying now.");
+                Debug.LogError($"{FruitContainer.Transform.name} has still {_childCount} children, destroying now.");
             }
 #endif
             // ReSharper disable once InconsistentNaming
@@ -371,7 +363,7 @@ namespace Watermelon_Game.Fruits
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to add to <see cref="fruits"/></param>
         public static void AddFruit_DEVELOPMENT(FruitBehaviour _FruitBehaviour)
         {
-            instance.AddFruit(_FruitBehaviour);
+            Instance.AddFruit(_FruitBehaviour);
         }
 #endif
         

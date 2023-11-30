@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using JetBrains.Annotations;
 using Mirror;
 using OPS.AntiCheat.Field;
 using UnityEngine;
@@ -8,6 +9,7 @@ using Watermelon_Game.Container;
 using Watermelon_Game.Controls;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
+using Watermelon_Game.Menus.Lobbies;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
@@ -54,7 +56,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <summary>
         /// Container for this <see cref="FruitSpawner"/>
         /// </summary>
-        private ContainerBounds containerBounds;
+        [CanBeNull] private ContainerBounds containerBounds;
         
         /// <summary>
         /// <see cref="Rigidbody2D"/>
@@ -86,7 +88,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// Index of the <see cref="AudioWrapper"/> in <see cref="AudioPool.assignedAudioWrappers"/>, for the <see cref="AudioClipName.BlockedRelease"/> <see cref="AudioClip"/>
         /// </summary>
         private int blockedReleaseIndex;
-
+        
         /// <summary>
         /// The <see cref="FruitBehaviour"/> that is currently attached to this <see cref="FruitSpawner"/> 
         /// </summary>
@@ -132,6 +134,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 FruitsFirstCollision.OnCollision += this.UnblockRelease;
                 SkillController.OnSkillActivated += this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
+                LobbyHostMenu.OnHostLeaveLobby += AssignContainers;
             }
             
             this.AssignContainers();
@@ -150,6 +153,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 FruitsFirstCollision.OnCollision -= this.UnblockRelease;
                 SkillController.OnSkillActivated -= this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed -= DeactivateRotation;
+                LobbyHostMenu.OnHostLeaveLobby -= AssignContainers;
             }
         }
 
@@ -203,7 +207,7 @@ namespace Watermelon_Game.Fruit_Spawn
                     CustomNetworkManager.AssignContainer(null, _ContainerIndices[i], _ConnectionIds[i]);
                 }
             }
-
+            
             if (!GameController.ActiveGame && base.isLocalPlayer)
             {
                 GameController.StartGame();
@@ -369,9 +373,9 @@ namespace Watermelon_Game.Fruit_Spawn
             if (!MenuController.IsAnyMenuOpen)
             {
                 _mouseInput = Input.GetKey(KeyCode.Mouse0);
-                if (_mouseInput)
+                if (_mouseInput && this.containerBounds is {} _containerBounds)
                 {
-                    _mouseInput = this.containerBounds.Contains(InputController.MouseWorldPosition);
+                    _mouseInput = _containerBounds.Contains(InputController.MouseWorldPosition);
                 }   
             }
                 
@@ -399,9 +403,12 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_Position">The direction to move the <see cref="FruitSpawner"/> to</param>
         private void MovePosition(Vector2 _Position)
         {
-            if (!this.anyActiveSkill && this.containerBounds.Contains(_Position))
+            if (this.containerBounds is {} _container)
             {
-                this.rigidbody2D.MovePosition(_Position);   
+                if (!this.anyActiveSkill && _container.Contains(_Position))
+                {
+                    this.rigidbody2D.MovePosition(_Position);   
+                }   
             }
         }
         
@@ -413,7 +420,7 @@ namespace Watermelon_Game.Fruit_Spawn
         private void ResetFruitSpawner(bool _ResetPosition)
         {
             if (_ResetPosition)
-                this.rigidbody2D.MovePosition(this.containerBounds.StartingPosition);
+                this.rigidbody2D.MovePosition(this.containerBounds!.StartingPosition);
             
             var _fruit = NextFruit.GetFruit(out var _rotation);
             this.CmdResetFruitSpawner(_fruit, _rotation);
@@ -606,7 +613,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         public void GameModeTransitionEnded()
         {
-            base.transform.position = this.containerBounds.StartingPosition.Value;
+            base.transform.position = this.containerBounds!.StartingPosition.Value;
             base.gameObject.SetActive(true);
         }
         

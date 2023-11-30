@@ -1,20 +1,49 @@
-[Lobby System]
--Exit lobby
--Show lobby password
--Refresh lobby password
--Keep scroll position on reopen in lobby menu
+TODO: After leaving a lobby as a client, the server has to be stopped (maybe fixed)
+TODO: After host leaves lobby, needs to connect again or not stop the host in the first place (Needs to be tested)
+---------------------------------------------------------------------------------------
+TODO: Test what happens if a client is kicked from a lobby while still in the connection menu (maybe lobbymember list add needs to wait until fully connected)
+TODO: After joining a lobby as a client, leaving and starting a lobby as a host, host is not being displayed as a lobby member, joining client was displayed 3 time in lobby member list
+TODO: Sometimes when switching the gamemode the fruitspawner is not set to the correct position inside the container (maybe something to do with mouse position while the menu is closing during the trasion animation)
+TODO: See TODO in CustomNetworkManager.SteamLobbyEnterAttempt()
+TODO: Join from friend list, while game is running and while game is not running
 
-TODO: After stopping the host and starting again, no fruit is on the fruit spawner
-TODO: Lobby menu is not closed correctly when open the menu container while lobby menu is opened
-TODO: Add exit button to all menus (clickable by mouse)
+TODO: Test friends only lobby
 TODO: Test if hosting without a internet connection works
-TODO: Change menu button names
-TODO: Add a control button to the footer 
-TODO: Use looser connection id -> MaxHeight.OnGameOver
-TODO: Change the WebSettings setting "SizeMultiplier" for the BackgroundFruit in Github 
+TODO: Audio settings are not saved on restart (check if it works now, if not test if saving in ondisable changes anything)
+TODO: Check "LanguageController.cs" TODOs
+TODO: Check if leaderboard friends are displayed with friends toggle on
 
+TODO: "LobbyConnectMenu.cs" need localizations for buttons 
+TODO: Add exit button to all menus (clickable by mouse)
+TODO: Change menu button names
+TODO: Add a friends filter to the lobby list and a name search
+TODO: Add a control button to the footer
+TODO: Check if Uploading leaderboard scores still works
+
+TODO: Fruits need to be destroyed on GameMode change
+TODO: Expanding the evolutions chart when in the right container will drop a fruit
+TODO: Use looser connection id -> MaxHeight.OnGameOver
 TODO: Game crashes when closing it immediately after opening (maybe something with steam or leaderboard)
 
+
+Warning // TODO: OnSteamLobby Leave (mybe comes only after trying to start server again not sure yet)
+NetworkClient.RegisterHandler replacing handler for Mirror.SceneMessage, id=30259. If replacement is intentional, use ReplaceHandler instead to avoid this warning.
+UnityEngine.Debug:LogWarning(Object)
+Mirror.NetworkClient:RegisterHandler(Action`1, Boolean)
+Mirror.NetworkManager:RegisterClientMessages()
+Mirror.NetworkManager:FinishStartHost()
+Mirror.NetworkManager:StartHost()
+Watermelon_Game.Networking.CustomNetworkManager:SteamLobbyLeft()
+Watermelon_Game.Networking.CustomNetworkManager:OnStopClient()
+Mirror.NetworkManager:OnClientDisconnectInternal()
+Mirror.NetworkManager:StopClient()
+Watermelon_Game.Networking.CustomNetworkManager:LeaveSteamLobby(Boolean)
+Watermelon_Game.Steamworks.NET.SteamLobby:LeaveLobby()
+Watermelon_Game.Menus.MainMenus.MultiplayerMenu:LeaveLobby()
+Sirenix.Serialization.IDataWriter:WritePrimitiveArray(T[])
+UnityEngine.EventSystems.EventSystem:Update()
+TODO: While leaderbopard entries are refreshing, and the leaderboard is closed, after opening, the refresh wont go on, page has to be turned for the refresh to complete
+-Use -> https://partner.steamgames.com/doc/api/ISteamFriends#ActivateGameOverlayInviteDialog
 -Split MenuBase.cs into 2 base classes, one for the MenuContainer-submenus and one for the Lobby menus
 -Achievements localizations
 -Reduce the "WaitForEndOfFrame" delay in "FontManager.cs"
@@ -25,7 +54,11 @@ TODO: Game crashes when closing it immediately after opening (maybe something wi
 -Test game with Application.TargetFramerate
 -Multiplier.cs "multiplierWaitTime" and "multiplierWaitForSeconds" need descriptions
 -Check "BuildSettings.cs", sometimes things like "Application.version" are not updated immediately (in build), is resolved after a build through the normal "Build Settings"-Menu 
-
+[Build Error]
+-Annoying error logs during build (still finished)
+-Assertion failed on expression: 'GetApplication().MayUpdate()'UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
+-Resolve of invalid GC handle. The handle is from a previous domain. The resolve operation is skipped.UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
+-Assertion failed on expression: '!performAutorepaint || GetApplication().MayUpdate()'UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
 
 https://keymailer.co/de/creators/
 

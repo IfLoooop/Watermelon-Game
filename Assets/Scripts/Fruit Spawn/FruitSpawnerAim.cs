@@ -78,7 +78,7 @@ namespace Watermelon_Game.Fruit_Spawn
             var _transform = this.transform;
             Physics2D.Raycast(_transform.position, -_transform.up, contactFilter2D, raycastHits2D);
 
-            var _rayCastHit2D = this.raycastHits2D.First();
+            var _rayCastHit2D = this.raycastHits2D.FirstOrDefault();
             this.lineRenderer.SetPosition(1, new Vector3(0, -_rayCastHit2D.distance, 0));
         }
         

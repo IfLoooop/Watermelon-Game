@@ -6,6 +6,7 @@ using Mirror;
 using Mirror.FizzySteam;
 using UnityEngine;
 using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.Steamworks.NET;
 
 namespace Watermelon_Game.Networking
 {
@@ -15,18 +16,18 @@ namespace Watermelon_Game.Networking
     [RequireComponent(typeof(FizzySteamworks))]
     internal sealed class CustomNetworkManager : NetworkManager
     {
-        #region Fields
+        #region Constants
         /// <summary>
-        /// Singleton of <see cref="CustomNetworkManager"/>
+        /// The default value for <see cref="NetworkManager.networkAddress"/>
         /// </summary>
-        private static CustomNetworkManager instance;
+        private const string DEFAULT_NETWORK_ADDRESS = "localhost";
         #endregion
-
+        
         #region Properties
         /// <summary>
         /// <see cref="NetworkManager.maxConnections"/>
         /// </summary>
-        public static int MaxConnection => instance.maxConnections;
+        public static int MaxConnection => singleton.maxConnections;
         /// <summary>
         /// Is true while the client is trying to join a lobby <br/>
         /// <i>Will be set to false after joining or on failure</i>
@@ -35,6 +36,10 @@ namespace Watermelon_Game.Networking
         #endregion
         
         #region Events
+        /// <summary>
+        /// Is called when a host or client connection has been stopped
+        /// </summary>
+        public static event Action OnConnectionStopped;
         /// <summary>
         /// Is called after an attempt to join a steam lobby <br/>
         /// <b>Parameter:</b> Indicates if the attempt failed
@@ -45,40 +50,48 @@ namespace Watermelon_Game.Networking
         #region Methods
         public override void Awake()
         {
-            if (instance != null && instance != this)
+            if (singleton != null && singleton != this)
             {
                 Destroy(base.gameObject);
                 return;
             }
-            
             base.Awake();
-            instance = this;
             
 #if DEBUG || DEVELOPMENT_BUILD
-            if (instance.gameObject.GetComponent<NetworkManagerHUD>() == null)
+            if (this.gameObject.GetComponent<NetworkManagerHUD>() == null)
             {
-                instance.gameObject.AddComponent<NetworkManagerHUD>();   
+                this.gameObject.AddComponent<NetworkManagerHUD>();   
             }
 #endif
-        }  
-
+        }
+        
         public override void Start()
         {
             base.Start();
             base.StartHost();
         }
 
+        public override void OnStartHost()
+        {
+            base.OnStartHost();
+            GameController.Containers.ForEach(_Container => _Container.FreeContainer());
+        }
+        
         public override void OnStopHost()
         {
             base.OnStopHost();
-            
-            GameController.Containers.Clear();
+            OnConnectionStopped?.Invoke();
         }
-
+        
+        public override void OnStopClient() // Will only be called when connected AS a client to another host
+        {
+            base.OnStopClient();
+            OnConnectionStopped?.Invoke();
+        }
+        
         public override void OnServerDisconnect(NetworkConnectionToClient _ConnectionToClient)
         {
             base.OnServerDisconnect(_ConnectionToClient);
-            
             GameController.Containers.FirstOrDefault(_Container => _Container.ConnectionId == _ConnectionToClient.connectionId)?.FreeContainer();
         }
         
@@ -116,18 +129,38 @@ namespace Watermelon_Game.Networking
         /// <param name="_Failure">Indicates whether the lobby can be joined or not</param>
         /// <param name="_HostAddress">The address of the lobby to join</param>
         [Client]
-        public static void SteamLobbyEnterAttempt(bool _Failure, string _HostAddress)
+        public static void SteamLobbyEnterAttempt(bool _Failure, string _HostAddress = DEFAULT_NETWORK_ADDRESS)
         {
             if (!_Failure && AttemptingToJoinALobby)
             {
-                // TODO: Enable
-                instance.networkAddress = _HostAddress;
-                instance.StopHost();
-                instance.StartClient();
+                singleton.networkAddress = _HostAddress;
+                singleton.StopHost();
+                //singleton.StartClient(); // TODO: Try this
+            }
+            else
+            {
+                AttemptingToJoinALobby = false;
             }
             
             OnSteamLobbyEnterAttempt?.Invoke(_Failure);
+        }
+        
+        /// <summary>
+        /// Starts a client connection to <see cref="NetworkManager.networkAddress"/>
+        /// </summary>
+        public static void Connect()
+        {
             AttemptingToJoinALobby = false;
+            singleton.StartClient();
+        }
+
+        /// <summary>
+        /// Cancels the current lobby connection process
+        /// </summary>
+        public static void CancelConnectionAttempt()
+        {
+            AttemptingToJoinALobby = false;
+            singleton.StartHost();
         }
         
         /// <summary>
@@ -139,25 +172,25 @@ namespace Watermelon_Game.Networking
         [Server]
         public static Dictionary<int, int> GetContainerConnectionMap()
         {
-            var _dict = new Dictionary<int, int>();
+            var _map = new Dictionary<int, int>();
 
             foreach (var _connectionId in NetworkServer.connections.Keys)
             {
                 var _containerIndex = GameController.Containers.FindIndex(_Container => _Container.ConnectionId == _connectionId);
-                _dict.Add(_containerIndex, _connectionId);
+                _map.Add(_containerIndex, _connectionId);
             }
 
-            return _dict;
+            return _map;
         }
         
         /// <summary>
-        /// Assigns the the container in <see cref="containers"/> with the given index to the given connection id
+        /// Assigns the the container in <see cref="GameController.containers"/> with the given index to the given connection id
         /// </summary>
         /// <param name="_FruitSpawner">
-        /// If the container to assign belongs to the client, pass a reference of the <see cref="FruitSpawner"/> <br/>
+        /// If the container to assign belongs to the local client, pass a reference of the <see cref="FruitSpawner"/> <br/>
         /// If it belongs to another player, pass null
         /// </param>
-        /// <param name="_ContainerIndex">The index in <see cref="containers"/> to assign the connection to</param>
+        /// <param name="_ContainerIndex">The index in <see cref="GameController.containers"/> to assign the connection to</param>
         /// <param name="_ConnectionId">The connection to assign</param>
         [Client]
         public static void AssignContainer([CanBeNull] FruitSpawner _FruitSpawner, int _ContainerIndex, int _ConnectionId)
@@ -169,6 +202,24 @@ namespace Watermelon_Game.Networking
             else
             {
                 GameController.Containers[_ContainerIndex].AssignConnectionId(_ConnectionId);
+            }
+        }
+
+        /// <summary>
+        /// Disconnects a client from a lobby <br/>
+        /// <b>Won't work for the host of a lobby</b>
+        /// </summary>
+        /// <param name="_IsHost"><see cref="SteamLobby.IsHost"/></param>
+        public static void DisconnectFromLobby(bool _IsHost)
+        {
+            singleton.networkAddress = DEFAULT_NETWORK_ADDRESS;
+            AttemptingToJoinALobby = false;
+            
+            if (!_IsHost)
+            {
+                singleton.StopClient();
+                singleton.StopServer();
+                singleton.StartHost();
             }
         }
         #endregion

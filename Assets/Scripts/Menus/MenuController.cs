@@ -7,6 +7,7 @@ using Watermelon_Game.Menus.Languages;
 using Watermelon_Game.Menus.Lobbies;
 using Watermelon_Game.Menus.MainMenus;
 using Watermelon_Game.Menus.MenuContainers;
+using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Menus
@@ -14,7 +15,7 @@ namespace Watermelon_Game.Menus
     /// <summary>
     /// Controls all menu logic
     /// </summary>
-    internal sealed class MenuController : MonoBehaviour
+    internal sealed class MenuController : PersistantMonoBehaviour<MenuController>
     {
         #region Inspector Fields
         [Header("References")]
@@ -25,9 +26,9 @@ namespace Watermelon_Game.Menus
         [Tooltip("Reference to the Multiplayer")]
         [SerializeField] private MultiplayerMenu multiplayerMenu;
         [Tooltip("Reference to the JoinLobbyMenu")]
-        [SerializeField] private JoinLobbyMenu joinLobbyMenu;
+        [SerializeField] private LobbyJoinMenu lobbyJoinMenu;
         [Tooltip("Reference to the CreateLobbyMenu")]
-        [SerializeField] private CreateLobbyMenu createLobbyMenu;
+        [SerializeField] private LobbyCreateMenu lobbyCreateMenu;
         [Tooltip("Reference to the LobbyHostMenu")]
         [SerializeField] private LobbyHostMenu lobbyHostMenu;
 
@@ -38,13 +39,13 @@ namespace Watermelon_Game.Menus
         [Header("Debug")]
         [Tooltip("The currently active menu")]
         [SerializeField][ReadOnly][CanBeNull] private MenuBase currentActiveMenu;
+#if UNITY_EDITOR
+        [Tooltip("Forces all menu options to be always enabled")]
+        [ShowInInspector] public static bool DebugMultiplayerMenu;
+#endif
         #endregion
 
         #region Fields
-        /// <summary>
-        /// Singleton of <see cref="MenuController"/>
-        /// </summary>
-        private static MenuController instance;
         /// <summary>
         /// Whether the <see cref="MenuController"/> currently takes input or not
         /// </summary>
@@ -70,13 +71,13 @@ namespace Watermelon_Game.Menus
         /// </summary>
         public MenuBase MultiplayerMenu => this.multiplayerMenu;
         /// <summary>
-        /// <see cref="joinLobbyMenu"/>
+        /// <see cref="lobbyJoinMenu"/>
         /// </summary>
-        public MenuBase JoinLobbyMenu => this.joinLobbyMenu;
+        public MenuBase LobbyJoinMenu => this.lobbyJoinMenu;
         /// <summary>
-        /// <see cref="createLobbyMenu"/>
+        /// <see cref="lobbyCreateMenu"/>
         /// </summary>
-        public MenuBase CreateLobbyMenu => this.createLobbyMenu;
+        public MenuBase LobbyCreateMenu => this.lobbyCreateMenu;
         /// <summary>
         /// <see cref="lobbyHostMenu"/>
         /// </summary>
@@ -86,7 +87,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Indicates whether any of the menus is currently opened
         /// </summary>
-        public static bool IsAnyMenuOpen => instance.currentActiveMenu != null;
+        public static bool IsAnyMenuOpen => Instance.currentActiveMenu != null;
         #endregion
         
         #region Events
@@ -101,11 +102,6 @@ namespace Watermelon_Game.Menus
         #endregion
         
         #region Methods
-        private void Awake()
-        {
-            instance = this;
-        }
-        
         private void OnEnable()
         {
             MenuBase.OnMenuClose += MenuClosed;
@@ -135,7 +131,7 @@ namespace Watermelon_Game.Menus
             {
                 if (this.currentActiveMenu != null)
                 {
-                    this.CloseCurrentMenu();
+                    CloseCurrentMenu();
                 }
                 else
                 {
@@ -181,7 +177,7 @@ namespace Watermelon_Game.Menus
         {
             if (this.currentActiveMenu != null && this.currentActiveMenu.Menu == _Menu.Menu)
             {
-                this.CloseCurrentMenu();
+                CloseCurrentMenu();
             }
             else
             {
@@ -196,7 +192,7 @@ namespace Watermelon_Game.Menus
         /// <returns>The <see cref="MenuBase"/> that was opened</returns>
         public static MenuBase Open(Func<MenuController, MenuBase> _MenuControllerMenu)
         {
-            return instance.Open(_MenuControllerMenu.Invoke(instance));
+            return Instance.Open(_MenuControllerMenu.Invoke(Instance));
         }
         
         /// <summary>
@@ -223,19 +219,19 @@ namespace Watermelon_Game.Menus
         /// <i>Won't do anything if no menu is currently open</i>
         /// </summary>
         /// <param name="_ForceClose">Also closes all submenus</param>
-        private void CloseCurrentMenu(bool _ForceClose = false)
+        public static void CloseCurrentMenu(bool _ForceClose = false)
         {
-            if (this.currentActiveMenu != null)
+            if (Instance.currentActiveMenu != null)
             {
                 if (_ForceClose)
                 {
-                    this.currentActiveMenu.ForceClose(true);   
+                    Instance.currentActiveMenu.ForceClose(true);   
                 }
                 else
                 {
-                    this.currentActiveMenu.Close(true);
+                    Instance.currentActiveMenu.Close(true);
                 }
-                this.RestartGame(); // TODO: Neéds better solution
+                Instance.RestartGame(); // TODO: Neéds better solution
             }
         }
 
@@ -245,7 +241,7 @@ namespace Watermelon_Game.Menus
         /// </summary>
         public static void Restart()
         {
-            instance.CloseCurrentMenu();
+            CloseCurrentMenu();
             OnManualRestart?.Invoke();
         }
         
@@ -255,7 +251,7 @@ namespace Watermelon_Game.Menus
         private void ResetGameStarted()
         {
             this.DisableInput();
-            this.CloseCurrentMenu();
+            CloseCurrentMenu();
         }
         
         /// <summary>
@@ -335,7 +331,10 @@ namespace Watermelon_Game.Menus
         {
             if (this.currentActiveMenu != null)
             {
-                this.StartCoroutine(this.ReOpen());   
+                if (!this.currentActiveMenu.KeepOpen)
+                {
+                    this.StartCoroutine(this.ReOpen());   
+                }
             }
         }
 
@@ -347,7 +346,7 @@ namespace Watermelon_Game.Menus
         {
             this.DisableInput();
             var _menu = this.currentActiveMenu;
-            this.CloseCurrentMenu(true);
+            CloseCurrentMenu(true);
             
             yield return new WaitForSeconds(this.menuReopenDelay);
             this.Open(_menu);

@@ -15,11 +15,11 @@ namespace Watermelon_Game.Menus
         #region Inspector Fieds
         [Header("References")]
         [Tooltip("Open animation for the menu")]
-        [SerializeField] private Animation menuPopup;
+        [PropertyOrder(1)][SerializeField] private Animation menuPopup;
         
         [Header("Settings")]
         [Tooltip("The type of the menu")]
-        [SerializeField] private Menu menu;
+        [PropertyOrder(2)][SerializeField] private Menu menu;
         #endregion
         
         #region Properties
@@ -27,6 +27,10 @@ namespace Watermelon_Game.Menus
         /// <see cref="menu"/>
         /// </summary>
         public Menu Menu => this.menu;
+        /// <summary>
+        /// Indicates that this menu should not be reopened while true -> <see cref="MenuController.ReopenMenu"/>
+        /// </summary>
+        public bool KeepOpen { get; protected set; }
         #endregion
 
         #region Events

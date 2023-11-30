@@ -28,7 +28,10 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private bool debugFruit;
         [Tooltip("The connection id of the client who requested the spawn for this fruit")]
         // ReSharper disable once InconsistentNaming
+        // ReSharper disable once NotAccessedField.Local
+#pragma warning disable CS0414
         [SerializeField][ReadOnly] private string clientConnectionId_DEBUG = "null";
+#pragma warning restore CS0414
 #endif
         [Header("References")]
         [Tooltip("SpriteRenderer of the Fruit")]
@@ -461,7 +464,7 @@ namespace Watermelon_Game.Fruits
         [ClientRpc]
         private void RpcRelease(bool _AnyActiveSkill)
         {
-            base.transform.SetParent(FruitController.FruitContainerTransform, true);
+            base.transform.SetParent(FruitContainer.Transform, true);
             this.HasBeenReleased = true;
             this.DecreaseSortingOrder();
             this.InitializeRigidBody();
@@ -657,7 +660,7 @@ namespace Watermelon_Game.Fruits
         [ClientRpc]
         private void RpcEvolve()
         {
-            base.transform.SetParent(FruitController.FruitContainerTransform);
+            base.transform.SetParent(FruitContainer.Transform);
             this.fruitsFirstCollision.DestroyComponent();
             this.InitializeRigidBody();
             

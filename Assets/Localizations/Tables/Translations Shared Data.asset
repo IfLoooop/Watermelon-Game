@@ -151,6 +151,14 @@ MonoBehaviour:
     m_Key: leave_lobby
     m_Metadata:
       m_Items: []
+  - m_Id: 9223673881063424
+    m_Key: connect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9223707347415040
+    m_Key: cancel
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

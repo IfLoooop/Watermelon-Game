@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Watermelon_Game.ExtensionMethods
 {
@@ -32,6 +33,21 @@ namespace Watermelon_Game.ExtensionMethods
             }
             
             return -1;
+        }
+        
+        /// <summary>
+        /// Searches for an element that matches the conditions defined by the specified predicate, and returns the zero-based index of the first occurrence within the entire
+        /// </summary>
+        /// <param name="_Enumerable">The <see cref="IEnumerable{T}"/> to search on</param>
+        /// <param name="_Match">The condition to search for</param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns>The zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, -1</returns>
+        public static int FindIndexParallel<T>(this IEnumerable<T> _Enumerable, Predicate<T> _Match)
+        {
+            var _array = _Enumerable as T[] ?? _Enumerable.ToArray();
+            var _index = ParallelEnumerable.Range(0, _array.Length).FirstOrDefault(_Index => _Match(_array[_Index]));
+
+            return _index != -1 ? _index : -1;
         }
     }
 }

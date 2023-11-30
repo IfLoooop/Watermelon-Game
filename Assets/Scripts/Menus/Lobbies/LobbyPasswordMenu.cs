@@ -1,5 +1,6 @@
 using System.Collections;
 using JetBrains.Annotations;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,23 +15,21 @@ namespace Watermelon_Game.Menus.Lobbies
     internal sealed class LobbyPasswordMenu : MenuBase
     {
         #region Inspector Fields
-        [Header("References")]
         [Tooltip("Password inputfield")]
-        [SerializeField] private TMP_InputField inputField;
+        [PropertyOrder(1)][SerializeField] private TMP_InputField inputField;
         [Tooltip("Reference to the submit button")]
-        [SerializeField] private Button submitButton;
+        [PropertyOrder(1)][SerializeField] private Button submitButton;
         [Tooltip("Reference to the button that shows/hides the password")]
-        [SerializeField] private Button hideButton;
+        [PropertyOrder(1)][SerializeField] private Button hideButton;
         [Tooltip("Hide Password Sprite")]
-        [SerializeField] private Sprite hideSprite;
+        [PropertyOrder(1)][SerializeField] private Sprite hideSprite;
         [Tooltip("Show Password Sprite")]
-        [SerializeField] private Sprite showSprite;
-
-        [Header("Settings")]
+        [PropertyOrder(1)][SerializeField] private Sprite showSprite;
+        
         [Tooltip("AnimationCurve for the strength of the shake")]
-        [SerializeField] private AnimationCurve curve;
+        [PropertyOrder(2)][SerializeField] private AnimationCurve curve;
         [Tooltip("The duration in seconds of the shake effect")]
-        [SerializeField] private float shakeDuration = .375f;
+        [PropertyOrder(2)][SerializeField] private float shakeDuration = .375f;
         #endregion
 
         #region Fields

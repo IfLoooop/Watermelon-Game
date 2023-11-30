@@ -1,3 +1,4 @@
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon_Game.Steamworks.NET;
@@ -11,17 +12,16 @@ namespace Watermelon_Game.Menus.MainMenus
     internal sealed class MultiplayerMenu : MainMenuBase
     {
         #region Inspector Fields
-        [Header("References")]
         [Tooltip("Reference to the button to restart the game")]
-        [SerializeField] private Button restartButton;
+        [PropertyOrder(1)][SerializeField] private Button restartButton;
         [Tooltip("Reference to the button to change to singleplayer")]
-        [SerializeField] private Button singleplayerButton;
+        [PropertyOrder(1)][SerializeField] private Button singleplayerButton;
         [Tooltip("Reference to the button to join a lobby")]
-        [SerializeField] private Button joinLobbyButton;
+        [PropertyOrder(1)][SerializeField] private Button joinLobbyButton;
         [Tooltip("Reference to the button to leave the lobby")]
-        [SerializeField] private Button leaveLobbyButton;
+        [PropertyOrder(1)][SerializeField] private Button leaveLobbyButton;
         [Tooltip("Reference to the button to create a lobby")]
-        [SerializeField] private Button createLobbyButton;
+        [PropertyOrder(1)][SerializeField] private Button createLobbyButton;
         #endregion
         
         #region Methods
@@ -47,7 +47,7 @@ namespace Watermelon_Game.Menus.MainMenus
         /// </summary>
         public void JoinLobby()
         {
-            MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.JoinLobbyMenu);
+            MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.LobbyJoinMenu);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace Watermelon_Game.Menus.MainMenus
         /// </summary>
         public void LeaveLobby()
         {
-            SteamLobby.LeaveLobby();
+            SteamLobby.DisconnectFromLobby();
             base.Close(true);
         }
         
@@ -64,11 +64,23 @@ namespace Watermelon_Game.Menus.MainMenus
         /// </summary>
         public void CreateLobby()
         {
-            MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.CreateLobbyMenu);
+            MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.LobbyCreateMenu);
         }
 
         public override MenuBase Open(MenuBase _CurrentActiveMenu)
         {
+#if UNITY_EDITOR
+            if (MenuController.DebugMultiplayerMenu)
+            {
+                this.joinLobbyButton.gameObject.SetActive(true);
+                this.leaveLobbyButton.gameObject.SetActive(true);
+                this.restartButton.interactable = true;
+                this.singleplayerButton.interactable = true;
+                this.createLobbyButton.interactable = true;
+                
+                return base.Open(_CurrentActiveMenu);
+            }
+#endif
             if (SteamLobby.CurrentLobbyId == null)
             {
                 this.joinLobbyButton.gameObject.SetActive(true);
