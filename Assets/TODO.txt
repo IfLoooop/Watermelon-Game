@@ -13,6 +13,7 @@ TODO: Audio settings are not saved on restart (check if it works now, if not tes
 TODO: Check "LanguageController.cs" TODOs
 TODO: Check if leaderboard friends are displayed with friends toggle on
 
+TODO: Set max connections in mirror to 1 while not hosting a steam lobby
 TODO: "LobbyConnectMenu.cs" need localizations for buttons 
 TODO: Add exit button to all menus (clickable by mouse)
 TODO: Change menu button names

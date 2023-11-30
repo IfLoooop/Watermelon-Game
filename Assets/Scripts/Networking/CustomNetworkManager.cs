@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using kcp2k;
 using Mirror;
 using Mirror.FizzySteam;
 using UnityEngine;
@@ -16,6 +17,12 @@ namespace Watermelon_Game.Networking
     [RequireComponent(typeof(FizzySteamworks))]
     internal sealed class CustomNetworkManager : NetworkManager
     {
+#if UNITY_EDITOR
+        [Header("EDITOR")]
+        [Tooltip("For testing in editor")]
+        [SerializeField] private ushort port = 7777;
+#endif
+        
         #region Constants
         /// <summary>
         /// The default value for <see cref="NetworkManager.networkAddress"/>
@@ -55,14 +62,16 @@ namespace Watermelon_Game.Networking
                 Destroy(base.gameObject);
                 return;
             }
-            base.Awake();
-            
-#if DEBUG || DEVELOPMENT_BUILD
-            if (this.gameObject.GetComponent<NetworkManagerHUD>() == null)
-            {
-                this.gameObject.AddComponent<NetworkManagerHUD>();   
-            }
+#if UNITY_EDITOR
+            var _kcpTransport = base.gameObject.AddComponent<KcpTransport>();
+            base.transport.enabled = false;
+            base.transport = _kcpTransport;
+            _kcpTransport.Port = this.port;
 #endif
+#if DEBUG || DEVELOPMENT_BUILD
+            base.gameObject.AddComponent<NetworkManagerHUD>();
+#endif
+            base.Awake();
         }
         
         public override void Start()
@@ -133,7 +142,11 @@ namespace Watermelon_Game.Networking
         {
             if (!_Failure && AttemptingToJoinALobby)
             {
+#if UNITY_EDITOR
+                singleton.networkAddress = DEFAULT_NETWORK_ADDRESS;
+#else 
                 singleton.networkAddress = _HostAddress;
+#endif
                 singleton.StopHost();
                 //singleton.StartClient(); // TODO: Try this
             }
