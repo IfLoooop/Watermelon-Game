@@ -133,6 +133,7 @@ namespace Watermelon_Game.Menus.Lobbies
             }
             else
             {
+                this.isOpen = false;
                 this.SetScrollPosition();
                 base.Close(false);
                 MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.MultiplayerMenu);
@@ -141,10 +142,12 @@ namespace Watermelon_Game.Menus.Lobbies
 
         public override void ForceClose(bool _PlaySound)
         {
+            this.isOpen = false;
             this.lobbyPasswordMenu.Close(false);
             this.lobbyConnectMenu.Close(false);
             this.SetScrollPosition();
             base.Close(_PlaySound);
+            AllowJoinButtonInteraction(true);
         }
         
         /// <summary>
@@ -228,7 +231,7 @@ namespace Watermelon_Game.Menus.Lobbies
                 }
                 else
                 {
-                    SteamLobby.JoinLobbyAsync(_Callback.m_ulSteamIDLobby); // TODO: Force join if friend
+                    SteamLobby.JoinLobbyAsync(_Callback.m_ulSteamIDLobby); // TODO: Force join if friend (maybe)
                 }
             }
             // Lobby id doesn't exist
@@ -255,7 +258,6 @@ namespace Watermelon_Game.Menus.Lobbies
         /// </summary>
         private void SetScrollPosition()
         {
-            this.isOpen = false;
             this.normalizedScrollPosition = this.scroller.NormalizedScrollPosition;
             this.scrollBase.SetLastScrollPosition(this.scroller.ScrollRect.verticalScrollbar);
         }

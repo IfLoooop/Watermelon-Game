@@ -5,7 +5,6 @@ using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menus.InfoMenus;
 using Watermelon_Game.Menus.Languages;
 using Watermelon_Game.Menus.Lobbies;
@@ -201,12 +200,33 @@ namespace Watermelon_Game.Menus
         {
             this.OpenMenuForGameMode(GameController.CurrentGameMode, false);
         }
+
+        /// <summary>
+        /// Opens/closes the <see cref="Watermelon_Game.Menus.MenuContainers.MenuContainer"/>
+        /// </summary>
+        public void MenuButtonMenu()
+        {
+            this.Open_Close(this.menuContainer);
+        }
+        
+        /// <summary>
+        /// Opens a menu from the <see cref="MenuController"/> or closes it if it is already opened
+        /// </summary>
+        /// <param name="_MenuControllerMenu">Can be any <see cref="MenuBase"/> in <see cref="MenuController"/></param>
+        /// <typeparam name="T">Must inherit from <see cref="MenuBase"/></typeparam>
+        /// <returns>The <see cref="MenuBase"/> that was opened or null if the menu was closed</returns>
+        public static MenuBase Open_Close<T>(Func<MenuController, T> _MenuControllerMenu) where T : MenuBase
+        {
+            return Instance.Open_Close(_MenuControllerMenu.Invoke(Instance));
+        }
         
         /// <summary>
         /// Opens the given <see cref="MenuBase"/> if it's not <see cref="currentActiveMenu"/>, otherwise closes it
         /// </summary>
         /// <param name="_Menu">The menu to open/close</param>
-        public void Open_Close(MenuBase _Menu)
+        /// <returns>The currently open menu or null if no menu is currently open</returns>
+        [CanBeNull]
+        private MenuBase Open_Close(MenuBase _Menu)
         {
             if (this.currentActiveMenu != null && this.currentActiveMenu.Menu == _Menu.Menu)
             {
@@ -214,8 +234,10 @@ namespace Watermelon_Game.Menus
             }
             else
             {
-                this.Open(_Menu);
+                return this.Open(_Menu);
             }
+
+            return null;
         }
         
         /// <summary>

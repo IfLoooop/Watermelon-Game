@@ -30,6 +30,14 @@ MonoBehaviour:
     m_Localized: Friends only Lobby
     m_Metadata:
       m_Items: []
+  - m_Id: 692756346597376
+    m_Localized: Your were kicked from the Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693733258719232
+    m_Localized: Other Player left the Lobby
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

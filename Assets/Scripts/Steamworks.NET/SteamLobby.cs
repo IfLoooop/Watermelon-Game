@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 using Steamworks;
 using UnityEngine;
 using Watermelon_Game.Menus;
+using Watermelon_Game.Menus.InfoMenus;
 using Watermelon_Game.Menus.Lobbies;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Utility;
@@ -27,7 +28,7 @@ namespace Watermelon_Game.Steamworks.NET
         public const string PASSWORD = "password";
         public const string FRIENDS_ONLY = "friendsOnly";
         /// <summary>
-        /// Maximum lenght of the messages for <see cref="KickPlayer"/> and <see cref="OnLobbyChatMessage"/>
+        /// Maximum lenght of the messages for <see cref="SendPlayerKickMessage"/> and <see cref="OnLobbyChatMessage"/>
         /// </summary>
         private const int MAX_CHAT_MESSAGE_LENGHT = 17;
         #endregion
@@ -607,7 +608,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <b>Byte lenght of the given steam id must not exceed <see cref="MAX_CHAT_MESSAGE_LENGHT"/></b>
         /// </summary>
         /// <param name="_SteamID">The <see cref="CSteamID"/> to send as a chat message</param>
-        public static void KickPlayer(CSteamID _SteamID)
+        public static void SendPlayerKickMessage(CSteamID _SteamID)
         {
             if (CurrentLobbyId is null)
             {
@@ -624,8 +625,17 @@ namespace Watermelon_Game.Steamworks.NET
             SteamMatchmaking.SendLobbyChatMsg(new CSteamID(CurrentLobbyId.Value.Value), _body, MAX_CHAT_MESSAGE_LENGHT);
 
 #if DEBUG || DEVELOPMENT_BUILD
-            Debug.LogError($"[{nameof(SteamLobby)}].{nameof(KickPlayer)} IDToKick:{_SteamID.m_SteamID} | SenderID:{SteamManager.SteamID.m_SteamID} MessageSend: {string.Join(string.Empty, _body.Select(_Byte => _Byte.ToString()))}");
+            Debug.LogError($"[{nameof(SteamLobby)}].{nameof(SendPlayerKickMessage)} IDToKick:{_SteamID.m_SteamID} | SenderID:{SteamManager.SteamID.m_SteamID} MessageSend: {string.Join(string.Empty, _body.Select(_Byte => _Byte.ToString()))}");
 #endif
+        }
+
+        /// <summary>
+        /// Disconnects a client from the lobby and the connected host, and displays a message
+        /// </summary>
+        private static void KickPlayer()
+        {
+            DisconnectFromLobby();
+            MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.InfoMenu.SetMessage(InfoMessage.KickedFromLobby));
         }
         
         /// <summary>
@@ -641,7 +651,7 @@ namespace Watermelon_Game.Steamworks.NET
             {
                 if (_steamId == SteamManager.SteamID.m_SteamID)
                 {
-                    DisconnectFromLobby();
+                    KickPlayer();
                 }
             }
             

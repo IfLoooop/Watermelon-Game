@@ -8,6 +8,7 @@ using OPS.AntiCheat.Field;
 using UnityEngine;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Menus;
+using Watermelon_Game.Menus.InfoMenus;
 using Watermelon_Game.Steamworks.NET;
 
 namespace Watermelon_Game.Networking
@@ -29,7 +30,11 @@ namespace Watermelon_Game.Networking
         /// <summary>
         /// The connection id of the host
         /// </summary>
-        private ProtectedInt32? hostConnectionId;
+        private static ProtectedInt32? hostConnectionId;
+        /// <summary>
+        /// Indicates that a client has joint a game and the game has to be restarted
+        /// </summary>
+        private static ProtectedBool restartGame;
         /// <summary>
         /// Will be true when connection to another host as a client <br/>
         /// <i>Will be true for the duration of the connection, reset in <see cref="DisconnectFromLobby"/></i>
@@ -121,6 +126,13 @@ namespace Watermelon_Game.Networking
             {
                 _ConnectionToClient.Disconnect();
             }
+            else
+            {
+                if (_ConnectionToClient.connectionId != hostConnectionId)
+                {
+                    restartGame = true;
+                }
+            }
             
             base.OnServerConnect(_ConnectionToClient);
         }
@@ -130,10 +142,10 @@ namespace Watermelon_Game.Networking
             base.OnServerDisconnect(_ConnectionToClient);
             GameController.Containers.FirstOrDefault(_Container => _Container.ConnectionId == _ConnectionToClient.connectionId)?.FreeContainer();
 
-            if (GameController.ActiveGame)
-            {
-                
-            }
+            // if (SteamLobby.IsHost.Value.Value) // TODO: 
+            // {
+            //     MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.InfoMenu.SetMessage(InfoMessage.PlayerLeft));
+            // }
         }
         
         public override void OnServerAddPlayer(NetworkConnectionToClient _ConnectionToClient)
@@ -149,13 +161,19 @@ namespace Watermelon_Game.Networking
             NetworkServer.AddPlayerForConnection(_ConnectionToClient, _fruitSpawner.gameObject);
             _fruitSpawner.SetSteamData(_ConnectionToClient);
 
-            if (this.hostConnectionId == null)
+            if (hostConnectionId == null)
             {
-                this.hostConnectionId = _ConnectionToClient.connectionId;
+                hostConnectionId = _ConnectionToClient.connectionId;
             }
             else
             {
                 _fruitSpawner.SendSteamIdToHost(_ConnectionToClient);
+            }
+
+            if (restartGame)
+            {
+                restartGame = false;
+                NetworkGameController.RestartAndStartOnAllClients();
             }
         }
         

@@ -28,6 +28,7 @@ namespace Watermelon_Game.Menus.InfoMenus
         public void Close()
         {
             MenuController.CloseMenuPopup();
+            this.Close(true);
         }
         #endregion
     }

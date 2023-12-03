@@ -118,11 +118,6 @@ namespace Watermelon_Game.Fruit_Spawn
 
         #region Properties
         /// <summary>
-        /// <see cref="steamId"/>
-        /// </summary>
-        public ProtectedUInt64 SteamId => this.steamId;
-        
-        /// <summary>
         /// <see cref="rotationSpeed"/>
         /// </summary>
         public static ProtectedFloat RotationSpeed => instance.rotationSpeed;
@@ -239,8 +234,8 @@ namespace Watermelon_Game.Fruit_Spawn
                     CustomNetworkManager.AssignContainer(null, _ContainerIndices[i], _ConnectionIds[i]);
                 }
             }
-
-            if (_StartGameAfter)
+            
+            if (_StartGameAfter && SteamLobby.CurrentLobbyId == null)
             {
                 if (!GameController.ActiveGame && base.isLocalPlayer)
                 {
@@ -373,7 +368,7 @@ namespace Watermelon_Game.Fruit_Spawn
             this.anyActiveSkill = false;
             this.BlockInput(false);
 
-            if (_ResetReason == ResetReason.ManualRestart)
+            if (SteamLobby.CurrentLobbyId == null && _ResetReason == ResetReason.ManualRestart)
             {
                 GameController.StartGame();
             }
@@ -708,7 +703,7 @@ namespace Watermelon_Game.Fruit_Spawn
         // ReSharper disable once UnusedParameter.Local
         private void SetUsername(string _OldValue, string _NewValue)
         {
-            this.name.text = _NewValue; // TODO
+            this.name.text = _NewValue;
         }
         
         /// <summary>

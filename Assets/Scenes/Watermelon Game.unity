@@ -165,17 +165,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &550347859 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1406195154504935928, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
-  m_PrefabInstance: {fileID: 8380384360295738207}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5c56e4fcb02c8842ae10dff9f371151, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &755891345
 GameObject:
   m_ObjectHideFlags: 0
@@ -1651,7 +1640,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3287801432120862187, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3287801432120862187, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1659,7 +1648,7 @@ PrefabInstance:
       objectReference: {fileID: 2009716896}
     - target: {fileID: 3287801432120862187, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Open_Close
+      value: MenuButtonMenu
       objectReference: {fileID: 0}
     - target: {fileID: 3287801432120862187, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -1668,10 +1657,10 @@ PrefabInstance:
     - target: {fileID: 3287801432120862187, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
-      objectReference: {fileID: 550347859}
+      objectReference: {fileID: 0}
     - target: {fileID: 3287801432120862187, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: Watermelon_Game.Menus.MenuBase, WatermelonGame
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3484511988298515066, guid: 4c399cd2b82180a4fbf1d34ff3a49bc9, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -6099,7 +6088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7947195017017172080, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 5210043
+      value: 5272143
       objectReference: {fileID: 0}
     - target: {fileID: 7987250592335098074, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: test

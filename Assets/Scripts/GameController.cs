@@ -132,13 +132,13 @@ namespace Watermelon_Game
                 Instance.switchGameMode = true;
                 Instance.gameModeWasForced = _ForceSwitch;
                 CurrentGameMode = _GameMode;
-                Instance.ManualRestart();   
+                ManualRestart();   
             }
             else
             {
                 if (_ForceSwitch)
                 {
-                    Instance.ManualRestart();
+                    ManualRestart();
                     Instance.gameModeWasForced = true;
                 }
             }
@@ -181,10 +181,10 @@ namespace Watermelon_Game
         /// <summary>
         /// <see cref="MenuController.OnManualRestart"/> 
         /// </summary>
-        private void ManualRestart()
+        public static void ManualRestart()
         {
-            this.resetReason = ResetReason.ManualRestart;
-            base.StartCoroutine(ResetGame());
+            Instance.resetReason = ResetReason.ManualRestart;
+            Instance.StartCoroutine(Instance.ResetGame());
         }
         
         /// <summary>

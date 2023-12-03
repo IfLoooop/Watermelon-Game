@@ -8,6 +8,7 @@ namespace Watermelon_Game.Menus.InfoMenus
         LobbyIdNotValid,
         LobbyDoesNotExist,
         FriendsOnly,
-        WaitingForOtherPlayer
+        KickedFromLobby,
+        PlayerLeft
     }
 }

@@ -368,6 +368,8 @@ MonoBehaviour:
     fakeValue: 0.375
   colliderSizeOffset:
     fakeValue: 3.85
+  username: 
+  steamId: 0
 --- !u!114 &5954594749774604144
 MonoBehaviour:
   m_ObjectHideFlags: 0

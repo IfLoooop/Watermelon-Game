@@ -76,7 +76,10 @@ namespace Watermelon_Game.Menus.MenuContainers
         public override ContainerMenuBase SetActive(ContainerMenuBase _CurrentActiveMenu)
         {
             this.SetDuration();
-            this.Points = (int)PointsController.CurrentPoints.Value;
+            if (GameController.ActiveGame)
+            {
+                this.Points = (int)PointsController.CurrentPoints.Value;
+            }
             
             return base.SetActive(_CurrentActiveMenu);
         }

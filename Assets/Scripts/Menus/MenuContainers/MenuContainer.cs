@@ -86,8 +86,9 @@ namespace Watermelon_Game.Menus.MenuContainers
         
         private void OnEnable()
         {
-            MaxHeight.OnGameOver += this.GameStarted;
+            MaxHeight.OnGameOver += this.GameOver;
             GameController.OnResetGameStarted += this.ResetGameStarted;
+            GameController.OnGameStart += this.GameStarted;
             FruitController.OnEvolve += this.AddFruit;
             FruitBehaviour.OnGoldenFruitSpawn += this.AddGoldenFruit;
             FruitBehaviour.OnSkillUsed += this.AddSkill;
@@ -96,8 +97,9 @@ namespace Watermelon_Game.Menus.MenuContainers
         
         private void OnDisable()
         {
-            MaxHeight.OnGameOver -= this.GameStarted;
+            MaxHeight.OnGameOver -= this.GameOver;
             GameController.OnResetGameStarted -= this.ResetGameStarted;
+            GameController.OnGameStart -= this.GameStarted;
             FruitController.OnEvolve -= this.AddFruit;
             FruitBehaviour.OnGoldenFruitSpawn -= this.AddGoldenFruit;
             FruitBehaviour.OnSkillUsed -= this.AddSkill;
@@ -165,13 +167,12 @@ namespace Watermelon_Game.Menus.MenuContainers
         }
         
         /// <summary>
-        /// <see cref="GameController.OnGameStart"/>
+        /// <see cref="MaxHeight.OnGameOver"/>
         /// </summary>
         /// <param name="_SteamId">Not needed here</param>
-        private void GameStarted(ulong _SteamId)
+        private void GameOver(ulong _SteamId)
         {
             this.GlobalStats.AddGamesPlayed();
-            this.CurrentStats.Reset();
         }
         
         /// <summary>
@@ -182,6 +183,14 @@ namespace Watermelon_Game.Menus.MenuContainers
             var _points = PointsController.CurrentPoints.Value;
             this.CurrentStats.Points = (int)_points;
             this.CheckForNewBestScore(_points);
+        }
+
+        /// <summary>
+        /// <see cref="GameController.OnGameStart"/>
+        /// </summary>
+        private void GameStarted()
+        {
+            this.CurrentStats.Reset();
         }
         
         /// <summary>

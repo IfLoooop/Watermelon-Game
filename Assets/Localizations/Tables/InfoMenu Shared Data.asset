@@ -27,6 +27,14 @@ MonoBehaviour:
     m_Key: FriendsOnly
     m_Metadata:
       m_Items: []
+  - m_Id: 692756346597376
+    m_Key: KickedFromLobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693733258719232
+    m_Key: PlayerLeft
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

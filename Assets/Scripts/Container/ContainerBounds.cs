@@ -148,15 +148,6 @@ namespace Watermelon_Game.Container
         {
             return GameController.ActiveGame && !this.transitioning && this.bounds.rect.Contains(new Vector3(_Point.x, _Point.y) - this.bounds.position);
         }
-
-        /// <summary>
-        /// Returns the steam id of the <see cref="FruitSpawner"/> assigned to this <see cref="ContainerBounds"/> or 0 if this <see cref="ContainerBounds"/> is not assigned to the local player
-        /// </summary>
-        /// <returns>The steam id of the <see cref="FruitSpawner"/> assigned to this <see cref="ContainerBounds"/> or 0 if this <see cref="ContainerBounds"/> is not assigned to the local player</returns>
-        public ulong GetSteamId()
-        {
-            return this.fruitSpawner != null ? this.fruitSpawner.SteamId : 0;
-        }
         
         /// <summary>
         /// Enables/disables <see cref="waitingMessage"/>

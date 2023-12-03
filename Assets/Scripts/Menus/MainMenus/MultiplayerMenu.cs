@@ -108,7 +108,7 @@ namespace Watermelon_Game.Menus.MainMenus
             {
                 if (SteamLobby.IsHost.Value.Value)
                 {
-                    return MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.LobbyHostMenu);
+                    return MenuController.Open_Close(_MenuControllerMenu => _MenuControllerMenu.LobbyHostMenu);
                 }
                 
                 this.leaveLobbyButton.gameObject.SetActive(true);

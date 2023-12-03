@@ -144,23 +144,28 @@ namespace Watermelon_Game.Container
         [Client]
         private void CountDown()
         {
-            this.CmdCountdown();
+            if (!NetworkGameController.ClientHasJoinedLobby)
+            {
+                this.CmdCountdown(SteamManager.SteamID.m_SteamID);   
+            }
         }
 
         /// <summary>
         /// <see cref="CountDown"/>
         /// </summary>
+        /// <param name="_SteamId">The steam id of the player who triggered the countdown</param>
         [Command(requiresAuthority = false)]
-        private void CmdCountdown()
+        private void CmdCountdown(ulong _SteamId)
         {
-            this.RpcCountdown();
+            this.RpcCountdown(_SteamId);
         }
         
         /// <summary>
         /// <see cref="CountDown"/>
         /// </summary>
+         /// <param name="_SteamId">The steam id of the player who triggered the countdown</param>
         [ClientRpc]
-        private void RpcCountdown()
+        private void RpcCountdown(ulong _SteamId)
         {
 #if DEBUG || DEVELOPMENT_BUILD
             if (DisableCountDown)
@@ -177,9 +182,10 @@ namespace Watermelon_Game.Container
             
             if (this.countdown <= 1)
             {
+                // Needs to be set immediately, otherwise "CmdGameOver()" can be called multiple times when called by a client (not host) while waiting for the from the host
+                this.countdown = this.countdownStartTime;
                 this.Reset();
-                this.CmdGameOver(this.container.GetSteamId());
-                Debug.LogError($"RpcCountdown:{this.container.GetSteamId()}"); // TODO: Remove
+                this.CmdGameOver(_SteamId);
                 return;
             }
             
@@ -219,7 +225,6 @@ namespace Watermelon_Game.Container
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
         private void TargetGameOver(NetworkConnectionToClient _Target, ulong _SteamId)
         {
-            Debug.LogError($"TargetGameOver:{_SteamId}"); // TODO: Remove
             OnGameOver?.Invoke(_SteamId);
         }
         

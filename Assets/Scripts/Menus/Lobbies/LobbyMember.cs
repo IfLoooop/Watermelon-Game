@@ -91,7 +91,7 @@ namespace Watermelon_Game.Menus.Lobbies
                 return;
             }
             
-            SteamLobby.KickPlayer(new CSteamID(this.SteamId));
+            SteamLobby.SendPlayerKickMessage(new CSteamID(this.SteamId));
         }
         #endregion
     }
