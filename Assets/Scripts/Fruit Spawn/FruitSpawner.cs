@@ -235,7 +235,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 }
             }
             
-            if (_StartGameAfter && SteamLobby.CurrentLobbyId == null)
+            if (_StartGameAfter && SteamLobby.CurrentLobbyId == null) // TODO: Check if "&& SteamLobby.CurrentLobbyId == null" works
             {
                 if (!GameController.ActiveGame && base.isLocalPlayer)
                 {
@@ -368,7 +368,7 @@ namespace Watermelon_Game.Fruit_Spawn
             this.anyActiveSkill = false;
             this.BlockInput(false);
 
-            if (SteamLobby.CurrentLobbyId == null && _ResetReason == ResetReason.ManualRestart)
+            if (SteamLobby.CurrentLobbyId == null && _ResetReason == ResetReason.ManualRestart) // TODO: Maybe cant be called here "SteamLobby.CurrentLobbyId == null && "
             {
                 GameController.StartGame();
             }
@@ -480,8 +480,11 @@ namespace Watermelon_Game.Fruit_Spawn
         [Client]
         private void ResetFruitSpawner(bool _ResetPosition)
         {
-            if (_ResetPosition)
-                this.rigidbody2D.MovePosition(this.containerBounds!.StartingPosition);
+            if (this.containerBounds != null) // TODO
+            {
+                if (_ResetPosition)
+                    this.rigidbody2D.MovePosition(this.containerBounds.StartingPosition);
+            }
             
             var _fruit = NextFruit.GetFruit(out var _rotation);
             this.CmdResetFruitSpawner(_fruit, _rotation);

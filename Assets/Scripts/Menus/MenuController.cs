@@ -253,6 +253,7 @@ namespace Watermelon_Game.Menus
 
         /// <summary>
         /// Closes <see cref="currentActiveMenuPopup"/>
+        /// Closes <see cref="currentActiveMenuPopup"/>
         /// </summary>
         public static void CloseMenuPopup()
         {

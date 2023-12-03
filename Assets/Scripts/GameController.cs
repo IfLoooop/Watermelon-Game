@@ -183,6 +183,7 @@ namespace Watermelon_Game
         /// </summary>
         public static void ManualRestart()
         {
+            Debug.Log("ManualRestart"); // TODO
             Instance.resetReason = ResetReason.ManualRestart;
             Instance.StartCoroutine(Instance.ResetGame());
         }
@@ -193,6 +194,7 @@ namespace Watermelon_Game
         /// <returns></returns>
         private IEnumerator ResetGame()
         {
+            Debug.Log("ResetGame1"); // TODO
             ActiveGame = false;
             OnResetGameStarted?.Invoke();
             
@@ -211,6 +213,7 @@ namespace Watermelon_Game
             }
             
             OnResetGameFinished?.Invoke(this.resetReason);
+            Debug.Log("ResetGame2"); // TODO
         }
         
         /// <summary>

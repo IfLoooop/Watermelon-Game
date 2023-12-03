@@ -35,11 +35,11 @@ namespace Watermelon_Game
             instance = this;
         }
 
-        private void OnEnable()
+        private void OnEnable() // TODO
         {
             GameController.OnResetGameFinished += this.StartGameOnAllClients;
         }
-
+        
         private void OnDisable()
         {
             GameController.OnResetGameFinished -= this.StartGameOnAllClients;
@@ -107,7 +107,7 @@ namespace Watermelon_Game
             if (ClientHasJoinedLobby)
             {
                 ClientHasJoinedLobby = false;
-                //this.RpcStartGame();
+                this.RpcStartGame();
             }
         }
         

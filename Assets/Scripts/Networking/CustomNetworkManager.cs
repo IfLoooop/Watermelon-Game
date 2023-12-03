@@ -126,7 +126,7 @@ namespace Watermelon_Game.Networking
             {
                 _ConnectionToClient.Disconnect();
             }
-            else
+            else // TODO
             {
                 if (_ConnectionToClient.connectionId != hostConnectionId)
                 {
