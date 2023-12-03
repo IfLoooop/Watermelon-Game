@@ -9,6 +9,7 @@ namespace Watermelon_Game.Menus.InfoMenus
         LobbyDoesNotExist,
         FriendsOnly,
         KickedFromLobby,
-        PlayerLeft
+        PlayerLeft,
+        LobbyClosed
     }
 }

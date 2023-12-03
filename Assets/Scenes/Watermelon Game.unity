@@ -2013,6 +2013,10 @@ PrefabInstance:
       value: 27.418371
       objectReference: {fileID: 0}
     - target: {fileID: 4413370267823285371, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
+      propertyPath: test
+      value: closed
+      objectReference: {fileID: 0}
+    - target: {fileID: 4413370267823285371, guid: 33afac00ac3a0704aa51afa5166b1c6d, type: 3}
       propertyPath: steamId
       value: 11111111111111112
       objectReference: {fileID: 0}
@@ -6088,7 +6092,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7947195017017172080, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 5293518
+      value: 10357.734
       objectReference: {fileID: 0}
     - target: {fileID: 7987250592335098074, guid: 9c82c0f668de5ce4783f6208a66d920a, type: 3}
       propertyPath: test

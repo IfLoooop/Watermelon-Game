@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using OPS.AntiCheat.Field;
@@ -66,14 +65,6 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <see cref="lobbyMembers"/>
         /// </summary>
         public static List<LobbyMember> LobbyMembers => instance.lobbyMembers;
-        #endregion
-        
-        #region Events
-        /// <summary>
-        /// Is called when a host leaves their own lobby <br/>
-        /// <i>Dirty fix for ContainerBounds loosing reference to the FruitSpawner, after a client joins another hosts lobby and host leaves the lobby</i>
-        /// </summary>
-        public static event Action OnHostLeaveLobby;
         #endregion
         
         #region Methods
@@ -192,7 +183,6 @@ namespace Watermelon_Game.Menus.Lobbies
             this.lobbyMembers.ForEach(_LobbyMember => Destroy(_LobbyMember.gameObject));
             this.lobbyMembers.Clear();
             SteamLobby.LeaveLobby();
-            OnHostLeaveLobby?.Invoke();
         }
 
         /// <summary>

@@ -57,6 +57,15 @@ namespace Watermelon_Game.Development
             
             Debug.Log("TestButton Finished");
         }
+
+        [SerializeField] private string test;
+
+        [Button]
+        private void Test2()
+        {
+            var _body = System.Text.Encoding.UTF8.GetBytes(test);
+            Debug.Log(_body.Length);
+        }
         #endregion
 #endif
     }

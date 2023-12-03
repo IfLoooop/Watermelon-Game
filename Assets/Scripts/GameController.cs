@@ -6,8 +6,6 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
-using Watermelon_Game.Menus;
-using Watermelon_Game.Menus.Lobbies;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
@@ -105,8 +103,6 @@ namespace Watermelon_Game
             OnResetGameFinished += this.SwitchGameMode;
             CustomNetworkManager.OnConnectionStopped += this.ConnectionStopped;
             MaxHeight.OnGameOver += this.GameOver;
-            MenuController.OnManualRestart += ManualRestart;
-            LobbyHostMenu.OnHostLeaveLobby += ManualRestart;
             Application.quitting += this.ApplicationIsQuitting;
         }
 
@@ -115,8 +111,6 @@ namespace Watermelon_Game
             OnResetGameFinished -= this.SwitchGameMode;
             CustomNetworkManager.OnConnectionStopped -= this.ConnectionStopped;
             MaxHeight.OnGameOver -= this.GameOver;
-            MenuController.OnManualRestart -= ManualRestart;
-            LobbyHostMenu.OnHostLeaveLobby -= ManualRestart;
             Application.quitting -= this.ApplicationIsQuitting;
         }
 
@@ -179,11 +173,10 @@ namespace Watermelon_Game
         }
 
         /// <summary>
-        /// <see cref="MenuController.OnManualRestart"/> 
+        /// When clicking on the restart button
         /// </summary>
         public static void ManualRestart()
         {
-            Debug.Log("ManualRestart"); // TODO
             Instance.resetReason = ResetReason.ManualRestart;
             Instance.StartCoroutine(Instance.ResetGame());
         }
@@ -194,7 +187,6 @@ namespace Watermelon_Game
         /// <returns></returns>
         private IEnumerator ResetGame()
         {
-            Debug.Log("ResetGame1"); // TODO
             ActiveGame = false;
             OnResetGameStarted?.Invoke();
             
@@ -213,7 +205,6 @@ namespace Watermelon_Game
             }
             
             OnResetGameFinished?.Invoke(this.resetReason);
-            Debug.Log("ResetGame2"); // TODO
         }
         
         /// <summary>

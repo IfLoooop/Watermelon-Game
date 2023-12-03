@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using Mirror;
 using Mirror.FizzySteam;
 using OPS.AntiCheat.Field;
@@ -31,10 +29,6 @@ namespace Watermelon_Game.Networking
         /// The connection id of the host
         /// </summary>
         private static ProtectedInt32? hostConnectionId;
-        /// <summary>
-        /// Indicates that a client has joint a game and the game has to be restarted
-        /// </summary>
-        private static ProtectedBool restartGame;
         /// <summary>
         /// Will be true when connection to another host as a client <br/>
         /// <i>Will be true for the duration of the connection, reset in <see cref="DisconnectFromLobby"/></i>
@@ -115,9 +109,9 @@ namespace Watermelon_Game.Networking
                 attemptingToConnectToLobby = false;
                 SteamLobby.LeaveLobby();
                 MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.ConnectionErrorMenu);
+                
+                OnConnectionStopped?.Invoke();
             }
-            
-            OnConnectionStopped?.Invoke();
         }
         
         public override void OnServerConnect(NetworkConnectionToClient _ConnectionToClient)
@@ -125,13 +119,6 @@ namespace Watermelon_Game.Networking
             if (!SteamLobby.IsHost.Value.Value)
             {
                 _ConnectionToClient.Disconnect();
-            }
-            else // TODO
-            {
-                if (_ConnectionToClient.connectionId != hostConnectionId)
-                {
-                    restartGame = true;
-                }
             }
             
             base.OnServerConnect(_ConnectionToClient);
@@ -141,38 +128,30 @@ namespace Watermelon_Game.Networking
         {
             base.OnServerDisconnect(_ConnectionToClient);
             GameController.Containers.FirstOrDefault(_Container => _Container.ConnectionId == _ConnectionToClient.connectionId)?.FreeContainer();
-
-            // if (SteamLobby.IsHost.Value.Value) // TODO: 
-            // {
-            //     MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.InfoMenu.SetMessage(InfoMessage.PlayerLeft));
-            // }
+            
+            if (SteamLobby.IsHost.Value.Value)
+            {
+                MenuController.OpenPopup(_MenuControllerMenu => _MenuControllerMenu.InfoMenu.SetMessage(InfoMessage.PlayerLeft));
+            }
         }
         
         public override void OnServerAddPlayer(NetworkConnectionToClient _ConnectionToClient)
         {
             // base.OnServerAddPlayer(_ConnectionToClient);
             
-            var _container = GameController.Containers.First(_Container => _Container.ConnectionId == null);
-            var _fruitSpawner = Instantiate(base.playerPrefab, _container.StartingPosition.Value, base.playerPrefab.transform.rotation).GetComponent<FruitSpawner>();
-            
-            _fruitSpawner.SetConnectionId(_ConnectionToClient.connectionId);
-            _container.AssignToPlayer(_fruitSpawner);
+            var _containerIndex = GameController.Containers.FindIndex(_Container => _Container.ConnectionId == null);
+            var _fruitSpawner = Instantiate(base.playerPrefab, GameController.Containers[_containerIndex].StartingPosition.Value, base.playerPrefab.transform.rotation).GetComponent<FruitSpawner>();
             
             NetworkServer.AddPlayerForConnection(_ConnectionToClient, _fruitSpawner.gameObject);
-            _fruitSpawner.SetSteamData(_ConnectionToClient);
-
+            
+            _fruitSpawner.Init(_ConnectionToClient, _containerIndex);
+            
             if (hostConnectionId == null)
             {
                 hostConnectionId = _ConnectionToClient.connectionId;
             }
             else
             {
-                _fruitSpawner.SendSteamIdToHost(_ConnectionToClient);
-            }
-
-            if (restartGame)
-            {
-                restartGame = false;
                 NetworkGameController.RestartAndStartOnAllClients();
             }
         }
@@ -232,48 +211,6 @@ namespace Watermelon_Game.Networking
             singleton.StartHost();
         }
         
-        /// <summary>
-        /// Returns the connection id for every connected client and the index of the corresponding container in <see cref="GameController.containers"/> <br/>
-        /// <b>Key:</b> Index of the container in <see cref="GameController.containers"/> <br/>
-        /// <b>Value:</b> Connection od of the client that is assigned to the container
-        /// </summary>
-        /// <returns>The connection id for every connected client and the index of the corresponding container in <see cref="GameController.containers"/></returns>
-        [Server]
-        public static Dictionary<int, int> GetContainerConnectionMap()
-        {
-            var _map = new Dictionary<int, int>();
-
-            foreach (var _connectionId in NetworkServer.connections.Keys)
-            {
-                var _containerIndex = GameController.Containers.FindIndex(_Container => _Container.ConnectionId == _connectionId);
-                _map.Add(_containerIndex, _connectionId);
-            }
-
-            return _map;
-        }
-        
-        /// <summary>
-        /// Assigns the the container in <see cref="GameController.containers"/> with the given index to the given connection id
-        /// </summary>
-        /// <param name="_FruitSpawner">
-        /// If the container to assign belongs to the local client, pass a reference of the <see cref="FruitSpawner"/> <br/>
-        /// If it belongs to another player, pass null
-        /// </param>
-        /// <param name="_ContainerIndex">The index in <see cref="GameController.containers"/> to assign the connection to</param>
-        /// <param name="_ConnectionId">The connection to assign</param>
-        [Client]
-        public static void AssignContainer([CanBeNull] FruitSpawner _FruitSpawner, int _ContainerIndex, int _ConnectionId)
-        {
-            if (_FruitSpawner != null)
-            {
-                GameController.Containers[_ContainerIndex].AssignToPlayer(_FruitSpawner);
-            }
-            else
-            {
-                GameController.Containers[_ContainerIndex].AssignConnectionId(_ConnectionId);
-            }
-        }
-
         /// <summary>
         /// Disconnects a client from a lobby <br/>
         /// <b>Won't work for the host of a lobby</b>

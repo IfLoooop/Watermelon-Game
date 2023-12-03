@@ -29,6 +29,14 @@ namespace Watermelon_Game.Menus.MainMenus
         }
 
         /// <summary>
+        /// Restarts the game
+        /// </summary>
+        public void Restart()
+        {
+            MenuController.Restart();
+        }
+        
+        /// <summary>
         /// Exits the game
         /// </summary>
         public void ExitGame()

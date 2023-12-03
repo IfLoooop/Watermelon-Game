@@ -38,6 +38,10 @@ MonoBehaviour:
     m_Localized: Other Player left the Lobby
     m_Metadata:
       m_Items: []
+  - m_Id: 785086688817152
+    m_Localized: Lobby was closed
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

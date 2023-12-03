@@ -1,7 +1,3 @@
-TODO: Check if footer buttons keep their references on client join
-TODO: Check if Kicked info message appears
-
-TODO: Infomenu cant be closed with x button
 TODO: Add stone fruit
 TODO: Add missing localizations
 -
@@ -10,6 +6,8 @@ TODO: Sometimes when switching the gamemode the fruitspawner is not set to the c
 TODO: (maybe something to do with mouse position while the menu is closing during the trasion animation) - Maybe fixed -> ContainerBounds.Contains
 TODO: Maybe dont let friends through friendlist join without password (enable password + only friends on lobby create menu)
 
+-Dont display player left message on kcik on host
+-make separate message when host quits lobby
 -Rework the menu system
 -Set scrollposition of game over menu to top on game over
 -Rework the whole FruitSpawner/Container assignement system

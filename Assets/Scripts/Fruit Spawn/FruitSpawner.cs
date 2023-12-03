@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using JetBrains.Annotations;
 using Mirror;
 using OPS.AntiCheat.Field;
@@ -13,13 +11,15 @@ using Watermelon_Game.Controls;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.Lobbies;
-using Watermelon_Game.Networking;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Fruit_Spawn
 {
+    /// <summary>
+    /// Player character
+    /// </summary>
     internal sealed class FruitSpawner : NetworkBehaviour
     {
         #region Inspector Fields
@@ -48,14 +48,17 @@ namespace Watermelon_Game.Fruit_Spawn
         [SerializeField] private ProtectedFloat colliderSizeOffset = 3.85f;
         
         [Header("Debug")]
+        [Tooltip("Connection id to the server")]
+        [SyncVar(hook = nameof(SetConnectionId))]
+        [SerializeField][ReadOnly] private int connectionId = -1;
         [Tooltip("The steam username for the client of this FruitSpawner")]
-        [SerializeField][ReadOnly][SyncVar(hook = nameof(SetUsername))]
+        [SyncVar(hook = nameof(SetUsername))]
         // ReSharper disable once NotAccessedField.Local
-        private string username;
+        [SerializeField][ReadOnly] private string username;
         [Tooltip("The steam id for the client of this FruitSpawner")]
-        [SerializeField][ReadOnly][SyncVar(hook = nameof(SetSteamId))]
+        [SyncVar(hook = nameof(SetSteamId))]
         // ReSharper disable once NotAccessedField.Local
-        private ulong steamId;
+        [SerializeField][ReadOnly] private ulong steamId;
         #endregion
         
 #pragma warning disable CS0109
@@ -64,11 +67,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// Singleton of <see cref="FruitSpawner"/>
         /// </summary>
         private static FruitSpawner instance;
-
-        /// <summary>
-        /// <see cref="NetworkConnectionToClient.connectionId"/>
-        /// </summary>
-        private ProtectedInt32 connectionId; // TODO: Not set correctly in multiplayer, is overwritten and all FruitSpawner have the value of the local client (Container have the correct values)
+        
         /// <summary>
         /// Container for this <see cref="FruitSpawner"/>
         /// </summary>
@@ -150,10 +149,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 FruitsFirstCollision.OnCollision += this.UnblockRelease;
                 SkillController.OnSkillActivated += this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed += DeactivateRotation;
-                LobbyHostMenu.OnHostLeaveLobby += HostLeftLobby;
             }
-            
-            this.AssignContainers(true);
         }
 
         public override void OnStopClient()
@@ -169,109 +165,106 @@ namespace Watermelon_Game.Fruit_Spawn
                 FruitsFirstCollision.OnCollision -= this.UnblockRelease;
                 SkillController.OnSkillActivated -= this.SetActiveSkill;
                 FruitBehaviour.OnSkillUsed -= DeactivateRotation;
-                LobbyHostMenu.OnHostLeaveLobby -= HostLeftLobby;
             }
         }
 
         private void Start()
         {
-            this.blockedReleaseIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.BlockedRelease, base.transform);
-        }
-
-        /// <summary>
-        /// Assigns the container for the local player without calling <see cref="GameController"/>.<see cref="GameController.StartGame"/> afterwards
-        /// </summary>
-        private void HostLeftLobby()
-        {
-            this.AssignContainers(false);
-        }
-        
-        /// <summary>
-        /// Assigns all container to a player connection
-        /// </summary>
-        /// <param name="_StartGameAfter">Should <see cref="GameController"/>.<see cref="GameController.StartGame"/> be called after assignment</param>
-        [Client]
-        private void AssignContainers(bool _StartGameAfter)
-        {
-            this.CmdAssignContainers(_StartGameAfter);
-        }
-        
-        /// <summary>
-        /// <see cref="AssignContainers"/>
-        /// </summary>
-        /// <param name="_StartGameAfter">Should <see cref="GameController"/>.<see cref="GameController.StartGame"/> be called after assignment</param>
-        /// <param name="_Sender"></param>
-        [Command(requiresAuthority = false)]
-        private void CmdAssignContainers(bool _StartGameAfter, NetworkConnectionToClient _Sender = null)
-        {
-            var _containerConnectionMap = CustomNetworkManager.GetContainerConnectionMap();
-
-            this.TargetSetPlayerContainers(_Sender, _containerConnectionMap.Keys.ToArray(), _containerConnectionMap.Values.ToArray(), _Sender!.connectionId, _StartGameAfter);
-        }
-        
-        /// <summary>
-        /// <see cref="AssignContainers"/>
-        /// </summary>
-        /// <param name="_Target"></param>
-        /// <param name="_ContainerIndices"><see cref="CustomNetworkManager.GetContainerConnectionMap"/></param>
-        /// <param name="_ConnectionIds"><see cref="CustomNetworkManager.GetContainerConnectionMap"/></param>
-        /// <param name="_SenderConnectionId">Connection id of the sender</param>
-        /// <param name="_StartGameAfter">Should <see cref="GameController"/>.<see cref="GameController.StartGame"/> be called after assignment</param>
-        [TargetRpc] 
-        [SuppressMessage("ReSharper", "SuggestBaseTypeForParameter")] // ReSharper disable once UnusedParameter.Local
-        private void TargetSetPlayerContainers(NetworkConnectionToClient _Target, int[] _ContainerIndices, int[] _ConnectionIds, int _SenderConnectionId, bool _StartGameAfter)
-        {
-            // ReSharper disable once InconsistentNaming
-            for (var i = 0; i < _ConnectionIds.Length; i++)
+            if (base.isLocalPlayer)
             {
-                if (_ConnectionIds[i] == _SenderConnectionId)
-                {
-                    this.SetConnectionId(_SenderConnectionId);
-                    CustomNetworkManager.AssignContainer(this, _ContainerIndices[i], _SenderConnectionId);
-                }
-                else
-                {
-                    CustomNetworkManager.AssignContainer(null, _ContainerIndices[i], _ConnectionIds[i]);
-                }
+                this.blockedReleaseIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.BlockedRelease, base.transform);
+            }
+        }
+        
+        /// <summary>
+        /// Initializes all values the server needs
+        /// </summary>
+        /// <param name="_ConnectionToClient">The clients connection to the server</param>
+        /// <param name="_ContainerIndex">Index in <see cref="GameController.Containers"/> of the <see cref="ContainerBounds"/> that will be assigned to this <see cref="FruitSpawner"/></param>
+        [Server]
+        public void Init(NetworkConnectionToClient _ConnectionToClient, int _ContainerIndex)
+        {
+            this.connectionId = _ConnectionToClient.connectionId;
+            this.TargetInit(_ConnectionToClient, _ContainerIndex);
+        }
+        
+        /// <summary>
+        /// Sets the connection id 
+        /// </summary>
+        /// <param name="_OldValue">Not needed here</param>
+        /// <param name="_NewValue">The clients connection id to the server</param>
+        // ReSharper disable once UnusedParameter.Global
+        public void SetConnectionId(int _OldValue, int _NewValue)
+        {
+            this.connectionId = _NewValue;  
+        }
+        
+        /// <summary>
+        /// <see cref="Init"/>
+        /// </summary>
+        /// <param name="_ConnectionToClient">The clients connection to the server</param>
+        /// <param name="_ContainerIndex">Index in <see cref="GameController.Containers"/> of the <see cref="ContainerBounds"/> that will be assigned to this <see cref="FruitSpawner"/></param>
+        [TargetRpc] // ReSharper disable once UnusedParameter.Local
+        private void TargetInit(NetworkConnectionToClient _ConnectionToClient, int _ContainerIndex)
+        {
+            GameController.Containers[_ContainerIndex].AssignToPlayer(this);
+            
+            if (SteamManager.Initialized)
+            {
+                this.CmdSetSteamData(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName());   
             }
             
-            if (_StartGameAfter && SteamLobby.CurrentLobbyId == null) // TODO: Check if "&& SteamLobby.CurrentLobbyId == null" works
+            if (SteamLobby.CurrentLobbyId == null)
             {
-                if (!GameController.ActiveGame && base.isLocalPlayer)
-                {
-                    GameController.StartGame();
-                }   
+                GameController.StartGame();   
             }
         }
 
         /// <summary>
-        /// Sends a call to the client to send their SteamId to the host
+        /// Sets <see cref="containerBounds"/> to the given <see cref="ContainerBounds"/>
         /// </summary>
-        /// <param name="_Target">The target client</param>
-        [Server]
-        public void SendSteamIdToHost(NetworkConnectionToClient _Target)
+        /// <param name="_ContainerBounds">The container for this <see cref="FruitSpawner"/></param>
+        /// <returns><see cref="connectionId"/></returns>
+        public int SetContainerBounds(ContainerBounds _ContainerBounds)
         {
-            this.TargetSendSteamIdToHost(_Target);
-        }
+            this.containerBounds = _ContainerBounds;
 
-        /// <summary>
-        /// The client sends their SteamId to the host
-        /// </summary>
-        /// <param name="_Target"></param>
-        [TargetRpc] // ReSharper disable once UnusedParameter.Local
-        private void TargetSendSteamIdToHost(NetworkConnectionToClient _Target)
-        {
-            this.CmdSendSteamIdToHost(SteamManager.SteamID.m_SteamID);
+            return this.connectionId;
         }
-
+        
         /// <summary>
-        /// Host sends teh received SteamId to <see cref="LobbyHostMenu"/>
+        /// Sends the clients steam data to the server so it can be synced across the network
         /// </summary>
-        /// <param name="_SteamId">The SteamId of the client that connected to this host</param>
-        [Command] // ReSharper disable once MemberCanBeMadeStatic.Local
-        private void CmdSendSteamIdToHost(ulong _SteamId)
+        /// <param name="_SteamId"><see cref="steamId"/></param>
+        /// <param name="_Username"><see cref="username"/></param>
+        [Command(requiresAuthority = false)]
+        private void CmdSetSteamData(ulong _SteamId, string _Username)
         {
+            this.steamId = _SteamId;
+            this.username = _Username;
             LobbyHostMenu.PlayerConnected(_SteamId);
+        }
+        
+        /// <summary>
+        /// Sets the clients steam id
+        /// </summary>
+        /// <param name="_OldValue">Not needed here</param>
+        /// <param name="_NewValue">The clients steam id</param>
+        // ReSharper disable once UnusedParameter.Local
+        private void SetSteamId(ulong _OldValue, ulong _NewValue)
+        {
+            this.steamId = _NewValue;
+        }
+        
+        /// <summary>
+        /// Sets the clients username
+        /// </summary>
+        /// <param name="_OldValue">Not needed here</param>
+        /// <param name="_NewValue">The clients steam username</param>
+        // ReSharper disable once UnusedParameter.Local
+        private void SetUsername(string _OldValue, string _NewValue)
+        {
+            this.name.text = _NewValue;
         }
         
         /// <summary>
@@ -368,7 +361,7 @@ namespace Watermelon_Game.Fruit_Spawn
             this.anyActiveSkill = false;
             this.BlockInput(false);
 
-            if (SteamLobby.CurrentLobbyId == null && _ResetReason == ResetReason.ManualRestart) // TODO: Maybe cant be called here "SteamLobby.CurrentLobbyId == null && "
+            if (SteamLobby.CurrentLobbyId == null && _ResetReason == ResetReason.ManualRestart)
             {
                 GameController.StartGame();
             }
@@ -480,11 +473,8 @@ namespace Watermelon_Game.Fruit_Spawn
         [Client]
         private void ResetFruitSpawner(bool _ResetPosition)
         {
-            if (this.containerBounds != null) // TODO
-            {
-                if (_ResetPosition)
-                    this.rigidbody2D.MovePosition(this.containerBounds.StartingPosition);
-            }
+            if (_ResetPosition)
+                this.rigidbody2D.MovePosition(this.containerBounds!.StartingPosition);
             
             var _fruit = NextFruit.GetFruit(out var _rotation);
             this.CmdResetFruitSpawner(_fruit, _rotation);
@@ -642,85 +632,7 @@ namespace Watermelon_Game.Fruit_Spawn
             this.fruitSpawnerAim.EnableRotation(false);  
             this.fruitSpawnerAim.ResetAimRotation();
         }
-
-        /// <summary>
-        /// Sets <see cref="connectionId"/> to the given <see cref="NetworkConnectionToClient.connectionId"/>
-        /// </summary>
-        /// <param name="_ConnectionId">The connection the server has to this client</param>
-        public void SetConnectionId(int _ConnectionId) // TODO: Might be better to use a SyncVar for the connectionId
-        {
-            this.connectionId = _ConnectionId;  
-        }
         
-        /// <summary>
-        /// Request the steam data of this user and sync it over the network
-        /// </summary>
-        /// <param name="_ConnectionToClient">Connection to the client</param>
-        [Server]
-        public void SetSteamData(NetworkConnectionToClient _ConnectionToClient)
-        {
-            this.TargetSetSteamData(_ConnectionToClient);
-        }
-
-        /// <summary>
-        /// <see cref="SetSteamData"/>
-        /// </summary>
-        /// <param name="_ConnectionToClient">Connection to the client</param>
-        [TargetRpc] // ReSharper disable once UnusedParameter.Local
-        private void TargetSetSteamData(NetworkConnectionToClient _ConnectionToClient)
-        {
-            if (SteamManager.Initialized)
-            {
-                this.CmdSetSteamData(SteamUser.GetSteamID().m_SteamID, SteamFriends.GetPersonaName());   
-            }
-        }
-
-        /// <summary>
-        /// <see cref="SetSteamData"/>
-        /// </summary>
-        /// <param name="_SteamId"><see cref="steamId"/></param>
-        /// <param name="_Username"><see cref="username"/></param>
-        [Command(requiresAuthority = false)]
-        private void CmdSetSteamData(ulong _SteamId, string _Username)
-        {
-            this.steamId = _SteamId;
-            this.username = _Username;
-        }
-        
-        /// <summary>
-        /// Sets the clients steam id
-        /// </summary>
-        /// <param name="_OldValue">Not needed here</param>
-        /// <param name="_NewValue">The clients steam id</param>
-        // ReSharper disable once UnusedParameter.Local
-        private void SetSteamId(ulong _OldValue, ulong _NewValue)
-        {
-            this.steamId = _NewValue;
-        }
-        
-        /// <summary>
-        /// Sets the clients username
-        /// </summary>
-        /// <param name="_OldValue">Not needed here</param>
-        /// <param name="_NewValue">The clients steam username</param>
-        // ReSharper disable once UnusedParameter.Local
-        private void SetUsername(string _OldValue, string _NewValue)
-        {
-            this.name.text = _NewValue;
-        }
-        
-        /// <summary>
-        /// Sets <see cref="containerBounds"/> to the given <see cref="ContainerBounds"/>
-        /// </summary>
-        /// <param name="_ContainerBounds">The container for this <see cref="FruitSpawner"/></param>
-        /// <returns><see cref="connectionId"/></returns>
-        public int SetContainerBounds(ContainerBounds _ContainerBounds)
-        {
-            this.containerBounds = _ContainerBounds;
-
-            return this.connectionId;
-        }
-
         /// <summary>
         /// Disables this <see cref="FruitSpawner"/> <see cref="GameObject"/>
         /// </summary>

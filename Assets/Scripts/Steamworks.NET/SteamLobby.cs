@@ -607,35 +607,37 @@ namespace Watermelon_Game.Steamworks.NET
         /// Sends the given <see cref="CSteamID"/> as a chat message to all connected clients in the lobby and kicks the player whose steam id matches the given one <br/>
         /// <b>Byte lenght of the given steam id must not exceed <see cref="MAX_CHAT_MESSAGE_LENGHT"/></b>
         /// </summary>
-        /// <param name="_SteamID">The <see cref="CSteamID"/> to send as a chat message</param>
-        public static void SendPlayerKickMessage(CSteamID _SteamID)
+        /// <param name="_Message">The message body to sent</param>
+        public static void SendPlayerKickMessage(byte[] _Message)
         {
             if (CurrentLobbyId is null)
             {
                 Debug.LogError($"{nameof(CurrentLobbyId)} is null, you need to be in a lobby to send a message");
                 return;
             }
-            if (_SteamID.m_SteamID.ToString().Length > 17)
+            if (_Message.Length > MAX_CHAT_MESSAGE_LENGHT)
             {
                 Debug.LogError($"The given message is to long, max message size is: {MAX_CHAT_MESSAGE_LENGHT} byte");
                 return;
             }
-            
-            var _body = System.Text.Encoding.UTF8.GetBytes(_SteamID.m_SteamID.ToString());
-            SteamMatchmaking.SendLobbyChatMsg(new CSteamID(CurrentLobbyId.Value.Value), _body, MAX_CHAT_MESSAGE_LENGHT);
+
+            if (!SteamMatchmaking.SendLobbyChatMsg(new CSteamID(CurrentLobbyId.Value.Value), _Message, _Message.Length))
+            {
+                Debug.LogError($"[{nameof(SteamLobby)}].{nameof(SendPlayerKickMessage)}: Message [{System.Text.Encoding.UTF8.GetString(_Message)}] could not be send");
+            }
 
 #if DEBUG || DEVELOPMENT_BUILD
-            Debug.LogError($"[{nameof(SteamLobby)}].{nameof(SendPlayerKickMessage)} IDToKick:{_SteamID.m_SteamID} | SenderID:{SteamManager.SteamID.m_SteamID} MessageSend: {string.Join(string.Empty, _body.Select(_Byte => _Byte.ToString()))}");
+            Debug.LogError($"[{nameof(SteamLobby)}].{nameof(SendPlayerKickMessage)} IDToKick:{System.Text.Encoding.UTF8.GetString(_Message)} | SenderID:{SteamManager.SteamID.m_SteamID} MessageSend: {string.Join(string.Empty, _Message)}");
 #endif
         }
 
         /// <summary>
         /// Disconnects a client from the lobby and the connected host, and displays a message
         /// </summary>
-        private static void KickPlayer()
+        private static void KickPlayer(InfoMessage _InfoMessage)
         {
             DisconnectFromLobby();
-            MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.InfoMenu.SetMessage(InfoMessage.KickedFromLobby));
+            MenuController.OpenPopup(_MenuControllerMenu => _MenuControllerMenu.InfoMenu.SetMessage(_InfoMessage));  
         }
         
         /// <summary>
@@ -644,19 +646,20 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_Callback">The received callback</param>
         private static void OnLobbyChatMessage(LobbyChatMsg_t _Callback)
         {
-            var _message = new byte[MAX_CHAT_MESSAGE_LENGHT];
-            var _messageLength = SteamMatchmaking.GetLobbyChatEntry(new CSteamID(_Callback.m_ulSteamIDLobby), (int)_Callback.m_iChatID, out _, _message, MAX_CHAT_MESSAGE_LENGHT, out _);
+            var _body = new byte[MAX_CHAT_MESSAGE_LENGHT];
+            var _messageLength = SteamMatchmaking.GetLobbyChatEntry(new CSteamID(_Callback.m_ulSteamIDLobby), (int)_Callback.m_iChatID, out _, _body, MAX_CHAT_MESSAGE_LENGHT, out _);
+            var _message = System.Text.Encoding.UTF8.GetString(_body);
             
-            if (ulong.TryParse(System.Text.Encoding.UTF8.GetString(_message), out var _steamId))
+            if (ulong.TryParse(_message, out var _steamId))
             {
                 if (_steamId == SteamManager.SteamID.m_SteamID)
                 {
-                    KickPlayer();
+                    KickPlayer(InfoMessage.KickedFromLobby);
                 }
             }
             
 #if DEBUG || DEVELOPMENT_BUILD
-            Debug.LogError($"[{nameof(SteamLobby)}].{nameof(OnLobbyChatMessage)} LobbyID:{_Callback.m_ulSteamIDLobby} | CallerID:{_Callback.m_ulSteamIDUser} | LocalID:{SteamManager.SteamID.m_SteamID} | ReceivedMessage:{string.Join(string.Empty, _message.Select(_Byte => _Byte.ToString()))} | SteamID:{_steamId} | MessageLenght:{_messageLength} | MessageType:{(EChatEntryType)_Callback.m_eChatEntryType} | ChatEntryIndex:{_Callback.m_iChatID}");
+            Debug.LogError($"[{nameof(SteamLobby)}].{nameof(OnLobbyChatMessage)} LobbyID:{_Callback.m_ulSteamIDLobby} | CallerID:{_Callback.m_ulSteamIDUser} | LocalID:{SteamManager.SteamID.m_SteamID} | ReceivedMessage:{string.Join(string.Empty, _body.Select(_Byte => _Byte.ToString()))} | SteamID:{_steamId} | MessageLenght:{_messageLength} | MessageType:{(EChatEntryType)_Callback.m_eChatEntryType} | ChatEntryIndex:{_Callback.m_iChatID}");
 #endif
         }
         #endregion

@@ -45,7 +45,7 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Will be true while the animation during a GameMode transition is running
         /// </summary>
-        private bool transitioning;
+        private ProtectedBool transitioning;
         #endregion
         
         #region Properties
@@ -100,18 +100,6 @@ namespace Watermelon_Game.Container
             this.PlayerContainer = true;
             this.maxHeightTrigger.enabled = true;
         }
-
-        /// <summary>
-        /// Assigns this container a connection id <br/>
-        /// <i>Use for container of other clients</i>
-        /// </summary>
-        /// <param name="_ConnectionId">The connection id to assign to this container</param>
-        public void AssignConnectionId(int _ConnectionId)
-        {
-            this.connectionId = _ConnectionId;
-            this.PlayerContainer = false;
-            this.maxHeightTrigger.enabled = false;
-        }
         
         /// <summary>
         /// Sets <see cref="fruitSpawner"/> and <see cref="connectionId"/> to null
@@ -120,6 +108,8 @@ namespace Watermelon_Game.Container
         {
             this.fruitSpawner = null;
             this.connectionId = null;
+            this.PlayerContainer = false;
+            this.maxHeightTrigger.enabled = false;
         }
 
         /// <summary>

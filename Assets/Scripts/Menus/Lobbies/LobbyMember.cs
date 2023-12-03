@@ -1,5 +1,4 @@
 using OPS.AntiCheat.Field;
-using Steamworks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +19,7 @@ namespace Watermelon_Game.Menus.Lobbies
         [SerializeField] private Button kickButton;
         #endregion
 
-        #region Fielsd
+        #region Fields
         /// <summary>
         /// The id if the lobby, the member is in right now
         /// </summary>
@@ -91,7 +90,7 @@ namespace Watermelon_Game.Menus.Lobbies
                 return;
             }
             
-            SteamLobby.SendPlayerKickMessage(new CSteamID(this.SteamId));
+            SteamLobby.SendPlayerKickMessage(System.Text.Encoding.UTF8.GetBytes(this.SteamId.ToString()));
         }
         #endregion
     }

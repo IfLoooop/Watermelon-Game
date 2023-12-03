@@ -110,14 +110,7 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Indicates whether any of the menus is currently opened
         /// </summary>
-        public static ProtectedBool IsAnyMenuOpen => Instance.currentActiveMenu != null;
-        #endregion
-        
-        #region Events
-        /// <summary>
-        /// Is called when the player manually restarts the game through the <see cref="SingleplayerMenu"/>
-        /// </summary>
-        public static event Action OnManualRestart;
+        public static ProtectedBool IsAnyMenuOpen => Instance.currentActiveMenu != null || Instance.currentActiveMenuPopup != null;
         #endregion
         
         #region Methods
@@ -321,7 +314,7 @@ namespace Watermelon_Game.Menus
         public static void Restart()
         {
             CloseCurrentMenu();
-            OnManualRestart?.Invoke();
+            GameController.ManualRestart();
         }
         
         /// <summary>

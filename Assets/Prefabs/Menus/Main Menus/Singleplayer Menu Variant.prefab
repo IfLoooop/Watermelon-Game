@@ -367,6 +367,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Restart
       objectReference: {fileID: 0}
+    - target: {fileID: 8238188209682418922, guid: ea0a717be600d994fad1286a4589d175, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7140355930139715051}
+    - target: {fileID: 8238188209682418922, guid: ea0a717be600d994fad1286a4589d175, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Restart
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238188209682418922, guid: ea0a717be600d994fad1286a4589d175, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Watermelon_Game.Menus.MainMenus.SingleplayerMenu, WatermelonGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238188209682418922, guid: ea0a717be600d994fad1286a4589d175, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -35,7 +35,7 @@ namespace Watermelon_Game
             instance = this;
         }
 
-        private void OnEnable() // TODO
+        private void OnEnable()
         {
             GameController.OnResetGameFinished += this.StartGameOnAllClients;
         }
@@ -104,10 +104,13 @@ namespace Watermelon_Game
         [Server]
         private void StartGameOnAllClients(ResetReason _ResetReason)
         {
-            if (ClientHasJoinedLobby)
+            if (base.isServer)
             {
-                ClientHasJoinedLobby = false;
-                this.RpcStartGame();
+                if (ClientHasJoinedLobby)
+                {
+                    ClientHasJoinedLobby = false;
+                    this.RpcStartGame();
+                }   
             }
         }
         
@@ -117,11 +120,14 @@ namespace Watermelon_Game
         [ClientRpc]
         private void RpcStartGame()
         {
-            memberWaitingForRestart = 0;
-            ContainerBounds.SetWaitingMessage(false);
-            MenuController.CloseCurrentMenu(true);
-            MenuController.CloseMenuPopup();
-            GameController.StartGame();
+            if (!GameController.ActiveGame)
+            {
+                memberWaitingForRestart = 0;
+                ContainerBounds.SetWaitingMessage(false);
+                MenuController.CloseCurrentMenu(true);
+                MenuController.CloseMenuPopup();
+                GameController.StartGame();   
+            }
         }
         
         /// <summary>

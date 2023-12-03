@@ -334,8 +334,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1615503437314412074}
-        m_TargetAssemblyTypeName: Watermelon_Game.Menus.Lobbies.KickLobbyMember,
-          WatermelonGame
+        m_TargetAssemblyTypeName: Watermelon_Game.Menus.Lobbies.LobbyMember, WatermelonGame
         m_MethodName: KickLobbyMember
         m_Mode: 1
         m_Arguments:

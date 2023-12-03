@@ -35,6 +35,10 @@ MonoBehaviour:
     m_Key: PlayerLeft
     m_Metadata:
       m_Items: []
+  - m_Id: 785086688817152
+    m_Key: LobbyClosed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
