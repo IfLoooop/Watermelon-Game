@@ -2,11 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Steamworks;
 using UnityEngine;
 using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
-using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.MenuContainers;
 using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
@@ -44,7 +44,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <summary>
         /// <see cref="Watermelon_Game.Steamworks.NET.Stats"/>
         /// </summary>
-        private Stats stats;
+        [CanBeNull] private Stats stats;
         /// <summary>
         /// <b>Key:</b> The achievement API name <br/>
         /// <b>Value:</b> Indicates whether this achievement has been unlocked or not
@@ -96,7 +96,7 @@ namespace Watermelon_Game.Steamworks.NET
         
         private void OnEnable()
         {
-            GameController.OnResetGameStarted += this.ResetGame;
+            MaxHeight.OnGameOver += this.ResetGame;
             Multiplier.OnMultiplierActivated += this.MultiplierActivated;
             FruitController.OnEvolve += this.FruitEvolved;
             FruitBehaviour.OnGoldenFruitSpawn += this.GoldenFruitSpawned;
@@ -124,7 +124,7 @@ namespace Watermelon_Game.Steamworks.NET
         
         private void OnDisable()
         {
-            GameController.OnResetGameStarted -= this.ResetGame;
+            MaxHeight.OnGameOver -= this.ResetGame;
             Multiplier.OnMultiplierActivated -= this.MultiplierActivated;
             FruitController.OnEvolve -= this.FruitEvolved;
             FruitBehaviour.OnGoldenFruitSpawn -= this.GoldenFruitSpawned;
@@ -161,6 +161,7 @@ namespace Watermelon_Game.Steamworks.NET
             
             var _storeStats = false;
             this.stats = Stats.LoadAllStats();
+            
             this.LoadAchievementStatus();
             this.UnlockAchievements(ref _storeStats);
             this.OverwriteStats(ref _storeStats);
@@ -247,20 +248,23 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_AnyStatOverwritten">Indicates whether any stat has been overwritten</param>
         private void OverwriteStats(ref bool _AnyStatOverwritten)
         {
-            var _statsMenuInstance = GlobalStats.Instance;
-            var _stats = _statsMenuInstance.Stats;
-            this.OverwriteStat(this.stats.Highscore, _statsMenuInstance.BestScore, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Grapes, _stats.GrapeEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Cherries, _stats.CherryEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Strawberries, _stats.StrawberryEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Lemons, _stats.LemonEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Oranges, _stats.OrangeEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Apples, _stats.AppleEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Pears, _stats.PearEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Pineapples, _stats.PineappleEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Honeymelons, _stats.HoneymelonEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.Watermelons, _stats.WatermelonEvolvedCount, ref _AnyStatOverwritten);
-            this.OverwriteStat(this.stats.SkillCount, _stats.PowerSkillUsedCount + _stats.EvolveSkillUsedCount + _stats.DestroySkillUsedCount, ref _AnyStatOverwritten);
+            if (this.stats != null)
+            {
+                var _statsMenuInstance = GlobalStats.Instance;
+                var _stats = _statsMenuInstance.Stats;
+                this.OverwriteStat(this.stats.Highscore, _statsMenuInstance.BestScore, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Grapes, _stats.GrapeEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Cherries, _stats.CherryEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Strawberries, _stats.StrawberryEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Lemons, _stats.LemonEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Oranges, _stats.OrangeEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Apples, _stats.AppleEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Pears, _stats.PearEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Pineapples, _stats.PineappleEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Honeymelons, _stats.HoneymelonEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.Watermelons, _stats.WatermelonEvolvedCount, ref _AnyStatOverwritten);
+                this.OverwriteStat(this.stats.SkillCount, _stats.PowerSkillUsedCount + _stats.EvolveSkillUsedCount + _stats.DestroySkillUsedCount, ref _AnyStatOverwritten);   
+            }
         }
 
         /// <summary>
@@ -271,7 +275,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_StatSet">Indicates whether the value has been overwritten or not</param>
         private void OverwriteStat(string _APIName, int _StatsMenuValue, ref bool _StatSet)
         {
-            if (_StatsMenuValue > this.stats.GetStat(_APIName))
+            if (_StatsMenuValue > this.stats?.GetStat(_APIName))
             {
                 this.stats.SetStat<int>(_APIName, _StatsMenuValue, Operation.Set);
                 _StatSet = true;
@@ -284,7 +288,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_AchievementSet">Indicates whether the achievement has been unlocked through this method or not</param>
         private void CurrentPlaytime(ref bool _AchievementSet)
         {
-            var _currentPlaytime = this.stats.GetStat(_Stats => _Stats.Playtime);
+            var _currentPlaytime = this.stats?.GetStat(_Stats => _Stats.Playtime);
             var _10H = _currentPlaytime >= 10 && !this.achievementStatus[PLAYTIME_10_H];
             var _100H = _currentPlaytime >= 100 && !this.achievementStatus[PLAYTIME_100_H];
             var _1000H = _currentPlaytime >= 1000 && !this.achievementStatus[PLAYTIME_1000_H];
@@ -311,9 +315,10 @@ namespace Watermelon_Game.Steamworks.NET
         /// <summary>
         /// Is called on <see cref="MaxHeight"/>.<see cref="MaxHeight.OnGameOver"/>
         /// </summary>
-        private void ResetGame()
+        /// <param name="_SteamId">Not needed here</param>
+        private void ResetGame(ulong _SteamId)
         {
-            if (!SteamManager.Initialized)
+            if (!SteamManager.Initialized || this.stats == null)
             {
                 return;
             }
@@ -364,7 +369,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_Fruit">The <see cref="Fruit"/> that has been combined</param>
         private void FruitEvolved(Fruit _Fruit)
         {
-            if (!SteamManager.Initialized)
+            if (!SteamManager.Initialized || this.stats == null)
             {
                 return;
             }
@@ -418,7 +423,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_IsUpgradedGoldenFruit">Indicates whether the golden fruit is anj upgraded golden fruit or not</param>
         private void GoldenFruitSpawned(bool _IsUpgradedGoldenFruit)
         {
-            if (!SteamManager.Initialized)
+            if (!SteamManager.Initialized || this.stats == null)
             {
                 return;
             }
@@ -439,7 +444,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// <param name="_Skill">The <see cref="Skill"/> that was used</param>
         private void SkillUsed(Skill? _Skill)
         {
-            if (!SteamManager.Initialized)
+            if (!SteamManager.Initialized || this.stats == null)
             {
                 return;
             }
@@ -469,7 +474,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private void AddPlaytime()
         {
-            this.stats.SetStat(_Stats => _Stats.Playtime, Time.time / 3600, Operation.Add);
+            this.stats?.SetStat(_Stats => _Stats.Playtime, Time.time / 3600, Operation.Add);
         }
         
         /// <summary>
@@ -489,7 +494,7 @@ namespace Watermelon_Game.Steamworks.NET
         private void ResetAll()
         {
             Debug.LogWarning("Resetting");
-            this.stats.ResetAllStats_DEVELOPMENT();
+            this.stats?.ResetAllStats_DEVELOPMENT();
             GlobalStats.ResetPlayerPrefs_DEVELOPMENT();
             SteamUserStats.ResetAllStats(true);
             SteamUserStats.StoreStats();

@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
-    m_Localized: Jogos Jogados
+    m_Localized: Jogos terminados
     m_Metadata:
       m_Items: []
   - m_Id: 39239848062976
@@ -152,6 +152,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 8472696324386816
     m_Localized: Sair do Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9997889463152640
+    m_Localized: ID do lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9223673881063424
+    m_Localized: Conectar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9223707347415040
+    m_Localized: Cancelar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9920671760281600
+    m_Localized: "Erro de conex\xE3o"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10397406217924608
+    m_Localized: Frutas de fundo
     m_Metadata:
       m_Items: []
   references:

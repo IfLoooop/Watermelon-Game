@@ -200,19 +200,19 @@ namespace Mirror
         /// Called on the server when a new client connects.
         /// <para>Unity calls this on the Server when a Client connects to the Server. Use an override to tell the NetworkManager what to do when a client connects to the server.</para>
         /// </summary>
-        /// <param name="conn">Connection from client.</param>
-        public override void OnServerConnect(NetworkConnectionToClient conn)
+        /// <param name="_ConnectionToClient">Connection from client.</param>
+        public override void OnServerConnect(NetworkConnectionToClient _ConnectionToClient)
         {
             // cannot join game in progress
             if (!Utils.IsSceneActive(RoomScene))
             {
-                Debug.Log($"Not in Room scene...disconnecting {conn}");
-                conn.Disconnect();
+                Debug.Log($"Not in Room scene...disconnecting {_ConnectionToClient}");
+                _ConnectionToClient.Disconnect();
                 return;
             }
 
-            base.OnServerConnect(conn);
-            OnRoomServerConnect(conn);
+            base.OnServerConnect(_ConnectionToClient);
+            OnRoomServerConnect(_ConnectionToClient);
         }
 
         /// <summary>

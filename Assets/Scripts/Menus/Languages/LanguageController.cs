@@ -59,7 +59,7 @@ namespace Watermelon_Game.Menus.Languages
         {
             base.Awake();
 
-#if UNITY_EDITOR // TODO: Check if this only happens in Editor
+#if UNITY_EDITOR
             // Awake is called when exiting playmode
             // Doesn't break anything, just to remove the error message
             if (!Application.isPlaying)
@@ -74,7 +74,7 @@ namespace Watermelon_Game.Menus.Languages
         {
             base.OnDestroy();
             
-#if UNITY_EDITOR // TODO: Check if this only happens in Editor
+#if UNITY_EDITOR
             // OnDestroy is called when starting playmode
             // Doesn't break anything, just to remove the error message
             if (!Application.isPlaying)

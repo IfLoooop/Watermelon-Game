@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using Sirenix.Serialization;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus.Leaderboards;
 using Watermelon_Game.Points;
@@ -85,7 +86,7 @@ namespace Watermelon_Game.Menus.MenuContainers
         
         private void OnEnable()
         {
-            GameController.OnGameStart += this.GameStarted;
+            MaxHeight.OnGameOver += this.GameStarted;
             GameController.OnResetGameStarted += this.ResetGameStarted;
             FruitController.OnEvolve += this.AddFruit;
             FruitBehaviour.OnGoldenFruitSpawn += this.AddGoldenFruit;
@@ -95,7 +96,7 @@ namespace Watermelon_Game.Menus.MenuContainers
         
         private void OnDisable()
         {
-            GameController.OnGameStart -= this.GameStarted;
+            MaxHeight.OnGameOver -= this.GameStarted;
             GameController.OnResetGameStarted -= this.ResetGameStarted;
             FruitController.OnEvolve -= this.AddFruit;
             FruitBehaviour.OnGoldenFruitSpawn -= this.AddGoldenFruit;
@@ -155,9 +156,19 @@ namespace Watermelon_Game.Menus.MenuContainers
         }
 
         /// <summary>
+        /// Closes this menu <br/>
+        /// <i>Used on the "Close Menu" button (for mouse)</i>
+        /// </summary>
+        public void CloseButton()
+        {
+            this.Close(true);
+        }
+        
+        /// <summary>
         /// <see cref="GameController.OnGameStart"/>
         /// </summary>
-        private void GameStarted()
+        /// <param name="_SteamId">Not needed here</param>
+        private void GameStarted(ulong _SteamId)
         {
             this.GlobalStats.AddGamesPlayed();
             this.CurrentStats.Reset();

@@ -12,12 +12,12 @@ using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
 using Watermelon_Game.Points;
+using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
-using Watermelon_Game.Web;
 
 namespace Watermelon_Game.Skills
 {
-    internal sealed class SkillController : MonoBehaviour
+    internal sealed class SkillController : PersistantMonoBehaviour<SkillController>
     {
         #region WebSettings
         [Header("WebSettings")]
@@ -58,11 +58,6 @@ namespace Watermelon_Game.Skills
 
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="SkillController"/>
-        /// </summary>
-        private static SkillController instance;
-        
-        /// <summary>
         /// Maps a <see cref="Skill"/> to its data
         /// </summary>
         private ReadOnlyDictionary<Skill, SkillData> skillMap;
@@ -101,7 +96,7 @@ namespace Watermelon_Game.Skills
         /// <summary>
         /// <see cref="shootForceMultiplier"/>
         /// </summary>
-        public static ProtectedFloat ShootForceMultiplier => instance.shootForceMultiplier;
+        public static ProtectedFloat ShootForceMultiplier => Instance.shootForceMultiplier;
         #endregion
 
         #region Events
@@ -119,31 +114,32 @@ namespace Watermelon_Game.Skills
         #endregion
         
         #region Methods
-        /// <summary>
-        /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
-        /// </summary>
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
-        private static void SubscribeToWebSettings()
-        {
-            WebSettings.OnApplyWebSettings += ApplyWebSettings;
-        }
-
-        private void OnDestroy()
-        {
-            WebSettings.OnApplyWebSettings -= ApplyWebSettings;
-        }
-        
-        /// <summary>
-        /// Tries to set the values from the web settings
-        /// </summary>
-        private static void ApplyWebSettings()
-        {
-            var _callerType = typeof(SkillController);
-            WebSettings.TrySetValue(nameof(PowerPointsRequirement), ref powerPointsRequirement, _callerType);
-            WebSettings.TrySetValue(nameof(EvolvePointsRequirement), ref evolvePointsRequirement, _callerType);
-            WebSettings.TrySetValue(nameof(DestroyPointsRequirement), ref destroyPointsRequirement, _callerType);
-            WebSettings.TrySetValue(nameof(SkillPointIncrease), ref skillPointIncrease, _callerType);
-        }
+        // /// <summary>
+        // /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
+        // /// </summary>
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+        // private static void SubscribeToWebSettings()
+        // {
+        //     WebSettings.OnApplyWebSettings += ApplyWebSettings;
+        // }
+        //
+        // protected override void OnDestroy()
+        // {
+        //     base.OnDestroy();
+        //     WebSettings.OnApplyWebSettings -= ApplyWebSettings;
+        // }
+        //
+        // /// <summary>
+        // /// Tries to set the values from the web settings
+        // /// </summary>
+        // private static void ApplyWebSettings()
+        // {
+        //     var _callerType = typeof(SkillController);
+        //     WebSettings.TrySetValue(nameof(PowerPointsRequirement), ref powerPointsRequirement, _callerType);
+        //     WebSettings.TrySetValue(nameof(EvolvePointsRequirement), ref evolvePointsRequirement, _callerType);
+        //     WebSettings.TrySetValue(nameof(DestroyPointsRequirement), ref destroyPointsRequirement, _callerType);
+        //     WebSettings.TrySetValue(nameof(SkillPointIncrease), ref skillPointIncrease, _callerType);
+        // }
 
         private void OnEnable()
         {
@@ -161,10 +157,9 @@ namespace Watermelon_Game.Skills
             FruitBehaviour.OnSkillUsed -= this.SkillUsed;
         }
 
-        private void Awake()
+        protected override void Init()
         {
-            instance = this;
-            
+            base.Init();
             this.skillMap = new ReadOnlyDictionary<Skill, SkillData>(new Dictionary<Skill, SkillData>
             {
                 { Skill.Power, InitializeSkill(this.power, KeyCode.Alpha1, Skill.Power, powerPointsRequirement) },
@@ -172,7 +167,7 @@ namespace Watermelon_Game.Skills
                 { Skill.Destroy, InitializeSkill(this.destroy, KeyCode.Alpha3, Skill.Destroy, destroyPointsRequirement) }
             });
         }
-
+        
         /// <summary>
         /// Sets all needed value for a <see cref="SkillData"/> (<see cref="Skill"/>)
         /// </summary>
@@ -357,10 +352,10 @@ namespace Watermelon_Game.Skills
         /// <param name="_Direction">The direction to shoot the fruit in</param>
         public static void Skill_Power(FruitBehaviour _FruitBehaviour, Vector2 _Direction)
         {
-            _Direction *= instance.powerSkillForce;
-            _FruitBehaviour.SetMass(instance.powerSkillMass, Operation.Set);
+            _Direction *= Instance.powerSkillForce;
+            _FruitBehaviour.SetMass(Instance.powerSkillMass, Operation.Set);
             _FruitBehaviour.AddForce(_Direction, ForceMode2D.Impulse);
-            instance.StartCoroutine(instance.ResetMass(_FruitBehaviour));
+            Instance.StartCoroutine(Instance.ResetMass(_FruitBehaviour));
         }
 
         /// <summary>

@@ -200,7 +200,7 @@ namespace Watermelon_Game.Steamworks.NET
         public static void DownloadLeaderboardScores(ELeaderboardDataRequest _LeaderboardDataRequest = ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobalAroundUser, int _RangeStart = -(MAX_LEADERBOARD_ENTRIES / 2), int _RangeEnd = MAX_LEADERBOARD_ENTRIES / 2)
         {
 #if UNITY_EDITOR
-            DownloadLeaderboardScores_DEVELOPMENT(SCORE_AMOUNT, false);
+            DownloadLeaderboardScores_DEVELOPMENT(LEADERBOARD_ENTRY_COUNT, false);
             return;
 #endif
             if (!SteamManager.Initialized)
@@ -469,31 +469,10 @@ namespace Watermelon_Game.Steamworks.NET
         }
         
 #if DEBUG || DEVELOPMENT_BUILD
-        [FilePath(AbsolutePath = true, RequireExistingPath = true, ParentFolder = "Assets/Test", Extensions = ".txt")]
-        [Tooltip("Filepath to the file that holds all names")]
-        [LabelWidth(75)]
-        // ReSharper disable once InconsistentNaming
-        [SerializeField]private string filepath_DEVELOPMENT;
-        
         /// <summary>
-        /// Amount of scores to download with <see cref="DownloadLeaderboardScores_DEVELOPMENT"/>
+        /// Amount of entries to download with <see cref="DownloadLeaderboardScores_DEVELOPMENT"/>
         /// </summary>
-        private const uint SCORE_AMOUNT = 950;
-
-        /// <summary>
-        /// Returns a random entry from the given list and removes it from the list
-        /// </summary>
-        /// <param name="_Names">The list to get the name from</param>
-        /// <returns>A random entry from the given list</returns>
-        private static string GetRandomName(IList<string> _Names)
-        {
-            var _index = Random.Range(0, _Names.Count - 1);
-            var _name = _Names[_index];
-            
-            _Names.RemoveAt(_index);
-
-            return _name;
-        }
+        private const uint LEADERBOARD_ENTRY_COUNT = 1100;
         
         /// <summary>
         /// Fills <see cref="SteamUsers"/> with random values <br/>
@@ -504,24 +483,27 @@ namespace Watermelon_Game.Steamworks.NET
         private static void DownloadLeaderboardScores_DEVELOPMENT(ulong _Amount, bool _AddNew)
         {
             ulong _id = 1000000000000000;
-            var _names = File.ReadAllLines(instance.filepath_DEVELOPMENT).ToList();
-
+            
             SteamUsers.Clear();
             
             // ReSharper disable once InconsistentNaming
             for (ulong i = 0; i < _Amount; i++)
             {
                 var _steamID = new CSteamID(_AddNew ? (ulong)Random.Range(1000000000000000, 9999999999999999) : _id++);
-                var _username = GetRandomName(_names);
+                var _username = _id.ToString();
                 
                 AddUser_DEVELOPMENT(_steamID, _username, true);
             }
+
+            var _friends = new List<ulong> { SteamManager.SteamID.m_SteamID };
             
             // ReSharper disable once InconsistentNaming
-            for (var i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagAll); i++)
+            for (var i = 0; i < SteamFriends.GetFriendCount(EFriendFlags.k_EFriendFlagImmediate); i++)
             {
-                var _friend = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagAll);
+                var _friend = SteamFriends.GetFriendByIndex(i, EFriendFlags.k_EFriendFlagImmediate);
                 var _friendUserName = SteamFriends.GetFriendPersonaName(_friend);
+                
+                _friends.Add(_friend.m_SteamID);
                 
                 AddUser_DEVELOPMENT(_friend, _friendUserName, false);
             }
@@ -533,7 +515,13 @@ namespace Watermelon_Game.Steamworks.NET
             for (var i = 0; i < SteamUsers.Count; i++)
             {
                 SteamUsers[i] = new LeaderboardUserData(SteamUsers[i], i + 1);
+
+                if (_friends.Contains(SteamUsers[i].SteamId))
+                {
+                    Friends.Add(SteamUsers[i]);
+                }
             }
+            Friends = new ConcurrentBag<LeaderboardUserData>(Friends.OrderByDescending(_Friend => _Friend.GlobalRank));
             
             OnLeaderboardScoresDownloaded?.Invoke();
         }
@@ -555,13 +543,14 @@ namespace Watermelon_Game.Steamworks.NET
                 m_steamIDUser = _SteamId,
                 m_nScore = Random.Range(0, 10000)
             };
-                
+
             SteamUsers.Add(new LeaderboardUserData
             {
                 SteamId = _leaderboardEntry.m_steamIDUser.m_SteamID,
+                Username = _Username,
                 GlobalRank = _leaderboardEntry.m_nGlobalRank,
                 Score = _leaderboardEntry.m_nScore
-            });
+            }); 
 
             instance.StartCoroutine(GetUserName_DEVELOPMENT(_SteamId, _Username, _NeedsToRetrieveInformationFromInternet));
         }
@@ -595,7 +584,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// Checks if any username in <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/> contains a character that is not supported <br/>
         /// <b>Development only!</b>
         /// </summary>
-        private static async void CheckForMissingCharactersAsync_DEVELOPMENT()
+        private static async void CheckForMissingCharactersAsync_DEVELOPMENT() // TODO: Maybe not needed
         {
             var _usernames = new ConcurrentBag<string>();
 

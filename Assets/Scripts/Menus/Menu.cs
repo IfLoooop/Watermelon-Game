@@ -38,6 +38,10 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// <see cref="LobbyConnect"/>
         /// </summary>
-        LobbyConnect
+        LobbyConnect,
+        /// <summary>
+        /// <see cref="InfoMenu"/>
+        /// </summary>
+        InfoMenu
     }
 }

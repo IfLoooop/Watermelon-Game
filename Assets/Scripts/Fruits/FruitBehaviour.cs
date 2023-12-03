@@ -38,6 +38,8 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private SpriteRenderer fruitSpriteRenderer;
         [Tooltip("SpriteRenderer of the fruits face")]
         [SerializeField] private SpriteRenderer faceSpriteRenderer;
+        [Tooltip("Reference to the golden fruit GameObject")]
+        [SerializeField] private GameObject goldenFruit;
         
         [Header("Settings")]
         [Tooltip("The type of this fruit")]
@@ -283,6 +285,10 @@ namespace Watermelon_Game.Fruits
         /// </param>
         private void GoldenFruit(bool _ForceEnable = false, bool _ForceGolden = false)
         {
+            if (this.IsGoldenFruit)
+            {
+                return;
+            }
             if (!_ForceEnable)
             {
                 var _notEnoughFruitsOnMap =
@@ -308,6 +314,36 @@ namespace Watermelon_Game.Fruits
                 }
             }
             
+            OnGoldenFruitSpawn?.Invoke(_ForceEnable);
+            this.CmdGoldenFruit(_ForceEnable, _ForceGolden);
+        }
+
+        /// <summary>
+        /// <see cref="GoldenFruit"/>
+        /// </summary>
+        /// <param name="_ForceEnable">Force upgrade if true</param>
+        /// <param name="_ForceGolden">
+        /// Forces this <see cref="FruitBehaviour"/> to become a golden fruit instead of an upgraded golden fruit <br/>
+        /// <b>Works only in Development!</b>
+        /// </param>
+        [Command(requiresAuthority = false)]
+        private void CmdGoldenFruit(bool _ForceEnable, bool _ForceGolden)
+        {
+            this.RpcGoldenFruit(_ForceEnable, _ForceGolden);
+        }
+        
+        /// <summary>
+        /// <see cref="GoldenFruit"/>
+        /// </summary>
+        /// <param name="_ForceEnable">Force upgrade if true</param>
+        /// <param name="_ForceGolden">
+        /// Forces this <see cref="FruitBehaviour"/> to become a golden fruit instead of an upgraded golden fruit <br/>
+        /// <b>Works only in Development!</b>
+        /// </param>
+        [ClientRpc]
+        private void RpcGoldenFruit(bool _ForceEnable, bool _ForceGolden)
+        {
+            this.goldenFruit.SetActive(true);
             this.IsGoldenFruit = true;
             
 #if DEBUG || DEVELOPMENT_BUILD
@@ -318,8 +354,6 @@ namespace Watermelon_Game.Fruits
 #if DEBUG || DEVELOPMENT_BUILD
             skipUpgraded:;
 #endif
-            Instantiate(FruitPrefabSettings.GoldenFruitPrefab, base.transform.position, Quaternion.identity, base.transform);
-            OnGoldenFruitSpawn?.Invoke(this.isUpgradedGoldenFruit);
         }
         
         private void OnCollisionEnter2D(Collision2D _Other)
@@ -678,7 +712,7 @@ namespace Watermelon_Game.Fruits
             while (base.transform.localScale.x < _TargetScale.x)
             {
                 var _localScale = base.transform.localScale + (_TargetScale + FruitSettings.EvolveStep.Value) * Time.deltaTime;
-                this.transform.localScale = _localScale.Clamp(Vector3.zero, _TargetScale);
+                base.transform.localScale = _localScale.Clamp(Vector3.zero, _TargetScale);
                 yield return FruitSettings.GrowFruitWaitForSeconds;
             }
         }

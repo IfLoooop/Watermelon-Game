@@ -107,6 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   watermelonGame: {fileID: 11400000, guid: 7e6135e1b0e70444c82b8a515bae674f, type: 2}
+  watermelonGame2: {fileID: 11400000, guid: f6947192c454a7f42a3cb2e4a65bcb1e, type: 2}
   tmp: {fileID: 3776344451080700887}
   filePath: C:/Unity Projects/Watermelon-Game/Assets/Fonts/_Missing Characters.txt
 --- !u!114 &3776344451080700887

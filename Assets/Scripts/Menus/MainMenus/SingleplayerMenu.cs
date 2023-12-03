@@ -10,7 +10,7 @@ namespace Watermelon_Game.Menus.MainMenus
     /// <summary>
     /// Main menu while in singleplayer mode
     /// </summary>
-    internal sealed class SingleplayerMenu : MainMenuBase
+    internal sealed class SingleplayerMenu : MenuBase
     {
         #region Inspector Fields
         [Tooltip("Reference to the button to switch to multiplayer")]
@@ -44,8 +44,7 @@ namespace Watermelon_Game.Menus.MainMenus
         /// </summary>
         public void SwitchToMultiplayer()
         {
-            CurrentGameMode = GameMode.MultiPlayer;
-            GameModeTransition(CurrentGameMode);
+            GameController.SwitchGameMode(GameMode.MultiPlayer);
         }
         #endregion
     }

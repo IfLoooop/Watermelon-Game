@@ -1,6 +1,6 @@
 using UnityEngine;
+using UnityEngine.UI;
 using Watermelon_Game.Singletons;
-using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Background
 {
@@ -10,45 +10,35 @@ namespace Watermelon_Game.Background
     internal sealed class EvolutionsChart : PersistantGameModeTransition<EvolutionsChart>
     {
         #region Inspector Fields
+        [Tooltip("Button to open the chart")]
+        [SerializeField] private Button open;
+        [Tooltip("Button to close the chart")]
+        [SerializeField] private Button close;
         [Tooltip("Animation to open the chart (for multiplayer)")]
         [SerializeField] private AnimationClip openAnimation;
         [Tooltip("Animation to close the chart (for multiplayer)")]
         [SerializeField] private AnimationClip closeAnimation;
         #endregion
-
-        #region Fields
-        /// <summary>
-        /// Indicates whether the chart is currently opened or closed (for multiplayer)
-        /// </summary>
-        private bool isOpen;
-        #endregion
         
         #region Methods
-        protected override void Transition(GameMode _GameMode)
+        /// <summary>
+        /// Opens the chart
+        /// </summary>
+        public void Open()
         {
-            base.Transition(_GameMode);
-
-            if (_GameMode == GameMode.SinglePlayer)
-            {
-                this.isOpen = false;
-            }
+            this.open.interactable = false;
+            this.close.interactable = true;
+            base.Animation.Play(this.openAnimation.name);
         }
 
         /// <summary>
-        /// Opens/closes the chart (for multiplayer) 
+        /// Closes the chart
         /// </summary>
-        public void Open_Close()
+        public void Close()
         {
-            if (this.isOpen)
-            {
-                this.isOpen = false;
-                base.Animation.Play(this.closeAnimation.name);
-            }
-            else
-            {
-                this.isOpen = true;
-                base.Animation.Play(this.openAnimation.name);
-            }
+            this.close.interactable = false;
+            this.open.interactable = true;
+            base.Animation.Play(this.closeAnimation.name);
         }
         #endregion
     }

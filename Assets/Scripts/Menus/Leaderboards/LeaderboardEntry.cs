@@ -28,7 +28,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// <summary>
         /// Sets the data of this <see cref="LeaderboardEntry"/>
         /// </summary>
-        /// <param name="_SteamUsersDataIndex">Index in <see cref="Leaderboard.steamUsers"/>, this object holds the data of</param>
+        /// <param name="_SteamUsersDataIndex">Index in <see cref="Leaderboard.SteamUsers"/>, this object holds the data of</param>
         public void SetData(int _SteamUsersDataIndex)
         {
             base.dataIndex = _SteamUsersDataIndex;

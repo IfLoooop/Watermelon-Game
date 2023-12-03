@@ -3,6 +3,7 @@ using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
+using Watermelon_Game.Points;
 using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Menus.MenuContainers
@@ -75,6 +76,7 @@ namespace Watermelon_Game.Menus.MenuContainers
         public override ContainerMenuBase SetActive(ContainerMenuBase _CurrentActiveMenu)
         {
             this.SetDuration();
+            this.Points = (int)PointsController.CurrentPoints.Value;
             
             return base.SetActive(_CurrentActiveMenu);
         }

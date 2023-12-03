@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EnhancedUI.EnhancedScroller;
 using Sirenix.OdinInspector;
 using TMPro;
@@ -76,8 +77,8 @@ namespace Watermelon_Game.Menus.Leaderboards
         public static List<LeaderboardUserData> SteamUsers { get; } = new();
         /// <summary>
         /// Returns <see cref="SteamUsers"/> if <see cref="friendsToggleIsOn"/> it true, otherwise <see cref="SteamLeaderboard"/>.<see cref="SteamLeaderboard.SteamUsers"/>
-        /// </summary>
-        private List<LeaderboardUserData> UserList => this.friendsToggleIsOn ? SteamUsers : SteamLeaderboard.SteamUsers;
+        /// </summary> // TODO: Change "SteamLeaderboard.Friends.ToList()", maybe store "Friends" not as a "ConcurrentBag"
+        private List<LeaderboardUserData> UserList => this.friendsToggleIsOn ? SteamLeaderboard.Friends.ToList() : SteamLeaderboard.SteamUsers;
         #endregion
         
         #region Methods
@@ -172,9 +173,6 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         public void JumpToSelf()
         {
-            // TODO:
-            // Set the jump position to be the middle of the leaderboard (if possible, e.g. enough entries are in it)
-            // Maybe smooth scroll towards the position, instead of jumping
             var _index = this.UserList.FindIndexParallel(_SteamUser => _SteamUser.SteamId == SteamManager.SteamID.m_SteamID);
             if (_index != -1)
             {

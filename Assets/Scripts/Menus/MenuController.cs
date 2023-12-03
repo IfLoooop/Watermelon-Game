@@ -1,13 +1,18 @@
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
+using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.Menus.InfoMenus;
 using Watermelon_Game.Menus.Languages;
 using Watermelon_Game.Menus.Lobbies;
 using Watermelon_Game.Menus.MainMenus;
 using Watermelon_Game.Menus.MenuContainers;
 using Watermelon_Game.Singletons;
+using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Menus
@@ -31,6 +36,15 @@ namespace Watermelon_Game.Menus
         [SerializeField] private LobbyCreateMenu lobbyCreateMenu;
         [Tooltip("Reference to the LobbyHostMenu")]
         [SerializeField] private LobbyHostMenu lobbyHostMenu;
+        [Tooltip("Reference to the ConnectionErrorMenu")]
+        [SerializeField] private ConnectionErrorMenu connectionErrorMenu;
+        [Tooltip("Reference to the InfoMenu")]
+        [SerializeField] private InfoMenu infoMenu;
+
+        [Tooltip("Win message")]
+        [SerializeField] private TextMeshProUGUI win;
+        [Tooltip("Loose message")]
+        [SerializeField] private TextMeshProUGUI loose;
 
         [Header("Settings")]
         [Tooltip("Delay in seconds, between opening and closing the menu, on language change")]
@@ -39,6 +53,8 @@ namespace Watermelon_Game.Menus
         [Header("Debug")]
         [Tooltip("The currently active menu")]
         [SerializeField][ReadOnly][CanBeNull] private MenuBase currentActiveMenu;
+        [Tooltip("The currently active popup menu")]
+        [SerializeField][ReadOnly][CanBeNull] private InfoMenuBase currentActiveMenuPopup;
 #if UNITY_EDITOR
         [Tooltip("Forces all menu options to be always enabled")]
         [ShowInInspector] public static bool DebugMultiplayerMenu;
@@ -49,11 +65,11 @@ namespace Watermelon_Game.Menus
         /// <summary>
         /// Whether the <see cref="MenuController"/> currently takes input or not
         /// </summary>
-        private bool allowInput = true;
+        private ProtectedBool allowInput = true;
         /// <summary>
         /// Restarts the game if true and the <see cref="CurrentStats"/>-Menu is closed -> <see cref="RestartGame"/>
         /// </summary>
-        private bool readyToRestart;
+        private ProtectedBool readyToRestart;
         #endregion
         
         #region Properties
@@ -82,12 +98,20 @@ namespace Watermelon_Game.Menus
         /// <see cref="lobbyHostMenu"/>
         /// </summary>
         public MenuBase LobbyHostMenu => this.lobbyHostMenu;
+        /// <summary>
+        /// <see cref="connectionErrorMenu"/>
+        /// </summary>
+        public MenuBase ConnectionErrorMenu => this.connectionErrorMenu;
+        /// <summary>
+        /// <see cref="infoMenu"/>
+        /// </summary>
+        public InfoMenu InfoMenu => this.infoMenu;
         // ReSharper restore UnusedMember.Global
         
         /// <summary>
         /// Indicates whether any of the menus is currently opened
         /// </summary>
-        public static bool IsAnyMenuOpen => Instance.currentActiveMenu != null;
+        public static ProtectedBool IsAnyMenuOpen => Instance.currentActiveMenu != null;
         #endregion
         
         #region Events
@@ -95,10 +119,6 @@ namespace Watermelon_Game.Menus
         /// Is called when the player manually restarts the game through the <see cref="SingleplayerMenu"/>
         /// </summary>
         public static event Action OnManualRestart;
-        /// <summary>
-        /// Is called when the <see cref="CurrentStats"/> is closed
-        /// </summary>
-        public static event Action OnRestartGame; 
         #endregion
         
         #region Methods
@@ -107,7 +127,7 @@ namespace Watermelon_Game.Menus
             MenuBase.OnMenuClose += MenuClosed;
             GameController.OnResetGameStarted += this.ResetGameStarted;
             GameController.OnResetGameFinished += this.ResetGameFinished;
-            MainMenuBase.OnGameModeTransition += OpenMenuForGameMode;
+            GameController.OnGameModeTransition += OpenMenuForGameMode;
             LanguageController.OnLanguageChanged += this.ReopenMenu;
         }
         
@@ -116,7 +136,7 @@ namespace Watermelon_Game.Menus
             MenuBase.OnMenuClose -= MenuClosed;
             GameController.OnResetGameStarted -= this.ResetGameStarted;
             GameController.OnResetGameFinished -= this.ResetGameFinished;
-            MainMenuBase.OnGameModeTransition -= OpenMenuForGameMode;
+            GameController.OnGameModeTransition -= OpenMenuForGameMode;
             LanguageController.OnLanguageChanged -= this.ReopenMenu;
         }
         
@@ -129,13 +149,17 @@ namespace Watermelon_Game.Menus
             
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                if (this.currentActiveMenu != null)
+                if (this.currentActiveMenuPopup != null)
+                {
+                    CloseMenuPopup();
+                }
+                else if (this.currentActiveMenu != null)
                 {
                     CloseCurrentMenu();
                 }
                 else
                 {
-                    this.OpenMenuForGameMode(MainMenuBase.CurrentGameMode);
+                    this.OpenMenuForGameMode(GameController.CurrentGameMode, false);
                 }
             }
             else if (Input.GetKeyDown(KeyCode.M))
@@ -168,6 +192,15 @@ namespace Watermelon_Game.Menus
                 this.currentActiveMenu = null;
             }
         }
+
+        /// <summary>
+        /// Opens the main menu depending on the <see cref="GameController.CurrentGameMode"/>
+        /// </summary>
+        // ReSharper disable once InconsistentNaming
+        public void ESCButtonMenu()
+        {
+            this.OpenMenuForGameMode(GameController.CurrentGameMode, false);
+        }
         
         /// <summary>
         /// Opens the given <see cref="MenuBase"/> if it's not <see cref="currentActiveMenu"/>, otherwise closes it
@@ -184,13 +217,36 @@ namespace Watermelon_Game.Menus
                 this.Open(_Menu);
             }
         }
+        
+        /// <summary>
+        /// Opens a <see cref="InfoMenuBase"/> from the <see cref="MenuController"/>
+        /// </summary>
+        /// <param name="_MenuControllerMenu">Can be any <see cref="MenuBase"/> in <see cref="MenuController"/></param>
+        /// <typeparam name="T">Must inherit from <see cref="InfoMenuBase"/></typeparam>
+        /// <returns>The <see cref="MenuBase"/> that was opened</returns>
+        public static InfoMenuBase OpenPopup<T>(Func<MenuController, T> _MenuControllerMenu) where T : InfoMenuBase
+        {
+            return Instance.currentActiveMenuPopup = _MenuControllerMenu.Invoke(Instance).Open(Instance.currentActiveMenuPopup).As<InfoMenuBase>();
+        }
 
+        /// <summary>
+        /// Closes <see cref="currentActiveMenuPopup"/>
+        /// </summary>
+        public static void CloseMenuPopup()
+        {
+            if (Instance.currentActiveMenuPopup != null)
+            {
+                Instance.currentActiveMenuPopup = Instance.currentActiveMenuPopup.Close(true);
+            }
+        }
+        
         /// <summary>
         /// Opens a <see cref="MenuBase"/> from the <see cref="MenuController"/>
         /// </summary>
         /// <param name="_MenuControllerMenu">Can be any <see cref="MenuBase"/> in <see cref="MenuController"/></param>
+        /// <typeparam name="T">Must inherit from <see cref="MenuBase"/></typeparam>
         /// <returns>The <see cref="MenuBase"/> that was opened</returns>
-        public static MenuBase Open(Func<MenuController, MenuBase> _MenuControllerMenu)
+        public static MenuBase Open<T>(Func<MenuController, T> _MenuControllerMenu) where T : MenuBase
         {
             return Instance.Open(_MenuControllerMenu.Invoke(Instance));
         }
@@ -285,16 +341,38 @@ namespace Watermelon_Game.Menus
         }
         
         /// <summary>
-        /// Opens the <see cref="CurrentStats"/> at the end of a game -> <see cref="GameController.OnRestartGame"/>
+        /// Opens the <see cref="CurrentStats"/> at the end of a game -> <see cref="GameController.OnResetGameFinished"/>
         /// </summary>
         /// <param name="_Timestamp">Timestamp in seconds, when the game was over</param>
         private void GameOver(float _Timestamp)
         {
+            this.SetWinner();
             this.menuContainer.CurrentStats.GameOverTimestamp = _Timestamp;
             this.Open(ContainerMenu.CurrentStats);
             this.readyToRestart = true;
         }
 
+        /// <summary>
+        /// Sets the win/loose message
+        /// </summary>
+        private void SetWinner()
+        {
+            if (SteamManager.Initialized)
+            {
+                if (SteamLobby.CurrentLobbyId != null)
+                {
+                    if (SteamManager.SteamID.m_SteamID != GameController.LoosingPlayer)
+                    {
+                        this.win.gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        this.loose.gameObject.SetActive(true);
+                    }
+                }   
+            }
+        }
+        
         /// <summary> // TODO: Needs better solution
         /// Restarts the game when <see cref="GameController.ActiveGame"/> is false
         /// </summary>
@@ -302,25 +380,31 @@ namespace Watermelon_Game.Menus
         {
             if (this.readyToRestart)
             {
+                this.win.gameObject.SetActive(false);
+                this.loose.gameObject.SetActive(false);
                 this.readyToRestart = false;
-                OnRestartGame?.Invoke();
+                NetworkGameController.RestartGame();
             }
         }
-
+        
         /// <summary>
         /// Opens the menu for the given <see cref="GameMode"/>
         /// </summary>
         /// <param name="_GameMode">The <see cref="GameMode"/> to open the menu of</param>
-        private void OpenMenuForGameMode(GameMode _GameMode)
+        /// <param name="_ForceSwitch"><see cref="GameController.gameModeWasForced"/></param>
+        private void OpenMenuForGameMode(GameMode _GameMode, bool _ForceSwitch)
         {
-            switch (_GameMode)
+            if (!_ForceSwitch)
             {
-                case GameMode.SinglePlayer:
-                    this.Open_Close(this.singleplayerMenu);
-                    break;
-                case GameMode.MultiPlayer:
-                    this.Open_Close(this.multiplayerMenu);
-                    break;
+                switch (_GameMode)
+                {
+                    case GameMode.SinglePlayer:
+                        this.Open_Close(this.singleplayerMenu);
+                        break;
+                    case GameMode.MultiPlayer:
+                        this.Open_Close(this.multiplayerMenu);
+                        break;
+                }   
             }
         }
         

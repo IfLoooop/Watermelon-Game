@@ -9,11 +9,9 @@ using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.ExtensionMethods;
-using Watermelon_Game.Menus.MainMenus;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
-using Watermelon_Game.Web;
 
 namespace Watermelon_Game.Fruits
 {
@@ -82,20 +80,20 @@ namespace Watermelon_Game.Fruits
         #endregion
         
         #region Methods
-        /// <summary>
-        /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
-        /// </summary>
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
-        private static void SubscribeToWebSettings()
-        {
-            WebSettings.OnApplyWebSettings += FruitSettings.ApplyWebSettings;
-        }
-
-        protected override void OnDestroy()
-        {
-            base.OnDestroy();
-            WebSettings.OnApplyWebSettings -= FruitSettings.ApplyWebSettings;
-        }
+        // /// <summary>
+        // /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
+        // /// </summary>
+        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
+        // private static void SubscribeToWebSettings()
+        // {
+        //     WebSettings.OnApplyWebSettings += FruitSettings.ApplyWebSettings;
+        // }
+        //
+        // protected override void OnDestroy()
+        // {
+        //     base.OnDestroy();
+        //     WebSettings.OnApplyWebSettings -= FruitSettings.ApplyWebSettings;
+        // }
 
         protected override void Init()
         {
@@ -127,7 +125,7 @@ namespace Watermelon_Game.Fruits
             GameController.OnResetGameStarted += this.DisableFruitEvolving;
             GameController.OnResetGameFinished += this.ClearFruits;
 
-            MainMenuBase.OnGameModeTransition += _Mode => this.currentGameMode = _Mode; // TODO: Temporary
+            GameController.OnGameModeTransition += (_Mode, _) => this.currentGameMode = _Mode; // TODO: Temporary
         }
         
         private void OnDisable()
@@ -342,7 +340,7 @@ namespace Watermelon_Game.Fruits
             // Can happen in multiplayer, because the "Fruit Container" contains the fruits of all clients
             // TODO: On GameOver, fruits have to be destroyed by the server, not by the individual clients
             // TODO: Remove "this.currentGameMode"
-            if (_childCount > 0 && this.currentGameMode == GameMode.SinglePlayer) // TODO: No idea why sometimes fruits all left in the container
+            if (_childCount > 0 && this.currentGameMode == GameMode.SinglePlayer && !GameController.IsApplicationQuitting) // TODO: No idea why sometimes fruits all left in the container
             {
                 Debug.LogError($"{FruitContainer.Transform.name} has still {_childCount} children, destroying now.");
             }

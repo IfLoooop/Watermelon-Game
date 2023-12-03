@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
-    m_Localized: Games Played
+    m_Localized: Games Finished
     m_Metadata:
       m_Items: []
   - m_Id: 39239848062976
@@ -160,6 +160,30 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 9223707347415040
     m_Localized: Cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9920671760281600
+    m_Localized: Connection Error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9997889463152640
+    m_Localized: Lobby ID
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10397406217924608
+    m_Localized: Background Fruit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10518691417714688
+    m_Localized: YOU WIN
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10518721927081984
+    m_Localized: YOU LOOSE
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10535732233138176
+    m_Localized: Waiting for other Player
     m_Metadata:
       m_Items: []
   references:

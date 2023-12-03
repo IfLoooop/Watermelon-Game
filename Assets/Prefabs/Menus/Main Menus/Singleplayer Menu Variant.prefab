@@ -24,6 +24,26 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 732877916516823720, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+    - target: {fileID: 4023952835419714051, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4023952835419714051, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 7140355930139715051}
+    - target: {fileID: 4023952835419714051, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Close
+      objectReference: {fileID: 0}
+    - target: {fileID: 4023952835419714051, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Watermelon_Game.Menus.MenuBase, WatermelonGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 4023952835419714051, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4405812351608660549, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -63,6 +83,14 @@ PrefabInstance:
     - target: {fileID: 5815505016470783006, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6466433708674526026, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6466433708674526026, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 700
       objectReference: {fileID: 0}
     - target: {fileID: 6943908477997217613, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_fontSize

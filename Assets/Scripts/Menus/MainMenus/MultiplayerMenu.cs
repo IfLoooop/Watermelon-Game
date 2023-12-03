@@ -1,4 +1,5 @@
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon_Game.Steamworks.NET;
@@ -9,7 +10,7 @@ namespace Watermelon_Game.Menus.MainMenus
     /// <summary>
     /// Main menu while in multiplayer mode
     /// </summary>
-    internal sealed class MultiplayerMenu : MainMenuBase
+    internal sealed class MultiplayerMenu : MenuBase
     {
         #region Inspector Fields
         [Tooltip("Reference to the button to restart the game")]
@@ -22,6 +23,8 @@ namespace Watermelon_Game.Menus.MainMenus
         [PropertyOrder(1)][SerializeField] private Button leaveLobbyButton;
         [Tooltip("Reference to the button to create a lobby")]
         [PropertyOrder(1)][SerializeField] private Button createLobbyButton;
+        [Tooltip("Reference to the button to exit the game")]
+        [PropertyOrder(1)][SerializeField] private Button exitGameButton;
         #endregion
         
         #region Methods
@@ -38,10 +41,9 @@ namespace Watermelon_Game.Menus.MainMenus
         /// </summary>
         public void SwitchToSingleplayer()
         {
-            CurrentGameMode = GameMode.SinglePlayer;
-            GameModeTransition(CurrentGameMode);
+            GameController.SwitchGameMode(GameMode.SinglePlayer);
         }
-
+        
         /// <summary>
         /// Opens the lobby browser menu
         /// </summary>
@@ -67,6 +69,17 @@ namespace Watermelon_Game.Menus.MainMenus
             MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.LobbyCreateMenu);
         }
 
+        /// <summary>
+        /// Exits the game
+        /// </summary>
+        public void ExitGame()
+        {
+#if UNITY_EDITOR
+            EditorApplication.ExitPlaymode();
+#endif
+            Application.Quit();
+        }
+        
         public override MenuBase Open(MenuBase _CurrentActiveMenu)
         {
 #if UNITY_EDITOR
@@ -77,6 +90,7 @@ namespace Watermelon_Game.Menus.MainMenus
                 this.restartButton.interactable = true;
                 this.singleplayerButton.interactable = true;
                 this.createLobbyButton.interactable = true;
+                this.exitGameButton.interactable = true;
                 
                 return base.Open(_CurrentActiveMenu);
             }
@@ -88,10 +102,11 @@ namespace Watermelon_Game.Menus.MainMenus
                 this.restartButton.interactable = true;
                 this.singleplayerButton.interactable = true;
                 this.createLobbyButton.interactable = true;
+                this.exitGameButton.interactable = true;
             }
             else
             {
-                if (SteamLobby.IsHost)
+                if (SteamLobby.IsHost.Value.Value)
                 {
                     return MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.LobbyHostMenu);
                 }
@@ -101,6 +116,7 @@ namespace Watermelon_Game.Menus.MainMenus
                 this.restartButton.interactable = false; // TODO: Maybe allow while alone in lobby
                 this.singleplayerButton.interactable = false;
                 this.createLobbyButton.interactable = false;
+                this.exitGameButton.interactable = false;
             }
             
             return base.Open(_CurrentActiveMenu);

@@ -44,14 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949f64bdc63b20a4f85c55648347eda1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 0
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
   backgroundFruitPrefab: {fileID: 8387814598454936443, guid: 3fb7d87f41f061241b1b4cfeea67e707, type: 3}
+  fruitSpawnDelayMultiplier: 2.5
   forceMode: 1

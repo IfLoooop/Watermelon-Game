@@ -65,7 +65,7 @@ MonoBehaviour:
   nextNextFruitEnabled:
     key: 9
     audioClip: {fileID: 8300000, guid: 79180f511d89441b9aa23ccae1992fe0, type: 3}
-    volume: 0.05
+    volume: 0.025
     startTime: 0.1
   nextNextFruitDisabled:
     key: 10

@@ -103,6 +103,13 @@ namespace Watermelon_Game.Points
         /// <param name="_Fruit">The <see cref="Fruit"/> to get the points for</param>
         private void AddPoints(Fruit _Fruit)
         {
+            // TODO: Dirty fix
+            // TODO: When a client is connected to a host, this is null when the clients golden fruit collides with another fruit
+            if (this.multiplier == null)
+            {
+                return;
+            }
+            
             this.multiplier.StartMultiplier();
 
             var _points = (int)((int)_Fruit + this.multiplier.CurrentMultiplier);

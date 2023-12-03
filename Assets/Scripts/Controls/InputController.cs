@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 using Watermelon_Game.Menus;
 using Watermelon_Game.Utility;
 
@@ -9,7 +8,7 @@ namespace Watermelon_Game.Controls
     /// <summary>
     /// Handles mouse input
     /// </summary>
-    internal sealed class InputController : MonoBehaviour, IMouseCaptureEvent
+    internal sealed class InputController : MonoBehaviour
     {
         #region Fields
         /// <summary>

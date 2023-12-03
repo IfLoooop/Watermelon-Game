@@ -1,3 +1,4 @@
+using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using Steamworks;
 using TMPro;
@@ -29,20 +30,20 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <summary>
         /// Indicates whether this lobby will require a password
         /// </summary>
-        private bool requiresPassword;
+        private ProtectedBool requiresPassword;
         /// <summary>
         /// Indicates whether only friends are allowed to join
         /// </summary>
-        private bool isFriendsOnly;
+        private ProtectedBool isFriendsOnly;
 
         /// <summary>
         /// Will be true when the <see cref="LobbyCreateMenu"/> is closed, while waiting for a response from the steam backend to host a lobby
         /// </summary>
-        private bool cancelHostingAttempt;
+        private ProtectedBool cancelHostingAttempt;
         /// <summary>
         /// Will be true when <see cref="StartLobby"/> is called, is reset after the callback from the steam backend in <see cref="LobbyCreateAttempt"/>
         /// </summary>
-        private bool waitingForCallback;
+        private ProtectedBool waitingForCallback;
         #endregion
         
         #region Methods
@@ -65,6 +66,7 @@ namespace Watermelon_Game.Menus.Lobbies
             {
                 this.cancelHostingAttempt = true;
             }
+            this.EnableUI(true);
         }
 
         public override void ForceClose(bool _PlaySound)
@@ -79,6 +81,10 @@ namespace Watermelon_Game.Menus.Lobbies
         public void SetPassword(Toggle _Toggle)
         {
             this.requiresPassword = _Toggle.isOn;
+            if (this.requiresPassword)
+            {
+                this.friendsOnlyToggle.isOn = false;   
+            }
         }
 
         /// <summary>
@@ -88,6 +94,10 @@ namespace Watermelon_Game.Menus.Lobbies
         public void SetFriendsOnly(Toggle _Toggle)
         {
             this.isFriendsOnly = _Toggle.isOn;
+            if (this.isFriendsOnly)
+            {
+                this.passwordToggle.isOn = false;   
+            }
         }
 
         /// <summary>
@@ -110,7 +120,6 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <param name="_Reason">The reason (if failure)</param>
         private void LobbyCreateAttempt(bool _Failure, EResult _Reason)
         {
-            Debug.LogError($"[LobbyCreateMenu].LobbyCreateAttempt: Failure:{_Failure} | Reason:{_Reason} | CancelHostingAttempt:{this.cancelHostingAttempt}");
             this.waitingForCallback = false;
             base.KeepOpen = false;
 

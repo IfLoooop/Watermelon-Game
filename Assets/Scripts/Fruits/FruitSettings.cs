@@ -1,7 +1,6 @@
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using UnityEngine;
-using Watermelon_Game.Web;
 
 namespace Watermelon_Game.Fruits
 {
@@ -176,29 +175,29 @@ namespace Watermelon_Game.Fruits
         #endregion
 
         #region Methods
-        /// <summary>
-        /// Tries to set the values from the web settings
-        /// </summary>
-        public static void ApplyWebSettings()
-        {
-            var _callerType = typeof(FruitController);
-            WebSettings.TrySetValue(nameof(SpawnWeightModifier), ref spawnWeightModifier, _callerType);
-            WebSettings.TrySetValue(nameof(LowerIndexWeight), ref lowerIndexWeight, _callerType);
-            WebSettings.TrySetValue(nameof(HigherIndexWeight), ref higherIndexWeight, _callerType);
-            WebSettings.TrySetValue(nameof(SameIndexWeight), ref sameIndexWeight, _callerType);
-            WebSettings.TrySetValue(nameof(GoldenFruitChance), ref goldenFruitChance, _callerType);
-            WebSettings.TrySetValue(nameof(MassMultiplier), ref massMultiplier, _callerType);
-            WebSettings.TrySetValue(nameof(GrapeSpawnWeight), ref grapeSpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(CherrySpawnWeight), ref cherrySpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(StrawberrySpawnWeight), ref strawberrySpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(LemonSpawnWeight), ref lemonSpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(OrangeSpawnWeight), ref orangeSpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(AppleSpawnWeight), ref appleSpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(PearSpawnWeight), ref pearSpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(PineappleSpawnWeight), ref pineappleSpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(HoneymelonSpawnWeight), ref honeymelonSpawnWeight, _callerType);
-            WebSettings.TrySetValue(nameof(WatermelonSpawnWeight), ref watermelonSpawnWeight, _callerType);
-        }
+        // /// <summary>
+        // /// Tries to set the values from the web settings
+        // /// </summary>
+        // public static void ApplyWebSettings()
+        // {
+        //     var _callerType = typeof(FruitController);
+        //     WebSettings.TrySetValue(nameof(SpawnWeightModifier), ref spawnWeightModifier, _callerType);
+        //     WebSettings.TrySetValue(nameof(LowerIndexWeight), ref lowerIndexWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(HigherIndexWeight), ref higherIndexWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(SameIndexWeight), ref sameIndexWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(GoldenFruitChance), ref goldenFruitChance, _callerType);
+        //     WebSettings.TrySetValue(nameof(MassMultiplier), ref massMultiplier, _callerType);
+        //     WebSettings.TrySetValue(nameof(GrapeSpawnWeight), ref grapeSpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(CherrySpawnWeight), ref cherrySpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(StrawberrySpawnWeight), ref strawberrySpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(LemonSpawnWeight), ref lemonSpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(OrangeSpawnWeight), ref orangeSpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(AppleSpawnWeight), ref appleSpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(PearSpawnWeight), ref pearSpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(PineappleSpawnWeight), ref pineappleSpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(HoneymelonSpawnWeight), ref honeymelonSpawnWeight, _callerType);
+        //     WebSettings.TrySetValue(nameof(WatermelonSpawnWeight), ref watermelonSpawnWeight, _callerType);
+        // }
 
         /// <summary>
         /// Initializes all needed values

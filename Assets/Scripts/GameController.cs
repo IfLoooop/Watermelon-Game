@@ -7,7 +7,7 @@ using UnityEngine;
 using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
-using Watermelon_Game.Menus.MainMenus;
+using Watermelon_Game.Menus.Lobbies;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
@@ -24,16 +24,17 @@ namespace Watermelon_Game
         [Tooltip("All container in the scene")]
         [SceneObjectsOnly]
         [SerializeField] private List<ContainerBounds> containers;
-
-#if UNITY_EDITOR
-        [Header("Debug")]
-        [Tooltip("The currently active GameMode")]
-        // ReSharper disable once NotAccessedField.Local
-        [SerializeField][ReadOnly] private GameMode currentGameMode;
-#endif
         #endregion
         
         #region Fields
+        /// <summary>
+        /// Indicates whether the <see cref="GameMode"/> should be switched on the next <see cref="ResetGame"/>
+        /// </summary>
+        private ProtectedBool switchGameMode;
+        /// <summary>
+        /// Indicates that the switch was not initiated by the menu buttons (e.g. friend invite/join)
+        /// </summary>
+        private ProtectedBool gameModeWasForced;
         /// <summary>
         /// <see cref="ResetReason"/>
         /// </summary>
@@ -42,25 +43,39 @@ namespace Watermelon_Game
         
         #region Properties
         /// <summary>
+        /// The currently active GameMode
+        /// </summary>
+        [ShowInInspector] public static GameMode CurrentGameMode { get; private set; } = GameMode.SinglePlayer;
+        /// <summary>
         /// <see cref="containers"/>
         /// </summary>
         public static List<ContainerBounds> Containers => Instance.containers;
         /// <summary>
         /// Indicates whether a game is currently running or over
         /// </summary>
-        public static bool ActiveGame { get; private set; }
+        public static ProtectedBool ActiveGame { get; private set; }
         /// <summary>
         /// Timestamp in seconds, when the currently active game was started -> <see cref="Time"/>.<see cref="Time.time"/> <br/>
         /// <i>Is reset on every <see cref="GameController"/>.<see cref="GameController.StartGame"/></i>
         /// </summary>
         public static ProtectedFloat CurrentGameTimeStamp { get; private set; }
         /// <summary>
+        /// The steam id of the player that lost the game
+        /// </summary>
+        public static ProtectedUInt64 LoosingPlayer { get; private set; }
+        /// <summary>
         /// Will be true when the application is about to be closed
         /// </summary>
-        public static bool IsApplicationQuitting { get; private set; }
+        public static ProtectedBool IsApplicationQuitting { get; private set; }
         #endregion
 
         #region Events
+        /// <summary>
+        /// Is called everytime the game mode is switched to <see cref="GameMode.SinglePlayer"/> or <see cref="GameMode.MultiPlayer"/> <br/>
+        /// <b>Parameter:</b> The <see cref="GameMode"/> that is being switched to <br/>
+        /// <b>Parameter:</b> <see cref="gameModeWasForced"/>
+        /// </summary>
+        public static event Action<GameMode, bool> OnGameModeTransition;
         /// <summary>
         /// Is called every time a game starts
         /// </summary>
@@ -87,41 +102,60 @@ namespace Watermelon_Game
         
         private void OnEnable()
         {
+            OnResetGameFinished += this.SwitchGameMode;
             CustomNetworkManager.OnConnectionStopped += this.ConnectionStopped;
             MaxHeight.OnGameOver += this.GameOver;
-            MenuController.OnManualRestart += this.ManualRestart;
-            MenuController.OnRestartGame += StartGame;
+            MenuController.OnManualRestart += ManualRestart;
+            LobbyHostMenu.OnHostLeaveLobby += ManualRestart;
             Application.quitting += this.ApplicationIsQuitting;
-
-#if UNITY_EDITOR
-            MainMenuBase.OnGameModeTransition += SetCurrentGameMode_EDITOR;
-#endif
         }
 
         private void OnDisable()
         {
+            OnResetGameFinished -= this.SwitchGameMode;
             CustomNetworkManager.OnConnectionStopped -= this.ConnectionStopped;
             MaxHeight.OnGameOver -= this.GameOver;
-            MenuController.OnManualRestart -= this.ManualRestart;
-            MenuController.OnRestartGame -= StartGame;
+            MenuController.OnManualRestart -= ManualRestart;
+            LobbyHostMenu.OnHostLeaveLobby -= ManualRestart;
             Application.quitting -= this.ApplicationIsQuitting;
-            
-#if UNITY_EDITOR
-            MainMenuBase.OnGameModeTransition -= SetCurrentGameMode_EDITOR;
-#endif
         }
 
-#if UNITY_EDITOR
         /// <summary>
-        /// Sets <see cref="currentGameMode"/> to the given value <br/>
-        /// <i>Only for debug purposes in editor</i>
+        /// Switches the current <see cref="GameMode"/> to the given one
         /// </summary>
-        /// <param name="_GameMode">The <see cref="GameMode"/> to set <see cref="currentGameMode"/> to</param>
-        private void SetCurrentGameMode_EDITOR(GameMode _GameMode)
+        /// <param name="_GameMode">The <see cref="GameMode"/> to switch to</param>
+        /// <param name="_ForceSwitch"><see cref="gameModeWasForced"/></param>
+        public static void SwitchGameMode(GameMode _GameMode, bool _ForceSwitch = false)
         {
-            this.currentGameMode = _GameMode;
-        }  
-#endif
+            if (CurrentGameMode != _GameMode)
+            {
+                Instance.switchGameMode = true;
+                Instance.gameModeWasForced = _ForceSwitch;
+                CurrentGameMode = _GameMode;
+                Instance.ManualRestart();   
+            }
+            else
+            {
+                if (_ForceSwitch)
+                {
+                    Instance.ManualRestart();
+                    Instance.gameModeWasForced = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Invokes <see cref="OnGameModeTransition"/> when <see cref="switchGameMode"/> is true
+        /// </summary>
+        /// <param name="_ResetReason">Not needed here</param>
+        private void SwitchGameMode(ResetReason _ResetReason)
+        {
+            if (switchGameMode)
+            {
+                this.switchGameMode = false;
+                OnGameModeTransition?.Invoke(CurrentGameMode, this.gameModeWasForced);
+            }
+        }
         
         /// <summary>
         /// Starts the game
@@ -136,9 +170,10 @@ namespace Watermelon_Game
         /// <summary>
         /// <see cref="MaxHeight.OnGameOver"/>
         /// </summary>
-        /// <param name="_ConnectionId">The connection id of the client that lost</param>
-        private void GameOver(int _ConnectionId) // TODO: Use _ConnectionId
+        /// <param name="_SteamId">The steam id of the client that lost</param>
+        private void GameOver(ulong _SteamId)
         {
+            LoosingPlayer = _SteamId;
             this.resetReason = ResetReason.GameOver;
             this.StartCoroutine(this.ResetGame());
         }

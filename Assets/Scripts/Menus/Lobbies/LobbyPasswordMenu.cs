@@ -1,11 +1,14 @@
+using System;
 using System.Collections;
 using JetBrains.Annotations;
+using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Steamworks.NET;
+using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Menus.Lobbies
 {
@@ -36,7 +39,7 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <summary>
         /// The id of the lobby to join
         /// </summary>
-        private ulong lobbyId;
+        private ProtectedUInt64 lobbyId;
     
         /// <summary>
         /// Initial position of this <see cref="LobbyPasswordMenu"/>
@@ -52,7 +55,14 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <summary>
         /// Indicates whether this <see cref="LobbyPasswordMenu"/> is currently open or not
         /// </summary>
-        public bool IsOpen { get; private set; }
+        public ProtectedBool IsOpen { get; private set; }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// Called when the <see cref="LobbyPasswordMenu"/> is being closed
+        /// </summary>
+        public static event Action OnLobbyPasswordMenuClose;
         #endregion
         
         #region Methods
@@ -66,6 +76,8 @@ namespace Watermelon_Game.Menus.Lobbies
             this.lobbyId = _LobbyId;
             this.startPosition = base.transform.position;
             base.Open(null);
+            this.inputField.Select();
+            this.submitButton.interactable = true;
         }
         
         public override void Close(bool _PlaySound)
@@ -81,6 +93,7 @@ namespace Watermelon_Game.Menus.Lobbies
             
             base.Close(_PlaySound);
             this.SwitchContentType(TMP_InputField.ContentType.Standard);
+            OnLobbyPasswordMenuClose?.Invoke();
         }
         
         /// <summary>
@@ -116,10 +129,11 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <param name="_SubmitThroughButton">Indicates that the button was used to submit</param>
         public void Submit(bool _SubmitThroughButton)
         {
-            if (_SubmitThroughButton || Input.GetKeyDown(KeyCode.Return))
+            if (_SubmitThroughButton || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
             {
                 this.submitButton.interactable = false;
-                SteamLobby.JoinLobby(this.lobbyId, this.inputField.text);
+                SteamLobby.JoinLobbyAsync(this.lobbyId, this.inputField.text);
+                // TODO: Show waiting indicator
             }
         }
         

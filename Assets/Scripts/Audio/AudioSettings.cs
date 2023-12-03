@@ -92,12 +92,12 @@ namespace Watermelon_Game.Audio
             
             this.LoadSettings();
         }
-
-        private void OnDestroy()
+        
+        private void OnApplicationQuit()
         {
             this.SaveSettings();
         }
-        
+
         /// <summary>
         /// <see cref="SteamLeaderboard.Init"/>
         /// </summary>
@@ -130,7 +130,7 @@ namespace Watermelon_Game.Audio
         /// <summary>
         /// Flips the current state of <see cref="isMuted"/>
         /// </summary>
-        public static void FlipMuteState() // bool _IsSetFromButton = true
+        public static void FlipMuteState()
         {
             instance.isMuted = !instance.isMuted;
             instance.SetBGM();

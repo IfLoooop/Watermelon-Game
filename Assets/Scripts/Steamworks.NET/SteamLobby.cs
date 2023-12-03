@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using JetBrains.Annotations;
 using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using Steamworks;
 using UnityEngine;
+using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.Lobbies;
 using Watermelon_Game.Networking;
+using Watermelon_Game.Utility;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Steamworks.NET
@@ -17,9 +22,10 @@ namespace Watermelon_Game.Steamworks.NET
     {
         #region Constants
         // Keys for LobbyData
-        private const string NETWORK_ADDRESS = "networkAddress";
+        public const string NETWORK_ADDRESS = "networkAddress";
         private const string NAME = "name";
-        private const string PASSWORD = "password";
+        public const string PASSWORD = "password";
+        public const string FRIENDS_ONLY = "friendsOnly";
         /// <summary>
         /// Maximum lenght of the messages for <see cref="KickPlayer"/> and <see cref="OnLobbyChatMessage"/>
         /// </summary>
@@ -32,13 +38,21 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private static ProtectedBool passwordChangeRequested;
         /// <summary>
+        /// Will be true if the first password attempt was wrong and a request has been made to receive the new lobby password
+        /// </summary>
+        private static readonly WaitCondition waitingForLobbyPassword = new();
+        /// <summary>
         /// Indicates how many user information request have been made, e.g. how often the <see cref="GetUserName"/>-Method should be allowed to run. <br/>
         /// <i>
         /// Sometimes the <see cref="onPersonaStateChange"/>-Callback is received without manually requesting it. <br/>
         /// A value less than 1 prevents the <see cref="GetUserName"/>-Method to run
         /// </i>
         /// </summary>
-        private static int userInformationRequested;
+        private static ProtectedInt32 userInformationRequested;
+        /// <summary>
+        /// Will be set when a user tries to join a lobby from their friends list or from an invite <see cref="OnGameLobbyJoinRequested"/>, otherwise null
+        /// </summary>
+        private static ProtectedUInt64? gameLobbyJoinRequested;
         #endregion
         
         #region Properties
@@ -50,17 +64,22 @@ namespace Watermelon_Game.Steamworks.NET
         /// <summary>
         /// Id of the lobby, the client is currently in
         /// </summary>
-        public static CSteamID? CurrentLobbyId { get; private set; }
+        [Title("Debug", TitleAlignment = TitleAlignments.Centered)]
+        [ShowInInspector][CanBeNull][ReadOnly] public static DebugField<ProtectedUInt64> CurrentLobbyId { get; private set; }
         /// <summary>
         /// Indicates whether the local client is currently the host of the lobby or not <br/>
         /// <i>Only valid if <see cref="CurrentLobbyId"/> is not null</i>
         /// </summary>
-        public static ProtectedBool IsHost { get; private set; }
+        [ShowInInspector][ReadOnly] public static DebugField<ProtectedBool> IsHost { get; } = new(false);
         /// <summary>
         /// The password set by the host of a lobby <br/>
         /// <i>Must not be longer than 256 characters</i>
         /// </summary>
-        public static ProtectedString HostPassword { get; private set; }
+        [ShowInInspector][ReadOnly] public static DebugField<ProtectedString> HostPassword { get; } = new(string.Empty);
+        /// <summary>
+        /// Will be true when a game is started as a host -> <see cref="IsHost"/> and it was started with <see cref="ELobbyType"/>: <see cref="ELobbyType.k_ELobbyTypeFriendsOnly"/>
+        /// </summary>
+        [ShowInInspector][ReadOnly] public static DebugField<ProtectedBool> FriendsOnly { get; } = new(false);
         #endregion
         
         #region Callbacks
@@ -81,6 +100,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private static readonly CallResult<LobbyEnter_t> onLobbyEnterAttempt = new();
 
+        // ReSharper disable NotAccessedField.Local
         /// <summary>
         /// Called when a user tries to join a lobby from their friend list or from an invite <br/>
         /// <i>https://partner.steamgames.com/doc/api/ISteamFriends#GameLobbyJoinRequested_t</i>
@@ -113,6 +133,7 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         private static Callback<LobbyChatMsg_t> onLobbyChatMessage;
         #endregion
+        // ReSharper restore NotAccessedField.Local
 
         #region Events
         /// <summary>
@@ -126,9 +147,10 @@ namespace Watermelon_Game.Steamworks.NET
         /// </summary>
         public static event Action OnLobbyEntriesProcessed;
         /// <summary>
-        /// Is called whenever the data of a lobby is changed/updated
+        /// Is called whenever the data of a lobby is changed/updated <br/>
+        /// <b>Parameter:</b> The <see cref="LobbyDataUpdate_t"/> callback
         /// </summary>
-        public static event Action OnLobbyDataUpdated;
+        public static event Action<LobbyDataUpdate_t> OnLobbyDataUpdated;
         /// <summary>
         /// Is called on the host, when a client joins/leaves the lobby <br/>
         /// <b>Parameter1:</b> The steam id of the client <br/>
@@ -144,7 +166,19 @@ namespace Watermelon_Game.Steamworks.NET
         {
             Init();
         }
-        
+
+        private void OnEnable()
+        {
+            LobbyPasswordMenu.OnLobbyPasswordMenuClose += PasswordMenuClosed;
+            GameController.OnResetGameFinished += LobbyJoinAccepted;
+        }
+
+        private void OnDisable()
+        {
+            LobbyPasswordMenu.OnLobbyPasswordMenuClose += PasswordMenuClosed;
+            GameController.OnResetGameFinished += LobbyJoinAccepted;
+        }
+
         /// <summary>
         /// Initializes all needed values
         /// </summary>
@@ -176,9 +210,10 @@ namespace Watermelon_Game.Steamworks.NET
                 return;
             }
             
-            HostPassword = _RequiresPassword ? Random.Range(1000, 9999).ToString() : string.Empty;
-            var _lobbyType = _IsFriendsOnly ? ELobbyType.k_ELobbyTypeFriendsOnly : ELobbyType.k_ELobbyTypePublic;
-            var _apiCall = SteamMatchmaking.CreateLobby(_lobbyType, CustomNetworkManager.MaxConnection);
+            HostPassword.Set(_RequiresPassword ? Random.Range(1000, 9999).ToString() : string.Empty);
+            FriendsOnly.Set(_IsFriendsOnly);
+            var _lobbyType = FriendsOnly.Value ? ELobbyType.k_ELobbyTypeFriendsOnly : ELobbyType.k_ELobbyTypePublic;
+            var _apiCall = SteamMatchmaking.CreateLobby(_lobbyType, CustomNetworkManager.MaxConnections);
             onLobbyCreated.Set(_apiCall, OnLobbyCreated);
         }
         
@@ -193,17 +228,19 @@ namespace Watermelon_Game.Steamworks.NET
             Debug.LogError($"[{nameof(SteamLobby)}].{nameof(OnLobbyCreated)} Failure:{_Failure} | Result:{_Callback.m_eResult} | LobbyID{_Callback.m_ulSteamIDLobby} | SteamID:{SteamManager.SteamID.m_SteamID}");
 #endif
             
-            CurrentLobbyId = new CSteamID(_Callback.m_ulSteamIDLobby);
+            CurrentLobbyId = new DebugField<ProtectedUInt64>(_Callback.m_ulSteamIDLobby);
+            var _cSteamID = new CSteamID(CurrentLobbyId.Value.Value);
             
             if (!_Failure)
             {
-                IsHost = true;
-                SteamMatchmaking.SetLobbyData(CurrentLobbyId.Value, NETWORK_ADDRESS, SteamManager.SteamID.m_SteamID.ToString());
-                SteamMatchmaking.SetLobbyData(CurrentLobbyId.Value, NAME, SteamFriends.GetPersonaName());
+                IsHost.Set(true);
+                SteamMatchmaking.SetLobbyData(_cSteamID, NETWORK_ADDRESS, SteamManager.SteamID.m_SteamID.ToString());
+                SteamMatchmaking.SetLobbyData(_cSteamID, NAME, SteamFriends.GetPersonaName());
+                SteamMatchmaking.SetLobbyData(_cSteamID, FRIENDS_ONLY, FriendsOnly.Value.Value.ToString());
 
-                if (!string.IsNullOrWhiteSpace(HostPassword))
+                if (!string.IsNullOrWhiteSpace(HostPassword.Value.Value))
                 {
-                    SteamMatchmaking.SetLobbyData(CurrentLobbyId.Value, PASSWORD, HostPassword);
+                    SteamMatchmaking.SetLobbyData(_cSteamID, PASSWORD, HostPassword.Value.Value);
                 }
             }
             else
@@ -221,10 +258,10 @@ namespace Watermelon_Game.Steamworks.NET
         /// <returns>Indicates whether the password change was a success or not</returns>
         public static bool RefreshPassword()
         {
-            if (CurrentLobbyId != null && IsHost && !string.IsNullOrWhiteSpace(HostPassword))
+            if (CurrentLobbyId != null && IsHost.Value.Value && !string.IsNullOrWhiteSpace(HostPassword.Value.Value))
             {
                 passwordChangeRequested = true;
-                return SteamMatchmaking.SetLobbyData(CurrentLobbyId.Value, PASSWORD, Random.Range(1000, 9999).ToString());
+                return SteamMatchmaking.SetLobbyData(new CSteamID(CurrentLobbyId.Value.Value), PASSWORD, Random.Range(1000, 9999).ToString());
             }
 
             return false;
@@ -284,12 +321,45 @@ namespace Watermelon_Game.Steamworks.NET
         }
         
         /// <summary>
+        /// Resets the wait condition of <see cref="waitingForLobbyPassword"/> when the <see cref="LobbyPasswordMenu"/> is closed
+        /// </summary>
+        private static void PasswordMenuClosed()
+        {
+             waitingForLobbyPassword.Condition = false;
+        }
+
+        /// <summary>
+        /// Requests and awaits the lobby data for the given lobby <br/>
+        /// <i>Data will be received in a <see cref="LobbyDataUpdate_t"/>-<see cref="Callback{T}"/></i>
+        /// </summary>
+        /// <param name="_LobbyId">The id of the lobby to request the data of</param>
+        /// <param name="_WaitCondition">The condition to wait for until the data arrives</param>
+        /// <param name="_Await">Whether to wait to completion or just make the request</param>
+        /// <returns>False when not connected to steam</returns>
+        public static async Task<bool> RequestLobbyDataAsync(CSteamID _LobbyId, WaitCondition _WaitCondition, bool _Await = true)
+        {
+            if (SteamMatchmaking.RequestLobbyData(_LobbyId))
+            {
+                _WaitCondition.Condition = _Await;
+                await Task.Run(() =>
+                {
+                    while (_WaitCondition.Condition) { }
+                });
+
+                return true;
+            }
+
+            return false;
+        }
+        
+        /// <summary>
         /// Call this to join a lobby <br/>
         /// <i>https://partner.steamgames.com/doc/api/ISteamMatchmaking#JoinLobby</i>
         /// </summary>
         /// <param name="_LobbyId">Id of the lobby to join</param>
         /// <param name="_Password">Optional password for the lobby</param>
-        public static void JoinLobby(ulong _LobbyId, string _Password = "")
+        /// <param name="_ForceJoin">Skips the password check if true</param>
+        public static async void JoinLobbyAsync(ulong _LobbyId, string _Password = "", bool _ForceJoin = false)
         {
             if (!CustomNetworkManager.AllowSteamLobbyJoinRequest())
             {
@@ -298,7 +368,15 @@ namespace Watermelon_Game.Steamworks.NET
             
             var _lobbyId = new CSteamID(_LobbyId);
             var _validLobby = _lobbyId.IsValid() && _lobbyId.IsLobby();
-            var _correctPassword = SteamMatchmaking.GetLobbyData(_lobbyId, PASSWORD) == _Password;
+            var _correctPassword = SteamMatchmaking.GetLobbyData(_lobbyId, PASSWORD) == _Password || _ForceJoin;
+
+            if (!_correctPassword)
+            {
+                if (await RequestLobbyDataAsync(_lobbyId, waitingForLobbyPassword))
+                {
+                    _correctPassword = SteamMatchmaking.GetLobbyData(_lobbyId, PASSWORD) == _Password;
+                }
+            }
             
             // If no password is set for the lobby, "GetLobbyData()" will return string.Empty
             if (_validLobby && _correctPassword)
@@ -309,7 +387,7 @@ namespace Watermelon_Game.Steamworks.NET
             else
             {
 #if DEBUG ||DEVELOPMENT_BUILD
-                Debug.LogError($"[{nameof(SteamLobby)}].{nameof(JoinLobby)} LobbyID:{_LobbyId} | ValidID:{_lobbyId.IsValid()} | IsLobby:{_lobbyId.IsLobby()} | EnteredPassword:{_Password} | HostPassword:{SteamMatchmaking.GetLobbyData(_lobbyId, PASSWORD)}");
+                Debug.LogError($"[{nameof(SteamLobby)}].{nameof(JoinLobbyAsync)} LobbyID:{_LobbyId} | ValidID:{_lobbyId.IsValid()} | IsLobby:{_lobbyId.IsLobby()} | EnteredPassword:{_Password} | HostPassword:{SteamMatchmaking.GetLobbyData(_lobbyId, PASSWORD)}");
 #endif
                 CustomNetworkManager.SteamLobbyEnterAttempt(true);
             }
@@ -327,8 +405,8 @@ namespace Watermelon_Game.Steamworks.NET
             Debug.LogError($"[{nameof(SteamLobby)}].{nameof(OnLobbyEnterAttempt)} Failure:{_Failure} | ChatRoomEnterResponse:{(EChatRoomEnterResponse)_Callback.m_EChatRoomEnterResponse} | LobbyID:{_Callback.m_ulSteamIDLobby} | Blocked:{_Callback.m_bLocked} | SteamID:{SteamManager.SteamID.m_SteamID}");
 #endif
             
-            CurrentLobbyId = new CSteamID(_Callback.m_ulSteamIDLobby);
-            var _hostAddress = SteamMatchmaking.GetLobbyData(CurrentLobbyId.Value, NETWORK_ADDRESS);
+            CurrentLobbyId = new DebugField<ProtectedUInt64>(_Callback.m_ulSteamIDLobby);
+            var _hostAddress = SteamMatchmaking.GetLobbyData(new CSteamID(_Callback.m_ulSteamIDLobby), NETWORK_ADDRESS);
             
             if (_Failure)
             {
@@ -347,12 +425,13 @@ namespace Watermelon_Game.Steamworks.NET
         {
             if (CurrentLobbyId != null)
             {
-                SteamMatchmaking.LeaveLobby(CurrentLobbyId.Value);
+                SteamMatchmaking.LeaveLobby(new CSteamID(CurrentLobbyId.Value.Value));
             }
             
             CurrentLobbyId = null;
-            IsHost = false;
-            HostPassword = string.Empty;
+            IsHost.Set(false);
+            HostPassword.Set(string.Empty);
+            FriendsOnly.Set(false);
         }
 
         /// <summary>
@@ -362,7 +441,7 @@ namespace Watermelon_Game.Steamworks.NET
         {
             var _isHost = IsHost;
             LeaveLobby();
-            CustomNetworkManager.DisconnectFromLobby(_isHost);
+            CustomNetworkManager.DisconnectFromLobby(_isHost.Value.Value);
         }
         
         /// <summary>
@@ -374,12 +453,13 @@ namespace Watermelon_Game.Steamworks.NET
 #if DEBUG || DEVELOPMENT_BUILD
             Debug.LogError($"[{nameof(SteamLobby)}].{nameof(OnGameLobbyJoinRequested)} LobbyID:{_Callback.m_steamIDLobby.m_SteamID} | FriendID:{_Callback.m_steamIDFriend.m_SteamID} | SteamID:{SteamManager.SteamID.m_SteamID}");
 #endif
-            
-            
-            SteamMatchmaking.JoinLobby(_Callback.m_steamIDLobby);
-            // TODO: Set game to multiplayer mode -> Check if password is needed and open prompt -> Call "JoinLobby();"
+            if (gameLobbyJoinRequested == null && !CustomNetworkManager.AttemptingToJoinALobby)
+            {
+                gameLobbyJoinRequested = _Callback.m_steamIDLobby.m_SteamID;
+                GameController.SwitchGameMode(GameMode.MultiPlayer, true);
+            }
         }
-
+        
         /// <summary>
         /// <see cref="onGameRichPresenceJoinRequested"/>
         /// </summary>
@@ -389,16 +469,31 @@ namespace Watermelon_Game.Steamworks.NET
 #if DEBUG || DEVELOPMENT_BUILD
             Debug.LogError($"[{nameof(SteamLobby)}].{nameof(OnGameRichPresenceJoinRequested)} FriendID:{_Callback.m_steamIDFriend.m_SteamID} | ConnectKeyValue:{_Callback.m_rgchConnect} | SteamID:{SteamManager.SteamID.m_SteamID}");
 #endif
-            SteamMatchmaking.JoinLobby(_Callback.m_steamIDFriend);
-            // TODO: Set game to multiplayer mode -> Check if password is needed and open prompt -> Call "JoinLobby();"
+            if (gameLobbyJoinRequested == null && !CustomNetworkManager.AttemptingToJoinALobby)
+            {
+                gameLobbyJoinRequested = _Callback.m_steamIDFriend.m_SteamID;
+                GameController.SwitchGameMode(GameMode.MultiPlayer, true);
+            }
             
-            // // https://partner.steamgames.com/doc/api/ISteamApps#GetLaunchCommandLine
-            // // https://partner.steamgames.com/doc/api/ISteamApps#NewUrlLaunchParameters_t
-            // const int COMMAND_LINE_SIZE = 4000; // TODO: Maybe use here
-            // var _length = SteamApps.GetLaunchCommandLine(out var _commandLineArguments, COMMAND_LINE_SIZE);
-            // // https://partner.steamgames.com/doc/api/ISteamApps#GetLaunchQueryParam
-            // // https://partner.steamgames.com/doc/api/ISteamApps#NewLaunchQueryParameters_t
-            // SteamApps.GetLaunchQueryParam("key");
+            // TODO
+            // https://partner.steamgames.com/doc/api/ISteamApps#GetLaunchCommandLine
+            // https://partner.steamgames.com/doc/api/ISteamApps#NewUrlLaunchParameters_t
+            // https://partner.steamgames.com/doc/api/ISteamApps#GetLaunchQueryParam
+            // https://partner.steamgames.com/doc/api/ISteamApps#NewLaunchQueryParameters_t
+        }
+        
+        /// <summary>
+        /// Joins the lobby with id <see cref="gameLobbyJoinRequested"/>
+        /// </summary>
+        /// <param name="_ResetReason"></param>
+        private static void LobbyJoinAccepted(ResetReason _ResetReason)
+        {
+            if (gameLobbyJoinRequested != null)
+            {
+                MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.LobbyJoinMenu);
+                JoinLobbyAsync(gameLobbyJoinRequested.Value, string.Empty);
+                gameLobbyJoinRequested = null;
+            }
         }
         
         /// <summary>
@@ -414,17 +509,21 @@ namespace Watermelon_Game.Steamworks.NET
             // If m_ulSteamIDMember == m_ulSteamIDLobby, then lobby meta data has been updated and "SteamMatchmaking.GetLobbyData()" should be used
             if (_Callback.m_ulSteamIDMember == _Callback.m_ulSteamIDLobby)
             {
-                // Should be true after successfully hosting/joining a lobby
+                // Will be 0/false, when the id for which the data has been requested doesn't exist
                 if (_Callback.m_bSuccess == 1)
                 {
                     if (passwordChangeRequested)
                     {
                         passwordChangeRequested = false;
-                        HostPassword = SteamMatchmaking.GetLobbyData(new CSteamID(_Callback.m_ulSteamIDLobby), PASSWORD);
+                        HostPassword.Set(SteamMatchmaking.GetLobbyData(new CSteamID(_Callback.m_ulSteamIDLobby), PASSWORD));
                     }
-                    
-                    OnLobbyDataUpdated?.Invoke();    
+                    if (waitingForLobbyPassword.Condition)
+                    {
+                        waitingForLobbyPassword.Condition = false;
+                    }
                 }
+                
+                OnLobbyDataUpdated?.Invoke(_Callback); 
             }
             // Member meta data has been updated an "SteamMatchmaking.GetLobbyMemberData()" should be used
             else
@@ -442,7 +541,7 @@ namespace Watermelon_Game.Steamworks.NET
 #if DEBUG || DEVELOPMENT_BUILD
             Debug.LogError($"[{nameof(SteamLobby)}].{nameof(OnLobbyChatUpdate)} LobbyID:{_Callback.m_ulSteamIDLobby} | UserID:{_Callback.m_ulSteamIDUserChanged} | CallerID:{_Callback.m_ulSteamIDMakingChange} | StateChange:{(EChatMemberStateChange)_Callback.m_rgfChatMemberStateChange} | SteamID:{SteamManager.SteamID.m_SteamID}");
 #endif
-            if (IsHost)
+            if (IsHost.Value.Value)
             {
                 userInformationRequested++;
                 var _username = string.Empty;
@@ -455,6 +554,14 @@ namespace Watermelon_Game.Steamworks.NET
                 }
                     
                 OnLobbyChatUpdated?.Invoke(_Callback.m_ulSteamIDUserChanged, _username, (EChatMemberStateChange)_Callback.m_rgfChatMemberStateChange);
+
+                // if (FriendsOnly) // TODO: Maybe not needed
+                // {
+                //     if (!SteamFriends.HasFriend(new CSteamID(_Callback.m_ulSteamIDUserChanged), EFriendFlags.k_EFriendFlagImmediate))
+                //     {
+                //         KickPlayer(new CSteamID(_Callback.m_ulSteamIDUserChanged));
+                //     }
+                // }
             }
         }
 
@@ -514,7 +621,7 @@ namespace Watermelon_Game.Steamworks.NET
             }
             
             var _body = System.Text.Encoding.UTF8.GetBytes(_SteamID.m_SteamID.ToString());
-            SteamMatchmaking.SendLobbyChatMsg(CurrentLobbyId!.Value, _body, MAX_CHAT_MESSAGE_LENGHT);
+            SteamMatchmaking.SendLobbyChatMsg(new CSteamID(CurrentLobbyId.Value.Value), _body, MAX_CHAT_MESSAGE_LENGHT);
 
 #if DEBUG || DEVELOPMENT_BUILD
             Debug.LogError($"[{nameof(SteamLobby)}].{nameof(KickPlayer)} IDToKick:{_SteamID.m_SteamID} | SenderID:{SteamManager.SteamID.m_SteamID} MessageSend: {string.Join(string.Empty, _body.Select(_Byte => _Byte.ToString()))}");

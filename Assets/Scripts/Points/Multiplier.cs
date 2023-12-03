@@ -84,8 +84,7 @@ namespace Watermelon_Game.Points
             
             var _newMultiplier = ++this.CurrentMultiplier;
             this.SetMultiplier(_newMultiplier);
-
-            this.gameObject.SetActive(true);
+            
             this.popup.Play();
             
             if (this.multiplierCoroutine == null)

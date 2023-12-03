@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using UnityEngine;
 
 namespace Watermelon_Game.Utility
@@ -13,10 +10,6 @@ namespace Watermelon_Game.Utility
     internal static class ExceptionLogger
     {
         #region Constants
-        /// <summary>
-        /// Name of the directory, the .txt file is in
-        /// </summary>
-        private const string DIRECTORY_NAME = "Error Logs";
         /// <summary>
         /// Separator between each log entry
         /// </summary>
@@ -36,24 +29,6 @@ namespace Watermelon_Game.Utility
         /// <see cref="StreamWriter"/>
         /// </summary>
         private static readonly StreamWriter streamWriter;
-
-#if (!DEBUG && !DEVELOPMENT_BUILD) || UNITY_EDITOR
-        /// <summary>
-        /// Message from <see cref="Watermelon_Game.Steamworks.NET.SteamManager"/>
-        /// </summary>
-        private const string STEAM_MANAGER_INITIALIZATION_FAILED = "[Steamworks.NET] SteamAPI_Init() failed. Refer to Valve's documentation or the comment above this line for more information.";
-        
-        /// <summary>
-        /// Messages that should be ignored
-        /// </summary>
-        private static readonly ReadOnlyCollection<string> ignore = new
-        (
-            new List<string>
-            {
-                //STEAM_MANAGER_INITIALIZATION_FAILED // TODO: Check if this should be logged in build
-            }
-        );
-#endif
         #endregion
 
         #region Constructor
@@ -63,18 +38,10 @@ namespace Watermelon_Game.Utility
             {
                 // Will be the "Assets"-Folder in Editor
                 var _directoryPath = Application.dataPath;
-
 #if UNITY_EDITOR
                 _directoryPath = Directory.GetParent(_directoryPath)!.FullName;
 #endif
-
-                _directoryPath = Path.Combine(_directoryPath, DIRECTORY_NAME);
-                Directory.CreateDirectory(_directoryPath);
-
-                var _timeStamp = DateTime.Now.ToString(@"dd.MM.yyyy hh\hmm\mss\s");
-                var _fileName = string.Concat(_timeStamp, ".txt");
-            
-                filePath = Path.Combine(_directoryPath, _fileName);
+                filePath = Path.Combine(_directoryPath, "Error Log.txt");
                 fileStream = new FileStream(filePath, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
                 streamWriter = new StreamWriter(fileStream);
             }
@@ -109,7 +76,7 @@ namespace Watermelon_Game.Utility
 #endif
 
 #if (!DEBUG && !DEVELOPMENT_BUILD) || UNITY_EDITOR
-            if (_LogType == LogType.Log || ignore.Any(_Condition.Contains))
+            if (_LogType == LogType.Log)
             {
                 return;
             }

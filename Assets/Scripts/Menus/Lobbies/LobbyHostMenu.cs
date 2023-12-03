@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
 using Steamworks;
 using TMPro;
@@ -16,10 +17,14 @@ namespace Watermelon_Game.Menus.Lobbies
     internal sealed class LobbyHostMenu : MenuBase
     {
         #region Inspector Fields
+        [Tooltip("Animation for the lobby id")]
+        [PropertyOrder(1)][SerializeField] private Animation lobbyIdPopup;
         [Tooltip("Parent transform for all lobby member prefabs")]
         [PropertyOrder(1)][SerializeField] private Transform playerList;
         [Tooltip("Prefab to instantiate for each lobby member")]
         [PropertyOrder(1)][SerializeField] private LobbyMember lobbyMemberPrefab;
+        [Tooltip("Displays the lobby id")]
+        [PropertyOrder(1)][SerializeField] private TextMeshProUGUI lobbyId;
         [Tooltip("Displays the password")]
         [PropertyOrder(1)][SerializeField] private TextMeshProUGUI password;
         [Tooltip("Reference to the refresh button")]
@@ -40,11 +45,11 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <summary>
         /// Indicates whether a password change has been requested and is being waited for
         /// </summary>
-        private bool passwordChangeRequested;
+        private ProtectedBool passwordChangeRequested;
         /// <summary>
         /// Indicates if the password is currently being replaced with '*' characters
         /// </summary>
-        private bool isPasswordHidden = true;
+        private ProtectedBool isPasswordHidden = true;
         /// <summary>
         /// Content for <see cref="password"/> while it is hidden
         /// </summary>
@@ -56,6 +61,13 @@ namespace Watermelon_Game.Menus.Lobbies
         private readonly List<LobbyMember> lobbyMembers = new();
         #endregion
 
+        #region Properties
+        /// <summary>
+        /// <see cref="lobbyMembers"/>
+        /// </summary>
+        public static List<LobbyMember> LobbyMembers => instance.lobbyMembers;
+        #endregion
+        
         #region Events
         /// <summary>
         /// Is called when a host leaves their own lobby <br/>
@@ -67,24 +79,29 @@ namespace Watermelon_Game.Menus.Lobbies
         #region Methods
         private void Awake()
         {
+            if (instance != null)
+            {
+                return;
+            }
+            
             instance = this;
         }
 
         private void OnEnable()
         {
-            SteamLobby.OnLobbyChatUpdated += AdjustLobbyMembers;
-            SteamLobby.OnLobbyDataUpdated += OnPasswordUpdate;
+            SteamLobby.OnLobbyChatUpdated += this.AdjustLobbyMembers;
+            SteamLobby.OnLobbyDataUpdated += this.OnPasswordUpdate;
         }
 
         private void OnDisable()
         {
-            SteamLobby.OnLobbyChatUpdated -= AdjustLobbyMembers;
-            SteamLobby.OnLobbyDataUpdated -= OnPasswordUpdate;
+            SteamLobby.OnLobbyChatUpdated -= this.AdjustLobbyMembers;
+            SteamLobby.OnLobbyDataUpdated -= this.OnPasswordUpdate;
         }
-
+        
         public override MenuBase Open(MenuBase _CurrentActiveMenu)
         {
-            if (string.IsNullOrWhiteSpace(SteamLobby.HostPassword))
+            if (string.IsNullOrWhiteSpace(SteamLobby.HostPassword.Value.Value))
             {
                 this.hideButton.interactable = false;
                 this.refreshButton.interactable = false;
@@ -104,12 +121,17 @@ namespace Watermelon_Game.Menus.Lobbies
         /// </summary>
         public static void AddHost()
         {
+            instance.lobbyId.text = SteamLobby.CurrentLobbyId!.Value.Value.ToString();
             instance.lobbyMembers.Add(Instantiate(instance.lobbyMemberPrefab, instance.playerList).SetMemberData(SteamManager.SteamID.m_SteamID, SteamFriends.GetPersonaName()));
-            foreach (var _lobbyMember in instance.lobbyMembers)
-            {
-                Debug.LogError(_lobbyMember.ToString());
-            }
-            instance.lobbyMembers[0].gameObject.SetActive(true);
+        }
+
+        /// <summary>
+        /// Call this when a player has successfully connected to a lobby
+        /// </summary>
+        /// <param name="_SteamId">The steam id of the player</param>
+        public static void PlayerConnected(ulong _SteamId)
+        {
+            instance.lobbyMembers.FirstOrDefault(_LobbyMember => _LobbyMember.SteamId == _SteamId)?.SetActive();
         }
         
         /// <summary>
@@ -127,7 +149,7 @@ namespace Watermelon_Game.Menus.Lobbies
                     case EChatMemberStateChange.k_EChatMemberStateChangeEntered:
                         if (this.lobbyMembers.All(_LobbyMembers => _LobbyMembers.SteamId != _SteamId))
                         {
-                            this.lobbyMembers.Add(Instantiate(this.lobbyMemberPrefab, this.playerList).SetMemberData(_SteamId, _Username));
+                            this.lobbyMembers.Add(Instantiate(this.lobbyMemberPrefab, this.playerList).SetMemberData(_SteamId, _Username, false));
                         }
                         break;
                     default:
@@ -147,6 +169,15 @@ namespace Watermelon_Game.Menus.Lobbies
                 }
             }
         }
+
+        /// <summary>
+        /// Copies the lobby id to the clipboard
+        /// </summary>
+        public void CopyLobbyId()
+        {
+            GUIUtility.systemCopyBuffer = this.lobbyId.text;
+            this.lobbyIdPopup.Play();
+        }
         
         /// <summary>
         /// Leaves and closes the current lobby
@@ -154,6 +185,8 @@ namespace Watermelon_Game.Menus.Lobbies
         public void LeaveLobby()
         {
             base.Close(true);
+            this.Hide();
+            this.password.text = string.Empty;
             this.lobbyMembers.ForEach(_LobbyMember => _LobbyMember.KickLobbyMember());
             // To destroy the LobbyMember GameObject of the host, "AdjustLobbyMembers()" won't be called for the host
             this.lobbyMembers.ForEach(_LobbyMember => Destroy(_LobbyMember.gameObject));
@@ -185,7 +218,7 @@ namespace Watermelon_Game.Menus.Lobbies
             else
             {
                 this.isPasswordHidden = false;
-                this.password.text = SteamLobby.HostPassword;
+                this.password.text = SteamLobby.HostPassword.Value.Value;
                 this.hideButton.image.sprite = this.hideSprite;
             }
         }
@@ -209,7 +242,8 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <summary>
         /// Makes the <see cref="refreshButton"/> <see cref="Button.interactable"/> again
         /// </summary>
-        private void OnPasswordUpdate()
+        /// <param name="_Callback">No needed here</param>
+        private void OnPasswordUpdate(LobbyDataUpdate_t _Callback)
         {
             if (passwordChangeRequested)
             {

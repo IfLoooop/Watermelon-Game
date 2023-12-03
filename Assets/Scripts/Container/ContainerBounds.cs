@@ -1,7 +1,7 @@
-using System;
 using JetBrains.Annotations;
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
+using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruit_Spawn;
@@ -20,6 +20,8 @@ namespace Watermelon_Game.Container
         [SerializeField] private RectTransform bounds;
         [Tooltip("Trigger of MaxHeight")]
         [SerializeField] private BoxCollider2D maxHeightTrigger;
+        [Tooltip("Displays a message while waiting for the other player")]
+        [SerializeField] private TextMeshProUGUI waitingMessage;
 
         [Header("Settings")]
         [Tooltip("Y-position of the FruitSpawner")]
@@ -32,10 +34,18 @@ namespace Watermelon_Game.Container
 
         #region Fields
         /// <summary>
+        /// The container that is assigned to the local player
+        /// </summary>
+        private static ContainerBounds instance;
+        /// <summary>
         /// Reference to the <see cref="FruitSpawner"/> that is assigned to this container <br/>
         /// <b>Will only be set for the local client, for every other client this will be null!</b>
         /// </summary>
         [CanBeNull] private FruitSpawner fruitSpawner;
+        /// <summary>
+        /// Will be true while the animation during a GameMode transition is running
+        /// </summary>
+        private bool transitioning;
         #endregion
         
         #region Properties
@@ -65,14 +75,14 @@ namespace Watermelon_Game.Container
             this.bounds.GetComponent<Canvas>().worldCamera = CameraUtils.Camera;
         }
 
-        protected override void Transition(GameMode _GameMode)
+        protected override void Transition(GameMode _GameMode, bool _ForceSwitch)
         {
             if (this.fruitSpawner != null)
             {
                 this.fruitSpawner.GameModeTransitionStarted();
             }
             
-            base.Transition(_GameMode);
+            base.Transition(_GameMode, _ForceSwitch);
             
             AudioPool.PlayClip(AudioClipName.FruitDestroy);
         }
@@ -84,6 +94,7 @@ namespace Watermelon_Game.Container
         /// <param name="_FruitSpawner">The <see cref="FruitSpawner"/> to assign this <see cref="ContainerBounds"/> to</param>
         public void AssignToPlayer(FruitSpawner _FruitSpawner)
         {
+            instance = this;
             this.fruitSpawner = _FruitSpawner;
             this.connectionId = this.fruitSpawner!.SetContainerBounds(this);
             this.PlayerContainer = true;
@@ -135,7 +146,25 @@ namespace Watermelon_Game.Container
         /// <returns>True if the point lies within the specified rectangle</returns>
         public bool Contains(Vector2 _Point)
         {
-            return this.bounds.rect.Contains(new Vector3(_Point.x, _Point.y) - this.bounds.position);
+            return GameController.ActiveGame && !this.transitioning && this.bounds.rect.Contains(new Vector3(_Point.x, _Point.y) - this.bounds.position);
+        }
+
+        /// <summary>
+        /// Returns the steam id of the <see cref="FruitSpawner"/> assigned to this <see cref="ContainerBounds"/> or 0 if this <see cref="ContainerBounds"/> is not assigned to the local player
+        /// </summary>
+        /// <returns>The steam id of the <see cref="FruitSpawner"/> assigned to this <see cref="ContainerBounds"/> or 0 if this <see cref="ContainerBounds"/> is not assigned to the local player</returns>
+        public ulong GetSteamId()
+        {
+            return this.fruitSpawner != null ? this.fruitSpawner.SteamId : 0;
+        }
+        
+        /// <summary>
+        /// Enables/disables <see cref="waitingMessage"/>
+        /// </summary>
+        /// <param name="_Value">True for enable, false for disable</param>
+        public static void SetWaitingMessage(bool _Value)
+        {
+            instance.waitingMessage.gameObject.SetActive(_Value);
         }
         #endregion
     }

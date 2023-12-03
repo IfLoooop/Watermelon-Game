@@ -33,6 +33,7 @@ namespace Watermelon_Game.Editor
             }
         }
         
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         /// <summary>
         /// Starts the release build pipeline <br/>
         /// <b>Multiple builds!</b>
@@ -40,13 +41,12 @@ namespace Watermelon_Game.Editor
         [MenuItem("Build/Release Build")]
         private static async void StartBuild()
         {
-            var _version = await VersionControl.TryGetLatestVersion()!;
+            //var _version = await VersionControl.TryGetLatestVersion()!;
+            const string VERSION = "1.7.1.0";
 
-            _version = "1.7.0.0"; // TODO: Temporary while the Github version lacks behind (Itch.io build needs to be updated) // TODO: Enable
-            
-            if (!string.IsNullOrWhiteSpace(_version))
+            if (!string.IsNullOrWhiteSpace(VERSION))
             {
-                if (_version == Application.version)
+                if (VERSION == Application.version)
                 {
                     Debug.LogWarning("<color=orange>Version number has not changed</color>");
                 }
@@ -69,6 +69,7 @@ namespace Watermelon_Game.Editor
                 Debug.LogError("Downloaded version is null");
             }
         }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         #endregion
     }
 }

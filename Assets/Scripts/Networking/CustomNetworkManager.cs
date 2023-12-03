@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using kcp2k;
 using Mirror;
 using Mirror.FizzySteam;
+using OPS.AntiCheat.Field;
 using UnityEngine;
 using Watermelon_Game.Fruit_Spawn;
+using Watermelon_Game.Menus;
 using Watermelon_Game.Steamworks.NET;
 
 namespace Watermelon_Game.Networking
@@ -17,29 +18,35 @@ namespace Watermelon_Game.Networking
     [RequireComponent(typeof(FizzySteamworks))]
     internal sealed class CustomNetworkManager : NetworkManager
     {
-#if UNITY_EDITOR
-        [Header("EDITOR")]
-        [Tooltip("For testing in editor")]
-        [SerializeField] private ushort port = 7777;
-#endif
-        
         #region Constants
         /// <summary>
         /// The default value for <see cref="NetworkManager.networkAddress"/>
         /// </summary>
         private const string DEFAULT_NETWORK_ADDRESS = "localhost";
         #endregion
+
+        #region Fields
+        /// <summary>
+        /// The connection id of the host
+        /// </summary>
+        private ProtectedInt32? hostConnectionId;
+        /// <summary>
+        /// Will be true when connection to another host as a client <br/>
+        /// <i>Will be true for the duration of the connection, reset in <see cref="DisconnectFromLobby"/></i>
+        /// </summary>
+        private static ProtectedBool attemptingToConnectToLobby;
+        #endregion
         
         #region Properties
         /// <summary>
         /// <see cref="NetworkManager.maxConnections"/>
         /// </summary>
-        public static int MaxConnection => singleton.maxConnections;
+        public static ProtectedInt32 MaxConnections => singleton.maxConnections;
         /// <summary>
         /// Is true while the client is trying to join a lobby <br/>
         /// <i>Will be set to false after joining or on failure</i>
         /// </summary>
-        public static bool AttemptingToJoinALobby { get; private set; }
+        public static ProtectedBool AttemptingToJoinALobby { get; private set; }
         #endregion
         
         #region Events
@@ -62,13 +69,8 @@ namespace Watermelon_Game.Networking
                 Destroy(base.gameObject);
                 return;
             }
-#if UNITY_EDITOR
-            var _kcpTransport = base.gameObject.AddComponent<KcpTransport>();
-            base.transport.enabled = false;
-            base.transport = _kcpTransport;
-            _kcpTransport.Port = this.port;
-#endif
-#if DEBUG || DEVELOPMENT_BUILD
+            
+#if DEBUG
             base.gameObject.AddComponent<NetworkManagerHUD>();
 #endif
             base.Awake();
@@ -79,7 +81,7 @@ namespace Watermelon_Game.Networking
             base.Start();
             base.StartHost();
         }
-
+        
         public override void OnStartHost()
         {
             base.OnStartHost();
@@ -95,13 +97,43 @@ namespace Watermelon_Game.Networking
         public override void OnStopClient() // Will only be called when connected AS a client to another host
         {
             base.OnStopClient();
+            ConnectionCancelled();
+        }
+        
+        /// <summary>
+        /// Determines whether the client was stopped normally or due to an error
+        /// </summary>
+        private static void ConnectionCancelled()
+        {
+            if (attemptingToConnectToLobby)
+            {
+                attemptingToConnectToLobby = false;
+                SteamLobby.LeaveLobby();
+                MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.ConnectionErrorMenu);
+            }
+            
             OnConnectionStopped?.Invoke();
+        }
+        
+        public override void OnServerConnect(NetworkConnectionToClient _ConnectionToClient)
+        {
+            if (!SteamLobby.IsHost.Value.Value)
+            {
+                _ConnectionToClient.Disconnect();
+            }
+            
+            base.OnServerConnect(_ConnectionToClient);
         }
         
         public override void OnServerDisconnect(NetworkConnectionToClient _ConnectionToClient)
         {
             base.OnServerDisconnect(_ConnectionToClient);
             GameController.Containers.FirstOrDefault(_Container => _Container.ConnectionId == _ConnectionToClient.connectionId)?.FreeContainer();
+
+            if (GameController.ActiveGame)
+            {
+                
+            }
         }
         
         public override void OnServerAddPlayer(NetworkConnectionToClient _ConnectionToClient)
@@ -115,13 +147,22 @@ namespace Watermelon_Game.Networking
             _container.AssignToPlayer(_fruitSpawner);
             
             NetworkServer.AddPlayerForConnection(_ConnectionToClient, _fruitSpawner.gameObject);
+            _fruitSpawner.SetSteamData(_ConnectionToClient);
+
+            if (this.hostConnectionId == null)
+            {
+                this.hostConnectionId = _ConnectionToClient.connectionId;
+            }
+            else
+            {
+                _fruitSpawner.SendSteamIdToHost(_ConnectionToClient);
+            }
         }
         
         /// <summary>
         /// Makes sure only one join request can be sent at a time -> <see cref="AttemptingToJoinALobby"/>
         /// </summary>
         /// <returns>True when the client is currently not joining any lobby and is allowed to join, otherwise false</returns>
-        [Client]
         public static bool AllowSteamLobbyJoinRequest()
         {
             if (AttemptingToJoinALobby)
@@ -142,13 +183,9 @@ namespace Watermelon_Game.Networking
         {
             if (!_Failure && AttemptingToJoinALobby)
             {
-#if UNITY_EDITOR
-                singleton.networkAddress = DEFAULT_NETWORK_ADDRESS;
-#else 
                 singleton.networkAddress = _HostAddress;
-#endif
                 singleton.StopHost();
-                //singleton.StartClient(); // TODO: Try this
+                //singleton.StartClient(); // TODO: Try starting the client here
             }
             else
             {
@@ -164,9 +201,10 @@ namespace Watermelon_Game.Networking
         public static void Connect()
         {
             AttemptingToJoinALobby = false;
+            attemptingToConnectToLobby = true;
             singleton.StartClient();
         }
-
+        
         /// <summary>
         /// Cancels the current lobby connection process
         /// </summary>
@@ -227,6 +265,7 @@ namespace Watermelon_Game.Networking
         {
             singleton.networkAddress = DEFAULT_NETWORK_ADDRESS;
             AttemptingToJoinALobby = false;
+            attemptingToConnectToLobby = false;
             
             if (!_IsHost)
             {

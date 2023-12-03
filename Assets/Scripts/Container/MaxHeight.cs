@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
+using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Container
@@ -90,9 +91,9 @@ namespace Watermelon_Game.Container
         #region Events
         /// <summary>
         /// Is called when <see cref="countdown"/> reaches 0 <br/>
-        /// <b>Parameter:</b> The connection id of the client that lost
+        /// <b>Parameter:</b> The steam id of the client that lost
         /// </summary>
-        public static event Action<int> OnGameOver;
+        public static event Action<ulong> OnGameOver;
         #endregion
         
         #region Methods
@@ -177,7 +178,8 @@ namespace Watermelon_Game.Container
             if (this.countdown <= 1)
             {
                 this.Reset();
-                this.CmdGameOver(this.container.ConnectionId!.Value);
+                this.CmdGameOver(this.container.GetSteamId());
+                Debug.LogError($"RpcCountdown:{this.container.GetSteamId()}"); // TODO: Remove
                 return;
             }
             
@@ -201,23 +203,24 @@ namespace Watermelon_Game.Container
         /// <summary>
         /// Tells the server this client has lost
         /// </summary>
-        /// <param name="_ConnectionId">The connection id of the client who lost</param>
+        /// <param name="_SteamId">The steam id of the player that lost</param>
         /// <param name="_Sender">The local client</param>
         [Command(requiresAuthority = false)]
-        private void CmdGameOver(int _ConnectionId, NetworkConnectionToClient _Sender = null)
+        private void CmdGameOver(ulong _SteamId, NetworkConnectionToClient _Sender = null)
         {
-            this.TargetGameOver(_Sender, _ConnectionId);
+            this.TargetGameOver(_Sender, _SteamId);
         }
 
         /// <summary>
         /// Tell every client the game is over
         /// </summary>
         /// <param name="_Target">The local client</param>
-        /// <param name="_ConnectionId">The connection id of the client that lost</param>
+        /// <param name="_SteamId">The steam id of the player that lost</param>
         [TargetRpc] // ReSharper disable once UnusedParameter.Local
-        private void TargetGameOver(NetworkConnectionToClient _Target, int _ConnectionId)
+        private void TargetGameOver(NetworkConnectionToClient _Target, ulong _SteamId)
         {
-            OnGameOver?.Invoke(_ConnectionId);
+            Debug.LogError($"TargetGameOver:{_SteamId}"); // TODO: Remove
+            OnGameOver?.Invoke(_SteamId);
         }
         
         /// <summary>
@@ -257,6 +260,11 @@ namespace Watermelon_Game.Container
         [Client]
         private void EnableGodRay()
         {
+            if (this.enableFlicker != null)
+            {
+                return;
+            }
+            
             this.CmdEnableGodRay();
         }
 

@@ -53,13 +53,6 @@ namespace Watermelon_Game.Menus.Lobbies
             }
             
             var _lobbyData = LobbyJoinMenu.LobbyList[base.dataIndex];
-            if (SteamLobby.CurrentLobbyId is {} _lobbyId)
-            {
-                if (_lobbyData.LobbyId == _lobbyId.m_SteamID)
-                {
-                    return;
-                }
-            }
             
             LobbyJoinMenu.AllowJoinButtonInteraction(false);
             
@@ -69,7 +62,7 @@ namespace Watermelon_Game.Menus.Lobbies
             }
             else
             {
-                SteamLobby.JoinLobby(_lobbyData.LobbyId);
+                SteamLobby.JoinLobbyAsync(_lobbyData.LobbyId);
             }
         }
         #endregion

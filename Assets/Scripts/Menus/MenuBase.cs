@@ -68,7 +68,7 @@ namespace Watermelon_Game.Menus
             this.menuPopup.Play();
             return this;
         }
-
+        
         /// <summary>
         /// Closes this menu
         /// </summary>
@@ -91,6 +91,16 @@ namespace Watermelon_Game.Menus
         public virtual void ForceClose(bool _PlaySound)
         {
             this.Close(_PlaySound);
+        }
+
+        /// <summary>
+        /// Casts tis <see cref="MenuBase"/> to the given type
+        /// </summary>
+        /// <typeparam name="T">Must inherit from <see cref="MenuBase"/></typeparam>
+        /// <returns>This <see cref="MenuBase"/> as <see cref="T"/></returns>
+        public T As<T>() where T : MenuBase
+        {
+            return this as T;
         }
         
         /// <summary>

@@ -16,9 +16,12 @@ namespace Watermelon_Game.Audio
         [SerializeField] private AudioClips audioClips;
         [Tooltip("A GameObject that contains an AudioSource Component")]
         [SerializeField] private AudioWrapper audioWrapperPrefab;
+        
         [Header("Settings")] 
         [Tooltip("How many GameObjects to instantiate on Awake")]
         [SerializeField] private uint startAmount = 1;
+        [Tooltip("Multiplies this value to the normal volume of other clients")]
+        [SerializeField] private float volumeReductionMultiplier = .25f;
         [Tooltip("Contains the GameObjects that play the AudioClip")]
         [SerializeField] private ObjectPool<AudioWrapper> audioPool;
         #endregion
@@ -144,12 +147,12 @@ namespace Watermelon_Game.Audio
         /// </summary>
         /// <param name="_AudioWrapper">The <see cref="AudioWrapper"/>to set the value in</param>
         /// <param name="_AudioClipSettings">The <see cref="AudioClipSettings"/> to take the values from</param>
-        /// <param name="_NormalVolume">If false, plays the clip at half volume</param>
+        /// <param name="_NormalVolume">If false, uses <see cref="volumeReductionMultiplier"/> on the volume</param>
         /// <param name="_Loop">Whether the <see cref="AudioClip"/> should play in a loop or not</param>
         private static void Set(AudioWrapper _AudioWrapper, AudioClipSettings _AudioClipSettings, bool _NormalVolume = true, bool _Loop = false)
         {
             _AudioWrapper.AudioSource.clip = _AudioClipSettings.audioClip;
-            _AudioWrapper.AudioSource.volume = _NormalVolume == false ? _AudioClipSettings.volume * .5f : _AudioClipSettings.volume;
+            _AudioWrapper.AudioSource.volume = _NormalVolume == false ? _AudioClipSettings.volume * instance.volumeReductionMultiplier : _AudioClipSettings.volume;
             _AudioWrapper.AudioSource.time = _AudioClipSettings.startTime;
             _AudioWrapper.AudioSource.loop = _Loop;
         }

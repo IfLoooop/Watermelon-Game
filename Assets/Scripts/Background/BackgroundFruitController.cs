@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Utility;
-using Watermelon_Game.Web;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Background
@@ -17,7 +17,7 @@ namespace Watermelon_Game.Background
         #region Websettings
         [Header("WebSettings")]
         [Tooltip("Time in seconds, between the fruit spawns")]
-        [ShowInInspector] private static float fruitSpawnDelay = .25f;
+        [ShowInInspector] private static float defaultFruitSpawnDelay = .25f;
         [Tooltip("Is multiplied on the size of every background fruit")]
         [ShowInInspector] private static float sizeMultiplier = 1;
         [Tooltip("Controls the force with which the fruits are dropped")]
@@ -31,10 +31,19 @@ namespace Watermelon_Game.Background
         [Header("Settings")]
         [Tooltip("BackgroundFruit-script on a prefab")]
         [SerializeField] private BackgroundFruit backgroundFruitPrefab;
+        [Tooltip("Multiplier for the fruit spawn delay")]
+        [SerializeField] private float fruitSpawnDelayMultiplier = 2.5f;
         [Tooltip("The rotation of a fruit increases as the value moves farther from 0 (Negative and positive values)")]
         [ShowInInspector] private Vector2 rotationForce = new(.125f, .125f);
         [Tooltip("Option for how to apply a force using Rigidbody2D.AddForce")]
         [SerializeField] private ForceMode2D forceMode = ForceMode2D.Impulse;
+        #endregion
+
+        #region Constans
+        /// <summary>
+        /// PlayerPrefs key for <see cref="FruitSpawnDelay"/>
+        /// </summary>
+        private const string BACKGROUND_FRUIT_DELAY = "BackgroundFruitDelay";
         #endregion
         
         #region Fields
@@ -62,9 +71,9 @@ namespace Watermelon_Game.Background
 
         #region Properties
         /// <summary>
-        /// <see cref="fruitSpawnDelay"/>
+        /// <see cref="defaultFruitSpawnDelay"/>
         /// </summary>
-        public static float FruitSpawnDelay => fruitSpawnDelay;
+        private static float FruitSpawnDelay { get; set; } = defaultFruitSpawnDelay;
         /// <summary>
         /// <see cref="sizeMultiplier"/>
         /// </summary>
@@ -120,9 +129,10 @@ namespace Watermelon_Game.Background
             instance = this;
             
             this.fruitPool = new ObjectPool<BackgroundFruit>(this.backgroundFruitPrefab, base.transform);
-            this.currentDelay = fruitSpawnDelay;
+            this.currentDelay = defaultFruitSpawnDelay;
+            FruitSpawnDelay = float.Parse(PlayerPrefs.GetString(BACKGROUND_FRUIT_DELAY, defaultFruitSpawnDelay.ToString(CultureInfo.InvariantCulture)));
         }
-
+        
         private void Start()
         {
             this.InitializeFruits();
@@ -145,6 +155,21 @@ namespace Watermelon_Game.Background
 
             this.biggestFruitHeight = this.fruitSprites.Max(_Fruit => _Fruit.sprite.bounds.size.y);
         }
+
+        private void OnDisable()
+        {
+            PlayerPrefs.SetString(BACKGROUND_FRUIT_DELAY, FruitSpawnDelay.ToString(CultureInfo.InvariantCulture));
+        }
+        
+        /// <summary>
+        /// Sets <see cref="currentDelay"/>
+        /// </summary>
+        /// <param name="_Value">The value <see cref="currentDelay"/> will be divided with</param>
+        public static void SetDelay(float _Value)
+        {
+            instance.currentDelay = FruitSpawnDelay = defaultFruitSpawnDelay;
+            instance.currentDelay = FruitSpawnDelay /= _Value * instance.fruitSpawnDelayMultiplier;
+        }
         
         private void Update()
         {
@@ -152,7 +177,7 @@ namespace Watermelon_Game.Background
         }
 
         /// <summary>
-        /// Spawns a new fruit after each <see cref="fruitSpawnDelay"/>
+        /// Spawns a new fruit after each <see cref="defaultFruitSpawnDelay"/>
         /// </summary>
         private void SpawnFruit()
         {
@@ -160,7 +185,7 @@ namespace Watermelon_Game.Background
 
             if (this.currentDelay <= 0)
             {
-                this.currentDelay = fruitSpawnDelay;
+                this.currentDelay = FruitSpawnDelay;
                 
                 var _randomPosition = this.GetRandomPosition();
                 var _fruit = this.fruitPool.Get(_randomPosition);

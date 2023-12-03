@@ -85,9 +85,6 @@ MonoBehaviour:
     deliveryTimeEmaDuration: 2
   connectionQualityInterval: 3
   timeInterpolationGui: 0
-  containers:
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!114 &5004405286768758112
 MonoBehaviour:
   m_ObjectHideFlags: 0

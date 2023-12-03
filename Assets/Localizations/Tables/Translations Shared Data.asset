@@ -56,7 +56,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
-    m_Key: games_played
+    m_Key: games_finished
     m_Metadata:
       m_Items: []
   - m_Id: 39239848062976
@@ -157,6 +157,30 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 9223707347415040
     m_Key: cancel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9920671760281600
+    m_Key: connection_error
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9997889463152640
+    m_Key: lobby_id
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10397406217924608
+    m_Key: background_fruit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10518691417714688
+    m_Key: win
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10518721927081984
+    m_Key: loose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10535732233138176
+    m_Key: waiting_for_other_player
     m_Metadata:
       m_Items: []
   m_Metadata:

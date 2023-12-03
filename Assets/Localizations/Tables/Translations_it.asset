@@ -67,7 +67,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
-    m_Localized: Partite Giocate
+    m_Localized: Giochi completati
     m_Metadata:
       m_Items: []
   - m_Id: 39239848062976
@@ -152,6 +152,26 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 8472696324386816
     m_Localized: Abbandona Lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9997889463152640
+    m_Localized: ID della lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9223673881063424
+    m_Localized: Collegare
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9223707347415040
+    m_Localized: Annulla
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9920671760281600
+    m_Localized: Errore di connessione
+    m_Metadata:
+      m_Items: []
+  - m_Id: 10397406217924608
+    m_Localized: Frutta di sfondo
     m_Metadata:
       m_Items: []
   references:

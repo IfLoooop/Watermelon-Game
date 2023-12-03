@@ -26,6 +26,8 @@ namespace Watermelon_Game.Utility
         [Header("References")] 
         [Tooltip("Main font asset")]
         [SerializeField] private TMP_FontAsset watermelonGame;
+        [Tooltip("Main font asset")]
+        [SerializeField] private TMP_FontAsset watermelonGame2;
         #endregion
 
         #region Fields
@@ -86,7 +88,7 @@ namespace Watermelon_Game.Utility
         {
             return Task.Run(() =>
             {
-                var _allCharacters = new List<TMP_FontAsset>(_AddFallbackFonts ? watermelonGame.fallbackFontAssetTable : Array.Empty<TMP_FontAsset>()) { watermelonGame }.SelectMany(_FontAsset => _FontAsset.characterTable);
+                var _allCharacters = new List<TMP_FontAsset>(_AddFallbackFonts ? watermelonGame.fallbackFontAssetTable : Array.Empty<TMP_FontAsset>()) { watermelonGame, watermelonGame2 }.SelectMany(_FontAsset => _FontAsset.characterTable);
                 Parallel.ForEach(_allCharacters, _Character =>
                 {
                     if (!this.unicodes.Contains(_Character.unicode))

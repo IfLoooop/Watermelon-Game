@@ -1,3 +1,5 @@
+using OPS.AntiCheat.Field;
+
 namespace Watermelon_Game.Menus.Lobbies
 {
     /// <summary>
@@ -9,19 +11,19 @@ namespace Watermelon_Game.Menus.Lobbies
         /// <summary>
         /// Id of the lobby
         /// </summary>
-        public ulong LobbyId { get; }
+        public ProtectedUInt64 LobbyId { get; }
         /// <summary>
         /// Name of the lobby
         /// </summary>
-        public string LobbyName { get; }
+        public ProtectedString LobbyName { get; }
         /// <summary>
         /// Indicates whether this lobby is password protected
         /// </summary>
-        public bool RequiresPassword { get; }
+        public ProtectedBool RequiresPassword { get; }
         /// <summary>
         /// Indicates whether the button for this lobby is interactable or not
         /// </summary>
-        public bool Interactable { get; }
+        public ProtectedBool Interactable { get; }
         #endregion
 
         #region Constructor

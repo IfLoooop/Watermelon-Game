@@ -1,10 +1,9 @@
 using UnityEngine;
-using Watermelon_Game.Menus.MainMenus;
 
 namespace Watermelon_Game.Utility
 {
     /// <summary>
-    /// Handles the <see cref="SingleplayerMenu"/>.<see cref="SingleplayerMenu.OnGameModeTransition"/> event <br/>
+    /// Handles the <see cref="GameController"/>.<see cref="GameController.OnGameModeTransition"/> event <br/>
     /// <i>Overwrite <see cref="Transition"/> to execute custom logic on transition</i>
     /// </summary>
     [RequireComponent(typeof(Animation))]
@@ -21,7 +20,7 @@ namespace Watermelon_Game.Utility
         #region Fields
         /// <summary>
         /// Should always be different from the incoming <see cref="GameMode"/> in <see cref="Transition"/> <br/>
-        /// <b>Same value indicates that a <see cref="SingleplayerMenu.OnGameModeTransition"/>-event has been missed and this GameObject might not be in sync with the current transition state anymore</b>
+        /// <b>Same value indicates that a <see cref="GameController.OnGameModeTransition"/>-event has been missed and this GameObject might not be in sync with the current transition state anymore</b>
         /// </summary>
         private GameMode? currentGameMode;
         #endregion
@@ -41,20 +40,21 @@ namespace Watermelon_Game.Utility
 
         protected virtual void OnEnable()
         {
-            MainMenuBase.OnGameModeTransition += Transition;
+            GameController.OnGameModeTransition += Transition;
         }
 
         protected virtual void OnDisable()
         {
-            MainMenuBase.OnGameModeTransition -= Transition;
+            GameController.OnGameModeTransition -= Transition;
         }
 
         /// <summary>
-        /// Is called on <see cref="SingleplayerMenu.OnGameModeTransition"/> <br/>
+        /// Is called on <see cref="GameController.OnGameModeTransition"/> <br/>
         /// <i>Prints a warning if the incoming <see cref="GameMode"/> is the same as <see cref="currentGameMode"/></i>
         /// </summary>
         /// <param name="_GameMode">The <see cref="GameMode"/> to transition to</param>
-        protected virtual void Transition(GameMode _GameMode)
+        /// <param name="_ForceSwitch"><see cref="GameController.gameModeWasForced"/></param>
+        protected virtual void Transition(GameMode _GameMode, bool _ForceSwitch)
         {
             if (this.currentGameMode != null && this.currentGameMode.Value == _GameMode)
             {
