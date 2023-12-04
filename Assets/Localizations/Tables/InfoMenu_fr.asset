@@ -30,6 +30,18 @@ MonoBehaviour:
     m_Localized: "Lobby r\xE9serv\xE9 aux amis"
     m_Metadata:
       m_Items: []
+  - m_Id: 692756346597376
+    m_Localized: "Vous avez \xE9t\xE9 expuls\xE9 du salon"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693733258719232
+    m_Localized: "L'autre joueur a quitt\xE9 le salon"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 785086688817152
+    m_Localized: "Le salon a \xE9t\xE9 ferm\xE9"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

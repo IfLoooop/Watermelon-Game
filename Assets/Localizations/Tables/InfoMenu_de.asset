@@ -30,6 +30,18 @@ MonoBehaviour:
     m_Localized: "Lobby nur f\xFCr Freunde"
     m_Metadata:
       m_Items: []
+  - m_Id: 692756346597376
+    m_Localized: Du wurdest aus der Lobby geworfen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693733258719232
+    m_Localized: Der andere Spieler hat die Lobby verlassen
+    m_Metadata:
+      m_Items: []
+  - m_Id: 785086688817152
+    m_Localized: Die Lobby wurde geschlossen
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

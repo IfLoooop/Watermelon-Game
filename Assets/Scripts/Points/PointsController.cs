@@ -178,7 +178,6 @@ namespace Watermelon_Game.Points
                 yield return this.pointsWaitForSeconds;
             }
             
-            StopCoroutine(this.pointsCoroutine);
             this.pointsCoroutine = null;
         }
         

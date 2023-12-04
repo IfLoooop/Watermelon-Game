@@ -192,6 +192,7 @@ namespace Watermelon_Game
             
             var _waitTime = new WaitForSeconds(.1f);
             var _fruits = FruitController.Fruits;
+            var _stoneFruits = FruitController.StoneFruits;
             
             // ReSharper disable once InconsistentNaming
             for (var i = _fruits.Count - 1; i >= 0; i--)
@@ -199,6 +200,17 @@ namespace Watermelon_Game
                 if (_fruits[i] != null) // TODO: Null check shouldn't be necessary, but fruit is sometimes null for some reason
                 {
                     _fruits[i].DestroyFruit();   
+                }
+                
+                yield return _waitTime;
+            }
+
+            // ReSharper disable once InconsistentNaming
+            for (var i = _stoneFruits.Count - 1; i >= 0; i--)
+            {
+                if (_stoneFruits[i] != null) // TODO: Null check shouldn't be necessary, but fruit is sometimes null for some reason
+                {
+                    _stoneFruits[i].DestroyFruit();   
                 }
                 
                 yield return _waitTime;

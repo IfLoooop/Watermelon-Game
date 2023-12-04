@@ -183,6 +183,10 @@ MonoBehaviour:
     m_Key: waiting_for_other_player
     m_Metadata:
       m_Items: []
+  - m_Id: 11226407589146624
+    m_Key: stone_fruit
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

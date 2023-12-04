@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
+using Watermelon_Game.Networking;
 using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility;
 

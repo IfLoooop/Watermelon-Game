@@ -27,6 +27,10 @@ namespace Watermelon_Game.Utility
         /// Default layer name of <see cref="FruitBehaviour"/>
         /// </summary>
         private const string FRUIT_LAYER = "Fruit";
+        /// <summary>
+        /// Layer of the <see cref="StoneFruitBehaviour"/>
+        /// </summary>
+        private const string STONE_FRUIT_LAYER = "StoneFruit";
         #endregion
         
         #region Properties
@@ -34,7 +38,7 @@ namespace Watermelon_Game.Utility
         /// Returns the <see cref="LayerMask"/> of the container and <see cref="FruitBehaviour"/>
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public static LayerMask Container_Fruit_Mask { get; } = LayerMask.GetMask(CONTAINER_LAYER, FRUIT_LAYER);
+        public static LayerMask Container_Fruit_Mask { get; } = LayerMask.GetMask(CONTAINER_LAYER, FRUIT_LAYER, STONE_FRUIT_LAYER);
         /// <summary>
         /// Returns the <see cref="LayerMask"/> of the <see cref="FruitBehaviour"/> and <see cref="EvolvingFruits"/>
         /// </summary>
@@ -52,6 +56,10 @@ namespace Watermelon_Game.Utility
         /// Returns the layer <see cref="FRUIT_LAYER"/>
         /// </summary>
         public static int FruitLayer { get; } = LayerMask.NameToLayer(FRUIT_LAYER);
+        /// <summary>
+        /// Returns the layer <see cref="STONE_FRUIT_LAYER"/>
+        /// </summary>
+        public static int StoneFruitLayer { get; } = LayerMask.NameToLayer(STONE_FRUIT_LAYER);
         /// <summary>
         /// Returns the layer <see cref="MAX_HEIGHT"/>
         /// </summary>

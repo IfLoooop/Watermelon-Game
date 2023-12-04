@@ -1,3 +1,4 @@
+using System;
 using JetBrains.Annotations;
 using Mirror;
 using OPS.AntiCheat.Field;
@@ -11,6 +12,7 @@ using Watermelon_Game.Controls;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.Lobbies;
+using Watermelon_Game.Networking;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility;
@@ -208,6 +210,7 @@ namespace Watermelon_Game.Fruit_Spawn
         private void TargetInit(NetworkConnectionToClient _ConnectionToClient, int _ContainerIndex)
         {
             GameController.Containers[_ContainerIndex].AssignToPlayer(this);
+            NetworkStoneFruitCharge.SetFruitSpawner(this);
             
             if (SteamManager.Initialized)
             {
@@ -436,7 +439,7 @@ namespace Watermelon_Game.Fruit_Spawn
             if ((Input.GetKey(KeyCode.Space) || _mouseInput) && !this.blockRelease)
             {
                 this.ReleaseFruit();
-            } 
+            }
         }
         
         /// <summary>
@@ -596,6 +599,16 @@ namespace Watermelon_Game.Fruit_Spawn
         private void TargetReleaseFruit(NetworkConnectionToClient _Target, FruitBehaviour _FruitBehaviour, Vector2 _AimRotation)
         {
             _FruitBehaviour.CmdRelease(_AimRotation, this.anyActiveSkill);
+        }
+
+        /// <summary>
+        /// Shoots the given <see cref="StoneFruitBehaviour"/> in the direction of <see cref="ContainerBounds.StoneFruitTarget"/>
+        /// </summary>
+        /// <param name="_StoneFruit">The <see cref="StoneFruitBehaviour"/> to shoot</param>
+        /// <param name="_ShootForce">Multiplier for the force with which the fruit is shot</param>
+        public void ShootStoneFruit(StoneFruitBehaviour _StoneFruit, float _ShootForce)
+        {
+            _StoneFruit.Shoot(this.containerBounds!.StoneFruitTarget.localPosition - base.transform.position, _ShootForce);
         }
         
         /// <summary>

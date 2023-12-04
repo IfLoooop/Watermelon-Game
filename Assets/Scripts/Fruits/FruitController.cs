@@ -42,6 +42,10 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         private static readonly List<EvolvingFruits> evolvingFruits = new();
         /// <summary>
+        /// Contains all spawned <see cref="StoneFruitBehaviour"/>
+        /// </summary>
+        private static readonly List<StoneFruitBehaviour> stoneFruits = new();
+        /// <summary>
         /// Contains every entry of the <see cref="Fruit"/> <see cref="Enum"/> in order
         /// </summary>
         private static readonly Fruit[] enumFruits = Enum.GetValues(typeof(Fruit)).Cast<Fruit>().ToArray();
@@ -53,13 +57,15 @@ namespace Watermelon_Game.Fruits
         #endregion
 
         #region Properties
-
-        
         /// <summary>
         /// <see cref="fruits"/> <br/>
         /// <i>Only contains the <see cref="FruitBehaviour"/></i>
         /// </summary> // TODO: Maybe change "ReadOnlyCollection" see -> "GameController.ResetGame()"
         public static ReadOnlyCollection<FruitBehaviour> Fruits => new(fruits.Values.ToList());
+        /// <summary>
+        /// <see cref="stoneFruits"/>
+        /// </summary>
+        public static List<StoneFruitBehaviour> StoneFruits => stoneFruits;
         /// <summary>
         /// <see cref="Dictionary{TKey,TValue}.Count"/> of <see cref="fruits"/>
         /// </summary>
@@ -332,6 +338,7 @@ namespace Watermelon_Game.Fruits
         private void ClearFruits(ResetReason _ResetReason)
         {
             fruits.Clear();
+            stoneFruits.Clear();
             
             var _fruitContainerTransform = FruitContainer.Transform;
             var _childCount = _fruitContainerTransform.childCount;
@@ -377,6 +384,15 @@ namespace Watermelon_Game.Fruits
                 
                 fruits.Add(_hashCode, _FruitBehaviour);   
             }
+        }
+
+        /// <summary>
+        /// Adds teh given <see cref="StoneFruitBehaviour"/> to <see cref="stoneFruits"/>
+        /// </summary>
+        /// <param name="_StoneFruit">The <see cref="StoneFruitBehaviour"/> to add to <see cref="stoneFruits"/></param>
+        public static void AddStoneFruit(StoneFruitBehaviour _StoneFruit)
+        {
+            stoneFruits.Add(_StoneFruit);
         }
         
         /// <summary>

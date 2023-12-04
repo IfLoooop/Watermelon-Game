@@ -186,6 +186,10 @@ MonoBehaviour:
     m_Localized: Waiting for other Player
     m_Metadata:
       m_Items: []
+  - m_Id: 11226407589146624
+    m_Localized: Stone Fruit
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

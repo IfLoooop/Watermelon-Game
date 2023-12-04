@@ -371,23 +371,34 @@ namespace Watermelon_Game.Fruits
             {
                 this.SetMass(0, Operation.Set);
             }
-            
+
+            var _otherIsStoneFruit = _Other.gameObject.layer == LayerMaskController.StoneFruitLayer;
             var _otherIsFruit = _Other.gameObject.layer == LayerMaskController.FruitLayer;
             var _thisHashcode = base.gameObject.GetHashCode();
             var _otherHashCode = _Other.gameObject.GetHashCode();
             
-            if (_otherIsFruit)
+            if (_otherIsFruit || _otherIsStoneFruit)
             {
                 if (this.IsGoldenFruit)
                 {
-                    if (this.isUpgradedGoldenFruit)
+                    if (_otherIsStoneFruit)
                     {
-                        OnUpgradedGoldenFruitCollision?.Invoke(_thisHashcode, _otherHashCode);
+                        if (this.isUpgradedGoldenFruit)
+                        {
+                            FruitController.StoneFruits.First(_StoneFruit => _StoneFruit.gameObject == _Other.gameObject).DestroyFruit();
+                            this.DestroyFruit();
+                        }
+                        else
+                            FruitController.StoneFruits.First(_StoneFruit => _StoneFruit.gameObject == _Other.gameObject).DestroyFruit();
                     }
                     else
                     {
-                        OnGoldenFruitCollision?.Invoke(_otherHashCode, false);
+                        if (this.isUpgradedGoldenFruit)
+                            OnUpgradedGoldenFruitCollision?.Invoke(_thisHashcode, _otherHashCode);
+                        else
+                            OnGoldenFruitCollision?.Invoke(_otherHashCode, false);   
                     }
+                    
                     return;
                 }
                 
@@ -399,7 +410,10 @@ namespace Watermelon_Game.Fruits
                         return;
                     case Skill.Destroy:
                         this.DeactivateSkill();
-                        SkillController.Skill_Destroy(_otherHashCode);
+                        if (_otherIsStoneFruit)
+                            FruitController.StoneFruits.First(_StoneFruit => _StoneFruit.gameObject == _Other.gameObject).DestroyFruit();
+                        else
+                            SkillController.Skill_Destroy(_otherHashCode);
                         return;
                     default:
                         OnFruitCollision?.Invoke(_thisHashcode, _otherHashCode);
@@ -413,7 +427,6 @@ namespace Watermelon_Game.Fruits
                     this.DestroyFruit();
                 }
             }
-
         }
 
         /// <summary>
@@ -796,7 +809,7 @@ namespace Watermelon_Game.Fruits
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, _Rotation, _Parent).GetComponent<FruitBehaviour>();
             
             NetworkServer.Spawn(_fruitBehaviour.gameObject);
-            
+
             _fruitBehaviour.netIdentity.AssignClientAuthority(_Sender);
             _fruitBehaviour.RpcSpawnFruit(_Sender?.connectionId ?? 0, _HasBeenEvolved);
 

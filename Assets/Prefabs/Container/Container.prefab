@@ -31,6 +31,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1649855334642937332}
   - {fileID: 5164968871095166111}
   - {fileID: 8010930851862497721}
   - {fileID: 5150638299379250220}
@@ -59,6 +60,7 @@ MonoBehaviour:
   bounds: {fileID: 5164968871095166111}
   maxHeightTrigger: {fileID: 915655012215915031}
   waitingMessage: {fileID: 1823857464190257703}
+  stoneFruitTarget: {fileID: 1649855334642937332}
 --- !u!111 &6998642802809751568
 Animation:
   m_ObjectHideFlags: 0
@@ -74,6 +76,37 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!1 &2487297905810107565
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1649855334642937332}
+  m_Layer: 0
+  m_Name: Stone Fruit Target
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1649855334642937332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2487297905810107565}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6239001716470882870}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3733200385242759527
 GameObject:
   m_ObjectHideFlags: 0

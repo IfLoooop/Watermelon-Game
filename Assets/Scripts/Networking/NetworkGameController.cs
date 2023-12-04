@@ -3,7 +3,7 @@ using Watermelon_Game.Container;
 using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.Lobbies;
 
-namespace Watermelon_Game
+namespace Watermelon_Game.Networking
 {
     /// <summary>
     /// Contains network game logic

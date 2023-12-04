@@ -22,6 +22,8 @@ namespace Watermelon_Game.Container
         [SerializeField] private BoxCollider2D maxHeightTrigger;
         [Tooltip("Displays a message while waiting for the other player")]
         [SerializeField] private TextMeshProUGUI waitingMessage;
+        [Tooltip("The target position to shoot the StoneFruit at")]
+        [SerializeField] private Transform stoneFruitTarget;
 
         [Header("Settings")]
         [Tooltip("Y-position of the FruitSpawner")]
@@ -31,7 +33,7 @@ namespace Watermelon_Game.Container
         [Tooltip("The connection Id of the player that is assigned to this container")]
         [ShowInInspector][ReadOnly] private ProtectedInt32? connectionId;
         #endregion
-
+        
         #region Fields
         /// <summary>
         /// The container that is assigned to the local player
@@ -62,6 +64,10 @@ namespace Watermelon_Game.Container
         /// Starting position of the <see cref="FruitSpawner"/>
         /// </summary>
         public ProtectedVector2 StartingPosition { get; private set; } = new Vector2(0, fruitSpawnerHeight);
+        /// <summary>
+        /// <see cref="stoneFruitTarget"/>
+        /// </summary>
+        public Transform StoneFruitTarget => this.stoneFruitTarget;
         #endregion
         
         #region Methods

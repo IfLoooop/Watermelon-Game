@@ -1,5 +1,7 @@
-TODO: Add stone fruit
-TODO: Add missing localizations
+TODO: Adjust the "Stone Fruit Target"-GameObjects inside the Fruit Containers, sometimes they bounce back into the own container. Also fill the gap between the containers, so they wont be able to fall down there
+TODO: Maybe add achievements
+TODO: Disconnect player on cheat detected (try doing so on the host, when in a multiplayer game)
+TODO: Maybe add WebSettings again
 -
 TODO: Game crashes when closing it immediately after opening (maybe something with steam or leaderboard)
 TODO: Sometimes when switching the gamemode the fruitspawner is not set to the correct position inside the container 

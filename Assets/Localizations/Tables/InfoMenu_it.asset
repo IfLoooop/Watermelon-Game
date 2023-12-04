@@ -30,6 +30,18 @@ MonoBehaviour:
     m_Localized: Lobby solo amici
     m_Metadata:
       m_Items: []
+  - m_Id: 692756346597376
+    m_Localized: Sei stato cacciato dalla lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 693733258719232
+    m_Localized: L'altro giocatore ha lasciato la lobby
+    m_Metadata:
+      m_Items: []
+  - m_Id: 785086688817152
+    m_Localized: "La lobby \xE8 stata chiusa"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

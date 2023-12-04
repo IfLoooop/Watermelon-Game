@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
+using Mirror;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Container;
@@ -10,6 +11,7 @@ using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Points;
+using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
 using AudioSettings = Watermelon_Game.Audio.AudioSettings;
 using Random = UnityEngine.Random;
@@ -19,7 +21,7 @@ namespace Watermelon_Game.Development
     /// <summary>
     /// Tool for use only in editor or in development builds
     /// </summary>
-    public class DevelopmentTools : MonoBehaviour
+    public class DevelopmentTools : NetworkBehaviour
     {
 #if DEBUG || DEVELOPMENT_BUILD
         [Header("References")]
@@ -114,7 +116,7 @@ namespace Watermelon_Game.Development
             this.SaveFruitsOnMap();
             this.LoadFruit();
             this.SpawnUpgradedFruit();
-            this.SetPoints();
+            this.SetPointsAndFill();
             this.SetBackgroundMusic();
         }
 
@@ -391,7 +393,7 @@ namespace Watermelon_Game.Development
         /// <summary>
         /// Adds or subtract a random amount of points
         /// </summary>
-        private void SetPoints()
+        private void SetPointsAndFill()
         {
             if (Input.GetKeyDown(KeyCode.KeypadPlus))
             {
@@ -399,12 +401,14 @@ namespace Watermelon_Game.Development
                 var _randomFruit = (Fruit)Random.Range(0, _maxFruit);
                 
                 PointsController.AddPoints_DEVELOPMENT(_randomFruit, 10);
+                StoneFruitCharge.SetFill_DEVELOPMENT(1);
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))
             {
                 var _randomNumber = (uint)Random.Range(1, 10);
                 
                 PointsController.SubtractPoints_DEVELOPMENT(_randomNumber, 1);
+                StoneFruitCharge.SetFill_DEVELOPMENT(-1);
             }
         }
         
