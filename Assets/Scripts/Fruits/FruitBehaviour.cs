@@ -40,6 +40,8 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private SpriteRenderer faceSpriteRenderer;
         [Tooltip("Reference to the golden fruit GameObject")]
         [SerializeField] private GameObject goldenFruit;
+        [Tooltip("SpriteRenderer of the GoldenFruit")]
+        [SerializeField] private SpriteRenderer goldenFruitSpriteRenderer;
         
         [Header("Settings")]
         [Tooltip("The type of this fruit")]
@@ -561,6 +563,7 @@ namespace Watermelon_Game.Fruits
         {
             this.fruitSpriteRenderer.sortingOrder += _Value;
             this.faceSpriteRenderer.sortingOrder += _Value;
+            this.goldenFruitSpriteRenderer.sortingOrder += _Value;
         }
         
         /// <summary>

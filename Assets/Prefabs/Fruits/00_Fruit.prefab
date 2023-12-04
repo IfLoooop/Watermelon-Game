@@ -220,6 +220,7 @@ MonoBehaviour:
   fruitSpriteRenderer: {fileID: 4946083969665849143}
   faceSpriteRenderer: {fileID: 1437083243244978668}
   goldenFruit: {fileID: 7364756317124155614}
+  goldenFruitSpriteRenderer: {fileID: 2720989230409801155}
   fruit:
     fakeValue: 0
   scale:
@@ -456,6 +457,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e11c03ec9fd886f45aca3d7c8942fefe, type: 3}
+--- !u!212 &2720989230409801155 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 4200798659070470646, guid: e11c03ec9fd886f45aca3d7c8942fefe, type: 3}
+  m_PrefabInstance: {fileID: 2273993826381624373}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7364756317124155614 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8771331538938211563, guid: e11c03ec9fd886f45aca3d7c8942fefe, type: 3}

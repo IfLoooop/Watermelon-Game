@@ -40,6 +40,10 @@ PrefabInstance:
       propertyPath: scale.fakeValue.z
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 2200633726002579183, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: caff8bb52bcee984d987d0f1cb245515, type: 3}
     - target: {fileID: 4946083969665849143, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Size.x
       value: 20
@@ -526,7 +530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8630753985610350245, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Mass
-      value: 7.1054873
+      value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 8711355630766412479, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: _assetId
