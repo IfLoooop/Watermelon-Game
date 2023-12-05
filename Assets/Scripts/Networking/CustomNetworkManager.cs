@@ -58,6 +58,11 @@ namespace Watermelon_Game.Networking
         /// <b>Parameter:</b> Indicates if the attempt failed
         /// </summary>
         public static event Action<bool> OnSteamLobbyEnterAttempt;
+        /// <summary>
+        /// Is called whenever a client disconnects from the host <br/>
+        /// <i>Only called on the host</i>
+        /// </summary>
+        public static event Action OnClientLeftLobby;
         #endregion
         
         #region Methods
@@ -132,6 +137,7 @@ namespace Watermelon_Game.Networking
             if (SteamLobby.IsHost.Value.Value)
             {
                 MenuController.OpenPopup(_MenuControllerMenu => _MenuControllerMenu.InfoMenu.SetMessage(InfoMessage.PlayerLeft));
+                OnClientLeftLobby?.Invoke();
             }
         }
         

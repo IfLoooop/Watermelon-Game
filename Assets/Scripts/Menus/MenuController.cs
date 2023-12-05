@@ -193,6 +193,7 @@ namespace Watermelon_Game.Menus
         public void ESCButtonMenu()
         {
             this.OpenMenuForGameMode(GameController.CurrentGameMode, false);
+            RestartGame();
         }
 
         /// <summary>
@@ -390,8 +391,9 @@ namespace Watermelon_Game.Menus
             }
         }
         
-        /// <summary> // TODO: Needs better solution
-        /// Restarts the game when <see cref="GameController.ActiveGame"/> is false
+        // TODO: Needs better solution
+        /// <summary>
+        /// Restarts the game when <see cref="readyToRestart"/> is true
         /// </summary>
         private void RestartGame()
         {

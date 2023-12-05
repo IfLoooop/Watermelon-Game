@@ -277,12 +277,15 @@ namespace Watermelon_Game.Skills
         /// <param name="_Amount">Amount to add/subtract</param>
         public static void SetFill_DEVELOPMENT(float _Amount)
         {
-            Instance.TargetFillAmount += _Amount;
+            if (GameController.CurrentGameMode == GameMode.MultiPlayer)
+            {
+                Instance.TargetFillAmount += _Amount;
             
             if (Instance.smoothFill == null)
             {
                 Instance.smoothFill = Instance.SmoothFill();
                 Instance.StartCoroutine(Instance.smoothFill);
+            } 
             }
         }
 #endif

@@ -146,7 +146,7 @@ namespace Watermelon_Game.Container
         }
         
         /// <summary>
-        /// Enables/disables <see cref="waitingMessage"/>
+        /// Enables/disables <see cref="waitingMessage"/> for the <see cref="PlayerContainer"/>
         /// </summary>
         /// <param name="_Value">True for enable, false for disable</param>
         public static void SetWaitingMessage(bool _Value)

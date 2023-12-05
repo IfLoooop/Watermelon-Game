@@ -223,8 +223,10 @@ namespace Watermelon_Game.Editor
                     var _steamAppIdPath = Path.Combine(_installPath, STEAM_APP_ID);
                     File.Copy(SteamAppIdPath, _steamAppIdPath); 
                 }
-                
+
+#if !UNITY_STANDALONE_OSX
                 CleanUp(_installPath, _CurrentOS);
+#endif
                 
                 if (_NextBuildTarget != null)
                 {
@@ -523,8 +525,6 @@ namespace Watermelon_Game.Editor
                     Directory.Delete(_path, true);
                 }
             }
-    
-            Debug.Log(_InstallDirectory);
             
 #if UNITY_STANDALONE_OSX // TODO: After a mac build has finished, apparently nothing inside the .app is allowed to be changed, otherwise it need to be signed again.
             // Takes forever to build with this

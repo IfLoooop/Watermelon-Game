@@ -2,6 +2,7 @@ using Mirror;
 using Watermelon_Game.Container;
 using Watermelon_Game.Menus;
 using Watermelon_Game.Menus.Lobbies;
+using Watermelon_Game.Steamworks.NET;
 
 namespace Watermelon_Game.Networking
 {
@@ -38,11 +39,13 @@ namespace Watermelon_Game.Networking
         private void OnEnable()
         {
             GameController.OnResetGameFinished += this.StartGameOnAllClients;
+            CustomNetworkManager.OnClientLeftLobby += ClientDisconnected;
         }
         
         private void OnDisable()
         {
             GameController.OnResetGameFinished -= this.StartGameOnAllClients;
+            CustomNetworkManager.OnClientLeftLobby -= ClientDisconnected;
         }
 
         /// <summary>
@@ -78,6 +81,11 @@ namespace Watermelon_Game.Networking
             {
                 this.RpcStartGame();
             }
+        }
+
+        private void CheckForRestart()
+        {
+            
         }
         
         /// <summary>
@@ -138,6 +146,22 @@ namespace Watermelon_Game.Networking
         private void TargetWaitingForOtherPlayer(NetworkConnectionToClient _Target)
         {
             ContainerBounds.SetWaitingMessage(true);
+        }
+
+        /// <summary>
+        /// Restarts the game on the host, when a client disconnects <br/>
+        /// <i>Needed for when the client disconnects before <see cref="memberWaitingForRestart"/> is incremented for them</i>
+        /// </summary>
+        [Server]
+        private void ClientDisconnected()
+        {
+            if (SteamLobby.IsHost.Value)
+            {
+                if (memberWaitingForRestart > 0)
+                {
+                    this.RpcStartGame();
+                }
+            }
         }
         #endregion
     }
