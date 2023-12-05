@@ -163,7 +163,7 @@ namespace Watermelon_Game.Menus.MenuContainers
         /// </summary>
         public void CloseButton()
         {
-            this.Close(true);
+            MenuController.CloseCurrentMenu();
         }
         
         /// <summary>

@@ -3,6 +3,7 @@ using System.Collections;
 using JetBrains.Annotations;
 using Mirror;
 using OPS.AntiCheat.Field;
+using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -31,11 +32,15 @@ namespace Watermelon_Game.Container
         
         [Header("Settings")]
         [Tooltip("Total duration in seconds of the countdown")]
-        [SerializeField] private ProtectedFloat countdownStartTime = 8;
-        [Tooltip("Countdown will be visible after is has reached this value")]
-        [SerializeField] private ProtectedFloat countdownVisibleAt = 5;
+        [SerializeField] private ProtectedFloat countdownStartTime = 5f;
+        [Tooltip("Grace time before the visible countdown starts")]
+        [SerializeField] private ProtectedFloat countDownGraceTime = 3f;
         [Tooltip("Duration in seconds the god ray stays visible before deactivating itself again")]
         [SerializeField] private float godRayDuration = 1.5f;
+        
+        [Header("Debug")]
+        [Tooltip("The current value of the countdown")]
+        [SerializeField][ReadOnly] private ProtectedFloat countdown;
         #endregion
         
         #region Fields
@@ -57,14 +62,20 @@ namespace Watermelon_Game.Container
         /// Displays the current countdown
         /// </summary>
         private TextMeshProUGUI countdownText;
+        
         /// <summary>
-        /// The current value of the countdown
+        /// Will be true, as long as a fruit is inside the trigger
         /// </summary>
-        private ProtectedFloat countdown;
+        private ProtectedBool triggerEntered;
         /// <summary>
-        /// Timestamp in  seconds when the last countdown was played
+        /// Time in seconds of the first fruit that entered the trigger, during a continuous trigger activation <br/>
+        /// <i>Can only be set when no fruit is currently inside the trigger</i>
         /// </summary>
-        private ProtectedFloat countdownTimestamp;
+        private ProtectedFloat enteredTimestamp;
+        /// <summary>
+        /// Indicates whether the visible countdown has started or not
+        /// </summary>
+        private ProtectedBool countdownStarted;
         
         /// <summary>
         /// Disables the <see cref="GodRayFlicker.godRay"/> when enabled
@@ -122,12 +133,26 @@ namespace Watermelon_Game.Container
         
         private void OnTriggerStay2D(Collider2D _Other)
         {
+            if (!this.triggerEntered)
+            {
+                this.triggerEntered = true;
+                this.enteredTimestamp = Time.time;
+            }
             if (!this.borderLineAnimation.isPlaying)
             {
                 this.borderLineAnimation.Play();
             }
-            
-            this.CountDown();
+            else
+            {
+                if (Time.time >= this.enteredTimestamp + this.countDownGraceTime)
+                {
+                    if (!this.countdownStarted)
+                    {
+                        this.countdownStarted = true;
+                        base.InvokeRepeating(nameof(this.CountDown), 0, 1);
+                    }
+                }
+            }
         }
 
         private void OnTriggerExit2D(Collider2D _Other)
@@ -174,14 +199,8 @@ namespace Watermelon_Game.Container
                 return;
             }
 #endif
-            this.countdown -= Time.fixedDeltaTime;
             
-            if (!this.countdownText.enabled && this.countdown <= this.countdownVisibleAt + 1)
-            {
-                this.countdownText.enabled = true;
-            }
-            
-            if (this.countdown <= 1)
+            if (this.countdown <= 0)
             {
                 // Needs to be set immediately, otherwise "CmdGameOver()" can be called multiple times when called by a client (not host) while waiting for the from the host
                 this.countdown = this.countdownStartTime;
@@ -190,21 +209,18 @@ namespace Watermelon_Game.Container
                 return;
             }
             
-            if (this.countdownText.enabled)
+            this.countdownText.fontSize = 0;
+            this.countdownText.text = this.countdown.ToString();
+            this.countdownText.enabled = true;
+            this.countdownAnimation.Play();
+            
+            // Sound is only player for the local client
+            if (this.container.PlayerContainer)
             {
-                if (Time.time - this.countdownTimestamp >= 1)
-                {
-                    this.countdownTimestamp = Time.time;
-                    this.countdownAnimation.Play();
-                    this.countdownText.text = ((int)this.countdown).ToString();
-
-                    // Sound is only player for the local client
-                    if (this.container.PlayerContainer)
-                    {
-                        AudioPool.PlayClip(AudioClipName.Countdown);   
-                    }
-                }
+                AudioPool.PlayClip(AudioClipName.Countdown);   
             }
+            
+            this.countdown--;
         }
 
         /// <summary>
@@ -253,11 +269,12 @@ namespace Watermelon_Game.Container
         [ClientRpc]
         private void RpcReset()
         {
+            base.CancelInvoke(nameof(CountDown));
             this.countdownAnimation.Stop();
             this.countdown = this.countdownStartTime;
+            this.triggerEntered = false;
+            this.countdownStarted = false;
             this.countdownText.enabled = false;
-            this.countdownText.fontSize = 0;
-            this.countdownText.text = this.countdownVisibleAt.ToString();
         }
         
         /// <summary>

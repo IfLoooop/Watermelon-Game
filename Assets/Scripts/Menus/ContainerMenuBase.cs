@@ -75,7 +75,7 @@ namespace Watermelon_Game.Menus
             if (_CurrentActiveMenu != null)
             {
                 _CurrentActiveMenu.DeselectTab();
-                _CurrentActiveMenu.gameObject.SetActive(false);   
+                _CurrentActiveMenu.SetInactive();
             }
             
             this.SelectTab();

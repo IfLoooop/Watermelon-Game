@@ -367,7 +367,7 @@ MonoBehaviour:
   releaseCooldown:
     fakeValue: 0.375
   colliderSizeOffset:
-    fakeValue: 3.85
+    fakeValue: 6
   connectionId: -1
   username: 
   steamId: 0

@@ -136,6 +136,7 @@ namespace Watermelon_Game.Background
         private void Start()
         {
             this.InitializeFruits();
+            SetDelay(Menus.MenuContainers.Controls.GetSliderValue());
         }
 
         /// <summary>
@@ -167,8 +168,11 @@ namespace Watermelon_Game.Background
         /// <param name="_Value">The value <see cref="currentDelay"/> will be divided with</param>
         public static void SetDelay(float _Value)
         {
-            instance.currentDelay = FruitSpawnDelay = defaultFruitSpawnDelay;
-            instance.currentDelay = FruitSpawnDelay /= _Value * instance.fruitSpawnDelayMultiplier;
+            if (instance != null)
+            {
+                instance.currentDelay = FruitSpawnDelay = defaultFruitSpawnDelay;
+                instance.currentDelay = FruitSpawnDelay /= _Value * instance.fruitSpawnDelayMultiplier;   
+            }
         }
         
         private void Update()

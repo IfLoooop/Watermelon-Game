@@ -1,148 +1,49 @@
 field,language,value
-body,english,"[b]Multiplayer[/b]
-It took some time, but the multiplayer mode is finally finished. You can now create or join lobbies through Steam and play against each other. I also added a new fruit type, the "Stone Fruit," to annoy your opponent during multiplayer.
-
-[b]Full Mouse Support[/b]
-The game now supports full mouse controls. Everything can be done with just the mouse; no keyboard input is needed (though the keyboard is still available).
-
-[b]Background Fruits[/b]
-The falling fruits in the background can now be turned off (Menu -> Controls -> Slider).
-
-[b]Stats[/b]
-The stats for the current game and your global stats are now separated into two different menus.
-
-Sorry for the long wait; this took longer than expected. I promise to update the game more regularly in the future and release smaller updates in between if one takes too long to implement. Thanks to everyone for waiting and still playing this game; I hope you enjoy the multiplayer."
-body,german,"[b]Mehrspieler[/b]
-Es hat eine Weile gedauert, aber der Mehrspielermodus ist endlich fertig. Sie können jetzt Lobbys über Steam erstellen oder beitreten und gegeneinander spielen. Ich habe auch einen neuen Fruchttyp, die "Steinfrucht", hinzugefügt, um Ihren Gegner während des Mehrspielermodus zu ärgern.
-
-[b]Vollständige Mausunterstützung[/b]
-Das Spiel unterstützt jetzt die volle Maussteuerung. Alles kann nur mit der Maus gemacht werden; keine Tastatureingabe ist erforderlich (obwohl die Tastatur immer noch verfügbar ist).
-
-[b]Hintergrundfrüchte[/b]
-Die fallenden Früchte im Hintergrund können jetzt ausgeschaltet werden (Menü -> Steuerung -> Schieberegler).
-
-[b]Statistiken[/b]
-Die Statistiken für das aktuelle Spiel und Ihre globalen Statistiken sind jetzt in zwei verschiedenen Menüs getrennt.
-
-Entschuldigung für die lange Wartezeit; das hat länger gedauert als erwartet. Ich verspreche, das Spiel in Zukunft regelmäßiger zu aktualisieren und kleinere Updates dazwischen zu veröffentlichen, wenn eines zu lange dauert, um implementiert zu werden. Vielen Dank an alle, die auf das Spiel gewartet haben und es immer noch spielen; ich hoffe, Sie genießen den Mehrspielermodus."
-body,french,"[b]Multijoueur[/b]
-Cela a pris du temps, mais le mode multijoueur est enfin terminé. Vous pouvez maintenant créer ou rejoindre des salons via Steam et jouer les uns contre les autres. J'ai également ajouté un nouveau type de fruit, les "Fruits de Pierre", pour ennuyer votre adversaire pendant le multijoueur.
-
-[b]Support complet de la souris[/b]
-Le jeu prend désormais en charge les commandes complètes de la souris. Tout peut être fait uniquement avec la souris ; aucune saisie au clavier n'est nécessaire (bien que le clavier soit toujours disponible).
-
-[b]Fruits de fond[/b]
-Les fruits qui tombent à l'arrière-plan peuvent maintenant être désactivés (Menu -> Commandes -> Curseur).
-
-[b]Statistiques[/b]
-Les statistiques du jeu actuel et vos statistiques globales sont maintenant séparées en deux menus différents.
-
-Désolé pour l'attente ; cela a pris plus de temps que prévu. Je promets de mettre à jour le jeu plus régulièrement à l'avenir et de publier des mises à jour plus petites entre-temps si l'une prend trop de temps à mettre en œuvre. Merci à tous pour avoir attendu et continué à jouer à ce jeu ; j'espère que vous apprécierez le multijoueur."
-body,italian,"[b]Multigiocatore[/b]
-Ci è voluto del tempo, ma la modalità multiplayer è finalmente completa. Ora puoi creare o unirti a lobby tramite Steam e giocare l'uno contro l'altro. Ho anche aggiunto un nuovo tipo di frutta, il "Frutto di Pietra", per infastidire il tuo avversario durante il multiplayer.
-
-[b]Supporto completo del mouse[/b]
-Il gioco supporta ora pienamente il controllo del mouse. Tutto può essere fatto solo con il mouse; non è necessario alcun input da tastiera (anche se la tastiera è comunque disponibile).
-
-[b]Frutti di sfondo[/b]
-I frutti che cadono sullo sfondo possono ora essere disattivati (Menu -> Controlli -> Slider).
-
-[b]Statistiche[/b]
-Le statistiche del gioco attuale e le tue statistiche globali sono ora separate in due menu diversi.
-
-Scusa per l'attesa prolungata; ciò ha richiesto più tempo del previsto. Prometto di aggiornare il gioco più regolarmente in futuro e rilasciare aggiornamenti più piccoli nel frattempo se uno richiede troppo tempo per essere implementato. Grazie a tutti per aver atteso e continuato a giocare a questo gioco; spero che tu possa goderti il multiplayer."
-body,korean,"[b]멀티플레이어[/b]
-시간이 좀 걸렸지만, 멀티플레이어 모드가 마침내 완성되었습니다. 이제 스팀을 통해 로비를 생성하거나 참여하여 서로 경기를 할 수 있습니다. 또한 새로운 과일 유형 "돌 과일"을 추가하여 상대방을 괴롭힐 수 있습니다.
-
-[b]마우스 전체 지원[/b]
-이제 게임은 전체적인 마우스 컨트롤을 지원합니다. 모든 것을 마우스로만 처리할 수 있으며 키보드 입력이 필요하지 않습니다 (하지만 키보드는 여전히 사용 가능합니다).
-
-[b]배경 과일[/b]
-배경에서 떨어지는 과일들을 끌 수 있습니다 (메뉴 -> 컨트롤 -> 슬라이더).
-
-[b]통계[/b]
-현재 게임의 통계와 전체적인 통계가 이제 두 개의 다른 메뉴로 분리되었습니다.
-
-긴 기다림에 대해 죄송합니다; 이것은 예상보다 오래 걸렸습니다. 앞으로는 게임을 더 정기적으로 업데이트하고 구현에 시간이 너무 오래 걸릴 경우 사이에 작은 업데이트를 더 자주 내보내겠습니다. 기다려 주신 모든 분들께 감사드리며 이 게임을 기다려 주시고 계속 플레이해 주신 모든 분들에게 즐거운 멀티플레이어를 즐기시기 바랍니다."
-body,spanish,"[b]Multiplayer[/b]
-It took some time, but the multiplayer mode is finally finished. You can now create or join lobbies through Steam and play against each other. I also added a new fruit type, the "Stone Fruit," to annoy your opponent during multiplayer.
-
-[b]Full Mouse Support[/b]
-The game now supports full mouse controls. Everything can be done with just the mouse; no keyboard input is needed (though the keyboard is still available).
-
-[b]Background Fruits[/b]
-The falling fruits in the background can now be turned off (Menu -> Controls -> Slider).
-
-[b]Stats[/b]
-The stats for the current game and your global stats are now separated into two different menus.
-
-Sorry for the long wait; this took longer than expected. I promise to update the game more regularly in the future and release smaller updates in between if one takes too long to implement. Thanks to everyone for waiting and still playing this game; I hope you enjoy the multiplayer."
-body,schinese,"[b]多人游戏[/b]
-花了一些时间，但多人游戏模式终于完成了。您现在可以通过Steam创建或加入游戏大厅，并相互对战。我还增加了一种新的水果类型，“石头水果”，可以在多人游戏中惹恼你的对手。
-
-[b]全面鼠标支持[/b]
-游戏现在支持全面的鼠标控制。一切都可以只用鼠标完成；无需键盘输入（尽管键盘仍然可用）。
-
-[b]背景水果[/b]
-现在可以关闭背景中下落的水果（菜单 -> 控制 -> 滑块）。
-
-[b]统计数据[/b]
-当前游戏和您的全局统计数据现在分别显示在两个不同的菜单中。
-
-对长时间的等待感到抱歉；这比预期的时间更长。我承诺将来会更定期地更新游戏，并在之间发布较小的更新，以防止某些更新实现时间过长。感谢大家的等待和继续玩这款游戏；希望您喜欢多人游戏。"
-body,tchinese,"[b]多人遊戲[/b]
-花了一些時間，但多人遊戲模式終於完成了。您現在可以透過Steam創建或加入遊戲大廳，彼此對戰。我也新增了一種新的水果類型，"石頭水果"，在多人遊戲中可以擾亂您的對手。
-
-[b]全面滑鼠支援[/b]
-遊戲現在支援完整的滑鼠控制。所有操作都可以只用滑鼠完成；無需鍵盤輸入（儘管鍵盤仍然可用）。
-
-[b]背景水果[/b]
-現在可以關閉背景中掉落的水果（菜單 -> 控制 -> 滑塊）。
-
-[b]統計數據[/b]
-當前遊戲的統計數據和您的全局統計數據現在分別顯示在兩個不同的菜單中。
-
-抱歉讓您等待這麼久；這比預期的時間更長。我承諾將來會更定期地更新遊戲，在這期間如果某個更新實現起來花費了太長時間，我會間隔性地發布較小的更新。感謝大家等待並持續玩這款遊戲；希望您喜歡這個多人遊戲模式。"
-body,russian,"[b]Многопользовательский режим[/b]
-Это заняло какое-то время, но многопользовательский режим наконец завершен. Теперь вы можете создавать или присоединяться к лобби через Steam и играть друг против друга. Я также добавил новый тип фрукта, "Каменный фрукт", чтобы раздражать вашего противника во время многопользовательской игры.
-
-[b]Полная поддержка мыши[/b]
-Теперь игра полностью поддерживает управление мышью. Все действия можно выполнять только с помощью мыши; не требуется ввод с клавиатуры (хотя клавиатура все еще доступна).
-
-[b]Фоновые фрукты[/b]
-Фоновые падающие фрукты теперь можно отключить (Меню -> Управление -> Ползунок).
-
-[b]Статистика[/b]
-Статистика текущей игры и ваша общая статистика теперь разделены на два различных меню.
-
-Извините за долгое ожидание; это заняло больше времени, чем ожидалось. Я обещаю обновлять игру более регулярно в будущем и выпускать меньшие обновления, если реализация займет слишком много времени. Спасибо всем за ожидание и продолжение игры; надеюсь, вам понравится многопользовательский режим."
+body,english,"-Closing the menu on game over will now properly start the next game.
+-The countdown counts to 1 again, before ending the game.
+-Fruits can not be dropped on top of the angled wall anymore.
+-The slider value in the controls menu is now being saved and loaded on game start/end."
+body,german,"-Das Schließen des Menüs am Spielende startet jetzt ordnungsgemäß das nächste Spiel.
+-Der Countdown zählt wieder bis 1, bevor das Spiel endet.
+-Früchte können nicht mehr auf die abgewinkelte Wand oben abgelegt werden.
+-Der Schiebereglerwert im Steuerungsmenü wird jetzt beim Starten/Beenden des Spiels gespeichert und geladen."
+body,french,"-La fermeture du menu en fin de partie lancera désormais correctement la partie suivante.
+-Le décompte compte à nouveau jusqu'à 1 avant la fin du jeu.
+-Les fruits ne peuvent plus être lâchés au sommet du mur incliné.
+-La valeur du curseur dans le menu des contrôles est désormais sauvegardée et chargée au début/à la fin du jeu."
+body,italian,"-Chiudere il menu alla fine del gioco avvierà correttamente il gioco successivo.
+-Il conto alla rovescia conta nuovamente fino a 1, prima di terminare il gioco.
+-I frutti non possono più essere lasciati cadere sulla cima del muro inclinato.
+-Il valore dello slider nel menu dei controlli viene ora salvato e caricato all'avvio/fine del gioco."
+body,korean,"-게임 종료 시 메뉴를 닫으면 이제 올바르게 다음 게임이 시작됩니다.
+-게임이 끝나기 전에 다시 1까지 카운트다운합니다.
+-이제 과일을 기울어진 벽 위에 더 이상 놓을 수 없습니다.
+-컨트롤 메뉴의 슬라이더 값이 이제 게임 시작/종료 시에 저장되고 로드됩니다."
+body,spanish,"-Al cerrar el menú al finalizar el juego, ahora se iniciará correctamente el siguiente juego.
+-La cuenta atrás vuelve a contar hasta 1 antes de terminar el juego.
+-Ya no se pueden soltar frutas en la parte superior de la pared inclinada.
+-El valor del deslizador en el menú de controles ahora se guarda y carga al iniciar/terminar el juego."
+body,schinese,"-在游戏结束时关闭菜单现在将正确开始下一场游戏。
+-游戏结束前倒计时再次计数到1。
+-现在不能再将水果掉落在倾斜的墙顶上了。
+-控制菜单中的滑块数值现在在游戏开始/结束时被保存和加载。"
+body,tchinese,"-在遊戲結束時關閉菜單將正確地開始下一場遊戲。
+-遊戲結束前的倒計時再次計數到 1。
+-現在不能再將水果掉落在傾斜的牆頂上了。
+-控制選單中的滑塊值現在會在遊戲開始/結束時進行保存和加載。"
+body,russian,"-Закрытие меню после завершения игры теперь правильно запустит следующую игру.
+-Обратный отсчёт снова идёт до 1 перед завершением игры.
+-Больше нельзя бросать фрукты сверху на наклонную стену.
+-Значение слайдера в меню управления теперь сохраняется и загружается при начале/окончании игры."
 body,thai,
-body,japanese,"[b]マルチプレイヤー[/b]
-少し時間がかかりましたが、マルチプレイヤーモードがついに完成しました。Steamを通じてロビーを作成または参加し、お互いに対戦することができます。また、マルチプレイヤー中に相手をイラつかせる新しいフルーツタイプ「ストーンフルーツ」も追加しました。
-
-[b]フルマウスサポート[/b]
-ゲームは現在、完全なマウスコントロールをサポートしています。全ての操作がマウスだけで行えます。キーボードの入力は不要です（ただし、キーボードは引き続き利用可能です）。
-
-[b]背景のフルーツ[/b]
-背景で落ちてくるフルーツをオフにすることができます（メニュー -> コントロール -> スライダー）。
-
-[b]統計[/b]
-現在のゲームの統計データとグローバルな統計データは、今後は別々のメニューに分かれて表示されます。
-
-長いお待たせ申し訳ありません。予想以上に時間がかかりました。今後は定期的にゲームをアップデートし、実装に時間がかかりすぎる場合はその間に小さなアップデートをリリースすることをお約束します。このゲームを待っていてくれた皆さん、そして今もプレイしてくれている皆さん、ありがとうございます。マルチプレイヤーを楽しんでいただけると嬉しいです。"
-body,portuguese,"[b]Multijogador[/b]
-Demorou algum tempo, mas o modo multijogador está finalmente concluído. Agora pode criar ou juntar-se a salas através do Steam e jogar uns contra os outros. Adicionei também um novo tipo de fruta, o "Fruto de Pedra", para irritar o seu oponente durante o multijogador.
-
-[b]Suporte total do rato[/b]
-O jogo agora suporta controlos completos do rato. Tudo pode ser feito apenas com o rato; não é necessário introduzir no teclado (apesar de o teclado continuar disponível).
-
-[b]Frutas em segundo plano[/b]
-As frutas que caem em segundo plano podem agora ser desligadas (Menu -> Controlos -> Deslizador).
-
-[b]Estatísticas[/b]
-As estatísticas do jogo atual e as estatísticas globais estão agora separadas em dois menus diferentes.
-
-Peço desculpa pela longa espera; isto demorou mais do que o esperado. Prometo atualizar o jogo mais regularmente no futuro e lançar atualizações mais pequenas no meio, se alguma demorar muito a implementar. Obrigado a todos por esperarem e continuarem a jogar este jogo; espero que gostem do multijogador."
+body,japanese,"-ゲーム終了時にメニューを閉じると次のゲームが正しく開始されます。
+-ゲーム終了前にカウントダウンが再び1に戻ります。
+-もう角度のある壁の上に果物を落とすことはできません。
+-コントロールメニューのスライダー値は、ゲームの開始/終了時に保存および読み込まれるようになりました。"
+body,portuguese,"-Fechar o menu no final do jogo agora irá iniciar corretamente o próximo jogo.
+-A contagem regressiva conta até 1 novamente, antes de terminar o jogo.
+-As frutas não podem mais ser deixadas no topo da parede inclinada.
+-O valor do deslizador no menu de controlos agora está a ser guardado e carregado no início/fim do jogo."
 body,polish,
 body,danish,
 body,dutch,
@@ -153,50 +54,32 @@ body,hungarian,
 body,czech,
 body,romanian,
 body,turkish,
-body,brazilian,"[b]Multijogador[/b]
-Levou um certo tempo, mas o modo multijogador finalmente está concluído. Agora você pode criar ou entrar em salas através do Steam e jogar uns contra os outros. Também adicionei um novo tipo de fruta, a "Fruta de Pedra", para irritar seu oponente durante o multijogador.
-
-[b]Suporte Total ao Mouse[/b]
-O jogo agora oferece suporte completo ao controle pelo mouse. Tudo pode ser feito apenas com o mouse; não é necessário usar o teclado (embora o teclado ainda esteja disponível).
-
-[b]Frutas de Fundo[/b]
-As frutas que caem ao fundo agora podem ser desativadas (Menu -> Controles -> Deslizador).
-
-[b]Estatísticas[/b]
-As estatísticas do jogo atual e suas estatísticas globais agora estão separadas em dois menus diferentes.
-
-Desculpe pela longa espera; isso demorou mais do que o esperado. Prometo atualizar o jogo com mais regularidade no futuro e lançar atualizações menores entre elas, caso alguma demore muito para ser implementada. Obrigado a todos por esperarem e continuarem a jogar este jogo; espero que vocês aproveitem o modo multijogador."
+body,brazilian,"-Fechar o menu ao finalizar o jogo agora iniciará corretamente o próximo jogo.
+-A contagem regressiva volta a contar até 1 antes de terminar o jogo.
+-As frutas não podem mais ser soltas no topo da parede inclinada.
+-O valor do controle deslizante no menu de configurações agora está sendo salvo e carregado no início/fim do jogo."
 body,bulgarian,
 body,greek,
 body,arabic,
 body,ukrainian,
-body,latam,"[b]Multijugador[/b]
-Tomó algo de tiempo, pero el modo multijugador finalmente está terminado. Ahora puedes crear o unirte a salas a través de Steam y jugar entre ustedes. También agregué un nuevo tipo de fruta, la "Fruta de Piedra", para molestar a tu oponente durante el multijugador.
-
-[b]Soporte completo para mouse[/b]
-El juego ahora cuenta con controles completos mediante el mouse. Todo puede hacerse solo con el mouse; no se necesita entrada de teclado (aunque el teclado sigue estando disponible).
-
-[b]Frutas de fondo[/b]
-Ahora se pueden desactivar las frutas que caen en el fondo (Menú -> Controles -> Deslizador).
-
-[b]Estadísticas[/b]
-Las estadísticas del juego actual y tus estadísticas globales ahora están separadas en dos menús diferentes.
-
-Lamentamos la larga espera; esto tomó más tiempo de lo esperado. Prometo actualizar el juego con más regularidad en el futuro y lanzar actualizaciones más pequeñas en el medio si alguna toma demasiado tiempo en implementarse. Gracias a todos por esperar y seguir jugando este juego; espero que disfrutes del modo multijugador."
+body,latam,"-Cerrar el menú al finalizar el juego ahora iniciará correctamente el siguiente juego.
+-La cuenta regresiva vuelve a contar hasta 1 antes de terminar el juego.
+-Las frutas ya no pueden soltarse en la parte superior de la pared inclinada.
+-El valor del deslizador en el menú de controles ahora se guarda y carga al iniciar o finalizar el juego."
 body,vietnamese,
 body,indonesian,
-subtitle,english,v2.0.0.0
-subtitle,german,v2.0.0.0
-subtitle,french,v2.0.0.0
-subtitle,italian,v2.0.0.0
-subtitle,korean,v2.0.0.0
-subtitle,spanish,v2.0.0.0
-subtitle,schinese,v2.0.0.0
-subtitle,tchinese,v2.0.0.0
-subtitle,russian,v2.0.0.0
+subtitle,english,v2.0.1.0
+subtitle,german,v2.0.1.0
+subtitle,french,v2.0.1.0
+subtitle,italian,v2.0.1.0
+subtitle,korean,v2.0.1.0
+subtitle,spanish,v2.0.1.0
+subtitle,schinese,v2.0.1.0
+subtitle,tchinese,v2.0.1.0
+subtitle,russian,v2.0.1.0
 subtitle,thai,
-subtitle,japanese,v2.0.0.0
-subtitle,portuguese,v2.0.0.0
+subtitle,japanese,v2.0.1.0
+subtitle,portuguese,v2.0.1.0
 subtitle,polish,
 subtitle,danish,
 subtitle,dutch,
@@ -207,26 +90,26 @@ subtitle,hungarian,
 subtitle,czech,
 subtitle,romanian,
 subtitle,turkish,
-subtitle,brazilian,v2.0.0.0
+subtitle,brazilian,v2.0.1.0
 subtitle,bulgarian,
 subtitle,greek,
 subtitle,arabic,
 subtitle,ukrainian,
-subtitle,latam,v2.0.0.0
+subtitle,latam,v2.0.1.0
 subtitle,vietnamese,
 subtitle,indonesian,
-summary,english,Multiplayer is finally available.
-summary,german,Multiplayer ist endlich verfügbar.
-summary,french,Le mode multijoueur est enfin disponible.
-summary,italian,Il multiplayer è finalmente disponibile.
-summary,korean,드디어 멀티플레이어가 이용 가능합니다.
-summary,spanish,El modo multijugador por fin está disponible.
-summary,schinese,多人游戏终于可用了。
-summary,tchinese,多人遊戲終於可以使用了。
-summary,russian,Многопользовательский режим наконец доступен.
+summary,english,Various bugfixes.
+summary,german,Verschiedene Fehlerbehebungen.
+summary,french,Diverses corrections de bugs.
+summary,italian,Diverse correzioni di bug.
+summary,korean,다양한 버그 수정 사항입니다.
+summary,spanish,Varias correcciones de errores.
+summary,schinese,各种故障修复。
+summary,tchinese,各種 bug 修復。
+summary,russian,Различные исправления ошибок.
 summary,thai,
-summary,japanese,マルチプレイヤーがついに利用可能です。
-summary,portuguese,O modo multijogador finalmente está disponível.
+summary,japanese,様々なバグ修正。
+summary,portuguese,Várias correções de erros.
 summary,polish,
 summary,danish,
 summary,dutch,
@@ -237,26 +120,26 @@ summary,hungarian,
 summary,czech,
 summary,romanian,
 summary,turkish,
-summary,brazilian,O modo multijogador finalmente está disponível.
+summary,brazilian,Várias correções de bugs.
 summary,bulgarian,
 summary,greek,
 summary,arabic,
 summary,ukrainian,
-summary,latam,El modo multijugador finalmente está disponible.
+summary,latam,Varias correcciones de errores.
 summary,vietnamese,
 summary,indonesian,
-title,english,Multiplayer
-title,german,Multiplayer
-title,french,Multiplayer
-title,italian,Multiplayer
-title,korean,멀티플레이어
-title,spanish,Multijugador
-title,schinese,多人游戏
-title,tchinese,多人遊戲
-title,russian,Многопользовательский режим
+title,english,Bugfix
+title,german,Bugfix
+title,french,Correction de bug
+title,italian,Bugfix
+title,korean,버그 수정
+title,spanish,Corrección de errores
+title,schinese,故障修复
+title,tchinese,Bug 修復
+title,russian,Исправление ошибок
 title,thai,
-title,japanese,マルチプレイヤー
-title,portuguese,Multijogador
+title,japanese,バグ修正
+title,portuguese,Correção de Erros
 title,polish,
 title,danish,
 title,dutch,
@@ -267,11 +150,11 @@ title,hungarian,
 title,czech,
 title,romanian,
 title,turkish,
-title,brazilian,Multijogador
+title,brazilian,Correção de Bugs
 title,bulgarian,
 title,greek,
 title,arabic,
 title,ukrainian,
-title,latam,Multijugador
+title,latam,Solución de errores
 title,vietnamese,
 title,indonesian,

@@ -15,6 +15,13 @@ namespace Watermelon_Game.Menus.MenuContainers
         [Tooltip("Slider that sets the background fruit frequency")]
         [PropertyOrder(1)][SerializeField] private Slider slider;
         #endregion
+
+        #region Fields
+        /// <summary>
+        /// Singleton of <see cref="Controls"/>
+        /// </summary>
+        private static Controls instance;
+        #endregion
         
         #region Constants
         /// <summary>
@@ -24,11 +31,13 @@ namespace Watermelon_Game.Menus.MenuContainers
         #endregion
         
         #region Methods
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
             this.LoadSettings();
+            instance = this;
         }
-
+        
         private void OnDisable()
         {
             this.SaveSettings();
@@ -48,7 +57,6 @@ namespace Watermelon_Game.Menus.MenuContainers
         private void LoadSettings()
         {
             this.slider.value = float.Parse(PlayerPrefs.GetString(SLIDER_VALUE, .375f.ToString(CultureInfo.InvariantCulture)));
-            this.SetFruitSpawnDelay();
         }
         
         /// <summary>
@@ -57,6 +65,15 @@ namespace Watermelon_Game.Menus.MenuContainers
         public void SetFruitSpawnDelay()
         {
             BackgroundFruitController.SetDelay(this.slider.value);
+        }
+
+        /// <summary>
+        /// Returns the <see cref="Slider.value"/> of <see cref="slider"/>
+        /// </summary>
+        /// <returns>The <see cref="Slider.value"/> of <see cref="slider"/></returns>
+        public static float GetSliderValue()
+        {
+            return instance.slider.value;
         }
         #endregion
     }
