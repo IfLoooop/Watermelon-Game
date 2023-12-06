@@ -450,18 +450,61 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Radius
-      value: 0.5016431
+      value: 0.402069
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Offset.x
-      value: -0.0017108917
+      value: -0.16967689
       objectReference: {fileID: 0}
     - target: {fileID: 9071831499857752450, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Offset.y
-      value: 0.03810215
+      value: 0.06508579
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7913849676234949797, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+      insertIndex: 4
+      addedObject: {fileID: 6557100209625962793}
   m_SourcePrefab: {fileID: 100100000, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+--- !u!1 &3765698940235238415 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7913849676234949797, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
+  m_PrefabInstance: {fileID: 6454176573717891242}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &6557100209625962793
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3765698940235238415}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.03195374, y: 0.0671548}
+  serializedVersion: 2
+  m_Radius: 0.395862

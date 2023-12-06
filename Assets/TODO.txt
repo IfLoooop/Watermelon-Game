@@ -1,3 +1,8 @@
+TODO: [IMPORTANT] - Chanded the Network Transform and Rigidbody on Fruits, FruitSpawner nad FruitSpawnerAim to Unreliable. Also changed "Collision Detection: Continuous" and "Sleeping Mode: Never Sleep", and "Interpolate: Interpolate"
+TODO: Try removing the Network Rigidbody (Maybe just needed for the Stone Fruit)
+
+TODO: Friends only lobby does not seem tor work (needs testing)
+TODO: Try changing the rigid body settings on the fruits for network performancew
 TODO: Maybe add achievements
 TODO: Disconnect player on cheat detected (try doing so on the host, when in a multiplayer game)
 TODO: Maybe add WebSettings again
