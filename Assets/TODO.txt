@@ -1,4 +1,4 @@
-TODO: [IMPORTANT] - Chanded the Network Transform and Rigidbody on Fruits, FruitSpawner nad FruitSpawnerAim to Unreliable. Also changed "Collision Detection: Continuous" and "Sleeping Mode: Never Sleep", and "Interpolate: Interpolate"
+TODO: [IMPORTANT] - Changed the Network Transform and Rigidbody on Fruits, FruitSpawner nad FruitSpawnerAim to Unreliable. Also changed "Collision Detection: Continuous" and "Sleeping Mode: Never Sleep", and "Interpolate: Interpolate"
 TODO: Try removing the Network Rigidbody (Maybe just needed for the Stone Fruit)
 
 TODO: Friends only lobby does not seem tor work (needs testing)
