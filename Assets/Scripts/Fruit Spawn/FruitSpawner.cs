@@ -47,7 +47,7 @@ namespace Watermelon_Game.Fruit_Spawn
         [Tooltip("Minimum cooldown between fruit releases (In Seconds)")]
         [SerializeField] private ProtectedFloat releaseCooldown = .375f;
         [Tooltip("Is added to the size of the FruitSpawners BoxCollider2D")]
-        [SerializeField] private ProtectedFloat colliderSizeOffset = 3.85f;
+        [SerializeField] private ProtectedFloat colliderSizeOffset = 2f;
         
         [Header("Debug")]
         [Tooltip("Connection id to the server")]
@@ -534,7 +534,7 @@ namespace Watermelon_Game.Fruit_Spawn
         private void SetFruitTriggerSize(FruitBehaviour _Fruit)
         {
             this.fruitTrigger.transform.localScale = _Fruit.transform.localScale;
-            this.fruitTrigger.radius = _Fruit.ColliderRadius;
+            this.fruitTrigger.radius = _Fruit.ColliderHalfSize;
         }
         
         /// <summary>

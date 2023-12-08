@@ -29,12 +29,18 @@ namespace Watermelon_Game.Container
         [Header("References")]
         [Tooltip("The container for this MaxHeight object")]
         [SerializeField] private ContainerBounds container;
+        [Tooltip("Animation that is played when a fruit touches the border")]
+        [SerializeField] private Animation borderLineAnimation;
+        [Tooltip("Reference to the background GameObject of the visible countdown")]
+        [SerializeField] private GameObject countdownBackground;
+        [Tooltip("Displays the current countdown")]
+        [SerializeField] private TextMeshProUGUI countdownText;
         
         [Header("Settings")]
         [Tooltip("Total duration in seconds of the countdown")]
         [SerializeField] private ProtectedFloat countdownStartTime = 5f;
         [Tooltip("Grace time before the visible countdown starts")]
-        [SerializeField] private ProtectedFloat countDownGraceTime = 3f;
+        [SerializeField] private ProtectedFloat countdownGraceTime = 3f;
         [Tooltip("Duration in seconds the god ray stays visible before deactivating itself again")]
         [SerializeField] private float godRayDuration = 1.5f;
         
@@ -48,20 +54,10 @@ namespace Watermelon_Game.Container
         /// Detects only <see cref="Fruits.Fruit"/>s
         /// </summary>
         private BoxCollider2D trigger;
-        
-        /// <summary>
-        /// <see cref="Animation"/> that indicates, a <see cref="Fruits.Fruit"/> has crossed the height limit
-        /// </summary>
-        private Animation borderLineAnimation;
         /// <summary>
         /// <see cref="Animation"/> that plays after a <see cref="Fruits.Fruit"/> has been to long above the height limit
         /// </summary>
         private Animation countdownAnimation;
-        
-        /// <summary>
-        /// Displays the current countdown
-        /// </summary>
-        private TextMeshProUGUI countdownText;
         
         /// <summary>
         /// Will be true, as long as a fruit is inside the trigger
@@ -112,9 +108,7 @@ namespace Watermelon_Game.Container
         private void Awake()
         {
             this.trigger = base.GetComponent<BoxCollider2D>();
-            this.borderLineAnimation = base.GetComponentInChildren<SpriteRenderer>().gameObject.GetComponent<Animation>();
             this.countdownAnimation = base.GetComponent<Animation>();
-            this.countdownText = base.GetComponentInChildren<TextMeshProUGUI>();
             this.countdown = this.countdownStartTime;
             
             this.godRayFlicker = base.GetComponent<GodRayFlicker>();
@@ -144,7 +138,7 @@ namespace Watermelon_Game.Container
             }
             else
             {
-                if (Time.time >= this.enteredTimestamp + this.countDownGraceTime)
+                if (Time.time >= this.enteredTimestamp + this.countdownGraceTime)
                 {
                     if (!this.countdownStarted)
                     {
@@ -209,9 +203,9 @@ namespace Watermelon_Game.Container
                 return;
             }
             
-            this.countdownText.fontSize = 0;
+            this.countdownBackground.transform.localScale = Vector3.zero;
             this.countdownText.text = this.countdown.ToString();
-            this.countdownText.enabled = true;
+            this.countdownBackground.SetActive(true);
             this.countdownAnimation.Play();
             
             // Sound is only player for the local client
@@ -274,7 +268,7 @@ namespace Watermelon_Game.Container
             this.countdown = this.countdownStartTime;
             this.triggerEntered = false;
             this.countdownStarted = false;
-            this.countdownText.enabled = false;
+            this.countdownBackground.SetActive(false);
         }
         
         /// <summary>

@@ -24,7 +24,7 @@ namespace Watermelon_Game.Skills
         [ChildGameObjectsOnly][Tooltip("Reference to the network logic")]
         [SerializeField] private GameObject controls;
         [ChildGameObjectsOnly][Tooltip("Every possible fill color")]
-        [SerializeField] private Image[] fillArray;
+        [SerializeField] private Slider[] fillArray;
 
         [Header("Settings")]
         [Tooltip("Multiplier for the force, the stone fruit is shot with")]
@@ -196,7 +196,7 @@ namespace Watermelon_Game.Skills
             }
 
             this.currentFillAmount = this.TargetFillAmount;
-            this.fillArray[this.currentFillArrayIndex].fillAmount = this.TargetFillAmount - (float)this.currentFillArrayIndex;
+            this.fillArray[this.currentFillArrayIndex].value = this.TargetFillAmount - (float)this.currentFillArrayIndex;
             
             this.smoothFill = null;
         }
@@ -210,7 +210,7 @@ namespace Watermelon_Game.Skills
         /// <returns><see cref="GetCurrentFillAmount"/></returns>
         private float SetFill(Operation _Operation, float _FillStep)
         {
-            var _currentFill = this.fillArray[this.currentFillArrayIndex].fillAmount;
+            var _currentFill = this.fillArray[this.currentFillArrayIndex].value;
             var _fillAmount = _currentFill;
             var _remainder = 0f;
             var _nextIndex = this.currentFillArrayIndex;
@@ -229,7 +229,7 @@ namespace Watermelon_Game.Skills
                     break;
             }
             
-            this.fillArray[this.currentFillArrayIndex].fillAmount = _fillAmount;
+            this.fillArray[this.currentFillArrayIndex].value = _fillAmount;
 
             if (_nextIndex != this.currentFillArrayIndex)
             {
@@ -246,7 +246,7 @@ namespace Watermelon_Game.Skills
         /// <returns>The <see cref="Image.fillAmount"/> of the element in <see cref="fillArray"/> at <see cref="currentFillArrayIndex"/></returns>
         private float GetCurrentFillAmount()
         {
-            return this.currentFillArrayIndex + this.fillArray[this.currentFillArrayIndex].fillAmount;
+            return this.currentFillArrayIndex + this.fillArray[this.currentFillArrayIndex].value;
         }
 
         /// <summary>

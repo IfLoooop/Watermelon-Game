@@ -16,33 +16,43 @@ MonoBehaviour:
   faceDefault: {fileID: 21300000, guid: fd14006210195164fbf4ebb1bdc01efb, type: 3}
   faceHurt: {fileID: 21300000, guid: 6acaba7842d400549a29b8a9b49abb94, type: 3}
   fruitPrefabs:
-  - prefab: {fileID: 3765698940235238415, guid: 08d17b8df74f8a14caff7a0d6c29cdd6, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: ef063bf83f67d8e43b4c6b481c20a30c, type: 3}
+    fullSprite: {fileID: 21300000, guid: 5d5006af373c5b249b2b19ac8a81ffdd, type: 3}
     fruit:
       fakeValue: 0
-  - prefab: {fileID: 3765698940235238415, guid: ef063bf83f67d8e43b4c6b481c20a30c, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: 3a70dc2acf2beb04eb0ec076d73e54b2, type: 3}
+    fullSprite: {fileID: 21300000, guid: d0509a0a7e6897d48b71ac4eb6bb5986, type: 3}
     fruit:
       fakeValue: 1
-  - prefab: {fileID: 3765698940235238415, guid: 3a70dc2acf2beb04eb0ec076d73e54b2, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: 41cbf90fed534094c95896d43de6bda1, type: 3}
+    fullSprite: {fileID: 21300000, guid: 2dce419138e7b744ba9e44482cba890a, type: 3}
     fruit:
       fakeValue: 2
-  - prefab: {fileID: 3765698940235238415, guid: 41cbf90fed534094c95896d43de6bda1, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: 83c687289f8349642b7cf3bf9605f917, type: 3}
+    fullSprite: {fileID: 21300000, guid: 289149209e688df4aa49db5a92f7b84b, type: 3}
     fruit:
       fakeValue: 3
-  - prefab: {fileID: 3765698940235238415, guid: 83c687289f8349642b7cf3bf9605f917, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: e56a745a8255a504fb383a45bc779ee2, type: 3}
+    fullSprite: {fileID: 21300000, guid: 69e39eec429ec0a42b54149c839ffd95, type: 3}
     fruit:
       fakeValue: 4
-  - prefab: {fileID: 3765698940235238415, guid: e56a745a8255a504fb383a45bc779ee2, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: 309c72b7f1c061246ac2b235b2a0a361, type: 3}
+    fullSprite: {fileID: 21300000, guid: 1906efdabf904384bbccd9e02555e0e3, type: 3}
     fruit:
       fakeValue: 5
-  - prefab: {fileID: 3765698940235238415, guid: 309c72b7f1c061246ac2b235b2a0a361, type: 3}
+  - prefab: {fileID: 3765698940235238415, guid: 08d17b8df74f8a14caff7a0d6c29cdd6, type: 3}
+    fullSprite: {fileID: 21300000, guid: a74464c0a773f6c41ad9828075ee4ca6, type: 3}
     fruit:
       fakeValue: 6
   - prefab: {fileID: 3765698940235238415, guid: a690f9cd3ed648448b3a3acbb0150bb4, type: 3}
+    fullSprite: {fileID: 21300000, guid: f34c3e7200f2b094b82f72809e4c31a9, type: 3}
     fruit:
       fakeValue: 7
   - prefab: {fileID: 3765698940235238415, guid: 1119e90d45d79fd4780e7cfd4ffce4c8, type: 3}
+    fullSprite: {fileID: 21300000, guid: e80fdc85867433e478575c65e9d50c70, type: 3}
     fruit:
       fakeValue: 8
   - prefab: {fileID: 3765698940235238415, guid: e0a7c1dfd1c7357429b65bcfb535c09d, type: 3}
+    fullSprite: {fileID: 21300000, guid: 593620d36b1de0541b384c19349723d6, type: 3}
     fruit:
       fakeValue: 9

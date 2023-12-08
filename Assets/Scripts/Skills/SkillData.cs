@@ -78,7 +78,7 @@ namespace Watermelon_Game.Skills
         /// </summary>
         private void SetSkillPointRequirementText()
         {
-            this.skillReferences.PointCost.text = string.Concat(this.CurrentPointsRequirement, "P");
+            this.skillReferences.PointCost.text = this.CurrentPointsRequirement.ToString();
         }
 
         /// <summary>

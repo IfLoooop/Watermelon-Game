@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using OPS.AntiCheat.Field;
 using Sirenix.OdinInspector;
+using UnityEditor;
 using UnityEngine;
 using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
@@ -65,6 +66,12 @@ namespace Watermelon_Game
         /// Will be true when the application is about to be closed
         /// </summary>
         public static ProtectedBool IsApplicationQuitting { get; private set; }
+#if UNITY_EDITOR
+        /// <summary>
+        /// Will be true when the editor is about to exit playmode
+        /// </summary>
+        public static ProtectedBool IsEditorApplicationQuitting { get; private set; }
+#endif
         #endregion
 
         #region Events
@@ -104,6 +111,10 @@ namespace Watermelon_Game
             CustomNetworkManager.OnConnectionStopped += this.ConnectionStopped;
             MaxHeight.OnGameOver += this.GameOver;
             Application.quitting += this.ApplicationIsQuitting;
+
+#if UNITY_EDITOR
+            EditorApplication.quitting += this.ApplicationIsQuitting;
+#endif
         }
 
         private void OnDisable()
@@ -112,6 +123,10 @@ namespace Watermelon_Game
             CustomNetworkManager.OnConnectionStopped -= this.ConnectionStopped;
             MaxHeight.OnGameOver -= this.GameOver;
             Application.quitting -= this.ApplicationIsQuitting;
+            
+#if UNITY_EDITOR
+            EditorApplication.quitting -= this.ApplicationIsQuitting;
+#endif
         }
 
         /// <summary>
@@ -225,6 +240,10 @@ namespace Watermelon_Game
         private void ApplicationIsQuitting()
         {
             IsApplicationQuitting = true;
+            
+#if UNITY_EDITOR
+            IsEditorApplicationQuitting = true;
+#endif
         }
 
         /// <summary>

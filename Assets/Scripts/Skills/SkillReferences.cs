@@ -13,18 +13,16 @@ namespace Watermelon_Game.Skills
         #region Inspector Fields
         [Tooltip("Reference to the Image component of a skill")]
         [SerializeField] private Image skillIconImage;
-        [Tooltip("Background for the currently active skill")]
-        [SerializeField] private Image activeSkillBackground;
+        [Tooltip("Glow for when the Skill is activated")]
+        [SerializeField] private GameObject glow;
         [Tooltip("Reference to a TMP component that displays the point cost of a skill")]
         [SerializeField] private TextMeshProUGUI pointCost;
-        [Tooltip("Image component that displays the keyboard button")]
-        [SerializeField] private Image keyboardButtonImage;
+        [Tooltip("Container for the input icons")]
+        [SerializeField] private GameObject input;
         [Tooltip("Image component that displays the mouse button")]
         [SerializeField] private Image mouseButtonImage;
         [Tooltip("Image component that displays the mouse wheel")]
         [SerializeField] private Image mouseWheelImage;
-        [Tooltip("Pulse animation")]
-        [SerializeField] private Animation pulse;
         [Tooltip("Reference to the animation that plays when the skill points requirements increase")]
         [SerializeField] private Animation skillPointsIncrease;
         #endregion
@@ -67,7 +65,7 @@ namespace Watermelon_Game.Skills
         public void EnableSkill()
         {
             this.skillIconImage.color = this.skillIconImage.color.WithAlpha(1);
-            this.keyboardButtonImage.gameObject.SetActive(true);
+            this.input.SetActive(true);
             this.mouseButtonImage.gameObject.SetActive(true);
         }
         
@@ -77,7 +75,7 @@ namespace Watermelon_Game.Skills
         public void DisableSkill()
         {
             this.skillIconImage.color = this.skillIconImage.color.WithAlpha(.5f);
-            this.keyboardButtonImage.gameObject.SetActive(false);
+            this.input.SetActive(false);
             this.mouseButtonImage.gameObject.SetActive(false);
         }
         
@@ -86,9 +84,9 @@ namespace Watermelon_Game.Skills
         /// </summary>
         public void ActivateSkill()
         {
-            this.pulse.Play();
-            this.activeSkillBackground.gameObject.SetActive(true);
+            this.glow.SetActive(true);
             this.mouseWheelImage.gameObject.SetActive(true);
+            this.mouseButtonImage.gameObject.SetActive(false);
         }
 
         /// <summary>
@@ -97,9 +95,9 @@ namespace Watermelon_Game.Skills
         public void DeactivateSkill()
         {
             this.skillIconImage.transform.localScale = this.skillIconScale;
-            this.pulse.Stop();
-            this.activeSkillBackground.gameObject.SetActive(false);
+            this.glow.SetActive(false);
             this.mouseWheelImage.gameObject.SetActive(false);
+            this.mouseButtonImage.gameObject.SetActive(true);
         }
         #endregion
     }

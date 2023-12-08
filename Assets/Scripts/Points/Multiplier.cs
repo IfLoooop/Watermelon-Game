@@ -19,8 +19,10 @@ namespace Watermelon_Game.Points
         [Header("References")]
         [Tooltip("Reference to the animation component that plays the popup clip")]
         [SerializeField] private Animation popup;
-        [Tooltip("Reference to the background image component")]
-        [SerializeField] private Image background;
+        [Tooltip("Reference to the \"Background Top\" image component")]
+        [SerializeField] private Image backgroundTop;
+        [Tooltip("Reference to the \"Background Bottom\" image component")]
+        [SerializeField] private Image backgroundBottom;
         [Tooltip("Reference to the TMP component that displays the multiplier amount")]
         [SerializeField] private TextMeshProUGUI multiplier;
         
@@ -85,8 +87,6 @@ namespace Watermelon_Game.Points
             var _newMultiplier = ++this.CurrentMultiplier;
             this.SetMultiplier(_newMultiplier);
             
-            this.popup.Play();
-            
             if (this.multiplierCoroutine == null)
             {
                 this.multiplierCoroutine = this.MultiplierDuration();
@@ -102,8 +102,10 @@ namespace Watermelon_Game.Points
         {
             this.CurrentMultiplier = _NewMultiplier;
             this.multiplier.text = string.Concat("x", this.CurrentMultiplier);
-            this.background.color = this.GetMultiplierColor();
+            this.backgroundTop.color = this.GetMultiplierColor();
+            this.backgroundBottom.color = this.GetMultiplierColor();
             this.gameObject.SetActive(true);
+            this.popup.Play();
 
             if (_NewMultiplier > 0)
             {
@@ -123,7 +125,6 @@ namespace Watermelon_Game.Points
                 this.currentMultiplierDuration -= multiplierWaitTime;
             }
             
-            this.SetMultiplier(0);
             this.StopCoroutine(this.multiplierCoroutine);
             this.multiplierCoroutine = null;
             

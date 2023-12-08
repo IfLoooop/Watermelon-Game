@@ -11,6 +11,9 @@ using Watermelon_Game.Skills;
 
 namespace Watermelon_Game.Points
 {
+    /// <summary>
+    /// Logic for everything to do with points
+    /// </summary>
     internal sealed class PointsController : PersistantGameModeTransition<PointsController>
     {
         #region Inspector Fields
@@ -20,7 +23,7 @@ namespace Watermelon_Game.Points
         [Tooltip("Reference to the TMP component that displays the current points")]
         [SerializeField] private TextMeshProUGUI pointsAmount;
         [Tooltip("Reference to the TMP component that displays the best score")]
-        [SerializeField] private TextMeshProUGUI bestScoreAmount;
+        [SerializeField] private TextMeshProUGUI bestScoreAmount; // TODO: Change to ingame currency
         
         [Header("Settings")]
         [Tooltip("Time in seconds to wait, between each update of \"pointsAmount\", when the points change")]
@@ -73,7 +76,8 @@ namespace Watermelon_Game.Points
         protected override void OnEnable()
         {
             base.OnEnable();
-            
+
+            GameController.OnResetGameStarted += this.AddCurrency;
             GameController.OnResetGameFinished += this.ResetPoints;
             FruitController.OnEvolve += AddPoints;
             FruitController.OnGoldenFruitCollision += AddPoints;
@@ -85,16 +89,17 @@ namespace Watermelon_Game.Points
         {
             base.OnDisable();
             
+            GameController.OnResetGameStarted -= this.AddCurrency;
             GameController.OnResetGameFinished -= this.ResetPoints;
             FruitController.OnEvolve -= AddPoints;
-            FruitController.OnGoldenFruitCollision += AddPoints;
+            FruitController.OnGoldenFruitCollision -= AddPoints;
             SkillController.OnSkillUsed -= this.SubtractPoints;
             MenuContainer.OnNewBestScore -= this.NewBestScore;
         }
 
         private void Start()
         {
-            this.bestScoreAmount.text = GlobalStats.Instance.BestScore.ToString();
+            this.bestScoreAmount.text = GlobalStats.Instance.BestScore.ToString(); // TODO: Load melon slices at start (currency)
         }
         
         /// <summary>
@@ -187,18 +192,23 @@ namespace Watermelon_Game.Points
         /// <param name="_Points"></param>
         private void SetPointsText(uint _Points)
         {
-            this.pointsAmount.text = string.Concat(_Points, 'P');
+            this.pointsAmount.text = _Points.ToString();
         }
 
         /// <summary>
         /// <see cref="MenuContainer.OnNewBestScore"/>
         /// </summary>
         /// <param name="_NewBestScore">The new best score amount</param>
-        private void NewBestScore(uint _NewBestScore)
+        private void NewBestScore(uint _NewBestScore) // TODO: Not needed anymore
         {
             this.bestScoreAmount.text = _NewBestScore.ToString();
         }
 
+        private void AddCurrency() // TODO
+        {
+            
+        }
+        
         /// <summary>
         /// Sets <see cref="currentPoints"/> to 0
         /// </summary>

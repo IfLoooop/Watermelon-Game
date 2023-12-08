@@ -233,7 +233,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5815505016470783006, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1100
+      value: 1150
       objectReference: {fileID: 0}
     - target: {fileID: 5815505016470783006, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_SizeDelta.y
@@ -294,6 +294,10 @@ PrefabInstance:
     - target: {fileID: 7624242374610226652, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_Name
       value: Connection Error Menu Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 8354721180808664692, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

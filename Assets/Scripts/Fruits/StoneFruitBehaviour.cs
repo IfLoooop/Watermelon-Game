@@ -14,6 +14,8 @@ namespace Watermelon_Game.Fruits
         [Header("References")]
         [Tooltip("SpriteRenderer that displays the fruit")]
         [SerializeField] private SpriteRenderer fruitSprite;
+        [Tooltip("The SpriteMask component")]
+        [SerializeField] private SpriteMask spriteMask;
         [Tooltip("Reference to the RigidBody2D component")]
         [SerializeField] private new Rigidbody2D rigidbody2D;
         #endregion
@@ -35,6 +37,7 @@ namespace Watermelon_Game.Fruits
         public void Init(FruitPrefab _FruitPrefab)
         {
             this.fruitSprite.sprite = _FruitPrefab.Sprite;
+            this.spriteMask.sprite = _FruitPrefab.Sprite;
             base.transform.localScale = _FruitPrefab.Scale;
         }
         

@@ -4,19 +4,11 @@ using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Fruits
 {
-    // TODO: Probably not needed anymore
     /// <summary>
     /// Contains information for a fruit to evolve
     /// </summary>
     internal sealed class EvolvingFruitTrigger : MonoBehaviour
     {
-        #region Fields
-        /// <summary>
-        /// The <see cref="FruitBehaviour"/> of this <see cref="EvolvingFruitTrigger"/>, can only evolve with <see cref="fruitToEvolveWith"/>
-        /// </summary>
-        private FruitBehaviour fruitToEvolveWith;
-        #endregion
-
         #region Event
         /// <summary>
         /// Is called when the fruit is ready to evolve <br/>
@@ -29,23 +21,21 @@ namespace Watermelon_Game.Fruits
         
         #region Methods
         /// <summary>
-        /// Sets the fruit, this fruit can only evolve with
+        /// Sets the <see cref="GameObject.layer"/> of the <see cref="EvolvingFruitTrigger"/> to <see cref="LayerMaskController.FruitLayer"/>
         /// </summary>
-        /// <param name="_FruitBehaviour"><see cref="fruitToEvolveWith"/></param>
-        public void SetFruitToEvolveWith(FruitBehaviour _FruitBehaviour)
+        public void SetFruitLayer() // TODO: Check if the layer can be set in the inspector from the beginning
         {
-            this.fruitToEvolveWith = _FruitBehaviour;
             base.gameObject.layer = LayerMaskController.FruitLayer;
         }
         
         /// <summary>
-        /// Forces the fruit to evolve -> <see cref="OnCanEvolve"/> <br/>
-        /// <i>Use when the fruit is stuck and can't move any further towards <see cref="fruitToEvolveWith"/></i>
+        /// Invokes <see cref="OnCanEvolve"/>
         /// </summary>
+        /// <param name="_FruitBehaviour">The calling <see cref="FruitBehaviour"/></param>
         /// <param name="_HasAuthority">Indicates if the local client has authority over this fruit</param>
-        public void Evolve(bool _HasAuthority)
+        public void Evolve(FruitBehaviour _FruitBehaviour, bool _HasAuthority)
         {
-            OnCanEvolve?.Invoke(this.fruitToEvolveWith, base.transform.position, _HasAuthority);
+            OnCanEvolve?.Invoke(_FruitBehaviour, base.transform.position, _HasAuthority);
         }
         #endregion
     }

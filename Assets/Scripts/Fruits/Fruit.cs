@@ -5,15 +5,15 @@ namespace Watermelon_Game.Fruits
     /// </summary>
     internal enum Fruit
     {
-        Grape = 0,
-        Cherry = 1,
-        Strawberry = 2,
-        Lemon = 3,
-        Orange = 4,
-        Apple = 5,
-        Pear = 6,
+        Cherry = 0,
+        Strawberry = 1,
+        Lemon = 2,
+        Orange = 3,
+        Apple = 4,
+        Pear = 5,
+        Dragonfruit = 6,
         Pineapple = 7,
-        Honeymelon = 8,
+        Coconut = 8,
         Watermelon = 9
     }
 }

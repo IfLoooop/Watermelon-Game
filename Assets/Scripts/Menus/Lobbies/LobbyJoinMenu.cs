@@ -156,7 +156,7 @@ namespace Watermelon_Game.Menus.Lobbies
         /// </summary>
         public void CloseButton()
         {
-            this.ForceClose(true);
+            this.ForceClose(false);
             MenuController.Open(_MenuControllerMenu => _MenuControllerMenu.MultiplayerMenu);
         }
         

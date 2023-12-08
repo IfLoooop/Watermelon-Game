@@ -12,6 +12,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8db8c78b99f0804289e583959321af0, type: 3}
   m_Name: FruitSettings
   m_EditorClassIdentifier: 
+  spawnWeightModifier:
+    fakeValue: -25
+  lowerIndexWeight:
+    fakeValue: 1
+  higherIndexWeight:
+    fakeValue: 0
+  sameIndexWeight:
+    fakeValue: 1
+  cherrySpawnWeight:
+    fakeValue: 50
+  strawberrySpawnWeight:
+    fakeValue: 50
+  lemonSpawnWeight:
+    fakeValue: 50
+  orangeSpawnWeight:
+    fakeValue: 25
+  appleSpawnWeight:
+    fakeValue: 15
+  pearSpawnWeight:
+    fakeValue: 5
+  dragonfruitSpawnWeight:
+    fakeValue: 0
+  pineappleSpawnWeight:
+    fakeValue: 0
+  coconutSpawnWeight:
+    fakeValue: 0
+  watermelonSpawnWeight:
+    fakeValue: 0
+  goldenFruitChance:
+    fakeValue: 0.01
+  massMultiplier:
+    fakeValue: 2.5
   canSpawnAfter:
     fakeValue: 10
   evolveMass:
@@ -20,7 +52,9 @@ MonoBehaviour:
     fakeValue: 0.01
   moveTowardsStepMultiplier:
     fakeValue: 0.2
-  evolveWaitTime:
+  scaleWaitTime:
     fakeValue: 0.005
   evolveStep:
     fakeValue: {x: 75, y: 75, z: 75}
+  shrinkStep:
+    fakeValue: {x: 20, y: 20, z: 20}

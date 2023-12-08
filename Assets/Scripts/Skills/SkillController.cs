@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using OPS.AntiCheat.Field;
-using Sirenix.OdinInspector;
 using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
@@ -17,20 +16,11 @@ using Watermelon_Game.Utility;
 
 namespace Watermelon_Game.Skills
 {
+    /// <summary>
+    /// Controls input and logic for skill usage
+    /// </summary>
     internal sealed class SkillController : PersistantMonoBehaviour<SkillController>
     {
-        #region WebSettings
-        [Header("WebSettings")]
-        [Tooltip("Points required to use he power skill")]
-        [ShowInInspector] private static ProtectedUInt32 powerPointsRequirement = 20;
-        [Tooltip("Points required to use he evolve skill")]
-        [ShowInInspector] private static ProtectedUInt32 evolvePointsRequirement = 50;
-        [Tooltip("Points required to use he destroy skill")]
-        [ShowInInspector] private static ProtectedUInt32 destroyPointsRequirement = 50;
-        [Tooltip("Point requirement increase in % after every skill use (Individual for each skill)")]
-        [ShowInInspector] private static ProtectedFloat skillPointIncrease = .1f;
-        #endregion
-        
         #region Inspector Fields
 #if UNITY_EDITOR
         [Header("Development")]
@@ -46,6 +36,14 @@ namespace Watermelon_Game.Skills
         [SerializeField] private GameObject destroy;
         
         [Header("Settings")]
+        [Tooltip("Points required to use he power skill")]
+        [SerializeField] private ProtectedUInt32 powerPointsRequirement = 20;
+        [Tooltip("Points required to use he evolve skill")]
+        [SerializeField] private ProtectedUInt32 evolvePointsRequirement = 50;
+        [Tooltip("Points required to use he destroy skill")]
+        [SerializeField] private ProtectedUInt32 destroyPointsRequirement = 50;
+        [Tooltip("Point requirement increase in % after every skill use (Individual for each skill)")]
+        [SerializeField] private ProtectedFloat skillPointIncrease = .1f;
         [Tooltip("Fruit drop/shoot force multiplier when a skill is used")]
         [SerializeField] private ProtectedFloat shootForceMultiplier = 100;
         [Tooltip("Fruit drop/shoot force when the power skill is used")]
@@ -78,22 +76,6 @@ namespace Watermelon_Game.Skills
         
         #region Properties
         /// <summary>
-        /// <see cref="powerPointsRequirement"/>
-        /// </summary>
-        public static ProtectedUInt32 PowerPointsRequirement => powerPointsRequirement;
-        /// <summary>
-        /// <see cref="evolvePointsRequirement"/>
-        /// </summary>
-        public static ProtectedUInt32 EvolvePointsRequirement => evolvePointsRequirement;
-        /// <summary>
-        /// <see cref="destroyPointsRequirement"/>
-        /// </summary>
-        public static ProtectedUInt32 DestroyPointsRequirement => destroyPointsRequirement;
-        /// <summary>
-        /// <see cref="skillPointIncrease"/>
-        /// </summary>
-        public static ProtectedFloat SkillPointIncrease => skillPointIncrease;
-        /// <summary>
         /// <see cref="shootForceMultiplier"/>
         /// </summary>
         public static ProtectedFloat ShootForceMultiplier => Instance.shootForceMultiplier;
@@ -114,33 +96,6 @@ namespace Watermelon_Game.Skills
         #endregion
         
         #region Methods
-        // /// <summary>
-        // /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
-        // /// </summary>
-        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
-        // private static void SubscribeToWebSettings()
-        // {
-        //     WebSettings.OnApplyWebSettings += ApplyWebSettings;
-        // }
-        //
-        // protected override void OnDestroy()
-        // {
-        //     base.OnDestroy();
-        //     WebSettings.OnApplyWebSettings -= ApplyWebSettings;
-        // }
-        //
-        // /// <summary>
-        // /// Tries to set the values from the web settings
-        // /// </summary>
-        // private static void ApplyWebSettings()
-        // {
-        //     var _callerType = typeof(SkillController);
-        //     WebSettings.TrySetValue(nameof(PowerPointsRequirement), ref powerPointsRequirement, _callerType);
-        //     WebSettings.TrySetValue(nameof(EvolvePointsRequirement), ref evolvePointsRequirement, _callerType);
-        //     WebSettings.TrySetValue(nameof(DestroyPointsRequirement), ref destroyPointsRequirement, _callerType);
-        //     WebSettings.TrySetValue(nameof(SkillPointIncrease), ref skillPointIncrease, _callerType);
-        // }
-
         private void OnEnable()
         {
             OnSkillActivated += SetActiveSkill;
@@ -160,6 +115,7 @@ namespace Watermelon_Game.Skills
         protected override void Init()
         {
             base.Init();
+            
             this.skillMap = new ReadOnlyDictionary<Skill, SkillData>(new Dictionary<Skill, SkillData>
             {
                 { Skill.Power, InitializeSkill(this.power, KeyCode.Alpha1, Skill.Power, powerPointsRequirement) },
@@ -265,6 +221,12 @@ namespace Watermelon_Game.Skills
         private void SelectSkill(int _Direction)
         {
             var _index = this.lastActiveSkill;
+            
+            if (!this.skillMap.ElementAt(this.lastActiveSkill).Value.CanBeActivated)
+            {
+                _Direction = 1;
+            }
+            
             // ReSharper disable once InconsistentNaming
             for (var i = 0; i < this.skillMap.Count - 1; i++)
             {
@@ -404,12 +366,13 @@ namespace Watermelon_Game.Skills
         private void SkillUsed(Skill? _Skill)
         {
             var _skill = skillMap[_Skill!.Value];
-            
-            OnSkillUsed?.Invoke(_skill.CurrentPointsRequirement);
+
+            var _pointsRequirement = _skill.CurrentPointsRequirement;
             
             _skill.PlayAnimation();
             _skill.CurrentPointsRequirement += (uint)(_skill.CurrentPointsRequirement * skillPointIncrease);
             
+            OnSkillUsed?.Invoke(_pointsRequirement);
             this.DeactivateActiveSkills();
         }
         

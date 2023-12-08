@@ -96,15 +96,15 @@ namespace Watermelon_Game.Development
         {
             this.ReplaceWithGrape();
             this.ForceGoldenFruit();
-            this.SpawnFruit(KeyCode.F1, Fruit.Grape);
-            this.SpawnFruit(KeyCode.F2, Fruit.Cherry);
-            this.SpawnFruit(KeyCode.F3, Fruit.Strawberry);
-            this.SpawnFruit(KeyCode.F4, Fruit.Lemon);
-            this.SpawnFruit(KeyCode.F5, Fruit.Orange);
-            this.SpawnFruit(KeyCode.F6, Fruit.Apple);
-            this.SpawnFruit(KeyCode.F7, Fruit.Pear);
+            this.SpawnFruit(KeyCode.F1, Fruit.Cherry);
+            this.SpawnFruit(KeyCode.F2, Fruit.Strawberry);
+            this.SpawnFruit(KeyCode.F3, Fruit.Lemon);
+            this.SpawnFruit(KeyCode.F4, Fruit.Orange);
+            this.SpawnFruit(KeyCode.F5, Fruit.Apple);
+            this.SpawnFruit(KeyCode.F6, Fruit.Pear);
+            this.SpawnFruit(KeyCode.F7, Fruit.Dragonfruit);
             this.SpawnFruit(KeyCode.F8, Fruit.Pineapple);
-            this.SpawnFruit(KeyCode.F9, Fruit.Honeymelon);
+            this.SpawnFruit(KeyCode.F9, Fruit.Coconut);
             this.SpawnFruit(KeyCode.F10, Fruit.Watermelon);
             this.FollowMouse();
             this.ReleaseFruit();
@@ -121,13 +121,13 @@ namespace Watermelon_Game.Development
         }
 
         /// <summary>
-        /// Replaces the <see cref="Fruit"/> on the <see cref="FruitSpawner"/> with a <see cref="Fruit.Grape"/>
+        /// Replaces the <see cref="Fruit"/> on the <see cref="FruitSpawner"/> with a <see cref="Fruit.Cherry"/>
         /// </summary>
         private void ReplaceWithGrape()
         {
             if (Input.GetKeyDown(KeyCode.Alpha0))
             {
-                FruitSpawner.ForceFruit_DEVELOPMENT(Fruit.Grape);
+                FruitSpawner.ForceFruit_DEVELOPMENT(Fruit.Cherry);
             }
         }
 
@@ -370,7 +370,7 @@ namespace Watermelon_Game.Development
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Grape, Quaternion.identity);
+                var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Cherry, Quaternion.identity);
                 _fruitBehaviour.ForceGoldenFruit_DEVELOPMENT();
                 _fruitBehaviour.CmdRelease(new Vector2(0, -1), false);
             }
@@ -400,7 +400,7 @@ namespace Watermelon_Game.Development
                 var _maxFruit = Enum.GetValues(typeof(Fruit)).Length - 1;
                 var _randomFruit = (Fruit)Random.Range(0, _maxFruit);
                 
-                PointsController.AddPoints_DEVELOPMENT(_randomFruit, 10);
+                PointsController.AddPoints_DEVELOPMENT(Fruit.Watermelon, 4);
                 StoneFruitCharge.SetFill_DEVELOPMENT(1);
             }
             else if (Input.GetKeyDown(KeyCode.KeypadMinus))

@@ -29,6 +29,27 @@ namespace Watermelon_Game.ExtensionMethods
         {
             return new Vector3(_Vector3.x, _Vector3.y, _Z);
         }
+
+        /// <summary>
+        /// Returns the largest value along a single axis in this <see cref="Vector3"/>
+        /// </summary>
+        /// <param name="_Vector3">The <see cref="Vector3"/> to get the largest value of</param>
+        /// <returns>The largest value along a single axis in this &lt;see cref="Vector3"/&gt;</returns>
+        public static float Max(this Vector3 _Vector3)
+        {
+            var _value = _Vector3.x;
+            
+            if (_Vector3.y > _value)
+            {
+                _value = _Vector3.x;
+            }
+            if (_Vector3.z > _value)
+            {
+                _value = _Vector3.x;
+            }
+
+            return _value;
+        }
         #endregion
     }
 }

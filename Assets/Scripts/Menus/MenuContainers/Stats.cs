@@ -304,9 +304,6 @@ namespace Watermelon_Game.Menus.MenuContainers
         {
             switch (_Fruit)
             {
-                case Fruits.Fruit.Grape:
-                    this.GrapeEvolvedCount++;
-                    break;
                 case Fruits.Fruit.Cherry:
                     this.CherryEvolvedCount++;
                     break;
@@ -325,10 +322,13 @@ namespace Watermelon_Game.Menus.MenuContainers
                 case Fruits.Fruit.Pear:
                     this.PearEvolvedCount++;
                     break;
+                case Fruits.Fruit.Dragonfruit:
+                    this.GrapeEvolvedCount++;
+                    break;
                 case Fruits.Fruit.Pineapple:
                     this.PineappleEvolvedCount++;
                     break;
-                case Fruits.Fruit.Honeymelon:
+                case Fruits.Fruit.Coconut:
                     this.HoneymelonEvolvedCount++;
                     break;
                 case Fruits.Fruit.Watermelon:

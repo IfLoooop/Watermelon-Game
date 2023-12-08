@@ -441,7 +441,11 @@ PrefabInstance:
       objectReference: {fileID: 732877916516823720, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
     - target: {fileID: 2141734944255620400, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_Spacing
-      value: -175
+      value: -300
+      objectReference: {fileID: 0}
+    - target: {fileID: 2141734944255620400, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
+      propertyPath: m_Padding.m_Top
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 4023952835419714051, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -505,7 +509,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5815505016470783006, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1100
+      value: 1200
       objectReference: {fileID: 0}
     - target: {fileID: 5815505016470783006, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_SizeDelta.y
@@ -545,7 +549,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5815505016470783006, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 175
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 5815505016470783006, guid: 3164908f9238d5849bd949c2da88971a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

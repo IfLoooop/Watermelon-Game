@@ -105,7 +105,7 @@ namespace Watermelon_Game.Fruit_Spawn
         {
             if (_PreviousFruit == null)
             {
-                return FruitPrefabSettings.FruitPrefabs.First(_FruitData => (Fruit)_FruitData.Fruit.Value == Fruit.Grape);
+                return FruitPrefabSettings.FruitPrefabs.First(_FruitData => (Fruit)_FruitData.Fruit.Value == Fruit.Cherry);
             }
          
             FruitController.SetWeightMultiplier(_PreviousFruit.Value);
@@ -126,8 +126,8 @@ namespace Watermelon_Game.Fruit_Spawn
 
                 _spawnWeight += _fruitData.GetSpawnWeight();
             }
-            
-            return null;
+
+            throw new NullReferenceException("No suitable fruit could be found, make sure the order of the fruits is always the same as declared in the \"Fruits.cs\"-Enum");
         }
         
         /// <summary>

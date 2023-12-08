@@ -27,7 +27,7 @@ namespace Watermelon_Game.Container
 
         [Header("Settings")]
         [Tooltip("Y-position of the FruitSpawner")]
-        [ShowInInspector] private static ProtectedFloat fruitSpawnerHeight = 16;
+        [ShowInInspector] private static ProtectedFloat fruitSpawnerHeight = 17;
         
         [Header("Debug")]
         [Tooltip("The connection Id of the player that is assigned to this container")]

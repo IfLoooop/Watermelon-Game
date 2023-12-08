@@ -19,7 +19,11 @@ namespace Watermelon_Game.Audio
         #region Inspector Fields
         [Header("References")]
         [Tooltip("Reference to the disabled icon")]
-        [SerializeField] private GameObject bgmDisabledIcon;
+        [SerializeField] private Image volumeIcon;
+        [Tooltip("Icon when the volume is enabled")]
+        [SerializeField] private Sprite volumeEnabled;
+        [Tooltip("Icon when the volume is disabled")]
+        [SerializeField] private Sprite volumeDisabled;
         [Tooltip("Reference to the Slider")]
         [SerializeField] private Slider slider;
         #endregion
@@ -149,14 +153,14 @@ namespace Watermelon_Game.Audio
         /// </summary>
         private void SetBGM()
         {
-            this.bgmDisabledIcon.SetActive(this.isMuted);
-            
             if (this.isMuted)
             {
+                this.volumeIcon.sprite = this.volumeDisabled;
                 AudioPool.PauseAssignedClip(this.bgmIndex);
             }
             else
             {
+                this.volumeIcon.sprite = this.volumeEnabled;
                 AudioPool.PlayAssignedClip(this.bgmIndex);
             }
         }
@@ -195,7 +199,7 @@ namespace Watermelon_Game.Audio
         
 #if DEBUG || DEVELOPMENT_BUILD
         /// <summary>
-        /// FLips the BGM on and off, without enabling <see cref="bgmDisabledIcon"/> <br/>
+        /// FLips the BGM on and off, without enabling <see cref="volumeIcon"/> <br/>
         /// <b>Development only!</b>
         /// </summary>
         public static void FlipBGM_DEVELOPMENT()

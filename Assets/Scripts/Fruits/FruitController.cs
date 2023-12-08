@@ -86,21 +86,6 @@ namespace Watermelon_Game.Fruits
         #endregion
         
         #region Methods
-        // /// <summary>
-        // /// Needs to be called with <see cref="RuntimeInitializeLoadType.BeforeSplashScreen"/>
-        // /// </summary>
-        // [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSplashScreen)]
-        // private static void SubscribeToWebSettings()
-        // {
-        //     WebSettings.OnApplyWebSettings += FruitSettings.ApplyWebSettings;
-        // }
-        //
-        // protected override void OnDestroy()
-        // {
-        //     base.OnDestroy();
-        //     WebSettings.OnApplyWebSettings -= FruitSettings.ApplyWebSettings;
-        // }
-
         protected override void Init()
         {
             base.Init();
@@ -260,30 +245,16 @@ namespace Watermelon_Game.Fruits
         {
             foreach (var _evolvingFruits in evolvingFruits)
             {
-                var _fruitBehaviour1 = _evolvingFruits.Fruit1.FruitBehaviour;
-                var _fruitBehaviour2 = _evolvingFruits.Fruit2.FruitBehaviour;
+                var _fruitBehaviour1 = _evolvingFruits.Fruit1;
+                var _fruitBehaviour2 = _evolvingFruits.Fruit2;
                 
                 var _fruit1 = _fruitBehaviour1 == _FruitBehaviourToEvolve;
                 var _fruit2 = _fruitBehaviour2 == _FruitBehaviourToEvolve;
                 
-                // TODO: Maybe combine into one method
-                if (_fruit1)
+                if (_fruit1 || _fruit2)
                 {
-                    _evolvingFruits.Fruit1HasReachedTarget();
-                    if (_evolvingFruits.HaveBothFinished())
-                    {
-                        Evolve(_Authority, _NextFruitPosition, _fruitBehaviour1, _fruitBehaviour2);
-                        break;
-                    }
-                }
-                else if (_fruit2)
-                {
-                    _evolvingFruits.Fruit2HasReachedTarget();
-                    if (_evolvingFruits.HaveBothFinished())
-                    {
-                        Evolve(_Authority, _NextFruitPosition, _fruitBehaviour1, _fruitBehaviour2);
-                        break;
-                    }
+                    Evolve(_Authority, _NextFruitPosition, _fruitBehaviour1, _fruitBehaviour2);
+                    break;
                 }
             }
         }
@@ -342,12 +313,12 @@ namespace Watermelon_Game.Fruits
             
             var _fruitContainerTransform = FruitContainer.Transform;
             var _childCount = _fruitContainerTransform.childCount;
-
+            
 #if UNITY_EDITOR 
             // Can happen in multiplayer, because the "Fruit Container" contains the fruits of all clients
             // TODO: On GameOver, fruits have to be destroyed by the server, not by the individual clients
             // TODO: Remove "this.currentGameMode"
-            if (_childCount > 0 && this.currentGameMode == GameMode.SinglePlayer && !GameController.IsApplicationQuitting) // TODO: No idea why sometimes fruits all left in the container
+            if (_childCount > 0 && this.currentGameMode == GameMode.SinglePlayer && !GameController.IsApplicationQuitting && !GameController.IsEditorApplicationQuitting) // TODO: No idea why sometimes fruits all left in the container
             {
                 Debug.LogError($"{FruitContainer.Transform.name} has still {_childCount} children, destroying now.");
             }

@@ -9,6 +9,7 @@ using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Container;
+using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
@@ -40,8 +41,6 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private SpriteRenderer faceSpriteRenderer;
         [Tooltip("Reference to the golden fruit GameObject")]
         [SerializeField] private GameObject goldenFruit;
-        [Tooltip("SpriteRenderer of the GoldenFruit")]
-        [SerializeField] private SpriteRenderer goldenFruitSpriteRenderer;
         
         [Header("Settings")]
         [Tooltip("The type of this fruit")]
@@ -50,15 +49,15 @@ namespace Watermelon_Game.Fruits
         // ReSharper disable once UnusedMember.Local
         private static IEnumerable fruits = new ValueDropdownList<ProtectedInt32>
         {
-            { $"{nameof(Watermelon_Game.Fruits.Fruit.Grape)}", (int)Watermelon_Game.Fruits.Fruit.Grape },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Cherry)}", (int)Watermelon_Game.Fruits.Fruit.Cherry },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Strawberry)}", (int)Watermelon_Game.Fruits.Fruit.Strawberry },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Lemon)}", (int)Watermelon_Game.Fruits.Fruit.Lemon },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Orange)}", (int)Watermelon_Game.Fruits.Fruit.Orange },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Apple)}", (int)Watermelon_Game.Fruits.Fruit.Apple },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Pear)}", (int)Watermelon_Game.Fruits.Fruit.Pear },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Dragonfruit)}", (int)Watermelon_Game.Fruits.Fruit.Dragonfruit },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Pineapple)}", (int)Watermelon_Game.Fruits.Fruit.Pineapple },
-            { $"{nameof(Watermelon_Game.Fruits.Fruit.Honeymelon)}", (int)Watermelon_Game.Fruits.Fruit.Honeymelon },
+            { $"{nameof(Watermelon_Game.Fruits.Fruit.Coconut)}", (int)Watermelon_Game.Fruits.Fruit.Coconut },
             { $"{nameof(Watermelon_Game.Fruits.Fruit.Watermelon)}", (int)Watermelon_Game.Fruits.Fruit.Watermelon },
         };
         [Tooltip("The size/scale of this fruit type")]
@@ -67,10 +66,6 @@ namespace Watermelon_Game.Fruits
         
         #region Fields
 #pragma warning disable CS0109
-        /// <summary>
-        /// <see cref="CircleCollider2D"/>
-        /// </summary>
-        private CircleCollider2D circleCollider2D;
         /// <summary>
         /// <see cref="UnityEngine.Rigidbody2D"/>
         /// </summary>
@@ -93,7 +88,11 @@ namespace Watermelon_Game.Fruits
         /// The currently active <see cref="Skill"/> on this fruit <br/>
         /// <i>Will be null of none is active</i>
         /// </summary>
-        private Skill? activeSkill; 
+        private Skill? activeSkill;
+        /// <summary>
+        /// The default sorting order of <see cref="fruitSpriteRenderer"/>
+        /// </summary>
+        private int defaultSortingOrder;
         /// <summary>
         /// Is true for a period of time, after the fruit had a collision with something
         /// </summary>
@@ -170,10 +169,11 @@ namespace Watermelon_Game.Fruits
         /// Indicates whether this fruit is currently evolving with another fruit 
         /// </summary>
         public ProtectedBool IsEvolving { get; private set; }
+
         /// <summary>
-        /// <see cref="CircleCollider2D.radius"/> of the <see cref="circleCollider2D"/>
+        /// Half size of the biggest collider in on this <see cref="FruitBehaviour"/> 
         /// </summary>
-        public ProtectedFloat ColliderRadius => this.circleCollider2D.radius;
+        public ProtectedFloat ColliderHalfSize { get; private set; }
         #endregion
         
         #region Events
@@ -222,9 +222,11 @@ namespace Watermelon_Game.Fruits
         private void Awake()
         {
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
-            this.circleCollider2D = base.GetComponent<CircleCollider2D>();
             this.fruitsFirstCollision = base.GetComponent<FruitsFirstCollision>();
             this.evolvingFruitTrigger = base.GetComponentInChildren<EvolvingFruitTrigger>();
+            this.ColliderHalfSize = base.GetComponentsInChildren<Collider2D>().Max(_Collider => _Collider.bounds.extents.Max());
+            
+            this.defaultSortingOrder = this.fruitSpriteRenderer.sortingOrder;
         }
         
         private void Start()
@@ -539,7 +541,7 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         public void IncreaseSortingOrder()
         {
-            const int VALUE = 1;
+            const int VALUE = 12; // TODO: Get form Layer Controller
             
             this.SetSortingOrder(VALUE);
         }
@@ -549,21 +551,18 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         private void DecreaseSortingOrder()
         {
-            const int VALUE = -1;
-            
-            this.SetSortingOrder(VALUE);
+            this.SetSortingOrder(this.defaultSortingOrder);
         }
         
         /// <summary>
-        /// Adds the given value to the <see cref="SpriteRenderer.sortingOrder"/> of <see cref="fruitSpriteRenderer"/> and <see cref="faceSpriteRenderer"/> <br/>
+        /// Sets the given value to the <see cref="SpriteRenderer.sortingOrder"/> of <see cref="fruitSpriteRenderer"/> and <see cref="faceSpriteRenderer"/> <br/>
         /// <i>Positive and negative values work</i>
         /// </summary>
-        /// <param name="_Value">The value to add to the <see cref="SpriteRenderer.sortingOrder"/> of <see cref="fruitSpriteRenderer"/> and <see cref="faceSpriteRenderer"/></param>
+        /// <param name="_Value">The value to set to the <see cref="SpriteRenderer.sortingOrder"/> of <see cref="fruitSpriteRenderer"/> and <see cref="faceSpriteRenderer"/></param>
         private void SetSortingOrder(int _Value)
         {
-            this.fruitSpriteRenderer.sortingOrder += _Value;
-            this.faceSpriteRenderer.sortingOrder += _Value;
-            this.goldenFruitSpriteRenderer.sortingOrder += _Value;
+            this.fruitSpriteRenderer.sortingOrder = _Value;
+            this.faceSpriteRenderer.sortingOrder = _Value + 1;
         }
         
         /// <summary>
@@ -649,7 +648,7 @@ namespace Watermelon_Game.Fruits
         public void MoveTowards(FruitBehaviour _FruitBehaviour)
         {
             this.IsEvolving = true;
-            this.evolvingFruitTrigger.SetFruitToEvolveWith(_FruitBehaviour);
+            this.evolvingFruitTrigger.SetFruitLayer();
             base.gameObject.layer = LayerMaskController.EvolvingFruitLayer;
             this.SetMass(FruitSettings.EvolveMass, Operation.Set);
             this.moveTowards = InternalMoveTowards(_FruitBehaviour);
@@ -663,26 +662,34 @@ namespace Watermelon_Game.Fruits
         /// <returns></returns>
         private IEnumerator InternalMoveTowards(FruitBehaviour _FruitBehaviour)
         {
+            var _testName = _FruitBehaviour.name;
+            
             this.rigidbody2D.velocity = Vector2.zero;
             var _maxDistanceDelta = this.GetSize() * FruitSettings.MoveTowardsStepMultiplier;
             float? _previousDistance = null;
             
-            while (this.rigidbody2D.position != _FruitBehaviour.rigidbody2D.position)
+            while (_FruitBehaviour.rigidbody2D != null && this.rigidbody2D.position != _FruitBehaviour.rigidbody2D.position)
             {
                 var _newPosition = Vector2.MoveTowards(this.rigidbody2D.position, _FruitBehaviour.rigidbody2D.position, _maxDistanceDelta);
                 var _distance = Vector2.Distance(this.rigidbody2D.position, _newPosition);
                 
-                if (_distance <= _previousDistance) // Stuck
-                    this.evolvingFruitTrigger.Evolve(base.authority); // TODO: "EvolvingFruitTrigger.cs" might not be needed anymore (Needs to be tested!)
+                if (_distance <= _previousDistance)
+                    this.evolvingFruitTrigger.Evolve(this, base.authority);
                 else
                     _previousDistance = _distance;
                 
                 this.rigidbody2D.MovePosition(_newPosition);
                 
                 yield return FruitSettings.MoveTowardsWaitForSeconds;
+
+                if (_FruitBehaviour.rigidbody2D == null)
+                {
+#if UNITY_EDITOR // TODO: Test if nothing breaks with this solution
+                    Debug.LogWarning($"_FruitBehaviour.name:{_testName} | base.name:{base.name}");
+#endif
+                    this.DestroyFruit();
+                }
             }
-            
-            base.StopCoroutine(this.moveTowards);
         }
 
         /// <summary>
@@ -729,7 +736,7 @@ namespace Watermelon_Game.Fruits
             {
                 var _localScale = base.transform.localScale + (_TargetScale + FruitSettings.EvolveStep.Value) * Time.deltaTime;
                 base.transform.localScale = _localScale.Clamp(Vector3.zero, _TargetScale);
-                yield return FruitSettings.GrowFruitWaitForSeconds;
+                yield return FruitSettings.SetScaleWaitForSeconds;
             }
         }
         
@@ -772,15 +779,31 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         public void DestroyFruit()
         {
-            // TODO: Add a visual animation
             FruitController.RemoveFruit(base.gameObject.GetHashCode());
+            base.StartCoroutine(nameof(ShrinkFruit));
+        }
+
+        /// <summary>
+        /// Shrinks the <see cref="Transform.localScale"/> towards <see cref="Vector3.zero"/> before destroying it
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerator ShrinkFruit() // TODO: Maybe add particle
+        {
+            var _originalSize = base.transform.localScale.x;
+            
+            while (base.transform.localScale.x > Vector3.zero.x)
+            {
+                base.transform.localScale -= FruitSettings.ShrinkStep.Value * _originalSize * Time.deltaTime;
+                yield return FruitSettings.SetScaleWaitForSeconds;
+            }
+            
             Destroy(base.gameObject);
             if (!base.isServer)
             {
                 this.CmdDestroyFruit(base.gameObject);
             }
         }
-
+        
         /// <summary>
         /// <see cref="DestroyFruit"/>
         /// </summary>

@@ -376,9 +376,6 @@ namespace Watermelon_Game.Steamworks.NET
             
             switch (_Fruit)
             {
-                case Fruit.Grape:
-                    this.stats.SetStat(_Stats => _Stats.Grapes, 1, Operation.Add);
-                    break;
                 case Fruit.Cherry:
                     this.stats.SetStat(_Stats => _Stats.Cherries, 1, Operation.Add);
                     break;
@@ -397,10 +394,13 @@ namespace Watermelon_Game.Steamworks.NET
                 case Fruit.Pear:
                     this.stats.SetStat(_Stats => _Stats.Pears, 1, Operation.Add);
                     break;
+                case Fruit.Dragonfruit:
+                    this.stats.SetStat(_Stats => _Stats.Grapes, 1, Operation.Add);
+                    break;
                 case Fruit.Pineapple:
                     this.stats.SetStat(_Stats => _Stats.Pineapples, 1, Operation.Add);
                     break;
-                case Fruit.Honeymelon:
+                case Fruit.Coconut:
                     this.stats.SetStat(_Stats => _Stats.Honeymelons, 1, Operation.Add);
                     break;
                 case Fruit.Watermelon:

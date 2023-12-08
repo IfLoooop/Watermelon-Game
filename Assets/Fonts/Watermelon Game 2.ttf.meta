@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: fd8f0e3490512f6438810b4834e285bd
+guid: 09fd063b16165134aab6a505b0756cda
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -11,7 +11,7 @@ TrueTypeFontImporter:
   fontNames:
   - Watermelon Game 2
   fallbackFontReferences:
-  - {fileID: 12800000, guid: 564dd46712156cd4e8fad2546316b0c1, type: 3}
+  - {fileID: 12800000, guid: e72903600194acf4a864b3fd9c17b232, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
