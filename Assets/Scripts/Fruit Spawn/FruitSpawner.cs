@@ -1,4 +1,3 @@
-using System;
 using JetBrains.Annotations;
 using Mirror;
 using OPS.AntiCheat.Field;
@@ -16,6 +15,7 @@ using Watermelon_Game.Networking;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility;
+using Watermelon_Game.Utility.Pools;
 
 namespace Watermelon_Game.Fruit_Spawn
 {
@@ -34,6 +34,8 @@ namespace Watermelon_Game.Fruit_Spawn
         [Header("References")] 
         [Tooltip("Reference to the FruitSpawnerAim component of this FruitSpawner")]
         [SerializeField] private FruitSpawnerAim fruitSpawnerAim;
+        [Tooltip("Particle system that is played when a skill is used")]
+        [SerializeField] private ParticleSystem shootExplosion;
         [Tooltip("Holds the steam usernames")]
         [SerializeField] private new TextMeshProUGUI name;
         
@@ -570,7 +572,7 @@ namespace Watermelon_Game.Fruit_Spawn
             skipCooldown:;
 #endif
             this.lastRelease = Time.time;
-            this.CmdReleaseFruit(this.fruitBehaviour, -this.fruitSpawnerAim.transform.up);
+            this.CmdReleaseFruit(this.fruitBehaviour, -this.fruitSpawnerAim.transform.up, this.anyActiveSkill);
             this.ResetFruitSpawner(false);
         }
         
@@ -579,13 +581,19 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         /// <param name="_FruitBehaviour">The <see cref="FruitBehaviour"/> to release</param>
         /// <param name="_AimRotation">The direction, the <see cref="fruitSpawnerAim"/> is pointing at</param>
+        /// <param name="_AnyActiveSkill">Is a skill currently active?</param>
         /// <param name="_Sender"><see cref="NetworkBehaviour.connectionToClient"/></param>
         [Command(requiresAuthority = false)] // ReSharper disable once UnusedParameter.Local
-        private void CmdReleaseFruit(FruitBehaviour _FruitBehaviour, Vector2 _AimRotation, NetworkConnectionToClient _Sender = null)
+        private void CmdReleaseFruit(FruitBehaviour _FruitBehaviour, Vector2 _AimRotation, bool _AnyActiveSkill, NetworkConnectionToClient _Sender = null)
         {
             if (_Sender == base.netIdentity.connectionToClient)
             {
                 this.TargetReleaseFruit(_Sender, _FruitBehaviour, _AimRotation);
+
+                if (_AnyActiveSkill)
+                {
+                    this.RpcReleaseFruit();
+                }
             }
         }
         
@@ -602,13 +610,42 @@ namespace Watermelon_Game.Fruit_Spawn
         }
 
         /// <summary>
+        /// <see cref="ReleaseFruit"/>
+        /// </summary>
+        [ClientRpc]
+        private void RpcReleaseFruit()
+        {
+            this.shootExplosion.Play();
+        }
+        
+        /// <summary>
         /// Shoots the given <see cref="StoneFruitBehaviour"/> in the direction of <see cref="ContainerBounds.StoneFruitTarget"/>
         /// </summary>
         /// <param name="_StoneFruit">The <see cref="StoneFruitBehaviour"/> to shoot</param>
         /// <param name="_ShootForce">Multiplier for the force with which the fruit is shot</param>
+        [Client]
         public void ShootStoneFruit(StoneFruitBehaviour _StoneFruit, float _ShootForce)
         {
+            this.CmdShootStoneFruit();
             _StoneFruit.Shoot(this.containerBounds!.StoneFruitTarget.localPosition - base.transform.position, _ShootForce);
+        }
+
+        /// <summary>
+        /// <see cref="ShootStoneFruit"/>
+        /// </summary>
+        [Command]
+        private void CmdShootStoneFruit()
+        {
+            this.RpcShootStoneFruit();
+        }
+
+        /// <summary>
+        /// <see cref="ShootStoneFruit"/>
+        /// </summary>
+        [ClientRpc]
+        private void RpcShootStoneFruit()
+        {
+            this.shootExplosion.Play();
         }
         
         /// <summary>
@@ -680,13 +717,25 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_Fruit">The <see cref="Fruit"/> to give to the <see cref="FruitSpawner"/></param>
         public static void ForceFruit_DEVELOPMENT(Fruit _Fruit)
         {
+            instance.CmdForceFruit_DEVELOPMENT(_Fruit);
+        }
+
+        /// <summary>
+        /// <see cref="ForceFruit_DEVELOPMENT"/>
+        /// </summary>
+        /// <param name="_Fruit">The <see cref="Fruit"/> to give to the <see cref="FruitSpawner"/></param>
+        /// <param name="_Sender">The caller</param>
+        [Command(requiresAuthority = false)]
+        private void CmdForceFruit_DEVELOPMENT(Fruit _Fruit, NetworkConnectionToClient _Sender = null)
+        {
             if (instance.fruitBehaviour != null)
             {
                 Destroy(instance.fruitBehaviour.gameObject);
             }
-
+            
             var _transform = instance.transform;
-            instance.fruitBehaviour = FruitBehaviour.SpawnFruit(_transform, _transform.position, Quaternion.identity, (int)_Fruit, true);
+            instance.fruitBehaviour = FruitBehaviour.SpawnFruit(_transform, _transform.position, Quaternion.identity, (int)_Fruit, true, _Sender);
+            instance.fruitBehaviour.SetScale();
             instance.fruitBehaviour.IncreaseSortingOrder();
             instance.fruitSpawnerAim.ResetAimRotation();
             instance.fruitSpawnerCollider.size = new Vector2(instance.fruitBehaviour.GetSize() + instance.colliderSizeOffset, instance.fruitSpawnerCollider.size.y);

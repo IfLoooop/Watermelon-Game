@@ -12,6 +12,7 @@ using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Singletons;
 using Watermelon_Game.Utility;
+using Watermelon_Game.Utility.Pools;
 
 namespace Watermelon_Game.Fruits
 {
@@ -187,17 +188,27 @@ namespace Watermelon_Game.Fruits
         
         /// <summary>
         /// Destroys the fruits with the given <see cref="HashCode"/> <br/>
-        /// <i>Uses <see cref="GoldenFruitCollision"/></i>
+        /// <i>Uses <see cref="GoldenFruitCollision(int, bool, Vector2)"/></i>
         /// </summary>
         /// <param name="_GoldenFruitHashcode">The <see cref="HashCode"/> of the upgraded golden fruit</param>
         /// <param name="_FruitToDestroyHashCode">The <see cref="HashCode"/> of the other fruit</param>
-        private void UpgradedGoldenFruitCollision(int _GoldenFruitHashcode, int _FruitToDestroyHashCode)
+        private void UpgradedGoldenFruitCollision(int _GoldenFruitHashcode, int _FruitToDestroyHashCode, Vector2 _CollisionPoint)
         {
-            var _otherIsNotGoldenFruit = GoldenFruitCollision(_FruitToDestroyHashCode, false);
+            var _otherIsNotGoldenFruit = GoldenFruitCollision(_FruitToDestroyHashCode, false, _CollisionPoint);
             if (_otherIsNotGoldenFruit)
             {
-                GoldenFruitCollision(_GoldenFruitHashcode, true);
+                GoldenFruitCollision(_GoldenFruitHashcode, true, _CollisionPoint);
             }
+        }
+
+        /// <summary>
+        /// Destroys the fruits with the given <see cref="HashCode"/>
+        /// </summary>
+        /// <param name="_FruitToDestroyHashCode"><see cref="HashCode"/> of the fruit to destroy</param>
+        /// <param name="_CollisionPoint">The collision point in world coordinates</param>
+        private void GoldenFruitCollision(int _FruitToDestroyHashCode, Vector2 _CollisionPoint)
+        {
+            this.GoldenFruitCollision(_FruitToDestroyHashCode, false, _CollisionPoint);
         }
         
         /// <summary>
@@ -208,8 +219,9 @@ namespace Watermelon_Game.Fruits
         /// Force destroy the given fruit, even if it is a <see cref="FruitBehaviour.IsGoldenFruit"/> <br/>
         /// <i>For upgraded golden fruits (They are destroyed through this method)</i>
         /// </param>
+        /// <param name="_CollisionPoint">The collision point in world coordinates</param>
         /// <returns>True if the other fruit was not a golden fruit, otherwise false</returns>
-        private bool GoldenFruitCollision(int _FruitToDestroyHashCode, bool _ForceDestroy)
+        private bool GoldenFruitCollision(int _FruitToDestroyHashCode, bool _ForceDestroy, Vector2 _CollisionPoint)
         {
             var _otherIsNotGoldenFruit = true;
             var _fruitToDestroy = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _FruitToDestroyHashCode).Value;
@@ -226,6 +238,7 @@ namespace Watermelon_Game.Fruits
                 if (!_ForceDestroy)
                 {
                     OnGoldenFruitCollision?.Invoke(_enumFruit);
+                    this.networkFruitController.CmdGoldenFruitCollision(_CollisionPoint);
                 }
                 
                 _fruitToDestroy.DestroyFruit();

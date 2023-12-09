@@ -6,7 +6,7 @@ using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
 using Object = UnityEngine.Object;
 
-namespace Watermelon_Game.Utility
+namespace Watermelon_Game.Utility.Pools
 {
     /// <summary>
     /// Generic object pool for <see cref="Component"/>s
@@ -20,7 +20,7 @@ namespace Watermelon_Game.Utility
         /// Holds all <see cref="Component"/>s
         /// </summary>
         [ListDrawerSettings(DefaultExpandedState = true)]
-        [ReadOnly] [ShowInInspector] private readonly List<T> objectPool = new();
+        [ShowInInspector][ReadOnly]  private readonly List<T> objectPool = new();
         /// <summary>
         /// All <see cref="Component"/>s in <see cref="objectPool"/> will be clones of this
         /// </summary>

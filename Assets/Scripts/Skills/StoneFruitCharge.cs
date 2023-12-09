@@ -28,7 +28,7 @@ namespace Watermelon_Game.Skills
 
         [Header("Settings")]
         [Tooltip("Multiplier for the force, the stone fruit is shot with")]
-        [SerializeField] private ProtectedFloat shootForceMultiplier;
+        [SerializeField] private ProtectedFloat shootForceMultiplier = 2;
         
         [Tooltip("Value with which the fill grows, with each step")]
         [SerializeField] private ProtectedFloat fillStep = .0125f;
@@ -281,11 +281,11 @@ namespace Watermelon_Game.Skills
             {
                 Instance.TargetFillAmount += _Amount;
             
-            if (Instance.smoothFill == null)
-            {
-                Instance.smoothFill = Instance.SmoothFill();
-                Instance.StartCoroutine(Instance.smoothFill);
-            } 
+                if (Instance.smoothFill == null)
+                {
+                    Instance.smoothFill = Instance.SmoothFill();
+                    Instance.StartCoroutine(Instance.smoothFill);
+                } 
             }
         }
 #endif

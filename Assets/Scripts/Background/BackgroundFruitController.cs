@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Utility;
+using Watermelon_Game.Utility.Pools;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Background

@@ -12,9 +12,9 @@ namespace Watermelon_Game.Utility
     {
         #region Inspector Fields
         [Tooltip("Absolute x position of the cameras horizontal frustum (In world coordinates)")] 
-        [ReadOnly] [SerializeField] private float xFrustumPosition;
+        [SerializeField][ReadOnly]  private float xFrustumPosition;
         [Tooltip("Absolute y position of the cameras horizontal frustum (In world coordinates)")]
-        [ReadOnly] [SerializeField] private float yFrustumPosition;
+        [SerializeField][ReadOnly]  private float yFrustumPosition;
         #endregion
         
         #region Fields
@@ -54,7 +54,6 @@ namespace Watermelon_Game.Utility
         {
             instance = this;
             Camera = base.GetComponent<Camera>();
-            
         }
         
         private void OnRectTransformDimensionsChange()

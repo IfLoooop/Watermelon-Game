@@ -2,6 +2,7 @@ using Mirror;
 using OPS.AntiCheat.Field;
 using UnityEngine;
 using Watermelon_Game.Fruits;
+using Watermelon_Game.Utility.Pools;
 
 namespace Watermelon_Game.Networking
 {
@@ -52,6 +53,26 @@ namespace Watermelon_Game.Networking
         {
             _FruitBehaviour.CmdEvolve();
             this.fruitController.AddFruit(_FruitBehaviour); // TODO: Not added to the dict on client
+        }
+
+        /// <summary>
+        /// <see cref="FruitController.GoldenFruitCollision(int, bool, Vector2)"/>
+        /// </summary>
+        /// <param name="_Position">The position to spawn the particle at</param>
+        [Command(requiresAuthority = false)]
+        public void CmdGoldenFruitCollision(Vector3 _Position)
+        {
+            this.RpcGoldenFruitCollision(_Position);
+        }
+
+        /// <summary>
+        /// <see cref="FruitController.GoldenFruitCollision(int, bool, Vector2)"/>
+        /// </summary>
+        /// <param name="_Position">The position to spawn the particle at</param>
+        [ClientRpc]
+        private void RpcGoldenFruitCollision(Vector3 _Position)
+        {
+            ParticlePool.PlayRandomParticle(_Group => _Group.TextExplosions, _Position);
         }
         #endregion
     }

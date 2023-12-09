@@ -42,10 +42,12 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private ProtectedInt32 watermelonSpawnWeight = 0;
         [Tooltip("Chance for a Golden Fruit in %")]
         [SerializeField] private ProtectedFloat goldenFruitChance = 0.01f;
-        [Tooltip("Multiplier for a Fruits mass on first release")]
-        [SerializeField] private ProtectedFloat massMultiplier = 2.5f;
         [Tooltip("How many fruits need to be on the map for a golden fruit spawn to be possible")]
         [SerializeField] private ProtectedUInt32 canSpawnAfter = 10; // TODO: Rename
+        [Tooltip("Multiplier for the force that is applied onto a golden fruit when it collides with another fruit")]
+        [SerializeField] private ProtectedFloat goldenFruitPushForceMultiplier = 10f;
+        [Tooltip("Multiplier for a Fruits mass on first release")]
+        [SerializeField] private ProtectedFloat massMultiplier = 2.5f;
         [Tooltip("The mass of a fruit while it's evolving")]
         [SerializeField] private ProtectedFloat evolveMass = 100;
         [Tooltip("Time in seconds between each movement, while a fruit is evolving")]
@@ -93,6 +95,10 @@ namespace Watermelon_Game.Fruits
         /// <see cref="canSpawnAfter"/>
         /// </summary>
         public static ProtectedUInt32 CanSpawnAfter => instance.canSpawnAfter;
+        /// <summary>
+        /// <see cref="goldenFruitPushForceMultiplier"/>
+        /// </summary>
+        public static ProtectedFloat GoldenFruitPushForceMultiplier => instance.goldenFruitPushForceMultiplier;
         /// <summary>
         /// <see cref="FruitSpawnWeights"/>
         /// </summary>

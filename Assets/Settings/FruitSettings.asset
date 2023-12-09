@@ -42,10 +42,12 @@ MonoBehaviour:
     fakeValue: 0
   goldenFruitChance:
     fakeValue: 0.01
-  massMultiplier:
-    fakeValue: 2.5
   canSpawnAfter:
     fakeValue: 10
+  goldenFruitPushForceMultiplier:
+    fakeValue: 10
+  massMultiplier:
+    fakeValue: 2.5
   evolveMass:
     fakeValue: 100
   moveTowardsWaitTime:

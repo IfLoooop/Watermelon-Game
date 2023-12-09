@@ -3,15 +3,18 @@ TODO: [IMPORTANT] - Changed the Network Transform and Rigidbody on Fruits, Fruit
 TODO: Test if fruit shrink works correctly in multiplayer
 TODO: FruitSpawner aim is visible in multiplayer while "Waiting for other Player" (TEST)
 TODO: Friends only lobby does not seem tor work (TEST)
+TODO: Test if screen flash on golden fruit particle spawn is in build or just editor
 
-TODO: Add multiplayer game over menu win/lose banner
-TODO: Add "Feel" plugin to the project
-TODO: Fruit hit animation (on evolve and golden fruit collision)
 TODO: Points popup on evolve
+TODO: Make sure fruits are getting bigger and not smaller (pineapple and coconut)
 TODO: points fly to melon slices animation
 TODO: Golden fruit sprite shader
 TODO: Change splash image color to blue
 TODO: Change icons
+
+TODO: Disable audio button lighter blue
+TODO: Close menu button lighter blue
+TODO: Password menu enter lighter blue
 
 TODO: Make Layer controller
 TODO: In FruitBehaviour set layer through LayerController

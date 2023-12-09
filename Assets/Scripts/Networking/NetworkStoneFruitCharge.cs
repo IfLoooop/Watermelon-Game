@@ -5,6 +5,7 @@ using Watermelon_Game.Audio;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Skills;
+using Watermelon_Game.Utility.Pools;
 
 namespace Watermelon_Game.Networking
 {
@@ -72,6 +73,7 @@ namespace Watermelon_Game.Networking
             _StoneFruit.transform.SetParent(FruitContainer.Transform, true);
             FruitController.AddStoneFruit(_StoneFruit);
             AudioPool.PlayClip(AudioClipName.Shoot);
+            
         }
 
         /// <summary>

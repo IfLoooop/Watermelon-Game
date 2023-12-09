@@ -216,7 +216,7 @@ MonoBehaviour:
   - {fileID: 6394034756729168806}
   - {fileID: 3343695293776145388}
   shootForceMultiplier:
-    fakeValue: 5
+    fakeValue: 2
   fillStep:
     fakeValue: 0.0125
   fruitMultiplier:
@@ -555,6 +555,14 @@ PrefabInstance:
     - target: {fileID: 2285478699613635227, guid: a7b4c7039a6ecfa4797024529740728d, type: 3}
       propertyPath: m_text
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2285478699613635227, guid: a7b4c7039a6ecfa4797024529740728d, type: 3}
+      propertyPath: m_fontSize
+      value: 1250
+      objectReference: {fileID: 0}
+    - target: {fileID: 2285478699613635227, guid: a7b4c7039a6ecfa4797024529740728d, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 1250
       objectReference: {fileID: 0}
     - target: {fileID: 3970163476235240392, guid: a7b4c7039a6ecfa4797024529740728d, type: 3}
       propertyPath: m_Pivot.x

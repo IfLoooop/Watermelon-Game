@@ -164,7 +164,7 @@ namespace Watermelon_Game.Development
                 
                 this.lastPressedKey = _KeyCode;
                 var _mouseWorldPosition = this.camera.ScreenToWorldPoint(Input.mousePosition);
-                this.currentFruit = this.SpawnFruit(_mouseWorldPosition.WithZ(0), _Fruit, Quaternion.identity);
+                this.CmdSpawnFruitAtMouse(_mouseWorldPosition.WithZ(0), _Fruit, Quaternion.identity);
             }
         }
 
@@ -348,7 +348,7 @@ namespace Watermelon_Game.Development
 
                     foreach (var _savedFruit in this.savedFruits)
                     {
-                        this.SpawnFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation).CmdRelease(new Vector2(0, -1), false);
+                        this.CmdSpawnLoadedFruit(_savedFruit.Position, _savedFruit.Fruit, _savedFruit.Rotation);
                     }
 #if UNITY_EDITOR
                     Debug.Log($"{this.savedFruits.Count} Fruits spawned.");
@@ -364,30 +364,60 @@ namespace Watermelon_Game.Development
         }
         
         /// <summary>
+        /// Spawns the given <see cref="Fruit"/> and sets it as the <see cref="currentFruit"/> <br/>
+        /// <i>Used for mouse follow</i>
+        /// </summary>
+        /// <param name="_Position">The initial position of the fruit</param>
+        /// <param name="_Fruit">The <see cref="Fruit"/> to spawn</param>
+        /// <param name="_Rotation">The rotation of the fruit</param>
+        /// <param name="_Sender">The caller</param>
+        [Command(requiresAuthority = false)]
+        private void CmdSpawnFruitAtMouse(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation, NetworkConnectionToClient _Sender = null)
+        {
+            this.currentFruit = FruitBehaviour.SpawnFruit(FruitContainer.Transform, _Position, _Rotation, (int)_Fruit, true, _Sender);
+            this.currentFruit!.SetScale();
+        }
+        
+        /// <summary>
         /// Spawns an upgraded golden <see cref="Fruit"/>
         /// </summary>
         private void SpawnUpgradedFruit()
         {
             if (Input.GetKeyDown(KeyCode.G))
             {
-                var _fruitBehaviour = this.SpawnFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Cherry, Quaternion.identity);
-                _fruitBehaviour.ForceGoldenFruit_DEVELOPMENT();
-                _fruitBehaviour.CmdRelease(new Vector2(0, -1), false);
+                this.CmdSpawnUpgradedFruit(base.transform.position.WithY(CameraUtils.YFrustumPosition + 15), Fruit.Cherry, Quaternion.identity);
             }
         }
         
         /// <summary>
-        /// Spawns a <see cref="Fruit"/>
+        /// <see cref="SpawnUpgradedFruit"/>
         /// </summary>
-        /// <param name="_Position">Position to spawn the <see cref="Fruit"/> at</param>
+        /// <param name="_Position">The initial position of the fruit</param>
         /// <param name="_Fruit">The <see cref="Fruit"/> to spawn</param>
-        /// <param name="_Rotation">The rotation to spawn the <see cref="Fruit"/> with</param>
-        /// <returns></returns>
-        private FruitBehaviour SpawnFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation)
+        /// <param name="_Rotation">The rotation of the fruit</param>
+        /// <param name="_Sender">The caller</param>
+        [Command(requiresAuthority = false)]
+        private void CmdSpawnUpgradedFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation, NetworkConnectionToClient _Sender = null)
         {
-            var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitContainer.Transform, _Position, _Rotation, (int)_Fruit, true);
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitContainer.Transform, _Position, _Rotation, (int)_Fruit, true, _Sender);
+            _fruitBehaviour.SetScale();
+            _fruitBehaviour.ForceGoldenFruit_DEVELOPMENT();
+            _fruitBehaviour.CmdRelease(new Vector2(0, -1), false);
+        }
 
-            return _fruitBehaviour;
+        /// <summary>
+        /// Use this to spawn one saved fruit
+        /// </summary>
+        /// <param name="_Position">The initial position of the fruit</param>
+        /// <param name="_Fruit">The <see cref="Fruit"/> to spawn</param>
+        /// <param name="_Rotation">The rotation of the fruit</param>
+        /// <param name="_Sender">The caller</param>
+        [Command(requiresAuthority = false)]
+        private void CmdSpawnLoadedFruit(Vector3 _Position, Fruit _Fruit, Quaternion _Rotation, NetworkConnectionToClient _Sender = null)
+        {
+            var _fruitBehaviour = FruitBehaviour.SpawnFruit(FruitContainer.Transform, _Position, _Rotation, (int)_Fruit, true, _Sender);
+            _fruitBehaviour.SetScale();
+            _fruitBehaviour.CmdRelease(new Vector2(0, -1), false);
         }
         
         /// <summary>

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
-using Watermelon_Game.Utility;
+using Watermelon_Game.Audio;
 
-namespace Watermelon_Game.Audio
+namespace Watermelon_Game.Utility.Pools
 {
     /// <summary>
     /// Contains methods to play pooled <see cref="AudioSource"/>s
@@ -107,10 +107,10 @@ namespace Watermelon_Game.Audio
         /// <param name="_Parent">If the lifetime of the <see cref="AudioClip"/> is dependant on the lifetime of a specific <see cref="GameObject"/>, set the <see cref="Transform"/> of that <see cref="GameObject"/> as the <see cref="_Parent"/></param>
         public static void PlayClip(AudioClipName _AudioClipName, [CanBeNull] Transform _Parent = null)
         {
-            var _audioWrapper = Init(_Parent, _AudioClipName, out var _audioClipSettings, out var _waitTime);
+            var _audioWrapper = Init(_Parent, _AudioClipName, out var _audioClipSettings, out var _returnToPool);
             
             Set(_audioWrapper, _audioClipSettings);
-            Play(_audioWrapper, _waitTime);
+            Play(_audioWrapper, 0, _returnToPool);
         }
 
         /// <summary>
@@ -118,12 +118,13 @@ namespace Watermelon_Game.Audio
         /// </summary>
         /// <param name="_AudioClipName"><see cref="AudioClipName"/></param>
         /// <param name="_NormalVolume">If false, plays the clip at half volume</param>
-        public static void PlayClip(AudioClipName _AudioClipName, bool _NormalVolume)
+        /// <param name="_Delay">Delay time specified in seconds</param>
+        public static void PlayClip(AudioClipName _AudioClipName, bool _NormalVolume, float _Delay = 0f)
         {
-            var _audioWrapper = Init(null, _AudioClipName, out var _audioClipSettings, out var _waitTime);
+            var _audioWrapper = Init(null, _AudioClipName, out var _audioClipSettings, out var _returnToPool);
             
             Set(_audioWrapper, _audioClipSettings, _NormalVolume);
-            Play(_audioWrapper, _waitTime);
+            Play(_audioWrapper, _Delay, _returnToPool);
         }
 
         /// <summary>
@@ -132,12 +133,12 @@ namespace Watermelon_Game.Audio
         /// <param name="_Parent">If the lifetime of the <see cref="AudioClip"/> is dependant on the lifetime of a specific <see cref="GameObject"/>, set the <see cref="Transform"/> of that <see cref="GameObject"/> as the <see cref="_Parent"/></param>
         /// <param name="_AudioClipName"><see cref="AudioClipName"/></param>
         /// <param name="_AudioClipSettings"><see cref="AudioClipSettings"/></param>
-        /// <param name="_WaitTime">Time in seconds after which the <see cref="AudioWrapper"/> should return to its pool</param>
+        /// <param name="_ReturnToPool">Time in seconds after which the <see cref="AudioWrapper"/> should return to its pool</param>
         /// <returns></returns>
-        private static AudioWrapper Init([CanBeNull] Transform _Parent, AudioClipName _AudioClipName, out AudioClipSettings _AudioClipSettings, out float _WaitTime)
+        private static AudioWrapper Init([CanBeNull] Transform _Parent, AudioClipName _AudioClipName, out AudioClipSettings _AudioClipSettings, out float _ReturnToPool)
         {
             _AudioClipSettings = AudioClips.Clips[_AudioClipName];
-            _WaitTime = _AudioClipSettings.audioClip.length;
+            _ReturnToPool = _AudioClipSettings.audioClip.length;
 
             return instance.audioPool.Get(_Parent);
         }
@@ -158,14 +159,15 @@ namespace Watermelon_Game.Audio
         }
 
         /// <summary>
-        /// Plays the clip and invokes <see cref="AudioWrapper.ReturnToPool"/> after the given <see cref="_WaitTime"/>
+        /// Plays the clip and invokes <see cref="AudioWrapper.ReturnToPool"/> after the given <see cref="_ReturnToPool"/>
         /// </summary>
         /// <param name="_AudioWrapper"><see cref="AudioWrapper"/></param>
-        /// <param name="_WaitTime">Time in seconds after which the given <see cref="_AudioWrapper"/> should return to its pool</param>
-        private static void Play(AudioWrapper _AudioWrapper, float _WaitTime)
+        /// <param name="_Delay">Delay time specified in seconds</param>
+        /// <param name="_ReturnToPool">Time in seconds after which the given <see cref="_AudioWrapper"/> should return to its pool</param>
+        private static void Play(AudioWrapper _AudioWrapper, float _Delay, float _ReturnToPool)
         {
-            _AudioWrapper.AudioSource.Play();
-            _AudioWrapper.Invoke(nameof(_AudioWrapper.ReturnToPool), _WaitTime);
+            _AudioWrapper.AudioSource.PlayDelayed(_Delay);
+            _AudioWrapper.Invoke(nameof(_AudioWrapper.ReturnToPool), _ReturnToPool);
         }
         
         /// <summary>

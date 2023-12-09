@@ -7,6 +7,7 @@ using UnityEngine;
 using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Singletons;
+using Watermelon_Game.Utility.Pools;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Fruit_Spawn

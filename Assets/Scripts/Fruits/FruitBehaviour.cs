@@ -13,6 +13,7 @@ using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruit_Spawn;
 using Watermelon_Game.Skills;
 using Watermelon_Game.Utility;
+using Watermelon_Game.Utility.Pools;
 using Random = UnityEngine.Random;
 
 namespace Watermelon_Game.Fruits
@@ -191,19 +192,20 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Is called when an upgraded golden fruit collides with another fruit <br/>
         /// <b>Parameter1:</b> Hashcode of the golden fruit <br/>
-        /// <b>Parameter2:</b> Hashcode of the other fruit
+        /// <b>Parameter2:</b> Hashcode of the other fruit <br/>
+        /// <b>Parameter3:</b> The collision point in world coordinates
         /// </summary>
-        public static event Action<int, int> OnUpgradedGoldenFruitCollision;
+        public static event Action<int, int, Vector2> OnUpgradedGoldenFruitCollision;
         /// <summary>
         /// Is called when a golden fruit collides with another fruit <br/>
         /// <b>Parameter1:</b> Hashcode of the fruit to destroy <br/>
-        /// <b>Parameter2:</b> Indicates whether to force destroy the given fruit <br/>
-        /// <b>Parameter2:</b> Indicates if the other fruit was a golden fruit or not -> <see cref="FruitController.GoldenFruitCollision"/>
+        /// <b>Parameter2:</b> The collision point in world coordinates
         /// </summary>
-        public static event Func<int, bool, bool> OnGoldenFruitCollision;
+        public static event Action<int, Vector2> OnGoldenFruitCollision;
         /// <summary>
         /// Is called when a fruit leaves the visible area of the map
         /// </summary>
+        // ReSharper disable once EventNeverSubscribedTo.Global
         public static event Action OnUpgradeToGoldenFruit;
         /// <summary>
         /// Is called when any kind of golden fruits spawns <br/>
@@ -398,9 +400,12 @@ namespace Watermelon_Game.Fruits
                     else
                     {
                         if (this.isUpgradedGoldenFruit)
-                            OnUpgradedGoldenFruitCollision?.Invoke(_thisHashcode, _otherHashCode);
+                            OnUpgradedGoldenFruitCollision?.Invoke(_thisHashcode, _otherHashCode, _Other.GetContact(0).point);
                         else
-                            OnGoldenFruitCollision?.Invoke(_otherHashCode, false);   
+                        {
+                            OnGoldenFruitCollision?.Invoke(_otherHashCode, _Other.GetContact(0).point);
+                            this.rigidbody2D.AddForce(-(_Other.transform.position - base.transform.position) * FruitSettings.GoldenFruitPushForceMultiplier, ForceMode2D.Impulse);
+                        } 
                     }
                     
                     return;
@@ -479,6 +484,7 @@ namespace Watermelon_Game.Fruits
         {
             if (!GameController.IsApplicationQuitting)
             {
+                // Not played on evolution, only on game over
                 if ((this.HasBeenReleased || this.HasBeenEvolved) && !this.IsEvolving)
                 {
                     // TODO: No authority for some reason, maybe just pass "true"
@@ -789,11 +795,21 @@ namespace Watermelon_Game.Fruits
         /// <returns></returns>
         private IEnumerator ShrinkFruit() // TODO: Maybe add particle
         {
-            var _originalSize = base.transform.localScale.x;
+            var _originalSize = base.transform.localScale;
             
             while (base.transform.localScale.x > Vector3.zero.x)
             {
-                base.transform.localScale -= FruitSettings.ShrinkStep.Value * _originalSize * Time.deltaTime;
+                var _shrinkStep = this.GetShrinkStep(_originalSize);
+
+                if (base.transform.localScale.x - _shrinkStep.x > 0)
+                {
+                    base.transform.localScale -= _shrinkStep;
+                }
+                else
+                {
+                    base.transform.localScale = Vector3.zero;
+                }
+                
                 yield return FruitSettings.SetScaleWaitForSeconds;
             }
             
@@ -802,6 +818,17 @@ namespace Watermelon_Game.Fruits
             {
                 this.CmdDestroyFruit(base.gameObject);
             }
+        }
+
+        /// <summary>
+        /// Returns the value the fruit will shrink during each step in <see cref="ShrinkFruit"/> <br/>
+        /// <i>Will be doubled on game over</i>
+        /// </summary>
+        /// <param name="_OriginalSize">The initial <see cref="Transform.localScale"/> of this fruit</param>
+        /// <returns>The value the fruit will shrink during each step in <see cref="ShrinkFruit"/></returns>
+        private Vector3 GetShrinkStep(Vector3 _OriginalSize)
+        {
+            return FruitSettings.ShrinkStep.Value * _OriginalSize.x * Time.deltaTime * (GameController.ActiveGame ? 1 : 2);
         }
         
         /// <summary>
@@ -829,7 +856,7 @@ namespace Watermelon_Game.Fruits
         /// <param name="_Sender">The client who requested the fruit</param>
         /// <returns>The <see cref="FruitBehaviour"/> of the spawned fruit <see cref="GameObject"/></returns>
         [Server]
-        public static FruitBehaviour SpawnFruit([CanBeNull] Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved, NetworkConnectionToClient _Sender = null) // TODO: Should never be null, temporary fix for DevelopmentTools.cs
+        public static FruitBehaviour SpawnFruit([CanBeNull] Transform _Parent, Vector2 _Position, Quaternion _Rotation, ProtectedInt32 _Fruit, bool _HasBeenEvolved, NetworkConnectionToClient _Sender)
         {
             var _fruitData = FruitPrefabSettings.FruitPrefabs.First(_FruitData => _FruitData.Fruit == _Fruit);
             var _fruitBehaviour = Instantiate(_fruitData.Prefab, _Position, _Rotation, _Parent).GetComponent<FruitBehaviour>();

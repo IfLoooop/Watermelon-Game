@@ -42,9 +42,9 @@ namespace Watermelon_Game.Menus
         [SerializeField] private InfoMenu infoMenu;
 
         [Tooltip("Win message")]
-        [SerializeField] private TextMeshProUGUI win;
+        [SerializeField] private GameObject win;
         [Tooltip("Loose message")]
-        [SerializeField] private TextMeshProUGUI loose;
+        [SerializeField] private GameObject loose;
 
         [Header("Settings")]
         [Tooltip("Delay in seconds, between opening and closing the menu, on language change")]

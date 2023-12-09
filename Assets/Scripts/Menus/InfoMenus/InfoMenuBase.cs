@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.Localization.Components;
 using UnityEngine.Localization.Settings;
 using Watermelon_Game.Audio;
+using Watermelon_Game.Utility.Pools;
 
 namespace Watermelon_Game.Menus.InfoMenus
 {

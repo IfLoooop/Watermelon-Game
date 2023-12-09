@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Watermelon_Game.Audio
+namespace Watermelon_Game.Utility.Pools
 {
     /// <summary>
     /// Wrapper <see cref="GameObject"/> for the pool objects of the <see cref="AudioPool"/>
