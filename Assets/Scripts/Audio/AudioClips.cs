@@ -55,6 +55,10 @@ namespace Watermelon_Game.Audio
         [Header("Skill")]
         [Tooltip("When a Skill is selected/deselected")]
         [SerializeField] private AudioClipSettings skillSelect;
+
+        [Header("Points")]
+        [Tooltip("When a melon slice is added")]
+        [SerializeField] private AudioClipSettings melonSliceAdd;
         #endregion
         
         #region Properties

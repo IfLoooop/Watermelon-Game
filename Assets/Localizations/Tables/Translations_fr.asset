@@ -63,7 +63,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39237398589440
-    m_Localized: "Comp\xE9tences Utilis\xE9es"
+    m_Localized: "Capacit\xE9s utilis\xE9es"
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
@@ -111,7 +111,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5954309895516160
-    m_Localized: "Habilet\xE9s"
+    m_Localized: "Capacit\xE9s"
     m_Metadata:
       m_Items: []
   - m_Id: 5954423032672256
@@ -196,6 +196,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12680036816809984
     m_Localized: Espace
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088339753463808
+    m_Localized: Peaux
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088772353978368
+    m_Localized: "Bient\xF4t disponible"
     m_Metadata:
       m_Items: []
   references:

@@ -23,7 +23,10 @@ namespace Watermelon_Game.Utility.Pools
 
         private void OnDestroy()
         {
-            AudioPool.RemovePoolObject(this);
+            if (!GameController.IsApplicationQuitting)
+            {
+                AudioPool.RemovePoolObject(this);
+            }
         }
 
         /// <summary>

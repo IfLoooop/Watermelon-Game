@@ -63,7 +63,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39237398589440
-    m_Localized: Habilidades Utilizadas
+    m_Localized: Habilidades usadas
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
@@ -196,6 +196,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12680036816809984
     m_Localized: Espacio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088339753463808
+    m_Localized: Pieles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088772353978368
+    m_Localized: "Pr\xF3ximamente"
     m_Metadata:
       m_Items: []
   references:

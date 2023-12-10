@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Sirenix.OdinInspector;
@@ -57,14 +56,6 @@ namespace Watermelon_Game.Menus.MenuContainers
         #endregion
         // ReSharper restore UnusedMember.Global
         // ReSharper restore MemberCanBePrivate.Global
-        
-        #region Events
-        /// <summary>
-        /// Is called when a new best score is reached <br/>
-        /// <b>Parameter:</b> The new best score amount
-        /// </summary>
-        public static event Action<uint> OnNewBestScore;
-        #endregion
         
         #region Methods
         private void Awake()
@@ -202,7 +193,6 @@ namespace Watermelon_Game.Menus.MenuContainers
             var _newBestScore = _NewScore > this.GlobalStats.BestScore;
             if (_newBestScore)
             {
-                OnNewBestScore?.Invoke(_NewScore);
                 this.GlobalStats.SetBestScore((int)_NewScore);
             }
         }

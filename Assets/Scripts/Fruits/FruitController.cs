@@ -160,7 +160,8 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         /// <param name="_Fruit1Hashcode"><see cref="HashCode"/> of the first fruit</param>
         /// <param name="_Fruit2Hashcode"><see cref="HashCode"/> of the second fruit</param>
-        private void FruitCollision(int _Fruit1Hashcode, int _Fruit2Hashcode)
+        /// <param name="_CollisionPoint">The collision point in world coordinates</param>
+        private void FruitCollision(int _Fruit1Hashcode, int _Fruit2Hashcode, Vector2 _CollisionPoint)
         {
             var _fruit1 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit1Hashcode).Value;
             var _fruit2 = fruits.FirstOrDefault(_Kvp => _Kvp.Key == _Fruit2Hashcode).Value;
@@ -180,6 +181,8 @@ namespace Watermelon_Game.Fruits
                 {
                     evolvingFruits.Add(new EvolvingFruits(_fruit1, _fruit2));
                     
+                    this.networkFruitController.CmdFruitCollision(_CollisionPoint);
+                    
                     _fruit1.MoveTowards(_fruit2);
                     _fruit2.MoveTowards(_fruit1);
                 }
@@ -192,6 +195,7 @@ namespace Watermelon_Game.Fruits
         /// </summary>
         /// <param name="_GoldenFruitHashcode">The <see cref="HashCode"/> of the upgraded golden fruit</param>
         /// <param name="_FruitToDestroyHashCode">The <see cref="HashCode"/> of the other fruit</param>
+        /// <param name="_CollisionPoint">The collision point in world coordinates</param>
         private void UpgradedGoldenFruitCollision(int _GoldenFruitHashcode, int _FruitToDestroyHashCode, Vector2 _CollisionPoint)
         {
             var _otherIsNotGoldenFruit = GoldenFruitCollision(_FruitToDestroyHashCode, false, _CollisionPoint);

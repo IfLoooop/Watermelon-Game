@@ -17,6 +17,7 @@ namespace Watermelon_Game.Audio
         NextNextFruitEnabled,
         NextNextFruitDisabled,
         SkillSelect,
-        InputError
+        InputError,
+        MelonSliceAdd
     }
 }

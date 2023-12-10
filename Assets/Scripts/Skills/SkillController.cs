@@ -7,6 +7,8 @@ using OPS.AntiCheat.Field;
 using Sirenix.Utilities;
 using UnityEngine;
 using Watermelon_Game.Audio;
+using Watermelon_Game.Container;
+using Watermelon_Game.Controls;
 using Watermelon_Game.ExtensionMethods;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Menus;
@@ -193,6 +195,11 @@ namespace Watermelon_Game.Skills
         /// </summary>
         private void MouseInput()
         {
+            if (!ContainerBounds.Contains(InputController.MouseWorldPosition))
+            {
+                return;
+            }
+            
             if (Input.GetKeyDown(KeyCode.Mouse1))
             {
                 this.SelectSkill(0);

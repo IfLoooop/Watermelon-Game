@@ -111,7 +111,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5954309895516160
-    m_Localized: Skills
+    m_Localized: "F\xE4higkeiten"
     m_Metadata:
       m_Items: []
   - m_Id: 5954423032672256
@@ -196,6 +196,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12680036816809984
     m_Localized: Leertaste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088339753463808
+    m_Localized: Skins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088772353978368
+    m_Localized: "Bald verf\xFCgbar"
     m_Metadata:
       m_Items: []
   references:

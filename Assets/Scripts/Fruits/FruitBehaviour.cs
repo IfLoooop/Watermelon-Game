@@ -25,13 +25,13 @@ namespace Watermelon_Game.Fruits
     {
         #region Inspector Fields
 #if DEBUG || DEVELOPMENT_BUILD
+#pragma warning disable CS0414
         [Header("Development")]
         [Tooltip("Set to true for fruits that are not spawned through a script (Only for Development!)")]
         [SerializeField] private bool debugFruit;
         [Tooltip("The connection id of the client who requested the spawn for this fruit")]
         // ReSharper disable once InconsistentNaming
         // ReSharper disable once NotAccessedField.Local
-#pragma warning disable CS0414
         [SerializeField][ReadOnly] private string clientConnectionId_DEBUG = "null";
 #pragma warning restore CS0414
 #endif
@@ -42,7 +42,9 @@ namespace Watermelon_Game.Fruits
         [SerializeField] private SpriteRenderer faceSpriteRenderer;
         [Tooltip("Reference to the golden fruit GameObject")]
         [SerializeField] private GameObject goldenFruit;
-        
+        [Tooltip("Material that is applied to the fruit when it becomes a golden fruit")]
+        [SerializeField] private Material goldenFruitMaterial;
+            
         [Header("Settings")]
         [Tooltip("The type of this fruit")]
         [ValueDropdown("fruits")]
@@ -186,9 +188,10 @@ namespace Watermelon_Game.Fruits
         /// <summary>
         /// Is called when two fruits collide with each other <br/>
         /// <b>Parameter1:</b> Hashcode of the 1st fruit <br/>
-        /// <b>Parameter2:</b> Hashcode of the 2nd fruit
+        /// <b>Parameter2:</b> Hashcode of the 2nd fruit <br/>
+        /// <b>Parameter3:</b> The collision point in world coordinates
         /// </summary>
-        public static event Action<int, int> OnFruitCollision;
+        public static event Action<int, int, Vector2> OnFruitCollision;
         /// <summary>
         /// Is called when an upgraded golden fruit collides with another fruit <br/>
         /// <b>Parameter1:</b> Hashcode of the golden fruit <br/>
@@ -349,6 +352,7 @@ namespace Watermelon_Game.Fruits
         [ClientRpc]
         private void RpcGoldenFruit(bool _ForceEnable, bool _ForceGolden)
         {
+            this.fruitSpriteRenderer.material = this.goldenFruitMaterial; // TODO: Must be reverted when fruits are pooled instead of instantiated
             this.goldenFruit.SetActive(true);
             this.IsGoldenFruit = true;
             
@@ -425,7 +429,7 @@ namespace Watermelon_Game.Fruits
                             SkillController.Skill_Destroy(_otherHashCode);
                         return;
                     default:
-                        OnFruitCollision?.Invoke(_thisHashcode, _otherHashCode);
+                        OnFruitCollision?.Invoke(_thisHashcode, _otherHashCode, _Other.GetContact(0).point);
                         break;
                 }
             }
@@ -690,9 +694,6 @@ namespace Watermelon_Game.Fruits
 
                 if (_FruitBehaviour.rigidbody2D == null)
                 {
-#if UNITY_EDITOR // TODO: Test if nothing breaks with this solution
-                    Debug.LogWarning($"_FruitBehaviour.name:{_testName} | base.name:{base.name}");
-#endif
                     this.DestroyFruit();
                 }
             }

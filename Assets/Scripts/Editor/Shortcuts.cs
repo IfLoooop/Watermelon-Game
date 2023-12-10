@@ -42,7 +42,7 @@ namespace Watermelon_Game.Editor
         private static async void StartBuild()
         {
             //var _version = await VersionControl.TryGetLatestVersion()!;
-            const string VERSION = "2.0.1.0";
+            const string VERSION = "2.1.0.0";
 
             if (!string.IsNullOrWhiteSpace(VERSION))
             {

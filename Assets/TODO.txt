@@ -1,66 +1,25 @@
-TODO: [IMPORTANT] - Changed the Network Transform and Rigidbody on Fruits, FruitSpawner nad FruitSpawnerAim to Unreliable. Also changed "Collision Detection: Continuous" and "Sleeping Mode: Never Sleep", and "Interpolate: Interpolate"
+TODO: Cheat detection not working after joining as a client (maybe the subscription)
 
-TODO: Test if fruit shrink works correctly in multiplayer
-TODO: FruitSpawner aim is visible in multiplayer while "Waiting for other Player" (TEST)
-TODO: Friends only lobby does not seem tor work (TEST)
-TODO: Test if screen flash on golden fruit particle spawn is in build or just editor
-
-TODO: Points popup on evolve
-TODO: Make sure fruits are getting bigger and not smaller (pineapple and coconut)
-TODO: points fly to melon slices animation
-TODO: Golden fruit sprite shader
-TODO: Change splash image color to blue
-TODO: Change icons
-
-TODO: Disable audio button lighter blue
-TODO: Close menu button lighter blue
-TODO: Password menu enter lighter blue
+-------------------------------------------
+TODO: Sometimes game crashes on exit (maybe beacuase of a task that is still running)
+TODO: High GPU usage, maybe becuase of all the high res sprites (try changing them to lower res)
+TODO: See "SteamLeaderboard.DownloadLeaderboardScores()" TODO
+TODO: See "AudioSettings.cs" TODOs
+TODO: See "SteamLobby.OnRequestLobbyList()" TODO
 
 TODO: Make Layer controller
 TODO: In FruitBehaviour set layer through LayerController
-TODO: Maybe add achievements
 TODO: Disconnect player on cheat detected (try doing so on the host, when in a multiplayer game)
-TODO: Maybe add WebSettings again
--
-TODO: Game crashes when closing it immediately after opening (maybe something with steam or leaderboard)
-TODO: Sometimes when switching the gamemode the fruitspawner is not set to the correct position inside the container 
-TODO: (maybe something to do with mouse position while the menu is closing during the trasion animation) - Maybe fixed -> ContainerBounds.Contains
-TODO: Maybe dont let friends through friendlist join without password (enable password + only friends on lobby create menu)
 
-- Add an objectpool for the fruits
--Dont display player left message on kcik on host
--make separate message when host quits lobby
--Rework the menu system
--Set scrollposition of game over menu to top on game over
--Rework the whole FruitSpawner/Container assignement system
--When lets say skill 2 was selected and now only enough points for skill one remain, left mouse button wont select the skill, only scroll works
--Demove non steam builds from itch.io
--Make github private
--Maybe rename skill to powerups or abilities
--While leaderbopard entries are refreshing, and the leaderboard is closed, after opening, the refresh wont go on, page has to be turned for the refresh to complete
--Add a friends filter to the lobby list and a name search
--Disable GameMode switch and restart during maxheight countdown
--Use -> https://partner.steamgames.com/doc/api/ISteamFriends#ActivateGameOverlayInviteDialog
+-Add an objectpool for the fruits
 -Split MenuBase.cs into 2 base classes, one for the MenuContainer-submenus and one for the Lobby menus
--Achievements localizations
 -Reduce the "WaitForEndOfFrame" delay in "FontManager.cs"
--Check if the Leaderboard entries should be capped
--DevelopmentTools fruit spawning is not working online (check what elso is not working)
 -On UWP build, rewired always asks to install the same missing package
--Infobox which buttons are used in "DevelopmentTools.cs"
--Test game with Application.TargetFramerate
--Multiplier.cs "multiplierWaitTime" and "multiplierWaitForSeconds" need descriptions
--Check "BuildSettings.cs", sometimes things like "Application.version" are not updated immediately (in build), is resolved after a build through the normal "Build Settings"-Menu 
-[Build Error]
--Annoying error logs during build (still finished)
--Assertion failed on expression: 'GetApplication().MayUpdate()'UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
--Resolve of invalid GC handle. The handle is from a previous domain. The resolve operation is skipped.UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
--Assertion failed on expression: '!performAutorepaint || GetApplication().MayUpdate()'UnityEditor.BuildPipeline:BuildPlayer (string[],string,UnityEditor.BuildTarget,UnityEditor.BuildOptions)Watermelon_Game.Editor.BuildSettings:OnScriptsRecompiled () (at Assets/Scripts/Editor/BuildSettings.cs:359)
+-Add an infobox which buttons are used in "DevelopmentTools.cs" (maybe also an ingame toggle)
 
+-Remove non steam builds from itch.io
 https://keymailer.co/de/creators/
-
 https://www.rockpapershotgun.com/
-
 https://www.greenmangaming.com/
 https://de.humblebundle.com/store
 https://www.gog.com/de

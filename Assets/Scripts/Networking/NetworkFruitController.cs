@@ -19,6 +19,25 @@ namespace Watermelon_Game.Networking
         
         #region Methods
         /// <summary>
+        /// <see cref="FruitController.FruitCollision"/>
+        /// </summary>
+        /// <param name="_Position">The position to spawn the particle at</param>
+        [Command(requiresAuthority = false)]
+        public void CmdFruitCollision(Vector3 _Position)
+        {
+            this.RpcFruitCollision(_Position);
+        }
+
+        /// <summary>
+        /// <see cref="FruitController.FruitCollision"/>
+        /// </summary>
+        /// <param name="_Position">The position to spawn the particle at</param>
+        private void RpcFruitCollision(Vector3 _Position)
+        {
+            ParticlePool.PlayRandomParticle(_Group => _Group.TextExplosions, _Position);
+        }
+        
+        /// <summary>
         /// Spawns the given <see cref="Fruit"/> at the given position
         /// </summary>
         /// <param name="_NextFruitPosition">The position to spawn the evolved <see cref="Fruit"/> at</param>

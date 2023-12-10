@@ -1806,7 +1806,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 605647929227518384, guid: 69074a9acc0760d46b919a68df1a8e08, type: 3}
       propertyPath: m_text
-      value: USed Skills
+      value: Used Skills
       objectReference: {fileID: 0}
     - target: {fileID: 1455561544096497701, guid: 69074a9acc0760d46b919a68df1a8e08, type: 3}
       propertyPath: m_Pivot.x
@@ -1890,7 +1890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3252298299489647991, guid: 69074a9acc0760d46b919a68df1a8e08, type: 3}
       propertyPath: m_Name
-      value: Skills
+      value: Abilities
       objectReference: {fileID: 0}
     - target: {fileID: 5332439146837384987, guid: 69074a9acc0760d46b919a68df1a8e08, type: 3}
       propertyPath: m_AnchoredPosition.x

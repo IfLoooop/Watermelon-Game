@@ -63,7 +63,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39237398589440
-    m_Localized: Used Skills
+    m_Localized: Used Abilities
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
@@ -111,7 +111,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 5954309895516160
-    m_Localized: Skills
+    m_Localized: Abilities
     m_Metadata:
       m_Items: []
   - m_Id: 5954423032672256
@@ -196,6 +196,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12680036816809984
     m_Localized: Space
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088339753463808
+    m_Localized: Skins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088772353978368
+    m_Localized: Coming soon
     m_Metadata:
       m_Items: []
   references:

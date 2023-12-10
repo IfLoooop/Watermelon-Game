@@ -1,49 +1,16 @@
 field,language,value
-body,english,"-Closing the menu on game over will now properly start the next game.
--The countdown counts to 1 again, before ending the game.
--Fruits can not be dropped on top of the angled wall anymore.
--The slider value in the controls menu is now being saved and loaded on game start/end."
-body,german,"-Das Schließen des Menüs am Spielende startet jetzt ordnungsgemäß das nächste Spiel.
--Der Countdown zählt wieder bis 1, bevor das Spiel endet.
--Früchte können nicht mehr auf die abgewinkelte Wand oben abgelegt werden.
--Der Schiebereglerwert im Steuerungsmenü wird jetzt beim Starten/Beenden des Spiels gespeichert und geladen."
-body,french,"-La fermeture du menu en fin de partie lancera désormais correctement la partie suivante.
--Le décompte compte à nouveau jusqu'à 1 avant la fin du jeu.
--Les fruits ne peuvent plus être lâchés au sommet du mur incliné.
--La valeur du curseur dans le menu des contrôles est désormais sauvegardée et chargée au début/à la fin du jeu."
-body,italian,"-Chiudere il menu alla fine del gioco avvierà correttamente il gioco successivo.
--Il conto alla rovescia conta nuovamente fino a 1, prima di terminare il gioco.
--I frutti non possono più essere lasciati cadere sulla cima del muro inclinato.
--Il valore dello slider nel menu dei controlli viene ora salvato e caricato all'avvio/fine del gioco."
-body,korean,"-게임 종료 시 메뉴를 닫으면 이제 올바르게 다음 게임이 시작됩니다.
--게임이 끝나기 전에 다시 1까지 카운트다운합니다.
--이제 과일을 기울어진 벽 위에 더 이상 놓을 수 없습니다.
--컨트롤 메뉴의 슬라이더 값이 이제 게임 시작/종료 시에 저장되고 로드됩니다."
-body,spanish,"-Al cerrar el menú al finalizar el juego, ahora se iniciará correctamente el siguiente juego.
--La cuenta atrás vuelve a contar hasta 1 antes de terminar el juego.
--Ya no se pueden soltar frutas en la parte superior de la pared inclinada.
--El valor del deslizador en el menú de controles ahora se guarda y carga al iniciar/terminar el juego."
-body,schinese,"-在游戏结束时关闭菜单现在将正确开始下一场游戏。
--游戏结束前倒计时再次计数到1。
--现在不能再将水果掉落在倾斜的墙顶上了。
--控制菜单中的滑块数值现在在游戏开始/结束时被保存和加载。"
-body,tchinese,"-在遊戲結束時關閉菜單將正確地開始下一場遊戲。
--遊戲結束前的倒計時再次計數到 1。
--現在不能再將水果掉落在傾斜的牆頂上了。
--控制選單中的滑塊值現在會在遊戲開始/結束時進行保存和加載。"
-body,russian,"-Закрытие меню после завершения игры теперь правильно запустит следующую игру.
--Обратный отсчёт снова идёт до 1 перед завершением игры.
--Больше нельзя бросать фрукты сверху на наклонную стену.
--Значение слайдера в меню управления теперь сохраняется и загружается при начале/окончании игры."
+body,english,
+body,german,
+body,french,
+body,italian,
+body,korean,
+body,spanish,
+body,schinese,
+body,tchinese,
+body,russian,
 body,thai,
-body,japanese,"-ゲーム終了時にメニューを閉じると次のゲームが正しく開始されます。
--ゲーム終了前にカウントダウンが再び1に戻ります。
--もう角度のある壁の上に果物を落とすことはできません。
--コントロールメニューのスライダー値は、ゲームの開始/終了時に保存および読み込まれるようになりました。"
-body,portuguese,"-Fechar o menu no final do jogo agora irá iniciar corretamente o próximo jogo.
--A contagem regressiva conta até 1 novamente, antes de terminar o jogo.
--As frutas não podem mais ser deixadas no topo da parede inclinada.
--O valor do deslizador no menu de controlos agora está a ser guardado e carregado no início/fim do jogo."
+body,japanese,
+body,portuguese,
 body,polish,
 body,danish,
 body,dutch,
@@ -54,32 +21,26 @@ body,hungarian,
 body,czech,
 body,romanian,
 body,turkish,
-body,brazilian,"-Fechar o menu ao finalizar o jogo agora iniciará corretamente o próximo jogo.
--A contagem regressiva volta a contar até 1 antes de terminar o jogo.
--As frutas não podem mais ser soltas no topo da parede inclinada.
--O valor do controle deslizante no menu de configurações agora está sendo salvo e carregado no início/fim do jogo."
+body,brazilian,
 body,bulgarian,
 body,greek,
 body,arabic,
 body,ukrainian,
-body,latam,"-Cerrar el menú al finalizar el juego ahora iniciará correctamente el siguiente juego.
--La cuenta regresiva vuelve a contar hasta 1 antes de terminar el juego.
--Las frutas ya no pueden soltarse en la parte superior de la pared inclinada.
--El valor del deslizador en el menú de controles ahora se guarda y carga al iniciar o finalizar el juego."
+body,latam,
 body,vietnamese,
 body,indonesian,
-subtitle,english,v2.0.1.0
-subtitle,german,v2.0.1.0
-subtitle,french,v2.0.1.0
-subtitle,italian,v2.0.1.0
-subtitle,korean,v2.0.1.0
-subtitle,spanish,v2.0.1.0
-subtitle,schinese,v2.0.1.0
-subtitle,tchinese,v2.0.1.0
-subtitle,russian,v2.0.1.0
+subtitle,english,
+subtitle,german,
+subtitle,french,
+subtitle,italian,
+subtitle,korean,
+subtitle,spanish,
+subtitle,schinese,
+subtitle,tchinese,
+subtitle,russian,
 subtitle,thai,
-subtitle,japanese,v2.0.1.0
-subtitle,portuguese,v2.0.1.0
+subtitle,japanese,
+subtitle,portuguese,
 subtitle,polish,
 subtitle,danish,
 subtitle,dutch,
@@ -90,26 +51,26 @@ subtitle,hungarian,
 subtitle,czech,
 subtitle,romanian,
 subtitle,turkish,
-subtitle,brazilian,v2.0.1.0
+subtitle,brazilian,
 subtitle,bulgarian,
 subtitle,greek,
 subtitle,arabic,
 subtitle,ukrainian,
-subtitle,latam,v2.0.1.0
+subtitle,latam,
 subtitle,vietnamese,
 subtitle,indonesian,
-summary,english,Various bugfixes.
-summary,german,Verschiedene Fehlerbehebungen.
-summary,french,Diverses corrections de bugs.
-summary,italian,Diverse correzioni di bug.
-summary,korean,다양한 버그 수정 사항입니다.
-summary,spanish,Varias correcciones de errores.
-summary,schinese,各种故障修复。
-summary,tchinese,各種 bug 修復。
-summary,russian,Различные исправления ошибок.
+summary,english,
+summary,german,
+summary,french,
+summary,italian,
+summary,korean,
+summary,spanish,
+summary,schinese,
+summary,tchinese,
+summary,russian,
 summary,thai,
-summary,japanese,様々なバグ修正。
-summary,portuguese,Várias correções de erros.
+summary,japanese,
+summary,portuguese,
 summary,polish,
 summary,danish,
 summary,dutch,
@@ -120,26 +81,26 @@ summary,hungarian,
 summary,czech,
 summary,romanian,
 summary,turkish,
-summary,brazilian,Várias correções de bugs.
+summary,brazilian,
 summary,bulgarian,
 summary,greek,
 summary,arabic,
 summary,ukrainian,
-summary,latam,Varias correcciones de errores.
+summary,latam,
 summary,vietnamese,
 summary,indonesian,
-title,english,Bugfix
-title,german,Bugfix
-title,french,Correction de bug
-title,italian,Bugfix
-title,korean,버그 수정
-title,spanish,Corrección de errores
-title,schinese,故障修复
-title,tchinese,Bug 修復
-title,russian,Исправление ошибок
+title,english,
+title,german,
+title,french,
+title,italian,
+title,korean,
+title,spanish,
+title,schinese,
+title,tchinese,
+title,russian,
 title,thai,
-title,japanese,バグ修正
-title,portuguese,Correção de Erros
+title,japanese,
+title,portuguese,
 title,polish,
 title,danish,
 title,dutch,
@@ -150,11 +111,11 @@ title,hungarian,
 title,czech,
 title,romanian,
 title,turkish,
-title,brazilian,Correção de Bugs
+title,brazilian,
 title,bulgarian,
 title,greek,
 title,arabic,
 title,ukrainian,
-title,latam,Solución de errores
+title,latam,
 title,vietnamese,
 title,indonesian,

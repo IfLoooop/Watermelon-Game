@@ -3,12 +3,10 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OPS.AntiCheat.Field;
-using Sirenix.OdinInspector;
 using Steamworks;
 using UnityEngine;
 using Watermelon_Game.ExtensionMethods;
@@ -214,6 +212,10 @@ namespace Watermelon_Game.Steamworks.NET
             }
             else
             {
+                // TODO: If the user has not entry in the leaderboard, "ELeaderboardDataRequest.k_ELeaderboardDataRequestGlobalAroundUser" will have 0 entries.
+                // TODO: In that case, check if the user has any entries, if not, download the first "MAX_LEADERBOARD_ENTRIES"
+                // TODO: Also wait for "OnLeaderboardFound()" (success or failure) before going any further
+                
                 var _steamAPICall = SteamUserStats.DownloadLeaderboardEntries(steamLeaderboard.Value, _LeaderboardDataRequest, _RangeStart, _RangeEnd);
                 onLeaderboardScoresDownloaded.Set(_steamAPICall, GetDownloadedLeaderboardScoresAsync);
             }
@@ -233,6 +235,12 @@ namespace Watermelon_Game.Steamworks.NET
         {
             if (!SteamManager.Initialized)
             {
+                return;
+            }
+
+            if (_Callback.m_cEntryCount <= 0)
+            {
+                Debug.LogError($"[{nameof(SteamLeaderboard)}].{nameof(GetDownloadedLeaderboardScoresAsync)} {nameof(_Callback.m_cEntryCount)}:{_Callback.m_cEntryCount}");
                 return;
             }
             
@@ -268,7 +276,7 @@ namespace Watermelon_Game.Steamworks.NET
                     {
                         return;
                     }
-                    
+
                     var _successfullyDownloadedLeaderboardEntries = SteamUserStats.GetDownloadedLeaderboardEntry(_Callback.m_hSteamLeaderboardEntries, i, out var _leaderboardEntry, null, 0);
                     if (_successfullyDownloadedLeaderboardEntries)
                     {
@@ -419,7 +427,7 @@ namespace Watermelon_Game.Steamworks.NET
             {
                 return;
             }
-            if (GameController.ActiveGame)
+            if (GameController.ActivGame)
             {
                 return;
             }

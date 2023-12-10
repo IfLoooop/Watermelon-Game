@@ -235,6 +235,33 @@ namespace Watermelon_Game.Networking
                 singleton.StartHost();
             }
         }
+
+        /// <summary>
+        /// Restarts the client/host
+        /// </summary>
+        public static void Restart()
+        {
+            singleton.networkAddress = DEFAULT_NETWORK_ADDRESS;
+            AttemptingToJoinALobby = false;
+            attemptingToConnectToLobby = false;
+
+            var _isInLobby = SteamLobby.CurrentLobbyId != null;
+            SteamLobby.LeaveLobby();
+            
+            if (FruitSpawner.Instance.isClientOnly)
+            {
+                singleton.StopClient();
+                singleton.StopServer();
+                singleton.StartHost();
+            }
+            else
+            {
+                if (_isInLobby)
+                {
+                    singleton.StopHost();
+                }
+            }
+        }
         #endregion
     }
 }

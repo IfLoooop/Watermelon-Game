@@ -77,3 +77,8 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 32d4b1811dda14a6cb9e059ee8ad17d2, type: 3}
     volume: 0.075
     startTime: 0
+  melonSliceAdd:
+    key: 13
+    audioClip: {fileID: 8300000, guid: 4b602c678b914a447b8416b07661b2e9, type: 3}
+    volume: 0.025
+    startTime: 0

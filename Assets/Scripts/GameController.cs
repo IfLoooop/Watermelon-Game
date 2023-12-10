@@ -9,6 +9,7 @@ using Watermelon_Game.Container;
 using Watermelon_Game.Fruits;
 using Watermelon_Game.Networking;
 using Watermelon_Game.Singletons;
+using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility;
 
 namespace Watermelon_Game
@@ -72,6 +73,12 @@ namespace Watermelon_Game
         /// </summary>
         public static ProtectedBool IsEditorApplicationQuitting { get; private set; }
 #endif
+        
+        /// <summary>
+        /// Used for <see cref="SteamLeaderboard.UploadScore"/>
+        /// </summary>
+        // ReSharper disable once IdentifierTypo
+        public static ProtectedBool ActivGame { get; private set; } = true;
         #endregion
 
         #region Events

@@ -19,6 +19,8 @@ namespace Watermelon_Game.Menus.Leaderboards
     internal sealed class Leaderboard : ContainerMenuBase, IEnhancedScrollerDelegate
     {
         #region Inspector Fields
+        [Tooltip("Will be shown while the leaderboard entries are being downloaded")]
+        [PropertyOrder(1)][SerializeField] private GameObject loadingIndicator;
         [Tooltip("Displays the current/max page")]
         [PropertyOrder(1)][SerializeField] private TextMeshProUGUI paging;
         [Tooltip("Button to refresh all leaderboard entries")]
@@ -104,7 +106,6 @@ namespace Watermelon_Game.Menus.Leaderboards
         private void Start()
         {
             this.RefreshLeaderboard();
-            this.GetLeaderboardEntries();
         }
 
         private void Update()
@@ -201,6 +202,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         public void RefreshLeaderboard()
         {
+            this.loadingIndicator.SetActive(true);
             this.refreshButton.interactable = false;
             this.refreshTimestamp = Time.time;
             this.refreshButtonImage.fillAmount = 0;
@@ -242,6 +244,7 @@ namespace Watermelon_Game.Menus.Leaderboards
         /// </summary>
         private void LeaderboardScoresDownloaded()
         {
+            this.loadingIndicator.SetActive(false);
             // Needs to be called twice, otherwise won't display the entries correctly when the menu is opened, while a new entry is added
             // Also shitty solution but it works
             this.GetLeaderboardEntries();

@@ -6,6 +6,7 @@ using OPS.AntiCheat.Field;
 using Steamworks;
 using UnityEngine;
 using UnityEngine.UI;
+using Watermelon_Game.Networking;
 using Watermelon_Game.Points;
 using Watermelon_Game.Steamworks.NET;
 using Watermelon_Game.Utility.Pools;
@@ -67,19 +68,24 @@ namespace Watermelon_Game.Audio
         #region Methods
         private void Awake()
         {
+            if (instance != null)
+            {
+                return;
+            }
+            
             instance = this;
         }
         
         private void OnEnable()
         {
             GameController.OnResetGameStarted += this.Set;
-            FieldCheatDetector.OnFieldCheatDetected += Error;
+            FieldCheatDetector.OnFieldCheatDetected += this.Error;
         }
 
         private void OnDisable()
         {
             GameController.OnResetGameStarted -= this.Set;
-            FieldCheatDetector.OnFieldCheatDetected -= Error;
+            FieldCheatDetector.OnFieldCheatDetected -= this.Error;
         }
 
         /// <summary>
@@ -119,7 +125,7 @@ namespace Watermelon_Game.Audio
             }
 #endif
             object _value = null;
-            await Task.Run(() =>
+            await Task.Run(() => // TODO: Implement timeout
             {
                 do
                 {
@@ -144,9 +150,9 @@ namespace Watermelon_Game.Audio
         /// <summary>
         /// <see cref="Error"/>
         /// </summary>
-        public static void PlayErrorSound()
+        public static void OnError()
         {
-            Error();
+            instance.Error();
         }
         
         /// <summary>
@@ -179,13 +185,16 @@ namespace Watermelon_Game.Audio
             
             var _field = typeof(SteamLeaderboard).GetField(SET, BindingFlags.Static | BindingFlags.NonPublic);
                 
-#if DEBUG || DEVELOPMENT_BUILD
             // For when the fields are renamed
             if (_field == null)
             {
+#if DEBUG || DEVELOPMENT_BUILD
                 throw new NullReferenceException($"The field \"{SET}\" couldn't be found");
-            }
+#else
+                return; // TODO: Call "Get()" and wait for success
 #endif
+            }
+            
             if (_Value <= (ProtectedInt32)_field!.GetValue(null))
             {
                 return;
@@ -253,11 +262,12 @@ namespace Watermelon_Game.Audio
         /// <summary>
         /// <see cref="OnFieldCheatDetected"/>
         /// </summary>
-        private static void Error()
+        private void Error()
         {
-            SteamManager.Destroy();
+            CustomNetworkManager.Restart();
             AudioClips.Disable();
             StatsAndAchievementsManager.Destroy();
+            SteamManager.Destroy();
         }
         
         /// <summary>

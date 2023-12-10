@@ -1,13 +1,16 @@
 using System;
 using System.Collections;
+using AssetKits.ParticleImage;
 using JetBrains.Annotations;
 using OPS.AntiCheat.Field;
+using OPS.AntiCheat.Prefs;
 using TMPro;
 using UnityEngine;
+using Watermelon_Game.Audio;
 using Watermelon_Game.Fruits;
-using Watermelon_Game.Menus.MenuContainers;
 using Watermelon_Game.Singletons;
 using Watermelon_Game.Skills;
+using Watermelon_Game.Utility.Pools;
 
 namespace Watermelon_Game.Points
 {
@@ -20,17 +23,48 @@ namespace Watermelon_Game.Points
         [Header("References")]
         [Tooltip("Reference to the Multiplier component")]
         [SerializeField] private Multiplier multiplier;
-        [Tooltip("Reference to the TMP component that displays the current points")]
-        [SerializeField] private TextMeshProUGUI pointsAmount;
-        [Tooltip("Reference to the TMP component that displays the best score")]
-        [SerializeField] private TextMeshProUGUI bestScoreAmount; // TODO: Change to ingame currency
+        [Tooltip("Displays the points for the current game")]
+        [SerializeField] private TextMeshProUGUI pointsText;
+        [Tooltip("Displays the current melon slice amount")]
+        [SerializeField] private TextMeshProUGUI melonSlicesText;
+        [Tooltip("Animation that is played when a particle has reached the melon slice icon")]
+        [SerializeField] private Animation melonSlicesPulse;
         
         [Header("Settings")]
         [Tooltip("Time in seconds to wait, between each update of \"pointsAmount\", when the points change")]
         [SerializeField] private float pointsWaitTime = .05f;
         #endregion
+
+        #region Constants
+        /// <summary>
+        /// <see cref="PlayerPrefs"/> key for <see cref="melonSlices"/>
+        /// </summary>
+        private const string MELON_SLICES_KEY = "MelonSlices";
+        /// <summary>
+        /// Max amount for <see cref="ParticleImage.rateOverTime"/>
+        /// </summary>
+        private const float PARTICLE_IMAGE_RATE = 50f;
+        #endregion
         
         #region Fields
+        /// <summary>
+        /// Particle effect to add the <see cref="currentPoints"/> to <see cref="melonSlices"/>
+        /// </summary>
+        private ParticleImage particleImage;
+        /// <summary>
+        /// Temporary storage for <see cref="currentPoints"/> while the points are being added to <see cref="melonSlices"/>
+        /// </summary>
+        private ProtectedFloat tmpPoints;
+        /// <summary>
+        /// The amount that is added to <see cref="melonSlices"/> per particle
+        /// </summary>
+        private ProtectedFloat amountPerParticle;
+        /// <summary>
+        /// The remaining amount to add to <see cref="melonSlices"/> <br/>
+        /// <i>In case of fractions during <see cref="amountPerParticle"/> calculation</i>
+        /// </summary>
+        private ProtectedFloat remainder;
+        
         /// <summary>
         /// The current points amount <br/>
         /// <i>Will be reset on <see cref="GameController"/><see cref="GameController.OnResetGameFinished"/></i>
@@ -42,6 +76,11 @@ namespace Watermelon_Game.Points
         private ProtectedUInt32 pointsDelta;
         
         /// <summary>
+        /// In game currency
+        /// </summary>
+        private ProtectedUInt64 melonSlices;
+        
+        /// <summary>
         /// Adds/subtract the amount in <see cref="pointsDelta"/> from <see cref="currentPoints"/>
         /// </summary>
         [CanBeNull] private IEnumerator pointsCoroutine;
@@ -49,6 +88,11 @@ namespace Watermelon_Game.Points
         /// <see cref="pointsWaitTime"/>
         /// </summary>
         private WaitForSeconds pointsWaitForSeconds;
+
+        /// <summary>
+        /// Index of the <see cref="AudioWrapper"/> in <see cref="AudioPool.assignedAudioWrappers"/>, for the <see cref="AudioClipName.MelonSliceAdd"/> <see cref="AudioClip"/>
+        /// </summary>
+        private int addMelonSliceIndex;
         #endregion
 
         #region Properties
@@ -70,36 +114,57 @@ namespace Watermelon_Game.Points
         protected override void Init()
         {
             base.Init();
+            this.particleImage = base.GetComponentInChildren<ParticleImage>();
             this.pointsWaitForSeconds = new WaitForSeconds(this.pointsWaitTime);
+            this.addMelonSliceIndex = AudioPool.CreateAssignedAudioWrapper(AudioClipName.MelonSliceAdd, base.transform);
         }
         
         protected override void OnEnable()
         {
             base.OnEnable();
 
-            GameController.OnResetGameStarted += this.AddCurrency;
-            GameController.OnResetGameFinished += this.ResetPoints;
+            GameController.OnResetGameFinished += this.GameEnded;
             FruitController.OnEvolve += AddPoints;
             FruitController.OnGoldenFruitCollision += AddPoints;
             SkillController.OnSkillUsed += this.SubtractPoints;
-            MenuContainer.OnNewBestScore += this.NewBestScore;
         }
         
         protected override void OnDisable()
         {
             base.OnDisable();
             
-            GameController.OnResetGameStarted -= this.AddCurrency;
-            GameController.OnResetGameFinished -= this.ResetPoints;
+            GameController.OnResetGameFinished -= this.GameEnded;
             FruitController.OnEvolve -= AddPoints;
             FruitController.OnGoldenFruitCollision -= AddPoints;
             SkillController.OnSkillUsed -= this.SubtractPoints;
-            MenuContainer.OnNewBestScore -= this.NewBestScore;
         }
 
         private void Start()
         {
-            this.bestScoreAmount.text = GlobalStats.Instance.BestScore.ToString(); // TODO: Load melon slices at start (currency)
+            this.Load();
+            this.melonSlicesText.text = this.melonSlices.ToString();
+        }
+
+        private void OnApplicationQuit()
+        {
+            this.Save();
+        }
+
+        /// <summary>
+        /// Saves the value of <see cref="melonSlices"/>
+        /// </summary>
+        private void Save()
+        {
+            ProtectedPlayerPrefs.SetString(MELON_SLICES_KEY, this.melonSlices.ToString());
+        }
+
+        /// <summary>
+        /// Loads the value of <see cref="melonSlices"/>
+        /// </summary>
+        private void Load()
+        {
+            this.melonSlices = ulong.Parse(ProtectedPlayerPrefs.GetString(MELON_SLICES_KEY, 0.ToString()));
+            this.melonSlicesText.text = this.melonSlices.ToString();
         }
         
         /// <summary>
@@ -132,7 +197,7 @@ namespace Watermelon_Game.Points
         
         /// <summary>
         /// Adds the given points to <see cref="currentPoints"/> <br/>
-        /// <i>Set to 0, to reset <see cref="currentPoints"/> and <see cref="pointsDelta"/></i>
+        /// <i>Set to 0 to reset the points</i>
         /// </summary>
         /// <param name="_Points">The points to add/subtract to <see cref="currentPoints"/></param>
         private void SetPoints(int _Points)
@@ -140,17 +205,17 @@ namespace Watermelon_Game.Points
             if (_Points == 0)
             {
                 this.currentPoints = 0;
-                this.pointsDelta = 1; // pointsDelta must be different from currentPoints, otherwise the Coroutine won't run
+                this.pointsDelta = 0;
             }
             else
             {
                 this.currentPoints = (uint)Mathf.Clamp(this.currentPoints + _Points, 0, uint.MaxValue);
-            }
-
-            if (this.pointsCoroutine == null)
-            {
-                this.pointsCoroutine = SetPoints();
-                StartCoroutine(this.pointsCoroutine);
+                
+                if (this.pointsCoroutine == null)
+                {
+                    this.pointsCoroutine = SetPoints();
+                    StartCoroutine(this.pointsCoroutine);
+                }
             }
             
             OnPointsChanged?.Invoke(this.currentPoints);
@@ -178,7 +243,7 @@ namespace Watermelon_Game.Points
                     this.pointsDelta--;
                 }
                 
-                this.SetPointsText(this.pointsDelta);
+                this.pointsText.text = this.pointsDelta.ToString();
                 
                 yield return this.pointsWaitForSeconds;
             }
@@ -187,35 +252,76 @@ namespace Watermelon_Game.Points
         }
         
         /// <summary>
-        /// Sets the <see cref="TextMeshProUGUI.text"/> of <see cref="pointsAmount"/> to the given value + 'P'
+        /// Sets <see cref="melonSlices"/> and reset <see cref="currentPoints"/>
         /// </summary>
-        /// <param name="_Points"></param>
-        private void SetPointsText(uint _Points)
+        /// <param name="_ResetReason">Not needed here</param>
+        private void GameEnded(ResetReason _ResetReason)
         {
-            this.pointsAmount.text = _Points.ToString();
-        }
+            if (this.currentPoints > 0)
+            {
+                if (this.pointsCoroutine != null)
+                {
+                    base.StopCoroutine(this.pointsCoroutine);
+                    this.pointsCoroutine = null;
+                    this.pointsText.text = this.currentPoints.ToString();
+                }
 
-        /// <summary>
-        /// <see cref="MenuContainer.OnNewBestScore"/>
-        /// </summary>
-        /// <param name="_NewBestScore">The new best score amount</param>
-        private void NewBestScore(uint _NewBestScore) // TODO: Not needed anymore
-        {
-            this.bestScoreAmount.text = _NewBestScore.ToString();
-        }
+                if (this.particleImage.isPlaying)
+                {
+                    this.particleImage.Stop();
+                }
+                
+                this.tmpPoints += this.currentPoints;
+                this.particleImage.rateOverTime = this.tmpPoints < PARTICLE_IMAGE_RATE ? this.tmpPoints : PARTICLE_IMAGE_RATE;
+                this.amountPerParticle = this.tmpPoints / this.particleImage.rateOverTime;
+                this.remainder = this.tmpPoints % this.particleImage.rateOverTime;
 
-        private void AddCurrency() // TODO
-        {
+                this.SetPoints(0);
             
+                this.particleImage.Play();   
+            }
         }
         
         /// <summary>
-        /// Sets <see cref="currentPoints"/> to 0
+        /// Adds <see cref="currentPoints"/> to <see cref="melonSlices"/> at the end of a game
         /// </summary>
-        /// <param name="_ResetReason">Not needed here</param>
-        private void ResetPoints(ResetReason _ResetReason)
+        public void AddMelonSlices()
         {
-            this.SetPoints(0);
+            if (!AudioPool.IsAssignedClipPlaying(this.addMelonSliceIndex))
+            {
+                AudioPool.PlayAssignedClip(this.addMelonSliceIndex);
+            }
+            if (!this.melonSlicesPulse.isPlaying)
+            {
+                this.melonSlicesPulse.Play();    
+            }
+            
+            this.tmpPoints = Mathf.Clamp(this.tmpPoints - this.amountPerParticle, 0, uint.MaxValue);
+            
+            if (this.melonSlices > ulong.MaxValue - this.amountPerParticle)
+            {
+                this.melonSlices = ulong.MaxValue;
+            }
+            else
+            {
+                
+                this.melonSlices += (ulong)this.amountPerParticle;
+            }
+
+            this.melonSlicesText.text = this.melonSlices.ToString();
+            if (this.tmpPoints >= this.currentPoints)
+            {
+                this.pointsText.text = ((uint)this.tmpPoints).ToString();   
+            }
+        }
+
+        /// <summary>
+        /// Adds the <see cref="remainder"/> to <see cref="melonSlices"/> when the last particle has finished
+        /// </summary>
+        public void LastParticleFinished()
+        {
+            this.amountPerParticle = this.remainder;
+            this.AddMelonSlices();
         }
         
 #if DEBUG || DEVELOPMENT_BUILD

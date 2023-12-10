@@ -68,11 +68,6 @@ namespace Watermelon_Game.Fruit_Spawn
 #pragma warning disable CS0109
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="FruitSpawner"/>
-        /// </summary>
-        private static FruitSpawner instance;
-        
-        /// <summary>
         /// Container for this <see cref="FruitSpawner"/>
         /// </summary>
         [CanBeNull] private ContainerBounds containerBounds;
@@ -121,20 +116,24 @@ namespace Watermelon_Game.Fruit_Spawn
 
         #region Properties
         /// <summary>
+        /// Singleton of <see cref="FruitSpawner"/> <br/>
+        /// <i>Will always be the instance of the local player</i>
+        /// </summary>
+        public static FruitSpawner Instance { get; private set; }
+        
+        /// <summary>
         /// <see cref="rotationSpeed"/>
         /// </summary>
-        public static ProtectedFloat RotationSpeed => instance.rotationSpeed;
+        public static ProtectedFloat RotationSpeed => Instance.rotationSpeed;
         /// <summary>
         /// <see cref="maxRotationAngle"/>
         /// </summary>
-        public static ProtectedFloat MaxRotationAngle => instance.maxRotationAngle;
+        public static ProtectedFloat MaxRotationAngle => Instance.maxRotationAngle;
         #endregion
         
         #region Methods
         private void Awake()
         {
-            instance = this;
-            
             this.rigidbody2D = base.GetComponent<Rigidbody2D>();
             this.fruitSpawnerCollider = base.GetComponent<BoxCollider2D>();
             this.fruitTrigger = base.GetComponentInChildren<CircleCollider2D>();
@@ -146,6 +145,8 @@ namespace Watermelon_Game.Fruit_Spawn
             
             if (base.isLocalPlayer)
             {
+                Instance = this;
+                
                 InputController.OnMouseMove += MovePosition;
                 GameController.OnGameStart += this.GameStarted;
                 GameController.OnResetGameStarted += this.ResetGameStarted;
@@ -434,7 +435,7 @@ namespace Watermelon_Game.Fruit_Spawn
                 _mouseInput = Input.GetKey(KeyCode.Mouse0);
                 if (_mouseInput && this.containerBounds is {} _containerBounds)
                 {
-                    _mouseInput = _containerBounds.Contains(InputController.MouseWorldPosition);
+                    _mouseInput = ContainerBounds.Contains(InputController.MouseWorldPosition);
                 }   
             }
                 
@@ -462,13 +463,10 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_Position">The direction to move the <see cref="FruitSpawner"/> to</param>
         private void MovePosition(Vector2 _Position)
         {
-            if (this.containerBounds is {} _container)
+            if (!this.anyActiveSkill && ContainerBounds.Contains(_Position))
             {
-                if (!this.anyActiveSkill && _container.Contains(_Position))
-                {
-                    this.rigidbody2D.MovePosition(_Position);   
-                }   
-            }
+                this.rigidbody2D.MovePosition(_Position);   
+            }  
         }
         
         /// <summary>
@@ -707,7 +705,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// </summary>
         public static void ForceGoldenFruit_DEVELOPMENT()
         {
-            instance.fruitBehaviour.ForceGoldenFruit_DEVELOPMENT(true);
+            Instance.fruitBehaviour.ForceGoldenFruit_DEVELOPMENT(true);
         }
         
         /// <summary>
@@ -717,7 +715,7 @@ namespace Watermelon_Game.Fruit_Spawn
         /// <param name="_Fruit">The <see cref="Fruit"/> to give to the <see cref="FruitSpawner"/></param>
         public static void ForceFruit_DEVELOPMENT(Fruit _Fruit)
         {
-            instance.CmdForceFruit_DEVELOPMENT(_Fruit);
+            Instance.CmdForceFruit_DEVELOPMENT(_Fruit);
         }
 
         /// <summary>
@@ -728,18 +726,18 @@ namespace Watermelon_Game.Fruit_Spawn
         [Command(requiresAuthority = false)]
         private void CmdForceFruit_DEVELOPMENT(Fruit _Fruit, NetworkConnectionToClient _Sender = null)
         {
-            if (instance.fruitBehaviour != null)
+            if (Instance.fruitBehaviour != null)
             {
-                Destroy(instance.fruitBehaviour.gameObject);
+                Destroy(Instance.fruitBehaviour.gameObject);
             }
             
-            var _transform = instance.transform;
-            instance.fruitBehaviour = FruitBehaviour.SpawnFruit(_transform, _transform.position, Quaternion.identity, (int)_Fruit, true, _Sender);
-            instance.fruitBehaviour.SetScale();
-            instance.fruitBehaviour.IncreaseSortingOrder();
-            instance.fruitSpawnerAim.ResetAimRotation();
-            instance.fruitSpawnerCollider.size = new Vector2(instance.fruitBehaviour.GetSize() + instance.colliderSizeOffset, instance.fruitSpawnerCollider.size.y);
-            instance.SetFruitTriggerSize(instance.fruitBehaviour);
+            var _transform = Instance.transform;
+            Instance.fruitBehaviour = FruitBehaviour.SpawnFruit(_transform, _transform.position, Quaternion.identity, (int)_Fruit, true, _Sender);
+            Instance.fruitBehaviour.SetScale();
+            Instance.fruitBehaviour.IncreaseSortingOrder();
+            Instance.fruitSpawnerAim.ResetAimRotation();
+            Instance.fruitSpawnerCollider.size = new Vector2(Instance.fruitBehaviour.GetSize() + Instance.colliderSizeOffset, Instance.fruitSpawnerCollider.size.y);
+            Instance.SetFruitTriggerSize(Instance.fruitBehaviour);
         }
 #endif
         #endregion

@@ -34,15 +34,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1968048327966716910, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: scale.fakeValue.x
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1968048327966716910, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: scale.fakeValue.y
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1968048327966716910, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: scale.fakeValue.z
-      value: 8
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2200633726002579183, guid: 65887a6017c0b9447bda29009d1a8192, type: 3}
       propertyPath: m_Sprite

@@ -63,7 +63,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39237398589440
-    m_Localized: "Abilit\xE0 Utilizzate"
+    m_Localized: "Abilit\xE0 utilizzate"
     m_Metadata:
       m_Items: []
   - m_Id: 39238539440128
@@ -196,6 +196,14 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 12680036816809984
     m_Localized: Spazio
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088339753463808
+    m_Localized: Skin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13088772353978368
+    m_Localized: Prossimamente disponibile
     m_Metadata:
       m_Items: []
   references:

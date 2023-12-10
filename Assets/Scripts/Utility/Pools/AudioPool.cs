@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using UnityEngine;
 using Watermelon_Game.Audio;
+using Watermelon_Game.Singletons;
 
 namespace Watermelon_Game.Utility.Pools
 {
     /// <summary>
     /// Contains methods to play pooled <see cref="AudioSource"/>s
     /// </summary>
-    internal sealed class AudioPool : MonoBehaviour
+    internal sealed class AudioPool : PersistantMonoBehaviour<AudioPool>
     {
         #region Inspector Fields
         [Header("References")]
@@ -28,19 +29,15 @@ namespace Watermelon_Game.Utility.Pools
 
         #region Fields
         /// <summary>
-        /// Singleton of <see cref="AudioPool"/>
-        /// </summary>
-        private static AudioPool instance;
-        /// <summary>
         /// <see cref="AudioWrapper"/> that are not part of <see cref="audioPool"/>, but assigned to one specific <see cref="AudioClip"/>
         /// </summary>
         private readonly List<AudioWrapper> assignedAudioWrappers = new();
         #endregion
         
         #region Methods
-        private void Awake()
+        protected override void Init()
         {
-            instance = this;
+            base.Init();
             this.audioPool = new ObjectPool<AudioWrapper>(this.audioWrapperPrefab, this.transform, this.startAmount, true);
             this.audioClips.Init();
         }
@@ -54,13 +51,13 @@ namespace Watermelon_Game.Utility.Pools
         /// <returns>The index of the created <see cref="AudioWrapper"/> in <see cref="assignedAudioWrappers"/></returns>
         public static int CreateAssignedAudioWrapper(AudioClipName _AudioClipName, Transform _Parent, bool _Loop = false)
         {
-            var _audioWrapper = instance.audioPool.Get(_Parent);
+            var _audioWrapper = Instance.audioPool.Get(_Parent);
             var _audioClipSettings = AudioClips.Clips[_AudioClipName];
             
             Set(_audioWrapper, _audioClipSettings, true, _Loop);
             
-            instance.assignedAudioWrappers.Add(_audioWrapper);
-            return instance.assignedAudioWrappers.Count - 1;
+            Instance.assignedAudioWrappers.Add(_audioWrapper);
+            return Instance.assignedAudioWrappers.Count - 1;
         }
         
         /// <summary>
@@ -70,7 +67,7 @@ namespace Watermelon_Game.Utility.Pools
         /// <returns>True if it is currently playing, otherwise false</returns>
         public static bool IsAssignedClipPlaying(int _Index)
         {
-            return instance.assignedAudioWrappers[_Index].AudioSource.isPlaying;
+            return Instance.assignedAudioWrappers[_Index].AudioSource.isPlaying;
         }
         
         /// <summary>
@@ -79,7 +76,7 @@ namespace Watermelon_Game.Utility.Pools
         /// <param name="_Index">Index of the <see cref="AudioWrapper"/> in <see cref="assignedAudioWrappers"/> to use</param>
         public static void PlayAssignedClip(int _Index)
         {
-            instance.assignedAudioWrappers[_Index].AudioSource.Play();
+            Instance.assignedAudioWrappers[_Index].AudioSource.Play();
         }
         
         /// <summary>
@@ -88,7 +85,7 @@ namespace Watermelon_Game.Utility.Pools
         /// <param name="_Index">Index of the <see cref="AudioWrapper"/> in <see cref="assignedAudioWrappers"/> to use</param>
         public static void PauseAssignedClip(int _Index)
         {
-            instance.assignedAudioWrappers[_Index].AudioSource.Pause();
+            Instance.assignedAudioWrappers[_Index].AudioSource.Pause();
         }
         
         /// <summary>
@@ -97,7 +94,7 @@ namespace Watermelon_Game.Utility.Pools
         /// <param name="_Index">Index of the <see cref="AudioWrapper"/> in <see cref="assignedAudioWrappers"/> to use</param>
         public static void StopAssignedClip(int _Index)
         {
-            instance.assignedAudioWrappers[_Index].AudioSource.Stop();
+            Instance.assignedAudioWrappers[_Index].AudioSource.Stop();
         }
         
         /// <summary>
@@ -140,7 +137,7 @@ namespace Watermelon_Game.Utility.Pools
             _AudioClipSettings = AudioClips.Clips[_AudioClipName];
             _ReturnToPool = _AudioClipSettings.audioClip.length;
 
-            return instance.audioPool.Get(_Parent);
+            return Instance.audioPool.Get(_Parent);
         }
         
         /// <summary>
@@ -153,7 +150,7 @@ namespace Watermelon_Game.Utility.Pools
         private static void Set(AudioWrapper _AudioWrapper, AudioClipSettings _AudioClipSettings, bool _NormalVolume = true, bool _Loop = false)
         {
             _AudioWrapper.AudioSource.clip = _AudioClipSettings.audioClip;
-            _AudioWrapper.AudioSource.volume = _NormalVolume == false ? _AudioClipSettings.volume * instance.volumeReductionMultiplier : _AudioClipSettings.volume;
+            _AudioWrapper.AudioSource.volume = _NormalVolume == false ? _AudioClipSettings.volume * Instance.volumeReductionMultiplier : _AudioClipSettings.volume;
             _AudioWrapper.AudioSource.time = _AudioClipSettings.startTime;
             _AudioWrapper.AudioSource.loop = _Loop;
         }
@@ -176,7 +173,7 @@ namespace Watermelon_Game.Utility.Pools
         /// <param name="_AudioWrapper">The <see cref="AudioWrapper"/> to return to <see cref="audioPool"/></param>
         public static void ReturnToPool(AudioWrapper _AudioWrapper)
         {
-            instance.audioPool.Return(_AudioWrapper);
+            Instance.audioPool.Return(_AudioWrapper);
         }
 
         /// <summary>
@@ -185,7 +182,7 @@ namespace Watermelon_Game.Utility.Pools
         /// <param name="_AudioWrapper">The <see cref="AudioWrapper"/> to remove from <see cref="ObjectPool{T}.objectPool"/></param>
         public static void RemovePoolObject(AudioWrapper _AudioWrapper)
         {
-            instance.audioPool.Remove(_AudioWrapper);
+            Instance.audioPool.Remove(_AudioWrapper);
         }
         #endregion
     }

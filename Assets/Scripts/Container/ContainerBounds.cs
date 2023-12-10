@@ -45,10 +45,6 @@ namespace Watermelon_Game.Container
         /// <b>Will only be set for the local client, for every other client this will be null!</b>
         /// </summary>
         [CanBeNull] private FruitSpawner fruitSpawner;
-        /// <summary>
-        /// Will be true while the animation during a GameMode transition is running
-        /// </summary>
-        private ProtectedBool transitioning;
         #endregion
         
         #region Properties
@@ -137,13 +133,14 @@ namespace Watermelon_Game.Container
         }
         
         /// <summary>
-        /// Returns true if the x and y components of point is a point inside <see cref="bounds"/>
+        /// Returns true if the x and y components of point is a point inside <see cref="bounds"/> <br/>
+        /// <i>Will always use the player container</i>
         /// </summary>
         /// <param name="_Point">Point to test</param>
         /// <returns>True if the point lies within the specified rectangle</returns>
-        public bool Contains(Vector2 _Point)
+        public static bool Contains(Vector2 _Point)
         {
-            return GameController.ActiveGame && !this.transitioning && this.bounds.rect.Contains(new Vector3(_Point.x, _Point.y) - this.bounds.position);
+            return GameController.ActiveGame && instance.bounds.rect.Contains(new Vector3(_Point.x, _Point.y) - instance.bounds.position);
         }
         
         /// <summary>

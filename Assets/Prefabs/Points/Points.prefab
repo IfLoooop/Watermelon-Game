@@ -165,6 +165,26 @@ PrefabInstance:
       propertyPath: m_text
       value: Amount
       objectReference: {fileID: 0}
+    - target: {fileID: 2600045604756130557, guid: c9310f6fcafe8034f9d34baf1b49ffb3, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2600045604756130557, guid: c9310f6fcafe8034f9d34baf1b49ffb3, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2600045604756130557, guid: c9310f6fcafe8034f9d34baf1b49ffb3, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2712336722118832520, guid: c9310f6fcafe8034f9d34baf1b49ffb3, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 2712336722118832520, guid: c9310f6fcafe8034f9d34baf1b49ffb3, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 200
+      objectReference: {fileID: 0}
     - target: {fileID: 2712336722118832520, guid: c9310f6fcafe8034f9d34baf1b49ffb3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

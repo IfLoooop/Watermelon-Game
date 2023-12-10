@@ -306,7 +306,7 @@ namespace Watermelon_Game.Steamworks.NET
             Lobbies.Clear();
                 
             // ReSharper disable once InconsistentNaming
-            for (var i = 0; i < _Callback.m_nLobbiesMatching; i++)
+            for (var i = 0; i < _Callback.m_nLobbiesMatching; i++) // TODO: Game freezes with "_Callback.m_nLobbiesMatching - 1"
             {
                 var _lobbyId = SteamMatchmaking.GetLobbyByIndex(i);
                 if (_lobbyId.IsValid() && _lobbyId.IsLobby())
