@@ -1,6 +1,8 @@
 TODO: Cheat detection not working after joining as a client (maybe the subscription)
 
 -------------------------------------------
+TODO: Make new physics optional (ingame toggle)
+TODO: Make all sounds louder (set volume mixer and in game sound to 50% and adjust sound to that volume)
 TODO: Sometimes game crashes on exit (maybe beacuase of a task that is still running)
 TODO: High GPU usage, maybe becuase of all the high res sprites (try changing them to lower res)
 TODO: See "SteamLeaderboard.DownloadLeaderboardScores()" TODO
